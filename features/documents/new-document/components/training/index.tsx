@@ -1,0 +1,177 @@
+import React, { useState } from "react";
+import { Plus, HelpCircle } from "lucide-react";
+import { cn } from "../../../../../components/ui/utils";
+import { TrainingConfig, Question } from "./types";
+import { redistributePoints } from "./utils";
+import { TrainingConfigSection } from "./TrainingConfigSection";
+import { QuestionCard } from "./QuestionCard";
+
+export const TrainingInformationTab: React.FC = () => {
+    const [config, setConfig] = useState<TrainingConfig>({
+        isRequired: true,
+        passingScore: 7,
+        maxAttempts: 3,
+        deadlineDays: 14,
+        questions: [
+            {
+                id: "1",
+                text: "What is the primary purpose of this SOP?",
+                type: "multiple_choice",
+                points: 10,
+                options: [
+                    { id: "opt1", text: "To ensure quality consistency", isCorrect: true },
+                    { id: "opt2", text: "To increase production speed", isCorrect: false },
+                    { id: "opt3", text: "To reduce employee count", isCorrect: false },
+                ]
+            }
+        ]
+    });
+
+    const [activeQuestionId, setActiveQuestionId] = useState<string | null>(null);
+    const [draggedQuestionId, setDraggedQuestionId] = useState<string | null>(null);
+    const [dragOverQuestionId, setDragOverQuestionId] = useState<string | null>(null);
+
+    const addQuestion = () => {
+        const newQuestion: Question = {
+            id: Date.now().toString(),
+            text: "New Question",
+            type: "multiple_choice",
+            points: 10,
+            options: [
+                { id: `opt-${Date.now()}-1`, text: "Option 1", isCorrect: true },
+                { id: `opt-${Date.now()}-2`, text: "Option 2", isCorrect: false },
+            ]
+        };
+        setConfig(prev => {
+            const updatedQuestions = redistributePoints([...prev.questions, newQuestion]);
+            return { ...prev, questions: updatedQuestions };
+        });
+        setActiveQuestionId(newQuestion.id);
+    };
+
+    const removeQuestion = (id: string) => {
+        setConfig(prev => {
+            const filteredQuestions = prev.questions.filter(q => q.id !== id);
+            const updatedQuestions = redistributePoints(filteredQuestions);
+            return { ...prev, questions: updatedQuestions };
+        });
+    };
+
+    const updateQuestion = (id: string, updates: Partial<Question>) => {
+        setConfig(prev => ({
+            ...prev,
+            questions: prev.questions.map(q => q.id === id ? { ...q, ...updates } : q)
+        }));
+    };
+
+    const reorderQuestions = (fromIndex: number, toIndex: number) => {
+        setConfig(prev => {
+            const newQuestions = [...prev.questions];
+            const [movedQuestion] = newQuestions.splice(fromIndex, 1);
+            newQuestions.splice(toIndex, 0, movedQuestion);
+            return { ...prev, questions: newQuestions };
+        });
+    };
+
+    const handleDragStart = (questionId: string) => {
+        setDraggedQuestionId(questionId);
+    };
+
+    const handleDragOver = (e: React.DragEvent, questionId: string) => {
+        e.preventDefault();
+        setDragOverQuestionId(questionId);
+    };
+
+    const handleDrop = (e: React.DragEvent, targetQuestionId: string) => {
+        e.preventDefault();
+        
+        if (!draggedQuestionId || draggedQuestionId === targetQuestionId) {
+            setDraggedQuestionId(null);
+            setDragOverQuestionId(null);
+            return;
+        }
+
+        const fromIndex = config.questions.findIndex(q => q.id === draggedQuestionId);
+        const toIndex = config.questions.findIndex(q => q.id === targetQuestionId);
+
+        if (fromIndex !== -1 && toIndex !== -1) {
+            reorderQuestions(fromIndex, toIndex);
+        }
+
+        setDraggedQuestionId(null);
+        setDragOverQuestionId(null);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedQuestionId(null);
+        setDragOverQuestionId(null);
+    };
+
+    const totalPoints = config.questions.reduce((sum, q) => sum + q.points, 0);
+
+    return (
+        <div className="space-y-8">
+            {/* Training Configuration */}
+            <TrainingConfigSection
+                config={config}
+                onUpdate={(updates) => setConfig({ ...config, ...updates })}
+            />
+
+            {/* Quiz Builder */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-slate-900">Quiz Questions</h3>
+                    <div className="flex items-center gap-4">
+                        <div className="text-sm font-medium text-slate-600">
+                            Total Points: <span className={cn(totalPoints === 10 ? "text-emerald-600" : totalPoints > 10 ? "text-red-600" : "text-amber-600")}>{totalPoints}</span> / 10
+                        </div>
+                        <button
+                            onClick={addQuestion}
+                            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+                        >
+                            <Plus className="h-4 w-4" />
+                            Add Question
+                        </button>
+                    </div>
+                </div>
+
+                <div className="space-y-4">
+                    {config.questions.map((question, index) => (
+                        <QuestionCard
+                            key={question.id}
+                            question={question}
+                            index={index}
+                            isActive={activeQuestionId === question.id}
+                            isDragging={draggedQuestionId === question.id}
+                            isDragOver={dragOverQuestionId === question.id}
+                            onToggle={() => setActiveQuestionId(question.id === activeQuestionId ? null : question.id)}
+                            onUpdate={(updates) => updateQuestion(question.id, updates)}
+                            onRemove={() => removeQuestion(question.id)}
+                            onDragStart={() => handleDragStart(question.id)}
+                            onDragOver={(e) => handleDragOver(e, question.id)}
+                            onDrop={(e) => handleDrop(e, question.id)}
+                            onDragEnd={handleDragEnd}
+                        />
+                    ))}
+
+                    {config.questions.length === 0 && (
+                        <div className="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                            <HelpCircle className="h-12 w-12 text-slate-300 mx-auto mb-3" />
+                            <h3 className="text-lg font-medium text-slate-900">No Questions Added</h3>
+                            <p className="text-slate-500 mb-4">Start building your training quiz by adding questions.</p>
+                            <button
+                                onClick={addQuestion}
+                                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+                            >
+                                Create First Question
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Re-export types for convenience
+export type { TrainingConfig, Question, QuestionType, QuestionOption } from "./types";

@@ -1,0 +1,1 @@
+export { NewDocumentView } from './NewDocumentView';
