@@ -179,7 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             isCollapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"
           )}>
             <span className="font-bold text-slate-800 tracking-tight text-lg">
-              Quality Management
+              Zenith Quality
             </span>
           </div>
         </div>

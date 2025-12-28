@@ -3,7 +3,7 @@ import { cn } from '../utils';
 
 /**
  * Responsive Table Component System
- * Optimized for Desktop and Tablet (iPad portrait & landscape)
+ * Sửa lỗi: Thay đổi cách truyền điều kiện vào hàm cn()
  */
 
 interface ResponsiveTableProps {
@@ -18,8 +18,7 @@ export const ResponsiveTableContainer: React.FC<ResponsiveTableProps> = ({
   return (
     <div
       className={cn(
-        'border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col',
-        'w-full',
+        'border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col w-full',
         className
       )}
     >
@@ -43,14 +42,7 @@ export const ResponsiveTableWrapper: React.FC<ResponsiveTableProps> = ({
 
 export const Table: React.FC<ResponsiveTableProps> = ({ children, className }) => {
   return (
-    <table
-      className={cn(
-        'w-full border-collapse',
-        // Responsive font sizes
-        'text-sm md:text-base',
-        className
-      )}
-    >
+    <table className={cn('w-full border-collapse text-sm md:text-base', className)}>
       {children}
     </table>
   );
@@ -58,13 +50,7 @@ export const Table: React.FC<ResponsiveTableProps> = ({ children, className }) =
 
 export const TableHeader: React.FC<ResponsiveTableProps> = ({ children, className }) => {
   return (
-    <thead
-      className={cn(
-        'bg-slate-50 border-b border-slate-200',
-        'sticky top-0 z-10',
-        className
-      )}
-    >
+    <thead className={cn('bg-slate-50 border-b border-slate-200 sticky top-0 z-10', className)}>
       {children}
     </thead>
   );
@@ -79,7 +65,7 @@ export const TableBody: React.FC<ResponsiveTableProps> = ({ children, className 
 };
 
 interface TableCellProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   isHeader?: boolean;
   sticky?: 'left' | 'right';
@@ -99,34 +85,23 @@ export const TableCell: React.FC<TableCellProps> = ({
     <Component
       className={cn(
         // Base styles
+        'px-3 py-3 md:px-4 md:py-4 lg:px-6 lg:py-4',
+        
+        // Alignment
         align === 'left' && 'text-left',
         align === 'center' && 'text-center',
         align === 'right' && 'text-right',
         
-        // Responsive padding
-        'px-3 py-3 md:px-4 md:py-4 lg:px-6 lg:py-4',
-        
-        // Header specific
-        isHeader && [
-          'font-semibold text-slate-700',
-          'text-xs md:text-sm',
-          'uppercase tracking-wider',
-        ],
+        // Header specific (Đã sửa từ mảng [] sang chuỗi/điều kiện rời)
+        isHeader && 'font-semibold text-slate-700 text-xs md:text-sm uppercase tracking-wider',
         
         // Cell specific
         !isHeader && 'text-slate-900',
         
-        // Sticky column
-        sticky === 'right' && [
-          'sticky right-0 bg-white z-20',
-          'before:content-[""] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200',
-          'shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]',
-        ],
-        sticky === 'left' && [
-          'sticky left-0 bg-white z-20',
-          'after:content-[""] after:absolute after:right-0 after:top-0 after:bottom-0 after:w-[1px] after:bg-slate-200',
-          'shadow-[4px_0_12px_-4px_rgba(0,0,0,0.05)]',
-        ],
+        // Sticky column (Sử dụng object hoặc chuỗi thay vì mảng)
+        sticky === 'right' && 'sticky right-0 bg-white z-20 before:content-[""] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]',
+        
+        sticky === 'left' && 'sticky left-0 bg-white z-20 after:content-[""] after:absolute after:right-0 after:top-0 after:bottom-0 after:w-[1px] after:bg-slate-200 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.05)]',
         
         className
       )}
@@ -144,7 +119,8 @@ export const TableRow: React.FC<ResponsiveTableProps> = ({ children, className }
   );
 };
 
-// Empty State Component
+// --- Các Component EmptyState và Pagination giữ nguyên logic nhưng dọn dẹp syntax cn() ---
+
 interface TableEmptyStateProps {
   icon?: React.ReactNode;
   title: string;
@@ -175,7 +151,6 @@ export const TableEmptyState: React.FC<TableEmptyStateProps> = ({
   );
 };
 
-// Pagination Component
 interface TablePaginationProps {
   currentPage: number;
   totalPages: number;
@@ -197,31 +172,18 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   return (
-    <div
-      className={cn(
-        'flex items-center justify-between border-t border-slate-200 bg-white px-6 py-4',
-        className
-      )}
-    >
-      {/* Page info */}
+    <div className={cn('flex items-center justify-between border-t border-slate-200 bg-white px-6 py-4', className)}>
       <div className="text-sm text-slate-600">
-        Showing{' '}
-        <span className="font-medium text-slate-900">
-          {startItem}-{endItem}
-        </span>{' '}
-        of <span className="font-medium text-slate-900">{totalItems}</span> results
+        Showing <span className="font-medium text-slate-900">{startItem}-{endItem}</span> of <span className="font-medium text-slate-900">{totalItems}</span> results
       </div>
 
-      {/* Page controls */}
       <div className="flex items-center gap-2">
         <button
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
           className={cn(
             'h-9 px-4 text-sm font-medium rounded-md transition-all border border-slate-200',
-            currentPage === 1
-              ? 'bg-slate-50 text-slate-400 cursor-not-allowed'
-              : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
+            currentPage === 1 ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
           )}
         >
           Previous
@@ -232,9 +194,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           disabled={currentPage === totalPages}
           className={cn(
             'h-9 px-4 text-sm font-medium rounded-md transition-all border border-slate-200',
-            currentPage === totalPages
-              ? 'bg-slate-50 text-slate-400 cursor-not-allowed'
-              : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
+            currentPage === totalPages ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
           )}
         >
           Next

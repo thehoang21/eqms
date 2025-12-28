@@ -11,8 +11,6 @@ import {
   AlertTriangle,
   ShieldAlert,
   GraduationCap,
-  LayoutGrid,
-  LayoutList,
   Users,
   CalendarDays,
   ChevronDown,
@@ -28,10 +26,12 @@ import {
 } from "lucide-react";
 import { Button } from "../../components/ui/button/Button";
 import { cn } from "../../components/ui/utils";
-import { Task, ModuleType, ViewMode } from "./types";
+import { Task, ModuleType } from "./types";
 import { TaskTable } from "./components/TaskTable";
-import { TaskGrid } from "./components/TaskGrid";
 import { TaskDetailDrawer } from "./components/TaskDetailDrawer";
+import { ColumnCustomizer } from "./components/ColumnCustomizer";
+import { DateRangePicker } from "./components/DateRangePicker";
+import { TableColumn } from "./types";
 
 // --- Mock Data ---
 const MOCK_TASKS: Task[] = [
@@ -426,6 +426,8 @@ const TaskFilters: React.FC<{
   setToDate: (val: string) => void;
   assignee: string;
   setAssignee: (val: string) => void;
+  tableColumns: TableColumn[];
+  onColumnsChange: (columns: TableColumn[]) => void;
 }> = ({
   search,
   setSearch,
@@ -439,6 +441,8 @@ const TaskFilters: React.FC<{
   setToDate,
   assignee,
   setAssignee,
+  tableColumns,
+  onColumnsChange,
 }) => {
   const moduleOptions: SelectOption[] = [
     { label: "All", value: "All Modules" },
@@ -555,8 +559,8 @@ const TaskFilters: React.FC<{
           />
         </div>
 
-        {/* Row 2: Assignee, From Date, To Date */}
-        <div className="xl:col-span-6 w-full">
+        {/* Row 2: Assignee, Columns, Date Range */}
+        <div className="xl:col-span-3 w-full">
           <SearchableCombobox
             label="Assignee"
             value={assignee}
@@ -567,24 +571,20 @@ const TaskFilters: React.FC<{
         </div>
         <div className="xl:col-span-3 w-full">
           <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-            From Date
+            Display
           </label>
-          <input
-            type="date"
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
-            className="block w-full px-3 h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all"
+          <ColumnCustomizer 
+            columns={tableColumns} 
+            onColumnsChange={onColumnsChange} 
           />
         </div>
-        <div className="xl:col-span-3 w-full">
-          <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-            To Date
-          </label>
-          <input
-            type="date"
-            value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
-            className="block w-full px-3 h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all"
+        <div className="xl:col-span-6 w-full">
+          <DateRangePicker
+            label="Date Range"
+            fromDate={fromDate}
+            toDate={toDate}
+            onFromDateChange={setFromDate}
+            onToDateChange={setToDate}
           />
         </div>
       </div>
@@ -608,47 +608,23 @@ const EmptyState = () => (
   </div>
 );
 
-const SkeletonLoader = ({ mode }: { mode: ViewMode }) => {
+const SkeletonLoader = () => {
   return (
     <div className="w-full animate-pulse">
-      {mode === "table" ? (
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="h-12 bg-slate-100 border-b border-slate-200" />
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="h-16 border-b border-slate-100 px-6 py-4 flex items-center gap-4"
-            >
-              <div className="h-4 w-20 bg-slate-200 rounded" />
-              <div className="h-4 w-48 bg-slate-200 rounded flex-1" />
-              <div className="h-6 w-20 bg-slate-200 rounded-full" />
-              <div className="h-4 w-24 bg-slate-200 rounded" />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="bg-white h-48 rounded-xl border border-slate-200 p-4 flex flex-col justify-between"
-            >
-              <div className="flex justify-between">
-                <div className="h-4 w-24 bg-slate-200 rounded" />
-                <div className="h-8 w-8 bg-slate-200 rounded-full" />
-              </div>
-              <div className="space-y-2">
-                <div className="h-5 w-3/4 bg-slate-200 rounded" />
-                <div className="h-4 w-full bg-slate-200 rounded" />
-              </div>
-              <div className="flex justify-between mt-4">
-                <div className="h-5 w-16 bg-slate-200 rounded-full" />
-                <div className="h-5 w-16 bg-slate-200 rounded" />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="h-12 bg-slate-100 border-b border-slate-200" />
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div
+            key={i}
+            className="h-16 border-b border-slate-100 px-6 py-4 flex items-center gap-4"
+          >
+            <div className="h-4 w-20 bg-slate-200 rounded" />
+            <div className="h-4 w-48 bg-slate-200 rounded flex-1" />
+            <div className="h-6 w-20 bg-slate-200 rounded-full" />
+            <div className="h-4 w-24 bg-slate-200 rounded" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -656,7 +632,6 @@ const SkeletonLoader = ({ mode }: { mode: ViewMode }) => {
 // --- Main Container ---
 
 export const MyTasksView: React.FC = () => {
-  const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [isLoading, setIsLoading] = useState(false);
 
   // Drawer State
@@ -673,6 +648,22 @@ export const MyTasksView: React.FC = () => {
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
+
+  // Column Customization State
+  const [tableColumns, setTableColumns] = useState<TableColumn[]>([
+    { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
+    { id: 'taskId', label: 'Task ID', visible: true, order: 1 },
+    { id: 'taskName', label: 'Task Name', visible: true, order: 2 },
+    { id: 'module', label: 'Module', visible: true, order: 3 },
+    { id: 'assignee', label: 'Assignee', visible: true, order: 4 },
+    { id: 'reporter', label: 'Reporter', visible: true, order: 5 },
+    { id: 'daysLeft', label: 'Days Left', visible: true, order: 6 },
+    { id: 'status', label: 'Status', visible: true, order: 7 },
+    { id: 'progress', label: 'Progress', visible: true, order: 8 },
+    { id: 'dueDate', label: 'Due Date', visible: true, order: 9 },
+    { id: 'priority', label: 'Priority', visible: true, order: 10 },
+    { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+  ]);
 
   // Simulate loading on filter change
   useEffect(() => {
@@ -739,42 +730,12 @@ export const MyTasksView: React.FC = () => {
     <div className="space-y-6 w-full flex-1 flex flex-col mb-12">
       {" "}
       {/* Added mb-12 for footer spacing */}
-      {/* 1. Header: Title & View Switcher - Aligned in one row */}
+      {/* 1. Header: Title */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
             My Tasks
           </h1>
-          {/* <p className="text-slate-500 mt-1 text-sm md:text-base">
-            Manage and track your assigned quality tasks.
-          </p> */}
-        </div>
-
-        <div className="flex items-center bg-white p-1 rounded-lg border border-slate-200 shadow-sm">
-          <button
-            onClick={() => setViewMode("table")}
-            className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
-              viewMode === "table"
-                ? "bg-slate-100 text-slate-900 shadow-sm"
-                : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
-            )}
-          >
-            <LayoutList className="h-4 w-4" />
-            <span className="hidden sm:inline">List</span>
-          </button>
-          <button
-            onClick={() => setViewMode("card")}
-            className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
-              viewMode === "card"
-                ? "bg-slate-100 text-slate-900 shadow-sm"
-                : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
-            )}
-          >
-            <LayoutGrid className="h-4 w-4" />
-            <span className="hidden sm:inline">Cards</span>
-          </button>
         </div>
       </div>
       {/* 2. Filter Card */}
@@ -792,14 +753,15 @@ export const MyTasksView: React.FC = () => {
           setToDate={setToDateFilter}
           assignee={assigneeFilter}
           setAssignee={setAssigneeFilter}
+          tableColumns={tableColumns}
+          onColumnsChange={setTableColumns}
         />
       </div>
-      {/* 3. Data Display (Loading / Table / Grid) */}
+      {/* 3. Data Display (Loading / Table) */}
       <div className="flex-1 min-h-0 flex flex-col">
         {isLoading ? (
-          <SkeletonLoader mode={viewMode} />
-        ) : viewMode === "table" ? (
-          // Integrated Table
+          <SkeletonLoader />
+        ) : (
           <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
             {paginatedData.length > 0 ? (
               <>
@@ -807,6 +769,7 @@ export const MyTasksView: React.FC = () => {
                   tasks={paginatedData}
                   onTaskClick={setSelectedTask}
                   startIndex={(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                  columns={tableColumns}
                 />
                 <Pagination
                   currentPage={currentPage}
@@ -815,26 +778,6 @@ export const MyTasksView: React.FC = () => {
                   itemsPerPage={ITEMS_PER_PAGE}
                   onPageChange={setCurrentPage}
                 />
-              </>
-            ) : (
-              <EmptyState />
-            )}
-          </div>
-        ) : (
-          // Card View
-          <div className="flex flex-col gap-6">
-            {paginatedData.length > 0 ? (
-              <>
-                <TaskGrid tasks={paginatedData} onTaskClick={setSelectedTask} />
-                <div className="rounded-xl border border-slate-200 overflow-hidden shadow-sm bg-white">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    totalItems={totalItems}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                    onPageChange={setCurrentPage}
-                  />
-                </div>
               </>
             ) : (
               <EmptyState />

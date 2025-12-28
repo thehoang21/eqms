@@ -10,6 +10,7 @@ import {
     History,
     GitBranch,
     Check,
+    Send,
 } from "lucide-react";
 import { Button } from "../../../components/ui/button/Button";
 import { cn } from "../../../components/ui/utils";
@@ -34,6 +35,7 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
 }) => {
     const [activeTab, setActiveTab] = useState<TabType>("general");
     const [isSaving, setIsSaving] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -68,6 +70,26 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
             console.error("Error creating document:", error);
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleSubmitForActive = async () => {
+        setIsSubmitting(true);
+        try {
+            // Validate required fields
+            if (!formData.title || !formData.author || !formData.businessUnit) {
+                alert("Please fill in all required fields");
+                return;
+            }
+
+            // Call onSave callback with form data and submit for activation
+            await onSave({ ...formData, submitForActive: true });
+
+            console.log("Document submitted for activation:", formData);
+        } catch (error) {
+            console.error("Error submitting document:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -124,6 +146,7 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                         <Button
                             onClick={onBack}
                             variant="outline"
+                            size="sm"
                             className="flex items-center gap-2"
                         >
                             <X className="h-4 w-4" />
@@ -131,11 +154,21 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                         </Button>
                         <Button
                             onClick={handleSave}
-                            disabled={isSaving}
+                            disabled={isSaving || isSubmitting}
+                            size="sm"
                             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
                             <Save className="h-4 w-4" />
                             {isSaving ? "Saving..." : "Save"}
+                        </Button>
+                        <Button
+                            onClick={handleSubmitForActive}
+                            disabled={isSaving || isSubmitting}
+                            size="sm"
+                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                            <Send className="h-4 w-4" />
+                            {isSubmitting ? "Submitting..." : "Submit for Active"}
                         </Button>
                     </div>
                 </div>

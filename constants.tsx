@@ -13,7 +13,11 @@ import {
   Book,
   Database,
   MonitorCog,
-  ShieldUser
+  ShieldUser,
+  MonitorSpeaker,
+  Boxes,
+  TextSearch,
+  Palette
 } from 'lucide-react';
 import { NavItem } from './types';
 
@@ -31,8 +35,8 @@ export const NAV_CONFIG: NavItem[] = [
     path: '/my-tasks',
   },
   {
-    id: 'doc-management',
-    label: 'Document Management',
+    id: 'doc-control',
+    label: 'Document Control',
     icon: FileText,
     children: [
       { id: 'doc-owned-me', label: 'Documents Owned By Me', path: '/documents/owned' },
@@ -61,34 +65,52 @@ export const NAV_CONFIG: NavItem[] = [
     ],
   },
   {
-    id: 'training',
+    id: 'training-management',
     label: 'Training Management',
     icon: GraduationCap,
-    path: '/training',
+    path: '/training-management',
   },
   {
-    id: 'deviation',
-    label: 'Deviation Management',
+    id: 'deviation-ncs',
+    label: 'Deviation & NCs',
     icon: AlertTriangle,
-    path: '/deviations',
+    path: '/deviations-ncs',
   },
   {
-    id: 'capa',
-    label: 'CAPA',
+    id: 'capa-management',
+    label: 'CAPA Management',
     icon: Shield,
-    path: '/capa',
+    path: '/capa-management',
   },
   {
-    id: 'change-control',
-    label: 'Change Control',
+    id: 'change-management',
+    label: 'Change Management',
     icon: GitPullRequest,
-    path: '/change-control',
+    path: '/change-management',
   },
   {
-    id: 'complaints',
-    label: 'Complaints & Recalls',
+    id: 'complaints-management',
+    label: 'Complaints Management',
     icon: Undo2,
-    path: '/complaints',
+    path: '/complaints-management',
+  },
+  {
+    id: 'equipment-management',
+    label: 'Equipment Management',
+    icon: MonitorSpeaker,
+    path: '/equipment-management',
+  },
+  {
+    id: 'supplier-management',
+    label: 'Supplier Management',
+    icon: Boxes,
+    path: '/supplier-management',
+  },
+  {
+    id: 'risk-management',
+    label: 'Risk Management',
+    icon: TextSearch,
+    path: '/risk-management',
   },
   {
     id: 'audit-trail',
@@ -106,6 +128,7 @@ export const NAV_CONFIG: NavItem[] = [
       { id: 'dictionaries', label: 'Dictionaries', icon: Book, path: '/settings/dictionaries' },
       { id: 'config', label: 'Configuration', icon: MonitorCog, path: '/settings/config' },
       { id: 'info-sys', label: 'Information System', icon: Database, path: '/settings/info-system' },
+      { id: 'ui-demo', label: 'UI Showcase', icon: Palette, path: '/ui-demo' },
     ],
   },
 ];

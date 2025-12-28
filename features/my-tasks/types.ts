@@ -25,3 +25,11 @@ export interface Task {
   progress: number;
   timeline: TimelineEvent[];
 }
+
+export interface TableColumn {
+  id: string;
+  label: string;
+  visible: boolean;
+  order: number;
+  locked?: boolean; // Cannot be reordered (No. and Action columns)
+}
