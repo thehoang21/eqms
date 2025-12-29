@@ -1,11 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import {
-  Search,
-  Filter,
-  FileText,
   ChevronDown,
-  ChevronLeft,
   ChevronRight,
   MoreVertical,
   Eye,
@@ -15,15 +11,25 @@ import {
   CheckCircle2,
   Clock,
   AlertTriangle,
+  GripVertical,
 } from "lucide-react";
-import { Button } from "../../../components/ui/button/Button";
-import { Select, SelectOption } from "../../../components/ui/select/Select";
-import { cn } from "../../../components/ui/utils";
+import { Button } from "../../components/ui/button/Button";
+import { Checkbox } from "../../components/ui/checkbox/Checkbox";
+import { cn } from "../../components/ui/utils";
+import { DocumentFilters } from "./components/DocumentFilters";
 
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Under Review" | "Approved" | "Obsolete" | "Effective";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+
+interface TableColumn {
+  id: string;
+  label: string;
+  visible: boolean;
+  order: number;
+  locked?: boolean;
+}
 
 interface Document {
   id: string;
@@ -94,7 +100,7 @@ const MOCK_DOCUMENTS: Document[] = [
     title: "Annual Validation Summary Report 2023",
     type: "Report",
     version: "1.0",
-    status: "Under Review",
+    status: "Pending Review",
     effectiveDate: "2024-01-15",
     validUntil: "2025-01-15",
     author: "Dr. Sarah Johnson",
@@ -126,13 +132,15 @@ const getStatusColor = (status: DocumentStatus) => {
   switch (status) {
     case "Draft":
       return "bg-slate-50 text-slate-700 border-slate-200";
-    case "Under Review":
+    case "Pending Review":
       return "bg-amber-50 text-amber-700 border-amber-200";
-    case "Approved":
+    case "Pending Approval":
       return "bg-blue-50 text-blue-700 border-blue-200";
+    case "Approved":
+      return "bg-cyan-50 text-cyan-700 border-cyan-200";
     case "Effective":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Obsolete":
+    case "Archive":
       return "bg-red-50 text-red-700 border-red-200";
     default:
       return "bg-slate-50 text-slate-700 border-slate-200";
@@ -143,13 +151,15 @@ const getStatusIcon = (status: DocumentStatus) => {
   switch (status) {
     case "Draft":
       return <Clock className="h-3.5 w-3.5" />;
-    case "Under Review":
+    case "Pending Review":
       return <AlertCircle className="h-3.5 w-3.5" />;
+    case "Pending Approval":
+      return <AlertTriangle className="h-3.5 w-3.5" />;
     case "Approved":
       return <CheckCircle2 className="h-3.5 w-3.5" />;
     case "Effective":
       return <CheckCircle2 className="h-3.5 w-3.5" />;
-    case "Obsolete":
+    case "Archive":
       return <AlertTriangle className="h-3.5 w-3.5" />;
     default:
       return <Clock className="h-3.5 w-3.5" />;
@@ -259,13 +269,16 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40"
-        onClick={onClose}
+        className="fixed inset-0 z-40 animate-in fade-in duration-150"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
         aria-hidden="true"
       />
       {/* Menu */}
       <div
-        className="fixed z-50 min-w-[200px] rounded-lg border border-slate-200 bg-white shadow-lg"
+        className="fixed z-50 min-w-[200px] rounded-lg border border-slate-200 bg-white shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
@@ -273,7 +286,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       >
         <div className="py-1">
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               console.log("View document:", document.id);
               onViewDocument?.(document.id);
               onClose();
@@ -284,7 +298,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             <span>View Details</span>
           </button>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               console.log("Download document:", document.id);
               onClose();
             }}
@@ -294,7 +309,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             <span>Download PDF</span>
           </button>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               console.log("View history:", document.id);
               onClose();
             }}
@@ -306,7 +322,171 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         </div>
       </div>
     </>,
-    document.body
+    window.document.body
+  );
+};
+
+// --- Document Column Customizer Component ---
+
+interface DocumentColumnCustomizerProps {
+  columns: TableColumn[];
+  onColumnsChange: (columns: TableColumn[]) => void;
+}
+
+const DocumentColumnCustomizer: React.FC<DocumentColumnCustomizerProps> = ({
+  columns,
+  onColumnsChange,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const reorderableColumns = columns.filter(col => !col.locked);
+  const lockedColumns = columns.filter(col => col.locked);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+
+    const newColumns = [...reorderableColumns];
+    const draggedColumn = newColumns[draggedIndex];
+    newColumns.splice(draggedIndex, 1);
+    newColumns.splice(index, 0, draggedColumn);
+
+    const updatedReorderable = newColumns.map((col, idx) => ({
+      ...col,
+      order: idx + 1,
+    }));
+
+    const finalColumns = [
+      ...lockedColumns,
+      ...updatedReorderable,
+    ].sort((a, b) => a.order - b.order);
+
+    onColumnsChange(finalColumns);
+    setDraggedIndex(index);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
+  const toggleVisibility = (columnId: string) => {
+    const updatedColumns = columns.map(col =>
+      col.id === columnId ? { ...col, visible: !col.visible } : col
+    );
+    onColumnsChange(updatedColumns);
+  };
+
+  const resetToDefault = () => {
+    const defaultColumns: TableColumn[] = [
+      { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
+      { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
+      { id: 'created', label: 'Created', visible: true, order: 2 },
+      { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
+      { id: 'title', label: 'Document Name', visible: true, order: 4 },
+      { id: 'status', label: 'State', visible: true, order: 5 },
+      { id: 'type', label: 'Document Type', visible: true, order: 6 },
+      { id: 'department', label: 'Department', visible: true, order: 7 },
+      { id: 'author', label: 'Author', visible: true, order: 8 },
+      { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
+      { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
+      { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+    ];
+    onColumnsChange(defaultColumns);
+  };
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={cn(
+          "flex items-center justify-between gap-2 w-full px-3 h-11 border rounded-md bg-white text-sm transition-all",
+          isOpen 
+            ? "border-emerald-500 ring-2 ring-emerald-500" 
+            : "border-slate-200 hover:border-slate-300"
+        )}
+      >
+        <span className="text-slate-700 font-medium">Customize Columns</span>
+        <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 left-0 top-full mt-2 z-50 w-full bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
+          <div className="px-4 py-2 border-b border-slate-100">
+            <h3 className="text-sm font-semibold text-slate-700">Customize Columns</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Scroll to View, Drag to reorder</p>
+          </div>
+
+          <div className="p-2 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+            {reorderableColumns.map((column, index) => (
+              <div
+                key={column.id}
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDragEnd={handleDragEnd}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 mb-1 rounded-md border border-transparent transition-all cursor-move group',
+                  draggedIndex === index
+                    ? 'bg-blue-50 border-blue-200 opacity-50'
+                    : 'hover:bg-slate-50'
+                )}
+              >
+                <Checkbox
+                  id={`column-${column.id}`}
+                  checked={column.visible}
+                  onChange={() => toggleVisibility(column.id)}
+                  className="flex-shrink-0"
+                />
+                
+                <span className={cn(
+                  "text-sm font-medium flex-1",
+                  column.visible ? "text-slate-700" : "text-slate-400"
+                )}>
+                  {column.label}
+                </span>
+
+                <GripVertical className="h-4 w-4 text-slate-400 flex-shrink-0" />
+              </div>
+            ))}
+          </div>
+
+          <div className="px-3 py-2 rounded-b-lg border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={resetToDefault}
+              className="flex-1"
+            >
+              Reset
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              className="flex-1"
+            >
+              Done
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -320,9 +500,31 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<DocumentStatus | "All">("All");
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("All");
+  const [authorFilter, setAuthorFilter] = useState<string>("All");
+  const [createdFromDate, setCreatedFromDate] = useState<string>("");
+  const [createdToDate, setCreatedToDate] = useState<string>("");
+  const [effectiveFromDate, setEffectiveFromDate] = useState<string>("");
+  const [effectiveToDate, setEffectiveToDate] = useState<string>("");
+  const [validFromDate, setValidFromDate] = useState<string>("");
+  const [validToDate, setValidToDate] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [columns, setColumns] = useState<TableColumn[]>([
+    { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
+    { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
+    { id: 'created', label: 'Created', visible: true, order: 2 },
+    { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
+    { id: 'title', label: 'Document Name', visible: true, order: 4 },
+    { id: 'status', label: 'State', visible: true, order: 5 },
+    { id: 'type', label: 'Document Type', visible: true, order: 6 },
+    { id: 'department', label: 'Department', visible: true, order: 7 },
+    { id: 'author', label: 'Author', visible: true, order: 8 },
+    { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
+    { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
+    { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+  ]);
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
 
   const itemsPerPage = 10;
@@ -339,10 +541,24 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
 
       const matchesStatus = statusFilter === "All" || doc.status === statusFilter;
       const matchesType = typeFilter === "All" || doc.type === typeFilter;
+      const matchesDepartment = departmentFilter === "All" || doc.department === departmentFilter;
+      const matchesAuthor = authorFilter === "All" || doc.author === authorFilter;
 
-      return matchesSearch && matchesStatus && matchesType;
+      // Date filtering
+      const matchesCreatedFrom = !createdFromDate || new Date(doc.created) >= new Date(createdFromDate);
+      const matchesCreatedTo = !createdToDate || new Date(doc.created) <= new Date(createdToDate);
+      const matchesEffectiveFrom = !effectiveFromDate || new Date(doc.effectiveDate) >= new Date(effectiveFromDate);
+      const matchesEffectiveTo = !effectiveToDate || new Date(doc.effectiveDate) <= new Date(effectiveToDate);
+      const matchesValidFrom = !validFromDate || new Date(doc.validUntil) >= new Date(validFromDate);
+      const matchesValidTo = !validToDate || new Date(doc.validUntil) <= new Date(validToDate);
+
+      return matchesSearch && matchesStatus && matchesType && matchesDepartment && 
+             matchesAuthor && matchesCreatedFrom && matchesCreatedTo && 
+             matchesEffectiveFrom && matchesEffectiveTo && matchesValidFrom && matchesValidTo;
     });
-  }, [searchQuery, statusFilter, typeFilter]);
+  }, [searchQuery, statusFilter, typeFilter, departmentFilter, authorFilter,
+      createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, 
+      validFromDate, validToDate]);
 
   const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -379,7 +595,7 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
       {/* Header: Title + Breadcrumb (No Action Button) */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             Documents Owned By Me
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
@@ -392,74 +608,67 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
         </div>
       </div>
 
-      {/* Filters Card - Match MyTasksView style */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-          {/* Search - Takes more space */}
-          <div className="xl:col-span-6 w-full">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-              Search
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <Search className="h-4.5 w-4.5 text-slate-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search by document name, ID, author, department, opened by..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="block w-full pl-10 pr-3 h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
-              />
-            </div>
-          </div>
-
-          {/* Status Filter */}
-          <div className="xl:col-span-3 w-full">
-            <Select
-              label="Status"
-              value={statusFilter}
-              onChange={(value) => {
-                setStatusFilter(value as DocumentStatus | "All");
-                setCurrentPage(1);
-              }}
-              options={[
-                { value: "All", label: "All" },
-                { value: "Draft", label: "Draft" },
-                { value: "Under Review", label: "Under Review" },
-                { value: "Approved", label: "Approved" },
-                { value: "Effective", label: "Effective" },
-                { value: "Obsolete", label: "Obsolete" },
-              ]}
-              placeholder="Select Status"
-            />
-          </div>
-          {/* Type Filter */}
-          <div className="xl:col-span-3 w-full">
-            <Select
-              label="Document Type"
-              value={typeFilter}
-              onChange={(value) => {
-                setTypeFilter(value as DocumentType | "All");
-                setCurrentPage(1);
-              }}
-              options={[
-                { value: "All", label: "All" },
-                { value: "SOP", label: "SOP" },
-                { value: "Policy", label: "Policy" },
-                { value: "Form", label: "Form" },
-                { value: "Report", label: "Report" },
-                { value: "Specification", label: "Specification" },
-                { value: "Protocol", label: "Protocol" },
-              ]}
-              placeholder="Select Type"
-            />
-          </div>
-        </div>
-      </div>
+      {/* Filters Card */}
+      <DocumentFilters
+        searchQuery={searchQuery}
+        onSearchChange={(value) => {
+          setSearchQuery(value);
+          setCurrentPage(1);
+        }}
+        statusFilter={statusFilter}
+        onStatusChange={(value) => {
+          setStatusFilter(value);
+          setCurrentPage(1);
+        }}
+        typeFilter={typeFilter}
+        onTypeChange={(value) => {
+          setTypeFilter(value);
+          setCurrentPage(1);
+        }}
+        departmentFilter={departmentFilter}
+        onDepartmentChange={(value) => {
+          setDepartmentFilter(value);
+          setCurrentPage(1);
+        }}
+        authorFilter={authorFilter}
+        onAuthorChange={(value) => {
+          setAuthorFilter(value);
+          setCurrentPage(1);
+        }}
+        createdFromDate={createdFromDate}
+        onCreatedFromDateChange={(dateStr) => {
+          setCreatedFromDate(dateStr);
+          setCurrentPage(1);
+        }}
+        createdToDate={createdToDate}
+        onCreatedToDateChange={(dateStr) => {
+          setCreatedToDate(dateStr);
+          setCurrentPage(1);
+        }}
+        effectiveFromDate={effectiveFromDate}
+        onEffectiveFromDateChange={(dateStr) => {
+          setEffectiveFromDate(dateStr);
+          setCurrentPage(1);
+        }}
+        effectiveToDate={effectiveToDate}
+        onEffectiveToDateChange={(dateStr) => {
+          setEffectiveToDate(dateStr);
+          setCurrentPage(1);
+        }}
+        validFromDate={validFromDate}
+        onValidFromDateChange={(dateStr) => {
+          setValidFromDate(dateStr);
+          setCurrentPage(1);
+        }}
+        validToDate={validToDate}
+        onValidToDateChange={(dateStr) => {
+          setValidToDate(dateStr);
+          setCurrentPage(1);
+        }}
+        columns={columns}
+        onColumnsChange={setColumns}
+        ColumnCustomizerComponent={DocumentColumnCustomizer}
+      />
 
       {/* Table Container with Pagination */}
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
@@ -587,7 +796,10 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
                     </td>
 
                     {/* Action - Sticky Column */}
-                    <td className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50">
+                    <td 
+                      onClick={(e) => e.stopPropagation()}
+                      className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                    >
                       <button
                         ref={getButtonRef(doc.id)}
                         onClick={(e) => {

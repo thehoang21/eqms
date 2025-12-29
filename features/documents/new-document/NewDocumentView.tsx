@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     ChevronRight,
     FileText,
@@ -14,10 +14,13 @@ import {
 } from "lucide-react";
 import { Button } from "../../../components/ui/button/Button";
 import { cn } from "../../../components/ui/utils";
+import { ESignatureModal } from "../../../components/ui/esignmodal/ESignatureModal";
+import { AlertModal } from "../../../components/ui/modal";
 import { NewDocumentForm } from "./components/NewDocumentForm";
 import { DocumentUploadPanel } from "./components/document-upload";
 import { TrainingInformationTab } from "./components/training";
 import { DocumentDetailsCard } from "./components/document-details";
+import { useLocation } from "react-router-dom";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -36,6 +39,10 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
     const [activeTab, setActiveTab] = useState<TabType>("general");
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isESignOpen, setIsESignOpen] = useState(false);
+    const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
+    const [validationModalMessage, setValidationModalMessage] = useState<React.ReactNode>(null);
+    const location = useLocation();
 
     // Form state
     const [formData, setFormData] = useState({
@@ -53,14 +60,49 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
         isTemplate: false,
     });
 
+    const missingRequiredFields = useMemo(() => {
+        const missing: string[] = [];
+        if (!formData.title.trim()) missing.push("Document Name");
+        if (!String(formData.type || "").trim()) missing.push("Document Type");
+        if (!formData.author.trim()) missing.push("Author");
+        if (!formData.businessUnit.trim()) missing.push("Business Unit");
+        if (!Number.isFinite(formData.periodicReviewCycle) || formData.periodicReviewCycle <= 0) {
+            missing.push("Periodic Review Cycle (Months)");
+        }
+        if (!Number.isFinite(formData.periodicReviewNotification) || formData.periodicReviewNotification <= 0) {
+            missing.push("Periodic Review Notification (Days)");
+        }
+        return missing;
+    }, [
+        formData.title,
+        formData.type,
+        formData.author,
+        formData.businessUnit,
+        formData.periodicReviewCycle,
+        formData.periodicReviewNotification,
+    ]);
+
+    const validateOrWarn = () => {
+        if (missingRequiredFields.length === 0) return true;
+
+        setValidationModalMessage(
+            <div className="space-y-2">
+                <p>Please fill in all required fields before submitting:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                    {missingRequiredFields.map((field) => (
+                        <li key={field}>{field}</li>
+                    ))}
+                </ul>
+            </div>
+        );
+        setIsValidationModalOpen(true);
+        return false;
+    };
+
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            // Validate required fields
-            if (!formData.title || !formData.author || !formData.businessUnit) {
-                alert("Please fill in all required fields");
-                return;
-            }
+            if (!validateOrWarn()) return;
 
             // Call onSave callback with form data
             await onSave(formData);
@@ -73,19 +115,17 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
         }
     };
 
-    const handleSubmitForActive = async () => {
+    const handleSubmitForActive = () => {
+        if (!validateOrWarn()) return;
+        setIsESignOpen(true);
+    };
+
+    const handleESignConfirm = async (reason: string) => {
         setIsSubmitting(true);
         try {
-            // Validate required fields
-            if (!formData.title || !formData.author || !formData.businessUnit) {
-                alert("Please fill in all required fields");
-                return;
-            }
-
-            // Call onSave callback with form data and submit for activation
-            await onSave({ ...formData, submitForActive: true });
-
-            console.log("Document submitted for activation:", formData);
+            await onSave({ ...formData, submitForActive: true, eSignatureReason: reason });
+            console.log("Document submitted for activation:", { ...formData, eSignatureReason: reason });
+            setIsESignOpen(false);
         } catch (error) {
             console.error("Error submitting document:", error);
         } finally {
@@ -105,6 +145,14 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
         { id: "audit" as TabType, label: "Audit Trail", icon: History },
         { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },
     ];
+
+    useEffect(() => {
+        // If user navigates away from /documents/new, close all modals
+        if (location.pathname !== "/documents/new") {
+            setIsESignOpen(false);
+            setIsValidationModalOpen(false);
+        }
+    }, [location.pathname]);
 
     return (
         <div className="space-y-6 w-full">
@@ -168,7 +216,7 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
                         >
                             <Send className="h-4 w-4" />
-                            {isSubmitting ? "Submitting..." : "Submit for Active"}
+                            {isSubmitting ? "Submitting..." : "Submit"}
                         </Button>
                     </div>
                 </div>
@@ -302,6 +350,26 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                     <DocumentDetailsCard />
                 </div>
             )}
+
+            <ESignatureModal
+                isOpen={isESignOpen}
+                onClose={() => {
+                    if (isSubmitting) return;
+                    setIsESignOpen(false);
+                }}
+                onConfirm={handleESignConfirm}
+                actionTitle="Submit document for activation"
+            />
+
+            <AlertModal
+                isOpen={isValidationModalOpen}
+                onClose={() => setIsValidationModalOpen(false)}
+                type="warning"
+                title="Missing required information"
+                description={validationModalMessage}
+                confirmText="OK"
+                showCancel={false}
+            />
         </div>
     );
 };

@@ -1,10 +1,10 @@
 import React from 'react';
-import { MainLayout } from './MainLayout';
+import { AppRoutes } from './MainLayout/AppRoutes';
 
 const App: React.FC = () => {
   return (
     <React.StrictMode>
-      <MainLayout />
+      <AppRoutes />
     </React.StrictMode>
   );
 };

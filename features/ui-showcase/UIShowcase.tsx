@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Button } from '../../components/ui/button/Button';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/card/ResponsiveCard';
-import { ResponsiveTableContainer, ResponsiveTableWrapper, Table } from '../../components/ui/table/ResponsiveTable';
+import { 
+  ResponsiveTableContainer, 
+  ResponsiveTableWrapper, 
+  Table, 
+  TableHeader, 
+  TableBody, 
+  TableCell, 
+  TableRow, 
+  TablePagination
+} from '../../components/ui/table/ResponsiveTable';
 import { StatusBadge, StatusType } from '../../components/ui/statusbadge/StatusBadge';
 import { Popover } from '../../components/ui/popover/Popover';
 import { FormField } from '../../components/ui/form/ResponsiveForm';
@@ -32,6 +41,10 @@ export const UIShowcase: React.FC = () => {
     notifications: true,
     bio: ''
   });
+
+  // Table State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const openModal = (type: AlertModalType) => {
     let title = '';
@@ -80,13 +93,29 @@ export const UIShowcase: React.FC = () => {
   };
 
   // Mock Data for Table
-  const tableData = [
+  const allTableData = [
     { id: 1, code: 'SOP-001', title: 'Document Control Procedure', version: '1.0', status: 'effective', author: 'John Doe', date: '2023-12-01' },
     { id: 2, code: 'WI-005', title: 'Equipment Calibration', version: '2.1', status: 'pendingReview', author: 'Jane Smith', date: '2023-12-05' },
     { id: 3, code: 'FORM-012', title: 'Change Request Form', version: '1.0', status: 'draft', author: 'Mike Johnson', date: '2023-12-10' },
     { id: 4, code: 'POL-003', title: 'Quality Policy', version: '3.0', status: 'approved', author: 'Sarah Wilson', date: '2023-11-20' },
     { id: 5, code: 'SOP-002', title: 'Internal Audit Procedure', version: '1.2', status: 'obsolete', author: 'David Brown', date: '2023-10-15' },
+    { id: 6, code: 'SOP-003', title: 'Deviation Management', version: '2.0', status: 'effective', author: 'Emily Chen', date: '2023-12-15' },
+    { id: 7, code: 'WI-010', title: 'Sample Testing Protocol', version: '1.5', status: 'approved', author: 'Tom Anderson', date: '2023-12-08' },
+    { id: 8, code: 'FORM-020', title: 'Training Record', version: '1.0', status: 'draft', author: 'Lisa Park', date: '2023-12-12' },
+    { id: 9, code: 'POL-005', title: 'Data Integrity Policy', version: '1.0', status: 'effective', author: 'Robert Lee', date: '2023-11-25' },
+    { id: 10, code: 'SOP-004', title: 'CAPA Management', version: '3.1', status: 'pendingReview', author: 'Maria Garcia', date: '2023-12-18' },
+    { id: 11, code: 'WI-015', title: 'Cleaning Validation', version: '2.0', status: 'approved', author: 'James Wilson', date: '2023-12-20' },
+    { id: 12, code: 'FORM-025', title: 'Audit Checklist', version: '1.2', status: 'effective', author: 'Anna Martinez', date: '2023-12-22' },
   ];
+
+  // Paginate Data
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return allTableData.slice(startIndex, endIndex);
+  }, [currentPage]);
+
+  const totalPages = Math.ceil(allTableData.length / itemsPerPage);
 
   return (
     <div className="space-y-8 pb-10">
@@ -254,31 +283,45 @@ export const UIShowcase: React.FC = () => {
         <ResponsiveTableContainer className="border-0 shadow-none rounded-none">
           <ResponsiveTableWrapper>
             <Table>
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Code</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Ver</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Author</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                  <th className="sticky right-0 bg-slate-50 z-20 px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider w-[100px] shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+              <TableHeader>
+                <TableRow>
+                  <TableCell isHeader>No.</TableCell>
+                  <TableCell isHeader>
+                    Code
+                  </TableCell>
+                  <TableCell isHeader>
+                    Title
+                  </TableCell>
+                  <TableCell isHeader align="center">
+                    Version
+                  </TableCell>
+                  <TableCell isHeader>
+                    Status
+                  </TableCell>
+                  <TableCell isHeader>
+                    Author
+                  </TableCell>
+                  <TableCell isHeader>
+                    Date
+                  </TableCell>
+                  <TableCell isHeader sticky="right" align="right">
                     Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-slate-200">
-                {tableData.map((row) => (
-                  <tr key={row.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{row.code}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{row.title}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{row.version}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  </TableCell>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedData.map((row, index) => (
+                  <TableRow key={row.id}>
+                    <TableCell>{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
+                    <TableCell className="font-medium text-slate-900">{row.code}</TableCell>
+                    <TableCell className="text-slate-700">{row.title}</TableCell>
+                    <TableCell align="center" className="text-slate-500">{row.version}</TableCell>
+                    <TableCell>
                       <StatusBadge status={row.status as StatusType} />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{row.author}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{row.date}</td>
-                    <td className="sticky right-0 bg-white z-20 px-6 py-4 whitespace-nowrap text-right text-sm font-medium shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                    </TableCell>
+                    <TableCell className="text-slate-600">{row.author}</TableCell>
+                    <TableCell className="text-slate-500">{row.date}</TableCell>
+                    <TableCell sticky="right" align="right">
                       <div className="flex items-center justify-end gap-2">
                         <button className="text-slate-400 hover:text-blue-600 transition-colors">
                           <Eye className="h-4 w-4" />
@@ -290,23 +333,20 @@ export const UIShowcase: React.FC = () => {
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
+              </TableBody>
             </Table>
           </ResponsiveTableWrapper>
           
-          {/* Pagination */}
-          <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-            <div className="text-sm text-slate-500">
-              Showing <span className="font-medium">1</span> to <span className="font-medium">5</span> of <span className="font-medium">12</span> results
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled>Previous</Button>
-              <Button variant="outline" size="sm">Next</Button>
-            </div>
-          </div>
+          <TablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={allTableData.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+          />
         </ResponsiveTableContainer>
       </Card>
 

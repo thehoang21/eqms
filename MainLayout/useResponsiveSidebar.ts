@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 
 /**
  * Custom hook to manage responsive sidebar behavior
- * - Tablet Portrait: Auto-collapse
- * - Tablet Landscape & Desktop: Auto-expand
- * - Mobile: Close menu
+ * - Mobile & Tablet (< 1024px): Auto-collapse sidebar
+ * - Desktop (≥ 1024px): Auto-expand sidebar
  */
 export const useResponsiveSidebar = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -14,18 +13,14 @@ export const useResponsiveSidebar = () => {
     const handleResize = () => {
       const width = window.innerWidth;
       
-      // Tablet Portrait: Auto collapse
-      if (width >= 768 && width < 1024) {
+      // Mobile & Tablet Portrait: Auto collapse
+      if (width < 1024) {
         setIsSidebarCollapsed(true);
         setIsMobileMenuOpen(false);
       }
       // Tablet Landscape & Desktop: Auto expand
       else if (width >= 1024) {
         setIsSidebarCollapsed(false);
-        setIsMobileMenuOpen(false);
-      }
-      // Mobile: Close menu
-      else if (width < 768) {
         setIsMobileMenuOpen(false);
       }
     };

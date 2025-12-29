@@ -9,9 +9,10 @@ export const useNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Derive active state from URL
+  // Find nav item by path
   const activeItem = findNodeByPath(NAV_CONFIG, location.pathname);
-  const activeId = activeItem?.id || 'dashboard';
+  // If not found, fallback to empty string (forces sidebar to re-render)
+  const activeId = activeItem?.id || '';
 
   // Derive breadcrumbs from activeId
   const breadcrumbs: BreadcrumbItem[] = findNodeAndBreadcrumbs(NAV_CONFIG, activeId) || [
@@ -32,7 +33,9 @@ export const useNavigation = () => {
 
     const item = findItem(NAV_CONFIG, id);
     if (item?.path) {
-      navigate(item.path);
+      // Always navigate with absolute path
+      const targetPath = item.path.startsWith('/') ? item.path : `/${item.path}`;
+      navigate(targetPath);
     }
   };
 

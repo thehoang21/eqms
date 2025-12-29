@@ -30,7 +30,7 @@ import { Task, ModuleType } from "./types";
 import { TaskTable } from "./components/TaskTable";
 import { TaskDetailDrawer } from "./components/TaskDetailDrawer";
 import { ColumnCustomizer } from "./components/ColumnCustomizer";
-import { DateRangePicker } from "./components/DateRangePicker";
+import { DateTimePicker } from "../../components/ui/datetime-picker/DateTimePicker";
 import { TableColumn } from "./types";
 
 // --- Mock Data ---
@@ -578,13 +578,20 @@ const TaskFilters: React.FC<{
             onColumnsChange={onColumnsChange} 
           />
         </div>
-        <div className="xl:col-span-6 w-full">
-          <DateRangePicker
-            label="Date Range"
-            fromDate={fromDate}
-            toDate={toDate}
-            onFromDateChange={setFromDate}
-            onToDateChange={setToDate}
+        <div className="xl:col-span-3 w-full">
+          <DateTimePicker
+            label="From Date"
+            value={fromDate}
+            onChange={setFromDate}
+            placeholder="Select start date..."
+          />
+        </div>
+        <div className="xl:col-span-3 w-full">
+          <DateTimePicker
+            label="To Date"
+            value={toDate}
+            onChange={setToDate}
+            placeholder="Select end date..."
           />
         </div>
       </div>
@@ -647,7 +654,7 @@ export const MyTasksView: React.FC = () => {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 8;
+  const ITEMS_PER_PAGE = 10;
 
   // Column Customization State
   const [tableColumns, setTableColumns] = useState<TableColumn[]>([

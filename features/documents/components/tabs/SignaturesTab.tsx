@@ -1,13 +1,73 @@
 import React from "react";
-import { FileSignature } from "lucide-react";
+
+interface SignatureRecord {
+  actionBy: string;
+  actionByName: string;
+  actionOn: string;
+  actionOnValue: string;
+}
+
+const mockSignatures: SignatureRecord[] = [
+  {
+    actionBy: "Submitted By",
+    actionByName: "Gilad Kigel",
+    actionOn: "Submitted On (yyyy-MM-dd HH:mm:ss)",
+    actionOnValue: "2025-12-12 07:46:36"
+  },
+  {
+    actionBy: "Rejected By",
+    actionByName: "",
+    actionOn: "Rejected On (yyyy-MM-dd HH:mm:ss)",
+    actionOnValue: ""
+  },
+  {
+    actionBy: "Reviewed By",
+    actionByName: "Jane Smith",
+    actionOn: "Reviewed On (yyyy-MM-dd HH:mm:ss)",
+    actionOnValue: "2025-12-11 16:30:45"
+  },
+  {
+    actionBy: "Approved By",
+    actionByName: "John Doe",
+    actionOn: "Approved On (yyyy-MM-dd HH:mm:ss)",
+    actionOnValue: "2025-12-12 09:15:20"
+  },
+    {
+    actionBy: "Published By",
+    actionByName: "Gilad Kigel",
+    actionOn: "Published On (yyyy-MM-dd HH:mm:ss)",
+    actionOnValue: "2025-12-12 07:47:19"
+  }
+];
 
 export const SignaturesTab: React.FC = () => {
   return (
-    <div className="py-12 text-center">
-      <FileSignature className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-      <p className="text-slate-500 text-sm">
-        Signatures content will be displayed here
-      </p>
+    <div className="p-4 md:p-6 bg-white">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+        {mockSignatures.map((record, index) => (
+          <React.Fragment key={index}>
+            {/* Action By Column */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-slate-700">
+                {record.actionBy}
+              </label>
+              <div className="h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded text-sm text-slate-900">
+                {record.actionByName}
+              </div>
+            </div>
+
+            {/* Action On Column */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-slate-700">
+                {record.actionOn}
+              </label>
+              <div className="h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded text-sm text-slate-900">
+                {record.actionOnValue}
+              </div>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
     </div>
   );
 };

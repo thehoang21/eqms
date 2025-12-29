@@ -11,6 +11,7 @@ import {
     FileSignature,
     GitBranch,
     Info,
+    ArrowLeft,
 } from "lucide-react";
 import { cn } from "../../../components/ui/utils";
 import {
@@ -58,6 +59,7 @@ interface DocumentDetail {
 interface DetailDocumentViewProps {
     documentId: string;
     onBack: () => void;
+    initialTab?: TabType;
 }
 
 // --- Helper Functions ---
@@ -155,10 +157,11 @@ const MOCK_DOCUMENT: DocumentDetail = {
 export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
     documentId,
     onBack,
+    initialTab = "general",
 }) => {
     // In real app, fetch document by documentId
     const document = MOCK_DOCUMENT;
-    const [activeTab, setActiveTab] = useState<TabType>("general");
+    const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
     // Status workflow steps
     const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
@@ -217,6 +220,13 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                             <span className="text-slate-700 font-medium">{document.documentId}</span>
                         </div>
                     </div>
+                    <button
+                        onClick={onBack}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                        Back to List
+                    </button>
                 </div>
             </div>
 

@@ -1,12 +1,14 @@
 import React from 'react';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { Footer } from './components/Layout/Footer';
-import { AppRoutes } from './MainLayout/AppRoutes';
 import { useResponsiveSidebar } from './MainLayout/useResponsiveSidebar';
 import { useNavigation } from './MainLayout/useNavigation';
 
 export const MainLayout: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { isSidebarCollapsed, isMobileMenuOpen, toggleSidebar, setIsMobileMenuOpen } = useResponsiveSidebar();
   const { activeId, handleNavigate } = useNavigation();
 
@@ -33,6 +35,7 @@ export const MainLayout: React.FC = () => {
         <Header 
           onToggleSidebar={toggleSidebar}
           isSidebarCollapsed={isSidebarCollapsed}
+          onNavigateToProfile={() => navigate('/profile')}
         />
 
         {/* Scrollable Content Area */}
@@ -40,7 +43,7 @@ export const MainLayout: React.FC = () => {
           {/* Main Content: Responsive padding */}
           <main className="w-full p-4 md:p-6 lg:p-8 pb-6">
             <div className="w-full max-w-[1920px] mx-auto space-y-4 md:space-y-6">
-              <AppRoutes />
+              <Outlet key={location.pathname} />
             </div>
           </main>
         </div>

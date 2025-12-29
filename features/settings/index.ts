@@ -1,2 +1,2 @@
 // Export Settings components
-// export { SettingsView } from './SettingsView';
+export { ProfileView } from './components/ProfileView';

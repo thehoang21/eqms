@@ -1,0 +1,235 @@
+import React, { useState } from 'react';
+import { User, KeyRound } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
+import { cn } from '@/components/ui/utils';
+import { AccountInfoTab } from './AccountInfoTab';
+import { PasswordTab } from './PasswordTab';
+
+interface ProfileViewProps {
+    onBack?: () => void;
+}
+
+export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
+    const [activeTab, setActiveTab] = useState('account');
+    const [avatarPreview, setAvatarPreview] = useState<string>('');
+
+    // Password state
+    const [passwordData, setPasswordData] = useState({
+        newPassword: '',
+        confirmPassword: '',
+    });
+    const [showPasswords, setShowPasswords] = useState({
+        new: false,
+        confirm: false,
+    });
+    const [passwordErrors, setPasswordErrors] = useState({
+        newPassword: '',
+        confirmPassword: '',
+    });
+    const [logoutAllSessions, setLogoutAllSessions] = useState(true);
+
+    // Mock user data
+    const originalFormData = {
+        fullName: 'admin hệ thống 1',
+        username: 'adminhethong',
+        employeeId: 'EMP-2025-001',
+        jobTitle: 'Quality Assurance Manager',
+        department: 'Quality Assurance',
+        systemRole: 'Admin',
+        nationality: 'Việt Nam',
+        userGroup: 'Admin',
+        email: 'uyenntt.0703@gmail.com',
+        phone: '0911263575',
+    };
+
+    const [formData, setFormData] = useState(originalFormData);
+
+    // Check if there are any changes (email, phone, or password)
+    const hasChanges = 
+        formData.email !== originalFormData.email || 
+        formData.phone !== originalFormData.phone ||
+        passwordData.newPassword !== '' || 
+        passwordData.confirmPassword !== '';
+
+    // Permissions state
+    const [permissions] = useState({
+        printControlledCopy: true,
+        viewAuditTrail: true,
+        createTrainingTest: true,
+        manageUsers: true,
+        approveDocuments: false,
+    });
+
+    const handleInputChange = (field: string, value: string) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleAvatarChange = (file: File) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setAvatarPreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handlePasswordChange = (field: 'newPassword' | 'confirmPassword', value: string) => {
+        setPasswordData(prev => ({ ...prev, [field]: value }));
+        setPasswordErrors(prev => ({ ...prev, [field]: '' }));
+    };
+
+    const togglePasswordVisibility = (field: 'new' | 'confirm') => {
+        setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+    };
+
+    const validatePassword = (password: string) => {
+        const requirements = {
+            minLength: password.length >= 8,
+            hasUpperCase: /[A-Z]/.test(password),
+            hasLowerCase: /[a-z]/.test(password),
+            hasNumber: /[0-9]/.test(password),
+            hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+        };
+        return requirements;
+    };
+
+    const handleSubmit = () => {
+        let hasError = false;
+        const newErrors = {
+            newPassword: '',
+            confirmPassword: '',
+        };
+
+        // If user is changing password, validate it
+        if (passwordData.newPassword || passwordData.confirmPassword) {
+            if (!passwordData.newPassword) {
+                newErrors.newPassword = 'New password is required';
+                hasError = true;
+            } else {
+                const requirements = validatePassword(passwordData.newPassword);
+                if (!Object.values(requirements).every(Boolean)) {
+                    newErrors.newPassword = 'Password does not meet all requirements';
+                    hasError = true;
+                }
+            }
+
+            if (!passwordData.confirmPassword) {
+                newErrors.confirmPassword = 'Please confirm your new password';
+                hasError = true;
+            } else if (passwordData.newPassword !== passwordData.confirmPassword) {
+                newErrors.confirmPassword = 'Passwords do not match';
+                hasError = true;
+            }
+
+            setPasswordErrors(newErrors);
+        }
+
+        if (!hasError) {
+            console.log('Updating profile:', formData);
+            if (passwordData.newPassword) {
+                console.log('Changing password, Logout all sessions:', logoutAllSessions);
+            }
+            alert('Changes saved successfully!');
+            if (passwordData.newPassword) {
+                setPasswordData({
+                    newPassword: '',
+                    confirmPassword: '',
+                });
+            }
+        }
+    };
+
+    const handleCancel = () => {
+        if (onBack) {
+            onBack();
+        }
+    };
+
+    return (
+        <div className="space-y-4 md:space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-xl md:text-2xl font-bold text-slate-900">User Profile</h1>
+                    <p className="text-sm text-slate-500 mt-1">Manage your account information and preferences</p>
+                </div>
+            </div>
+
+            {/* Main Content Card */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                {/* Tab Navigation */}
+                <div className="border-b border-slate-200 bg-slate-50/50">
+                    <div className="flex">
+                        <button
+                            className={cn(
+                                "px-4 py-3.5 text-sm font-medium transition-colors relative flex items-center gap-2",
+                                activeTab === 'account'
+                                    ? "text-emerald-600 border-b-2 border-emerald-600 bg-white"
+                                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                            )}
+                            onClick={() => setActiveTab('account')}
+                        >
+                            <User className="h-4 w-4" />
+                            Account Information
+                        </button>
+                        <button
+                            className={cn(
+                                "px-4 py-3.5 text-sm font-medium transition-colors relative flex items-center gap-2",
+                                activeTab === 'password'
+                                    ? "text-emerald-600 border-b-2 border-emerald-600 bg-white"
+                                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                            )}
+                            onClick={() => setActiveTab('password')}
+                        >
+                            <KeyRound className="h-4 w-4" />
+                            Password
+                        </button>
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6 md:p-8">
+                    {activeTab === 'account' && (
+                        <AccountInfoTab
+                            formData={formData}
+                            permissions={permissions}
+                            avatarPreview={avatarPreview}
+                            onInputChange={handleInputChange}
+                            onAvatarChange={handleAvatarChange}
+                        />
+                    )}
+
+                    {activeTab === 'password' && (
+                        <PasswordTab
+                            passwordData={passwordData}
+                            showPasswords={showPasswords}
+                            passwordErrors={passwordErrors}
+                            logoutAllSessions={logoutAllSessions}
+                            onPasswordChange={handlePasswordChange}
+                            onTogglePasswordVisibility={togglePasswordVisibility}
+                            onLogoutAllSessionsChange={setLogoutAllSessions}
+                        />
+                    )}
+                </div>
+                {/* Action Buttons Footer */}
+                <div className="flex items-center justify-end gap-3 px-6 md:px-8 py-4 bg-slate-50 border-t border-slate-200">
+                    <Button
+                        size='sm'
+                        variant="outline"
+                        onClick={handleCancel}
+                        className="px-5 py-2 text-sm"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        size='sm'
+                        onClick={handleSubmit}
+                        disabled={!hasChanges}
+                        className="px-5 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Save Changes
+                    </Button>
+                </div>
+            </div>
+        </div>
+    );
+};

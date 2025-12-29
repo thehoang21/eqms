@@ -107,14 +107,14 @@ export const ColumnCustomizer: React.FC<ColumnCustomizerProps> = ({
             : "border-slate-200 hover:border-slate-300"
         )}
       >
-        <span className="text-slate-700 font-medium">Columns</span>
+        <span className="text-slate-700 font-medium">Customize Columns</span>
         <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-80 bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 left-0 top-full mt-2 z-50 w-full bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
           {/* Header */}
-          <div className="px-4 py-3 border-b border-slate-100">
+          <div className="px-4 py-2 border-b border-slate-100">
             <h3 className="text-sm font-semibold text-slate-700">Customize Columns</h3>
             <p className="text-xs text-slate-500 mt-0.5">Scroll to View, Drag to reorder</p>
           </div>
@@ -155,7 +155,7 @@ export const ColumnCustomizer: React.FC<ColumnCustomizerProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="px-3 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
+          <div className="px-3 py-2 rounded-b-lg border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
             <Button
               variant="outline"
               size="sm"

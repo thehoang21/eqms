@@ -7,7 +7,7 @@ export const DashboardView: React.FC = () => {
       {/* tiêu đề */}
       <div>
         {/* get tên người dùng */}
-         <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+         <h1 className="text-2xl font-bold tracking-tight text-slate-900">
              Welcome back, User!
          </h1>
          <p className="text-slate-500 mt-1 text-sm md:text-base">

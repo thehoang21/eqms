@@ -1,0 +1,235 @@
+import React, { useRef, ChangeEvent } from 'react';
+import { Camera, Edit2, User as UserIcon } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox/Checkbox';
+
+interface AccountInfoTabProps {
+    formData: {
+        fullName: string;
+        username: string;
+        employeeId: string;
+        jobTitle: string;
+        department: string;
+        systemRole: string;
+        nationality: string;
+        userGroup: string;
+        email: string;
+        phone: string;
+    };
+    permissions: {
+        printControlledCopy: boolean;
+        viewAuditTrail: boolean;
+        createTrainingTest: boolean;
+        manageUsers: boolean;
+        approveDocuments: boolean;
+    };
+    avatarPreview: string;
+    onInputChange: (field: string, value: string) => void;
+    onAvatarChange: (file: File) => void;
+}
+
+export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
+    formData,
+    permissions,
+    avatarPreview,
+    onInputChange,
+    onAvatarChange,
+}) => {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleAvatarClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Kích thước file vượt quá 5MB');
+                return;
+            }
+            // Validate file type
+            if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+                alert('Chỉ chấp nhận file .png hoặc .jpg');
+                return;
+            }
+            onAvatarChange(file);
+        }
+    };
+
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            {/* Left Column - Avatar Section */}
+            <div className="lg:col-span-3">
+                <div className="flex flex-col items-center">
+                    {/* Avatar */}
+                    <div className="relative group">
+                        <div className="h-32 w-32 rounded-full bg-slate-100 overflow-hidden border-2 border-slate-200 flex items-center justify-center">
+                            {avatarPreview ? (
+                                <img
+                                    src={avatarPreview}
+                                    alt="User Avatar"
+                                    className="h-full w-full object-cover"
+                                    onError={(e) => {
+                                        e.currentTarget.style.display = 'none';
+                                        e.currentTarget.parentElement!.innerHTML = '<div class="h-full w-full flex items-center justify-center bg-emerald-50"><svg class="h-16 w-16 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></div>';
+                                    }}
+                                />
+                            ) : (
+                                <UserIcon className="h-16 w-16 text-emerald-600" strokeWidth={1.5} />
+                            )}
+                        </div>
+                        {/* Camera Button */}
+                        <button
+                            onClick={handleAvatarClick}
+                            className="absolute bottom-1 right-1 h-9 w-9 rounded-full bg-white border border-slate-300 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200"
+                            title="Change avatar"
+                        >
+                            <Camera className="h-4 w-4 text-slate-600 hover:text-emerald-600" />
+                        </button>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".png,.jpg,.jpeg"
+                            className="hidden"
+                            onChange={handleFileChange}
+                        />
+                    </div>
+
+                    {/* Upload Info */}
+                    <div className="mt-4 text-center">
+                        <p className="text-xs text-slate-500 leading-relaxed">
+                            Allowed: <span className="font-medium text-slate-700">.png, .jpg</span>
+                        </p>
+                        <p className="text-xs text-slate-500">
+                            Max size: <span className="font-medium text-slate-700">5MB</span>
+                        </p>
+                    </div>
+
+                    {/* Privacy Link */}
+                    <div className="mt-6 pt-6 border-t border-slate-200 w-full">
+                        <a
+                            href="#"
+                            className="text-xs text-emerald-600 hover:text-emerald-700 hover:underline inline-flex items-center gap-1"
+                        >
+                            <span>Data Privacy Request</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {/* Right Column - Form Fields */}
+            <div className="lg:col-span-9">
+                <div className="space-y-5">
+                    {/* Basic Information Section */}
+                    <div>
+                        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">Basic Information</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
+                                <input type="text" value={formData.fullName} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
+                                <input type="text" value={formData.username} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Employee ID</label>
+                                <input type="text" value={formData.employeeId} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Nationality</label>
+                                <input type="text" value={formData.nationality} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Role & Permissions Section */}
+                    <div>
+                        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">Role & Permissions</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Job Title</label>
+                                <input type="text" value={formData.jobTitle} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Department</label>
+                                <input type="text" value={formData.department} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">System Role</label>
+                                <input type="text" value={formData.systemRole} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                            </div>
+                        </div>
+
+                        {/* Permissions List */}
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">Permissions</label>
+                            <div className="space-y-2.5 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                {[
+                                    { id: 'perm-print', checked: permissions.printControlledCopy, label: 'Print Controlled Copy', desc: 'Allow printing of controlled document copies' },
+                                    { id: 'perm-audit', checked: permissions.viewAuditTrail, label: 'View System Audit Trail', desc: 'Access to full system audit trail and logs' },
+                                    { id: 'perm-training', checked: permissions.createTrainingTest, label: 'Create Training Tests', desc: 'Create and manage training tests and assessments' },
+                                    { id: 'perm-users', checked: permissions.manageUsers, label: 'Manage Users', desc: 'Create, edit, and manage user accounts and roles' },
+                                    { id: 'perm-approve', checked: permissions.approveDocuments, label: 'Approve Documents', desc: 'Final approval authority for document workflows' },
+                                ].map((perm) => (
+                                    <div key={perm.id} className="flex items-start gap-2">
+                                        <Checkbox id={perm.id} checked={perm.checked} disabled className="mt-0.5" />
+                                        <label htmlFor={perm.id} className="text-sm text-slate-700 flex-1">
+                                            <span className="font-medium">{perm.label}</span>
+                                            <span className="block text-xs text-slate-500 mt-0.5">{perm.desc}</span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="mt-2 text-xs text-slate-500">
+                                These permissions determine what actions you can perform in the system and are used for audit trail tracking.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Contact Information Section */}
+                    <div>
+                        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">Contact Information</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                                    Email Address <span className="text-red-500">*</span>
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => onInputChange('email', e.target.value)}
+                                        className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                        placeholder="Enter email"
+                                    />
+                                    <button className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit email">
+                                        <Edit2 className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                                    Phone Number <span className="text-red-500">*</span>
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="tel"
+                                        value={formData.phone}
+                                        onChange={(e) => onInputChange('phone', e.target.value)}
+                                        className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                        placeholder="Enter phone number"
+                                    />
+                                    <button className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit phone">
+                                        <Edit2 className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};

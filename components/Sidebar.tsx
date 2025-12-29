@@ -83,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           style={{ paddingLeft: isCollapsed ? 0 : `${paddingLeft}px` }}
         >
           {level === 0 && isActive && (
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r"></div>
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
           )}
 
           <div className={cn("flex items-center justify-center transition-all duration-300 relative", isCollapsed ? "w-full" : "w-auto")}>
@@ -105,7 +105,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             "overflow-hidden transition-all duration-300 ease-in-out whitespace-nowrap",
             isCollapsed ? "max-w-0 opacity-0 ml-0" : "max-w-[200px] opacity-100 ml-3"
           )}>
-            <span className={cn("truncate block transition-all text-sx md:text-sm", isActive && level === 0 && "font-semibold")}>
+            <span className={cn("truncate block transition-all text-sm", isActive && level === 0 && "font-semibold")}>
               {item.label}
             </span>
           </div>

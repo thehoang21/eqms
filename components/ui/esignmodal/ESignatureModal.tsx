@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Lock, AlertCircle } from 'lucide-react';
-import { Button } from './button/Button';
+import { Button } from '../button/Button';
 
 interface ESignatureModalProps {
   isOpen: boolean;
@@ -67,7 +67,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">Signer ID</label>
+            <label className="text-sm font-medium text-slate-700">Username <span className="text-red-500">*</span></label>
             <input 
               type="text" 
               value={username} 
@@ -82,7 +82,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm"
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
               placeholder="Enter your password"
             />
           </div>
@@ -92,7 +92,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
             <textarea 
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm min-h-[80px]"
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm min-h-[80px]"
               placeholder="e.g., Reviewed and approved for release..."
             />
           </div>

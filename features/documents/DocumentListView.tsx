@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   FileText,
@@ -10,16 +11,37 @@ import {
   Download,
   History,
   Plus,
+  GripVertical,
+  ChevronDown,
+  Edit,
+  Send,
+  CheckCircle,
+  XCircle,
+  Archive,
+  FileCheck,
+  ClipboardList,
+  Info,
 } from "lucide-react";
 import { Button } from "../../components/ui/button/Button";
 import { Select } from "../../components/ui/select/Select";
+import { Checkbox } from "../../components/ui/checkbox/Checkbox";
 import { cn } from "../../components/ui/utils";
-import { NewDocumentView } from "./new-document";
+import { DateTimePicker } from "../../components/ui/datetime-picker/DateTimePicker";
+import { DocumentFilters } from "./components/DocumentFilters";
+import { DetailDocumentView } from "./components/DetailDocumentView";
 
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+
+interface TableColumn {
+  id: string;
+  label: string;
+  visible: boolean;
+  order: number;
+  locked?: boolean;
+}
 
 interface Document {
   id: string;
@@ -282,7 +304,7 @@ interface DropdownMenuProps {
   isOpen: boolean;
   onClose: () => void;
   position: { top: number; left: number };
-  onViewDocument?: (documentId: string) => void;
+  onViewDocument?: (documentId: string, tab?: string) => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -294,89 +316,421 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 }) => {
   if (!isOpen) return null;
 
+  // Dynamic menu items based on document status
+  const getMenuItems = () => {
+    const items = [];
+
+    // Always available: View Details
+    items.push({
+      icon: Info,
+      label: "View Details",
+      onClick: () => {
+        onViewDocument?.(document.id);
+        onClose();
+      },
+      color: "text-slate-700"
+    });
+
+    // Status-specific actions
+    switch (document.status) {
+      case "Draft":
+        items.push(
+          {
+            icon: Edit,
+            label: "Edit Document",
+            onClick: () => {
+              console.log("Edit document:", document.id);
+              onClose();
+            },
+            color: "text-slate-700"
+          },
+          {
+            icon: Send,
+            label: "Submit for Review",
+            onClick: () => {
+              console.log("Submit for review:", document.id);
+              onClose();
+            },
+            color: "text-blue-700"
+          }
+        );
+        break;
+
+      case "Pending Review":
+        items.push(
+          {
+            icon: FileCheck,
+            label: "Review Document",
+            onClick: () => {
+              console.log("Review document:", document.id);
+              onClose();
+            },
+            color: "text-purple-700"
+          },
+          {
+            icon: XCircle,
+            label: "Reject",
+            onClick: () => {
+              console.log("Reject document:", document.id);
+              onClose();
+            },
+            color: "text-red-700"
+          }
+        );
+        break;
+
+      case "Pending Approval":
+        items.push(
+          {
+            icon: CheckCircle,
+            label: "Approve Document",
+            onClick: () => {
+              console.log("Approve document:", document.id);
+              onClose();
+            },
+            color: "text-emerald-700"
+          },
+          {
+            icon: XCircle,
+            label: "Reject",
+            onClick: () => {
+              console.log("Reject document:", document.id);
+              onClose();
+            },
+            color: "text-red-700"
+          }
+        );
+        break;
+
+      case "Approved":
+      case "Effective":
+        items.push(
+          {
+            icon: Download,
+            label: "Download PDF",
+            onClick: () => {
+              console.log("Download document:", document.id);
+              onClose();
+            },
+            color: "text-slate-700"
+          },
+          {
+            icon: Edit,
+            label: "Request Change",
+            onClick: () => {
+              console.log("Request change:", document.id);
+              onClose();
+            },
+            color: "text-amber-700"
+          }
+        );
+        break;
+
+      case "Archive":
+        items.push(
+          {
+            icon: Download,
+            label: "Download PDF",
+            onClick: () => {
+              console.log("Download document:", document.id);
+              onClose();
+            },
+            color: "text-slate-700"
+          }
+        );
+        break;
+    }
+
+    // Always available: Version History & Audit Trail
+    items.push(
+      {
+        icon: History,
+        label: "View Audit Trail",
+        onClick: () => {
+          onViewDocument?.(document.id, "audit");
+          onClose();
+        },
+        color: "text-slate-700"
+      }
+    );
+
+    return items;
+  };
+
+  const menuItems = getMenuItems();
+
   return createPortal(
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40"
-        onClick={onClose}
+        className="fixed inset-0 z-40 animate-in fade-in duration-150"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
         aria-hidden="true"
       />
       {/* Menu */}
       <div
-        className="fixed z-50 min-w-[200px] rounded-lg border border-slate-200 bg-white shadow-lg"
+        className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
         }}
       >
         <div className="py-1">
-          <button
-            onClick={() => {
-              console.log("View document:", document.id);
-              onViewDocument?.(document.id);
-              onClose();
-            }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-          >
-            <Eye className="h-4 w-4 text-slate-500" />
-            <span>View Details</span>
-          </button>
-          <button
-            onClick={() => {
-              console.log("Download document:", document.id);
-              onClose();
-            }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-          >
-            <Download className="h-4 w-4 text-slate-500" />
-            <span>Download PDF</span>
-          </button>
-          <button
-            onClick={() => {
-              console.log("View history:", document.id);
-              onClose();
-            }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-          >
-            <History className="h-4 w-4 text-slate-500" />
-            <span>Version History</span>
-          </button>
+          {menuItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  item.onClick();
+                }}
+                className={cn(
+                  "flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors",
+                  item.color,
+                  "hover:bg-slate-50 active:bg-slate-100"
+                )}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">{item.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </>,
-    // document.body
+    window.document.body
+  );
+};
+
+// --- Column Customizer Component ---
+
+interface DocumentColumnCustomizerProps {
+  columns: TableColumn[];
+  onColumnsChange: (columns: TableColumn[]) => void;
+}
+
+const DocumentColumnCustomizer: React.FC<DocumentColumnCustomizerProps> = ({
+  columns,
+  onColumnsChange,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const reorderableColumns = columns.filter(col => !col.locked);
+  const lockedColumns = columns.filter(col => col.locked);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+
+    const newColumns = [...reorderableColumns];
+    const draggedColumn = newColumns[draggedIndex];
+    newColumns.splice(draggedIndex, 1);
+    newColumns.splice(index, 0, draggedColumn);
+
+    const updatedReorderable = newColumns.map((col, idx) => ({
+      ...col,
+      order: idx + 1,
+    }));
+
+    const finalColumns = [
+      ...lockedColumns,
+      ...updatedReorderable,
+    ].sort((a, b) => a.order - b.order);
+
+    onColumnsChange(finalColumns);
+    setDraggedIndex(index);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
+  const toggleVisibility = (columnId: string) => {
+    const updatedColumns = columns.map(col =>
+      col.id === columnId ? { ...col, visible: !col.visible } : col
+    );
+    onColumnsChange(updatedColumns);
+  };
+
+  const resetToDefault = () => {
+    const defaultColumns: TableColumn[] = [
+      { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
+      { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
+      { id: 'created', label: 'Created', visible: true, order: 2 },
+      { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
+      { id: 'title', label: 'Document Name', visible: true, order: 4 },
+      { id: 'status', label: 'State', visible: true, order: 5 },
+      { id: 'type', label: 'Document Type', visible: true, order: 6 },
+      { id: 'department', label: 'Department', visible: true, order: 7 },
+      { id: 'author', label: 'Author', visible: true, order: 8 },
+      { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
+      { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
+      { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+    ];
+    onColumnsChange(defaultColumns);
+  };
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={cn(
+          "flex items-center justify-between gap-2 w-full px-3 h-11 border rounded-md bg-white text-sm transition-all",
+          isOpen 
+            ? "border-emerald-500 ring-2 ring-emerald-500" 
+            : "border-slate-200 hover:border-slate-300"
+        )}
+      >
+        <span className="text-slate-700 font-medium">Customize Columns</span>
+        <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 left-0 top-full mt-2 z-50 w-full bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
+          <div className="px-4 py-2 border-b border-slate-100">
+            <h3 className="text-sm font-semibold text-slate-700">Customize Columns</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Scroll to View, Drag to reorder</p>
+          </div>
+
+          <div className="p-2 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+            {reorderableColumns.map((column, index) => (
+              <div
+                key={column.id}
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDragEnd={handleDragEnd}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 mb-1 rounded-md border border-transparent transition-all cursor-move group',
+                  draggedIndex === index
+                    ? 'bg-blue-50 border-blue-200 opacity-50'
+                    : 'hover:bg-slate-50'
+                )}
+              >
+                <Checkbox
+                  id={`column-${column.id}`}
+                  checked={column.visible}
+                  onChange={() => toggleVisibility(column.id)}
+                  className="flex-shrink-0"
+                />
+                
+                <span className={cn(
+                  "text-sm font-medium flex-1",
+                  column.visible ? "text-slate-700" : "text-slate-400"
+                )}>
+                  {column.label}
+                </span>
+
+                <GripVertical className="h-4 w-4 text-slate-400 flex-shrink-0" />
+              </div>
+            ))}
+          </div>
+
+          <div className="px-3 py-2 rounded-b-lg border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={resetToDefault}
+              className="flex-1"
+            >
+              Reset
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              className="flex-1"
+            >
+              Done
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
 // --- Main Component ---
 
 interface DocumentListViewProps {
-  onViewDocument?: (documentId: string) => void;
+  onViewDocument?: (documentId: string, tab?: string) => void;
 }
 
 export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocument }) => {
+  const navigate = useNavigate();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<DocumentStatus | "All">("All");
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("All");
+  const [createdFromDate, setCreatedFromDate] = useState<string>("");
+  const [createdToDate, setCreatedToDate] = useState<string>("");
+  const [effectiveFromDate, setEffectiveFromDate] = useState<string>("");
+  const [effectiveToDate, setEffectiveToDate] = useState<string>("");
+  const [validFromDate, setValidFromDate] = useState<string>("");
+  const [validToDate, setValidToDate] = useState<string>("");
+  const [authorFilter, setAuthorFilter] = useState<string>("All");
+  const [versionFilter, setVersionFilter] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [columns, setColumns] = useState<TableColumn[]>([
+    { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
+    { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
+    { id: 'created', label: 'Created', visible: true, order: 2 },
+    { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
+    { id: 'title', label: 'Document Name', visible: true, order: 4 },
+    { id: 'status', label: 'State', visible: true, order: 5 },
+    { id: 'type', label: 'Document Type', visible: true, order: 6 },
+    { id: 'department', label: 'Department', visible: true, order: 7 },
+    { id: 'author', label: 'Author', visible: true, order: 8 },
+    { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
+    { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
+    { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+  ]);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
-  const [showNewDocument, setShowNewDocument] = useState(false);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
+  const [selectedDocumentTab, setSelectedDocumentTab] = useState<string>("general");
+  const [isLoading, setIsLoading] = useState(true);
 
   const itemsPerPage = 10;
 
   const handleNewDocument = () => {
-    setShowNewDocument(true);
+    navigate("/documents/all/new");
   };
 
-  const handleSaveDocument = async (data: any) => {
-    console.log("Saving new document:", data);
-    // TODO: Implement API call to save document
-    // After successful save, go back to list
-    setShowNewDocument(false);
+  const handleViewDocument = (documentId: string, tab: string = "general") => {
+    setSelectedDocumentId(documentId);
+    setSelectedDocumentTab(tab);
   };
+
+  // Simulate loading data
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Filter documents
   const filteredDocuments = useMemo(() => {
@@ -390,10 +744,34 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
 
       const matchesStatus = statusFilter === "All" || doc.status === statusFilter;
       const matchesType = typeFilter === "All" || doc.type === typeFilter;
+      const matchesDepartment = departmentFilter === "All" || doc.department === departmentFilter;
+      const matchesAuthor = authorFilter === "All" || doc.author === authorFilter;
+      const matchesVersion = !versionFilter || doc.version.toLowerCase().includes(versionFilter.toLowerCase());
 
-      return matchesSearch && matchesStatus && matchesType;
+      // Date filtering
+      const docCreatedDate = new Date(doc.created);
+      const matchesCreatedFrom = !createdFromDate || docCreatedDate >= new Date(createdFromDate);
+      const matchesCreatedTo = !createdToDate || docCreatedDate <= new Date(createdToDate);
+
+      const docEffectiveDate = new Date(doc.effectiveDate);
+      const matchesEffectiveFrom = !effectiveFromDate || docEffectiveDate >= new Date(effectiveFromDate);
+      const matchesEffectiveTo = !effectiveToDate || docEffectiveDate <= new Date(effectiveToDate);
+
+      const docValidUntilDate = new Date(doc.validUntil);
+      const matchesValidFrom = !validFromDate || docValidUntilDate >= new Date(validFromDate);
+      const matchesValidTo = !validToDate || docValidUntilDate <= new Date(validToDate);
+
+      return matchesSearch && matchesStatus && matchesType && matchesDepartment && matchesAuthor && matchesVersion &&
+             matchesCreatedFrom && matchesCreatedTo && matchesEffectiveFrom && matchesEffectiveTo &&
+             matchesValidFrom && matchesValidTo;
     });
-  }, [searchQuery, statusFilter, typeFilter]);
+  }, [searchQuery, statusFilter, typeFilter, departmentFilter, authorFilter, versionFilter,
+      createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, validFromDate, validToDate]);
+
+  // Visible columns sorted by order
+  const visibleColumns = useMemo(() => {
+    return columns.filter(col => col.visible).sort((a, b) => a.order - b.order);
+  }, [columns]);
 
   // Pagination
   const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
@@ -426,12 +804,16 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
     return buttonRefs.current[docId];
   };
 
-  // Show NewDocumentView if needed
-  if (showNewDocument) {
+  // Show DetailDocumentView if document is selected
+  if (selectedDocumentId) {
     return (
-      <NewDocumentView
-        onBack={() => setShowNewDocument(false)}
-        onSave={handleSaveDocument}
+      <DetailDocumentView
+        documentId={selectedDocumentId}
+        onBack={() => {
+          setSelectedDocumentId(null);
+          setSelectedDocumentTab("general");
+        }}
+        initialTab={selectedDocumentTab as any}
       />
     );
   }
@@ -452,238 +834,263 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
             <span className="text-slate-700 font-medium">All Documents</span>
           </div>
         </div>
-        <Button 
+        <Button
+          size="sm"
           onClick={handleNewDocument}
           className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
         >
-          <Plus className="mr-2 h-4 w-4" />
+          <FileText className="mr-2 h-4 w-4" />
           New Document
         </Button>
       </div>
 
-      {/* Filters Card - Match MyTasksView style */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-          {/* Search - Takes more space */}
-          <div className="xl:col-span-6 w-full">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-              Search
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <Search className="h-4.5 w-4.5 text-slate-400" />
-              </div>
-              <input
-                type="text"
-                 placeholder="Search by document name, ID, author, department, opened by..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="block w-full pl-10 pr-3 h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
-              />
-            </div>
-          </div>
-
-          {/* Status Filter */}
-          <div className="xl:col-span-3 w-full">
-            <Select
-              label="Status"
-              value={statusFilter}
-              onChange={(value) => {
-                setStatusFilter(value as DocumentStatus | "All");
-                setCurrentPage(1);
-              }}
-              options={[
-                { label: "All", value: "All" },
-                { label: "Draft", value: "Draft"},
-                { label: "Pending Review", value: "Pending Review"},
-                { label: "Pending Approval", value: "Pending Approval"},
-                { label: "Approved", value: "Approved"},
-                { label: "Effective", value: "Effective"},
-                { label: "Archive", value: "Archive"},
-              ]}
-              placeholder="Select status"
-              searchPlaceholder="Search status..."
-            />
-          </div>
-
-          {/* Type Filter */}
-          <div className="xl:col-span-3 w-full">
-            <Select
-              label="Document Type"
-              value={typeFilter}
-              onChange={(value) => {
-                setTypeFilter(value as DocumentType | "All");
-                setCurrentPage(1);
-              }}
-              options={[
-                { label: "All", value: "All" },
-                { label: "SOP", value: "SOP" },
-                { label: "Policy", value: "Policy" },
-                { label: "Form", value: "Form" },
-                { label: "Report", value: "Report" },
-                { label: "Specification", value: "Specification" },
-                { label: "Protocol", value: "Protocol" },
-              ]}
-              placeholder="Select type"
-              searchPlaceholder="Search type..."
-            />
-          </div>
-        </div>
-      </div>
+      {/* Filters Card */}
+      <DocumentFilters
+        searchQuery={searchQuery}
+        onSearchChange={(value) => {
+          setSearchQuery(value);
+          setCurrentPage(1);
+        }}
+        statusFilter={statusFilter}
+        onStatusChange={(value) => {
+          setStatusFilter(value);
+          setCurrentPage(1);
+        }}
+        typeFilter={typeFilter}
+        onTypeChange={(value) => {
+          setTypeFilter(value);
+          setCurrentPage(1);
+        }}
+        departmentFilter={departmentFilter}
+        onDepartmentChange={(value) => {
+          setDepartmentFilter(value);
+          setCurrentPage(1);
+        }}
+        authorFilter={authorFilter}
+        onAuthorChange={(value) => {
+          setAuthorFilter(value);
+          setCurrentPage(1);
+        }}
+        createdFromDate={createdFromDate}
+        onCreatedFromDateChange={(dateStr) => {
+          setCreatedFromDate(dateStr);
+          setCurrentPage(1);
+        }}
+        createdToDate={createdToDate}
+        onCreatedToDateChange={(dateStr) => {
+          setCreatedToDate(dateStr);
+          setCurrentPage(1);
+        }}
+        effectiveFromDate={effectiveFromDate}
+        onEffectiveFromDateChange={(dateStr) => {
+          setEffectiveFromDate(dateStr);
+          setCurrentPage(1);
+        }}
+        effectiveToDate={effectiveToDate}
+        onEffectiveToDateChange={(dateStr) => {
+          setEffectiveToDate(dateStr);
+          setCurrentPage(1);
+        }}
+        validFromDate={validFromDate}
+        onValidFromDateChange={(dateStr) => {
+          setValidFromDate(dateStr);
+          setCurrentPage(1);
+        }}
+        validToDate={validToDate}
+        onValidToDateChange={(dateStr) => {
+          setValidToDate(dateStr);
+          setCurrentPage(1);
+        }}
+        columns={columns}
+        onColumnsChange={setColumns}
+        ColumnCustomizerComponent={DocumentColumnCustomizer}
+      />
 
       {/* Table Container - Match MyTasksView wrapper */}
       <div className="flex-1 min-h-0 flex flex-col">
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
-          {paginatedDocuments.length > 0 ? (
+          {isLoading ? (
+            // Loading Skeleton
+            <div className="flex-1">
+              {/* Header Skeleton */}
+              <div className="bg-slate-50/80 border-b border-slate-200 px-4 py-3.5">
+                <div className="flex gap-4">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="h-4 bg-slate-200 rounded animate-pulse" style={{ width: `${80 + Math.random() * 40}px` }} />
+                  ))}
+                </div>
+              </div>
+              {/* Rows Skeleton */}
+              {Array.from({ length: 10 }).map((_, rowIndex) => (
+                <div key={rowIndex} className="border-b border-slate-100 px-4 py-3.5">
+                  <div className="flex gap-4 items-center">
+                    <div className="h-4 w-8 bg-slate-200 rounded animate-pulse" />
+                    <div className="h-4 flex-1 bg-slate-200 rounded animate-pulse" style={{ maxWidth: '150px' }} />
+                    <div className="h-4 flex-1 bg-slate-200 rounded animate-pulse" style={{ maxWidth: '200px' }} />
+                    <div className="h-4 flex-1 bg-slate-200 rounded animate-pulse" style={{ maxWidth: '120px' }} />
+                    <div className="h-6 w-20 bg-slate-200 rounded-full animate-pulse" />
+                    <div className="h-4 w-16 bg-slate-200 rounded animate-pulse" />
+                  </div>
+                </div>
+              ))}
+              {/* Pagination Skeleton */}
+              <div className="border-t border-slate-200 px-6 py-4 flex justify-between items-center">
+                <div className="h-4 w-48 bg-slate-200 rounded animate-pulse" />
+                <div className="flex gap-2">
+                  <div className="h-8 w-20 bg-slate-200 rounded animate-pulse" />
+                  <div className="h-8 w-20 bg-slate-200 rounded animate-pulse" />
+                </div>
+              </div>
+            </div>
+          ) : paginatedDocuments.length > 0 ? (
             <>
               {/* Table with Horizontal Scroll */}
               <div className="overflow-x-auto flex-1">
           <table className="w-full">
             <thead className="bg-slate-50/80 border-b border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
               <tr>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  No.
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Document Number
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Created
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Opened By
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap min-w-[250px]">
-                  Document Name
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  State
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Document Type
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Department
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Author
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Effective Date
-                </th>
-                <th className="text-left py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Valid Until
-                </th>
-                <th className="sticky right-0 bg-slate-50/80 text-center py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap z-40 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
-                  Action
-                </th>
+                {visibleColumns.map((column) => (
+                  <th
+                    key={column.id}
+                    className={cn(
+                      "py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
+                      column.id === 'action' 
+                        ? "sticky right-0 bg-slate-50/80 text-center z-40 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm"
+                        : column.id === 'no'
+                        ? "text-left"
+                        : column.id === 'title'
+                        ? "text-left min-w-[250px]"
+                        : "text-left"
+                    )}
+                  >
+                    {column.label}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {paginatedDocuments.map((doc) => {
+              {paginatedDocuments.map((doc, docIndex) => {
+                const renderCell = (columnId: string) => {
+                  const cellContent = (() => {
+                    switch (columnId) {
+                      case 'no':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-left text-slate-700">
+                            {(currentPage - 1) * itemsPerPage + docIndex + 1}
+                          </td>
+                        );
+                      case 'documentId':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                            <span className="font-medium text-emerald-600">{doc.documentId}</span>
+                          </td>
+                        );
+                      case 'created':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                            {formatDate(doc.created)}
+                          </td>
+                        );
+                      case 'openedBy':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                            {doc.openedBy}
+                          </td>
+                        );
+                      case 'title':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                            <span className="font-medium text-slate-900">{doc.title}</span>
+                          </td>
+                        );
+                      case 'status':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                            <span className={cn(
+                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border",
+                              getStatusColor(doc.status)
+                            )}>
+                              {doc.status}
+                            </span>
+                          </td>
+                        );
+                      case 'type':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                            <span className={cn(
+                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border",
+                              getTypeColor(doc.type)
+                            )}>
+                              {doc.type}
+                            </span>
+                          </td>
+                        );
+                      case 'department':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                            {doc.department}
+                          </td>
+                        );
+                      case 'author':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                            {doc.author}
+                          </td>
+                        );
+                      case 'effectiveDate':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                            {formatDate(doc.effectiveDate)}
+                          </td>
+                        );
+                      case 'validUntil':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                            {formatDate(doc.validUntil)}
+                          </td>
+                        );
+                      case 'action':
+                        return (
+                          <td 
+                            key={columnId} 
+                            onClick={(e) => e.stopPropagation()}
+                            className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                          >
+                            <button
+                              ref={getButtonRef(doc.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDropdownToggle(doc.id, e);
+                              }}
+                              className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                              aria-label="More actions"
+                            >
+                              <MoreVertical className="h-4 w-4 text-slate-600" />
+                            </button>
+                            <DropdownMenu
+                              document={doc}
+                              triggerRef={getButtonRef(doc.id)}
+                              isOpen={openDropdownId === doc.id}
+                              onClose={() => setOpenDropdownId(null)}
+                              position={dropdownPosition}
+                              onViewDocument={handleViewDocument}
+                            />
+                          </td>
+                        );
+                      default:
+                        return null;
+                    }
+                  })();
+                  return cellContent;
+                };
+
                 return (
                   <tr
                     key={doc.id}
-                    onClick={() => onViewDocument?.(doc.id)}
+                    onClick={() => handleViewDocument(doc.id)}
                     className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
                   >
-                    {/* No. */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center text-slate-700">
-                      {(currentPage - 1) * itemsPerPage + paginatedDocuments.indexOf(doc) + 1}
-                    </td>
-                      {/* Document Number */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-emerald-600">{doc.documentId}</span>
-                      </div>
-                    </td>
-                    
-                      {/* Created */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                        {formatDate(doc.created)}
-                    </td>
-                    
-                      {/* Opened By */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                        {doc.openedBy}
-                    </td>
-                    
-                      {/* Document Name */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-slate-900">{doc.title}</span>
-                        </div>
-                    </td>
-                    
-                      {/* State */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                      <span
-                        className={cn(
-                            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border",
-                          getStatusColor(doc.status)
-                        )}
-                      >
-                        {doc.status}
-                      </span>
-                    </td>
-                    
-                      {/* Document Type */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span
-                          className={cn(
-                            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border",
-                            getTypeColor(doc.type)
-                          )}
-                        >
-                          {doc.type}
-                        </span>
-                    </td>
-                    
-                      {/* Department */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
-                        {doc.department}
-                    </td>
-                    
-                      {/* Author */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                        {doc.author}
-                    </td>
-                    
-                      {/* Effective Date */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                        {formatDate(doc.effectiveDate)}
-                      </td>
-                    
-                      {/* Valid Until */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                        {formatDate(doc.validUntil)}
-                      </td>
-                    
-                      {/* Action - Sticky Column */}
-                      <td className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50">
-                      <button
-                        ref={getButtonRef(doc.id)}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDropdownToggle(doc.id, e);
-                        }}
-                        className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
-                        aria-label="More actions"
-                      >
-                        <MoreVertical className="h-4 w-4 text-slate-600" />
-                      </button>
-                      <DropdownMenu
-                        document={doc}
-                        triggerRef={getButtonRef(doc.id)}
-                        isOpen={openDropdownId === doc.id}
-                        onClose={() => setOpenDropdownId(null)}
-                        position={dropdownPosition}
-                        onViewDocument={onViewDocument}
-                      />
-                    </td>
+                    {visibleColumns.map((column) => renderCell(column.id))}
                   </tr>
                 );
               })}

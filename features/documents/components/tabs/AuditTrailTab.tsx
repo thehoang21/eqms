@@ -17,6 +17,7 @@ import {
 import { cn } from "@/components/ui/utils";
 import { Select, SelectOption } from "@/components/ui/select/Select";
 import { Button } from "@/components/ui/button/Button";
+import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 
 interface AuditEntry {
   id: string;
@@ -134,9 +135,29 @@ const actionTypeOptions: SelectOption[] = [
   { value: "print", label: "Print"}
 ];
 
+const userOptions: SelectOption[] = [
+  { value: "all", label: "All Users" },
+  { value: "Robert Johnson", label: "Robert Johnson" },
+  { value: "Jane Smith", label: "Jane Smith" },
+  { value: "John Doe", label: "John Doe" },
+  { value: "Sarah Williams", label: "Sarah Williams" },
+  { value: "Michael Chen", label: "Michael Chen" }
+];
+
+const departmentOptions: SelectOption[] = [
+  { value: "all", label: "All Departments" },
+  { value: "Quality Assurance", label: "Quality Assurance" },
+  { value: "Quality Control", label: "Quality Control" },
+  { value: "Human Resources", label: "Human Resources" }
+];
+
 export const AuditTrailTab: React.FC = () => {
   const [selectedAction, setSelectedAction] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedUser, setSelectedUser] = useState("all");
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [selectedEntry, setSelectedEntry] = useState<AuditEntry | null>(null);
   const [showChangesModal, setShowChangesModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -146,7 +167,16 @@ export const AuditTrailTab: React.FC = () => {
     const matchesAction = selectedAction === "all" || entry.actionType === selectedAction;
     const matchesSearch = entry.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          entry.action.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesAction && matchesSearch;
+    const matchesUser = selectedUser === "all" || entry.user.name === selectedUser;
+    const matchesDepartment = selectedDepartment === "all" || entry.user.department === selectedDepartment;
+    
+    // Date filtering
+    const entryDate = new Date(entry.timestamp);
+    const matchesDateFrom = !dateFrom || entryDate >= new Date(dateFrom);
+    const matchesDateTo = !dateTo || entryDate <= new Date(dateTo);
+    
+    return matchesAction && matchesSearch && matchesUser && matchesDepartment && 
+          matchesDateFrom && matchesDateTo;
   });
 
   // Pagination
@@ -179,7 +209,7 @@ export const AuditTrailTab: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-50">
+    <div className="flex flex-col h-full">
       {/* Visual Timeline */}
       <div className="bg-white border rounded-xl border-slate-200 px-6 py-4">
         <div className="flex items-center justify-between mb-3">
@@ -233,44 +263,104 @@ export const AuditTrailTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <div className="bg-white border-b border-slate-200 py-4">
-        <div className="flex items-center gap-4 flex-wrap">
-          {/* Action Filter with Select Component */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-slate-700">Filter by Action:</span>
-            <div className="w-[200px]">
-              <Select
-                value={selectedAction}
-                onChange={(value) => setSelectedAction(value as string)}
-                options={actionTypeOptions}
-                placeholder="All Actions"
-                searchPlaceholder="Search actions..."
-                enableSearch={false}
-                triggerClassName="h-10"
+      {/* Filter Section */}
+      <div className="bg-white w-full mt-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+          {/* Row 1: Search, Action Type, User */}
+          
+          {/* Search */}
+          <div className="xl:col-span-4 w-full">
+            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              Search
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                <Search className="h-4.5 w-4.5 text-slate-400" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by user or action..."
+                className="block w-full pl-10 pr-3 h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
               />
             </div>
           </div>
 
-          {/* Date Range (Placeholder) */}
-          <button className="flex items-center gap-2 px-3 py-2 text-sm border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-            <Calendar className="h-4 w-4 text-slate-500" />
-            <span className="text-slate-600">Last 30 days</span>
-            <ChevronDown className="h-3 w-3 text-slate-400" />
-          </button>
+          {/* Action Filter */}
+          <div className="xl:col-span-4 w-full">
+            <Select
+              label="Action Type"
+              value={selectedAction}
+              onChange={(value) => {
+                setSelectedAction(value as string);
+                setCurrentPage(1);
+              }}
+              options={actionTypeOptions}
+              placeholder="All Actions"
+              searchPlaceholder="Search actions..."
+            />
+          </div>
 
-          {/* Search */}
-          <div className="flex-1 max-w-md ml-auto">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by user or action..."
-                className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              />
-            </div>
+          {/* User Filter */}
+          <div className="xl:col-span-4 w-full">
+            <Select
+              label="User"
+              value={selectedUser}
+              onChange={(value) => {
+                setSelectedUser(value as string);
+                setCurrentPage(1);
+              }}
+              options={userOptions}
+              placeholder="All Users"
+              searchPlaceholder="Search users..."
+            />
+          </div>
+
+          {/* Row 2: Department, Date From, Date To */}
+
+          {/* Department Filter */}
+          <div className="xl:col-span-4 w-full">
+            <Select
+              label="Department"
+              value={selectedDepartment}
+              onChange={(value) => {
+                setSelectedDepartment(value as string);
+                setCurrentPage(1);
+              }}
+              options={departmentOptions}
+              placeholder="All Departments"
+              searchPlaceholder="Search departments..."
+            />
+          </div>
+
+          {/* Date From */}
+          <div className="xl:col-span-4 w-full">
+            <DateTimePicker
+              label="From Date"
+              value={dateFrom}
+              onChange={(dateStr) => {
+                setDateFrom(dateStr);
+                setCurrentPage(1);
+              }}
+              placeholder="Select start date"
+            />
+          </div>
+
+          {/* Date To */}
+          <div className="xl:col-span-4 w-full">
+            <DateTimePicker
+              label="To Date"
+              value={dateTo}
+              onChange={(dateStr) => {
+                setDateTo(dateStr);
+                setCurrentPage(1);
+              }}
+              placeholder="Select end date"
+            />
           </div>
         </div>
       </div>

@@ -6,10 +6,12 @@ import { cn } from './ui/utils';
 interface HeaderProps {
   onToggleSidebar: () => void;
   isSidebarCollapsed: boolean;
+  onNavigateToProfile?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollapsed }) => {
+export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollapsed, onNavigateToProfile }) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -24,6 +26,18 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    if (!isUserMenuOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [isUserMenuOpen]);
 
   return (
     <header className="h-16 md:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm px-4 md:px-6 flex items-center justify-between shadow-sm/30 shrink-0 transition-all">
@@ -140,9 +154,10 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
             <Bell className="h-5 w-5 md:h-6 md:w-6" />
             <span className="absolute top-2.5 right-2.5 h-2 w-2 bg-red-500 rounded-full border border-white shadow-sm"></span>
         </Button>
-
+        {/* thêm thanh dọc để phân chia */}
+        <div className="w-px h-8 bg-slate-300"></div>
         {/* User Profile Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={userMenuRef}>
           <div 
             className="flex items-center space-x-3 cursor-pointer hover:bg-slate-50 p-1.5 rounded-full border border-transparent hover:border-slate-200 transition-all select-none group"
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -166,17 +181,13 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                <div className="py-1">
                  <button 
                     className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary flex items-center"
-                    onClick={() => setIsUserMenuOpen(false)}
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      onNavigateToProfile?.();
+                    }}
                  >
                     <User className="h-4 w-4 mr-2" />
                     Profile
-                 </button>
-                 <button 
-                    className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary flex items-center"
-                    onClick={() => setIsUserMenuOpen(false)}
-                 >
-                    <Settings className="h-4 w-4 mr-2" />
-                    Settings
                  </button>
                </div>
                <div className="border-t border-slate-100 py-1">
