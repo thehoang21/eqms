@@ -2,7 +2,10 @@ import React from 'react';
 import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { DashboardView } from '../features/dashboard';
 import { DocumentListView, DocumentsOwnedByMeView, DetailDocumentView } from '../features/documents';
+import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView } from '../features/documents/document-revisions';
 import { NewDocumentView } from '../features/documents/new-document';
+import { ExternalDocumentsView } from '../features/documents/external-documents';
+import { ArchivedDocumentsView } from '../features/documents/archived';
 import { MyTasksView } from '../features/my-tasks';
 import { ProfileView } from '../features/settings';
 import { UIShowcase } from '../features/ui-showcase/UIShowcase';
@@ -28,11 +31,14 @@ export const AppRoutes: React.FC = () => {
         {/* Document Routes */}
         <Route path="documents/owned" element={<DocumentsOwnedByMeView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/all" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
-        <Route path="documents/all/new" element={<NewDocumentView onBack={() => navigate(-1)} onSave={async (data) => { console.log('Saving new document:', data); navigate('/documents/all'); }} />} />
+        <Route path="documents/all/new" element={<NewDocumentView />} />
+        <Route path="documents/revisions/all" element={<RevisionListView />} />
+        <Route path="documents/revisions/owned" element={<RevisionsOwnedByMeView />} />
+        <Route path="documents/revisions/new" element={<NewRevisionView />} />
         <Route path="documents/revisions/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/controlled-copies/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
-        <Route path="documents/archived" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
-        <Route path="documents/external" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
+        <Route path="documents/archived" element={<ArchivedDocumentsView />} />
+        <Route path="documents/external" element={<ExternalDocumentsView />} />
         {/* Detail View */}
         <Route path="documents/:id" element={<DetailDocumentViewWrapper />} />
         {/* Profile */}

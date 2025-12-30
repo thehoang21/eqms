@@ -21,6 +21,7 @@ import {
   FileCheck,
   ClipboardList,
   Info,
+  Home,
 } from "lucide-react";
 import { Button } from "../../components/ui/button/Button";
 import { Select } from "../../components/ui/select/Select";
@@ -823,13 +824,15 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
       {/* Header: Title + Breadcrumb + Action Button */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
            All Documents
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
-            <span>Dashboard</span>
+            <span className="hidden sm:inline">Dashboard</span>
+            <Home className="h-4 w-4 sm:hidden" />
             <ChevronRight className="h-4 w-4 text-slate-400" />
-            <span className="text-slate-700 font-medium">Document Management</span>
+            <span className="hidden sm:inline text-slate-700 font-medium">Document Management</span>
+            <span className="sm:hidden">...</span>
             <ChevronRight className="h-4 w-4 text-slate-400" />
             <span className="text-slate-700 font-medium">All Documents</span>
           </div>

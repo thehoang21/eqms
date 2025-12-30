@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     ChevronRight,
     FileText,
@@ -11,38 +12,35 @@ import {
     GitBranch,
     Check,
     Send,
+    CheckCircle2,
+    AlertCircle,
 } from "lucide-react";
 import { Button } from "../../../components/ui/button/Button";
 import { cn } from "../../../components/ui/utils";
 import { ESignatureModal } from "../../../components/ui/esignmodal/ESignatureModal";
 import { AlertModal } from "../../../components/ui/modal";
-import { NewDocumentForm } from "./components/NewDocumentForm";
-import { DocumentUploadPanel } from "./components/document-upload";
-import { TrainingInformationTab } from "./components/training";
-import { DocumentDetailsCard } from "./components/document-details";
-import { useLocation } from "react-router-dom";
+import {
+    GeneralTab,
+    TrainingTab,
+    DocumentTab,
+    SignaturesTab,
+    AuditTab,
+    WorkflowTab,
+} from "./tabs";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
 type TabType = "general" | "training" | "document" | "signatures" | "audit" | "workflow";
 
-interface NewDocumentViewProps {
-    onBack: () => void;
-    onSave: (data: any) => void;
-}
-
-export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
-    onBack,
-    onSave,
-}) => {
+export const NewDocumentView: React.FC = () => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<TabType>("general");
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isESignOpen, setIsESignOpen] = useState(false);
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
     const [validationModalMessage, setValidationModalMessage] = useState<React.ReactNode>(null);
-    const location = useLocation();
 
     // Form state
     const [formData, setFormData] = useState({
@@ -99,15 +97,18 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
         return false;
     };
 
+    const handleBack = () => {
+        navigate("/documents/all");
+    };
+
     const handleSave = async () => {
         setIsSaving(true);
         try {
             if (!validateOrWarn()) return;
 
-            // Call onSave callback with form data
-            await onSave(formData);
-
+            // TODO: Integrate with API service
             console.log("Document created:", formData);
+            navigate("/documents/all");
         } catch (error) {
             console.error("Error creating document:", error);
         } finally {
@@ -123,9 +124,10 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
     const handleESignConfirm = async (reason: string) => {
         setIsSubmitting(true);
         try {
-            await onSave({ ...formData, submitForActive: true, eSignatureReason: reason });
+            // TODO: Integrate with API service
             console.log("Document submitted for activation:", { ...formData, eSignatureReason: reason });
             setIsESignOpen(false);
+            navigate("/documents/all");
         } catch (error) {
             console.error("Error submitting document:", error);
         } finally {
@@ -133,7 +135,7 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
         }
     };
 
-    // Status workflow steps (same as DetailDocumentView)
+    // Status workflow steps
     const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
     const currentStepIndex = 0; // Always "Draft" for new documents
 
@@ -146,14 +148,6 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
         { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },
     ];
 
-    useEffect(() => {
-        // If user navigates away from /documents/new, close all modals
-        if (location.pathname !== "/documents/new") {
-            setIsESignOpen(false);
-            setIsValidationModalOpen(false);
-        }
-    }, [location.pathname]);
-
     return (
         <div className="space-y-6 w-full">
             {/* Header: Title + Breadcrumb + Actions */}
@@ -165,21 +159,21 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
                             <button
-                                onClick={onBack}
+                                onClick={() => navigate("/dashboard")}
                                 className="hover:text-slate-700 transition-colors"
                             >
                                 Dashboard
                             </button>
                             <ChevronRight className="h-4 w-4 text-slate-400" />
                             <button
-                                onClick={onBack}
+                                onClick={() => navigate("/documents/all")}
                                 className="hover:text-slate-700 transition-colors"
                             >
                                 Document Management
                             </button>
                             <ChevronRight className="h-4 w-4 text-slate-400" />
                             <button
-                                onClick={onBack}
+                                onClick={() => navigate("/documents/all")}
                                 className="hover:text-slate-700 transition-colors"
                             >
                                 All Documents
@@ -192,7 +186,7 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                     {/* Action Buttons */}
                     <div className="flex items-center gap-3">
                         <Button
-                            onClick={onBack}
+                            onClick={handleBack}
                             variant="outline"
                             size="sm"
                             className="flex items-center gap-2"
@@ -213,7 +207,7 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                             onClick={handleSubmitForActive}
                             disabled={isSaving || isSubmitting}
                             size="sm"
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+                            className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white"
                         >
                             <Send className="h-4 w-4" />
                             {isSubmitting ? "Submitting..." : "Submit"}
@@ -222,7 +216,7 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                 </div>
             </div>
 
-            {/* Status Stepper - Same as DetailDocumentView but locked at Draft */}
+            {/* Status Stepper */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="flex items-stretch">
                     {statusSteps.map((step, index) => {
@@ -249,10 +243,10 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                                     )}
                                     style={{
                                         clipPath: isFirst
-                                            ? 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%)' // Đầu nhọn, đuôi phẳng
+                                            ? 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%)'
                                             : isLast
-                                                ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%)' // Đầu phẳng, đuôi cắt chữ V
-                                                : 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, 20px 50%)' // Đầu nhọn, đuôi cắt chữ V
+                                                ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%)'
+                                                : 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, 20px 50%)'
                                     }}
                                 />
 
@@ -280,7 +274,7 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                 </div>
             </div>
 
-            {/* Tab Navigation - Same as DetailDocumentView */}
+            {/* Tab Navigation */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="border-b border-slate-200">
                     <div className="flex overflow-x-auto">
@@ -313,44 +307,32 @@ export const NewDocumentView: React.FC<NewDocumentViewProps> = ({
                 {/* Tab Content */}
                 <div className="p-6">
                     {activeTab === "general" && (
-                        <NewDocumentForm
-                            formData={formData}
-                            onChange={setFormData}
-                        />
+                        <GeneralTab formData={formData} onFormChange={setFormData} />
                     )}
-                    {activeTab === "document" && <DocumentUploadPanel />}
-                    {activeTab === "training" && <TrainingInformationTab />}
+
+                    {activeTab === "training" && (
+                        <TrainingTab />
+                    )}
+
+                    {activeTab === "document" && (
+                        <DocumentTab />
+                    )}
+
                     {activeTab === "signatures" && (
-                        <div className="py-12 text-center text-slate-500">
-                            <FileSignature className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                            <p className="text-sm font-medium">Electronic Signatures</p>
-                            <p className="text-xs mt-1">Document signature workflow will be displayed here.</p>
-                        </div>
+                        <SignaturesTab />
                     )}
+
                     {activeTab === "audit" && (
-                        <div className="py-12 text-center text-slate-500">
-                            <History className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                            <p className="text-sm font-medium">Audit Trail</p>
-                            <p className="text-xs mt-1">Document change history will appear here.</p>
-                        </div>
+                        <AuditTab />
                     )}
+
                     {activeTab === "workflow" && (
-                        <div className="py-12 text-center text-slate-500">
-                            <GitBranch className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                            <p className="text-sm font-medium">Workflow Diagram</p>
-                            <p className="text-xs mt-1">Document approval workflow visualization will be shown here.</p>
-                        </div>
+                        <WorkflowTab />
                     )}
                 </div>
             </div>
 
-            {/* Document Details Card - Only visible on General tab */}
-            {activeTab === "general" && (
-                <div className="mt-6">
-                    <DocumentDetailsCard />
-                </div>
-            )}
-
+            {/* Modals */}
             <ESignatureModal
                 isOpen={isESignOpen}
                 onClose={() => {

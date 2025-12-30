@@ -43,6 +43,8 @@ interface DocumentFiltersProps {
         columns: TableColumn[];
         onColumnsChange: (columns: TableColumn[]) => void;
     }>;
+    showTypeFilter?: boolean;
+    showDepartmentFilter?: boolean;
 }
 
 export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
@@ -71,6 +73,8 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
     columns,
     onColumnsChange,
     ColumnCustomizerComponent,
+    showTypeFilter = true,
+    showDepartmentFilter = true,
 }) => {
     return (
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
@@ -108,45 +112,49 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                 </div>
 
                 {/* Type Filter */}
-                <div className="xl:col-span-3 w-full">
-                    <Select
-                        label="Document Type"
-                        value={typeFilter}
-                        onChange={(value) => onTypeChange(value as DocumentType | "All")}
-                        options={[
-                            { label: "All", value: "All" },
-                            { label: "SOP", value: "SOP" },
-                            { label: "Policy", value: "Policy" },
-                            { label: "Form", value: "Form" },
-                            { label: "Report", value: "Report" },
-                            { label: "Specification", value: "Specification" },
-                            { label: "Protocol", value: "Protocol" },
-                        ]}
-                        placeholder="Select type"
-                        searchPlaceholder="Search type..."
-                    />
-                </div>
+                {showTypeFilter && (
+                    <div className="xl:col-span-3 w-full">
+                        <Select
+                            label="Document Type"
+                            value={typeFilter}
+                            onChange={(value) => onTypeChange(value as DocumentType | "All")}
+                            options={[
+                                { label: "All", value: "All" },
+                                { label: "SOP", value: "SOP" },
+                                { label: "Policy", value: "Policy" },
+                                { label: "Form", value: "Form" },
+                                { label: "Report", value: "Report" },
+                                { label: "Specification", value: "Specification" },
+                                { label: "Protocol", value: "Protocol" },
+                            ]}
+                            placeholder="Select type"
+                            searchPlaceholder="Search type..."
+                        />
+                    </div>
+                )}
 
                 {/* Department Filter */}
-                <div className="xl:col-span-3 w-full">
-                    <Select
-                        label="Department"
-                        value={departmentFilter}
-                        onChange={(value) => onDepartmentChange(value)}
-                        options={[
-                            { label: "All", value: "All" },
-                            { label: "Quality Assurance", value: "Quality Assurance" },
-                            { label: "Quality Management", value: "Quality Management" },
-                            { label: "Quality Control", value: "Quality Control" },
-                            { label: "Production", value: "Production" },
-                            { label: "Engineering", value: "Engineering" },
-                            { label: "Human Resources", value: "Human Resources" },
-                            { label: "Validation", value: "Validation" },
-                        ]}
-                        placeholder="Select department"
-                        searchPlaceholder="Search department..."
-                    />
-                </div>
+                {showDepartmentFilter && (
+                    <div className="xl:col-span-3 w-full">
+                        <Select
+                            label="Department"
+                            value={departmentFilter}
+                            onChange={(value) => onDepartmentChange(value)}
+                            options={[
+                                { label: "All", value: "All" },
+                                { label: "Quality Assurance", value: "Quality Assurance" },
+                                { label: "Quality Management", value: "Quality Management" },
+                                { label: "Quality Control", value: "Quality Control" },
+                                { label: "Production", value: "Production" },
+                                { label: "Engineering", value: "Engineering" },
+                                { label: "Human Resources", value: "Human Resources" },
+                                { label: "Validation", value: "Validation" },
+                            ]}
+                            placeholder="Select department"
+                            searchPlaceholder="Search department..."
+                        />
+                    </div>
+                )}
 
                 {/* Row 2: Status Filter */}
 

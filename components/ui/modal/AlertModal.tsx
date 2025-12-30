@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, CheckCircle2, AlertTriangle, XCircle, Info, HelpCircle } from 'lucide-react';
 import { Button } from '../button/Button';
 import { cn } from '../utils';
@@ -72,12 +73,12 @@ export const AlertModal: React.FC<AlertModalProps> = ({
 
   const currentConfig = config[type];
   const Icon = currentConfig.icon;
-  
+
   // Determine if we should show the cancel button
   // If showCancel is explicitly provided, use it.
   // Otherwise, show it for 'confirm' and 'warning' types.
-  const shouldShowCancel = showCancel !== undefined 
-    ? showCancel 
+  const shouldShowCancel = showCancel !== undefined
+    ? showCancel
     : (type === 'confirm' || type === 'warning');
 
   const finalConfirmText = confirmText || currentConfig.defaultConfirmText;
@@ -89,10 +90,10 @@ export const AlertModal: React.FC<AlertModalProps> = ({
     return '';
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-200 animate-in zoom-in-95 duration-200 overflow-hidden">
-        
+
         <div className="p-6">
           <div className="flex items-start gap-4">
             <div className={cn(
@@ -102,7 +103,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
             )}>
               <Icon className={cn("h-6 w-6", currentConfig.color)} />
             </div>
-            
+
             <div className="flex-1 pt-1">
               <h3 className="text-lg font-bold text-slate-900 leading-6 mb-2">
                 {title}
@@ -113,8 +114,8 @@ export const AlertModal: React.FC<AlertModalProps> = ({
                 </div>
               )}
             </div>
-            
-            <button 
+
+            <button
               onClick={onClose}
               className="text-slate-400 hover:text-slate-600 transition-colors -mt-1 -mr-2 p-2 rounded-full hover:bg-slate-100"
             >
@@ -125,16 +126,16 @@ export const AlertModal: React.FC<AlertModalProps> = ({
 
         <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3">
           {shouldShowCancel && (
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={onClose}
               disabled={isLoading}
             >
               {cancelText}
             </Button>
           )}
-          
-          <Button 
+
+          <Button
             onClick={onConfirm || onClose}
             className={getConfirmButtonClass()}
             disabled={isLoading}
@@ -143,6 +144,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

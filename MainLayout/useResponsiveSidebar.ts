@@ -13,15 +13,13 @@ export const useResponsiveSidebar = () => {
     const handleResize = () => {
       const width = window.innerWidth;
       
-      // Mobile & Tablet Portrait: Auto collapse
+      // Mobile & Tablet: Don't auto-collapse, use mobile menu instead
       if (width < 1024) {
-        setIsSidebarCollapsed(true);
-        setIsMobileMenuOpen(false);
+        setIsSidebarCollapsed(false); // Keep expanded when showing mobile menu
       }
-      // Tablet Landscape & Desktop: Auto expand
-      else if (width >= 1024) {
-        setIsSidebarCollapsed(false);
-        setIsMobileMenuOpen(false);
+      // Desktop: Use collapse state
+      else {
+        setIsMobileMenuOpen(false); // Close mobile menu on desktop
       }
     };
 
@@ -31,7 +29,20 @@ export const useResponsiveSidebar = () => {
   }, []);
 
   const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+    const width = window.innerWidth;
+    
+    // On mobile: toggle mobile menu
+    if (width < 1024) {
+      setIsMobileMenuOpen(!isMobileMenuOpen);
+    }
+    // On desktop: toggle collapse
+    else {
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   return {
@@ -39,5 +50,6 @@ export const useResponsiveSidebar = () => {
     isMobileMenuOpen,
     toggleSidebar,
     setIsMobileMenuOpen,
+    closeMobileMenu,
   };
 };

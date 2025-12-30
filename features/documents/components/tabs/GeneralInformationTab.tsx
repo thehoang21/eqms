@@ -31,61 +31,46 @@ interface GeneralInformationTabProps {
 export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ document }) => {
   return (
     <div className="space-y-4">
-      {/* Form Grid */}
       <div className="grid grid-cols-1 gap-x-8 gap-y-4">
-        {/* Document Number */}
+        {/* Document Number (read-only, auto-generated) */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Document Number
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Document Number</label>
           <input
             type="text"
             value={document.documentId}
             readOnly
             className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            placeholder="Auto-generated after save"
           />
         </div>
 
-        {/* Created */}
+        {/* Created (read-only, auto-generated) */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Created (yyyy-MM-dd HH:mm:ss)
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Created (yyyy-MM-dd HH:mm:ss)</label>
           <input
             type="text"
             value={document.created}
             readOnly
             className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            placeholder="Auto-generated after save"
           />
         </div>
 
-        {/* Opened by */}
+        {/* Opened by (read-only, auto-generated) */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Opened by
-          </label>
-          <div className="flex-1 flex items-center gap-2">
-            <input
-              type="text"
-              value={document.openedBy}
-              readOnly
-              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
-            />
-            <Popover
-              title=""
-              content={<UserDetailPopoverContent />}
-              contentClassName="w-[90vw] sm:w-[600px]"
-              placement="bottom"
-            />
-          </div>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Opened by</label>
+          <input
+            type="text"
+            value={document.openedBy}
+            readOnly
+            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            placeholder="Auto-generated after save"
+          />
         </div>
 
         {/* Author */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Author
-            <span className="text-red-500 ml-1">*</span>
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Author<span className="text-red-500 ml-1">*</span></label>
           <div className="flex-1 flex items-center gap-2">
             <input
               type="text"
@@ -103,97 +88,27 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
 
         {/* Is Template */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Is Template?
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Is Template?</label>
           <div className="flex-1">
-            <Checkbox
-              id="isTemplate"
-              checked={document.isTemplate}
-            />
-          </div>
-        </div>
-
-        {/* Business Unit */}
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Business Unit
-            <span className="text-red-500 ml-1">*</span>
-          </label>
-          <div className="flex-1 flex items-center gap-2">
-            <input
-              type="text"
-              value={document.businessUnit}
-              className="flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            />
-            <Popover
-              title="Business Unit"
-              content="Information about the business unit will appear here."
-            />
+            <Checkbox id="isTemplate" checked={document.isTemplate} />
           </div>
         </div>
 
         {/* Document Name */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Document Name
-            <span className="text-red-500 ml-1">*</span>
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Document Name<span className="text-red-500 ml-1">*</span></label>
           <div className="flex-1 flex items-center gap-2">
             <input
               type="text"
               value={document.title}
               className="flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
-            <Popover
-              title="Document Name"
-              content="Information about the document name will appear here."
-            />
-          </div>
-        </div>
-
-        {/* Department */}
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Department
-          </label>
-          <div className="flex-1 flex items-center gap-2">
-            <input
-              type="text"
-              value={document.department}
-              readOnly
-              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
-            />
-            <Popover
-              title="Department"
-              content="Information about the department will appear here."
-            />
-          </div>
-        </div>
-
-        {/* Knowledge Base */}
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Knowledge Base
-          </label>
-          <div className="flex-1 flex items-center gap-2">
-            <input
-              type="text"
-              value={document.knowledgeBase}
-              className="flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            />
-            <Popover
-              title="Knowledge Base"
-              content="Information about the knowledge base will appear here."
-            />
           </div>
         </div>
 
         {/* Document Type */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Document Type
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Document Type</label>
           <div className="flex-1 flex items-center gap-2">
             <input
               type="text"
@@ -201,36 +116,62 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
               readOnly
               className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
             />
-            <Popover
-              title="Document Type"
-              content="Information about the document type will appear here."
-            />
           </div>
         </div>
 
         {/* Sub-Type */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Sub-Type
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Sub-Type</label>
           <div className="flex-1">
-            <Select
+            <input
+              type="text"
               value={document.subType}
-              onChange={() => {}}
-              options={[
-                { label: "-- None --", value: "-- None --" }
-              ]}
-              enableSearch={false}
+              readOnly
+              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            />
+          </div>
+        </div>
+
+        {/* Business Unit */}
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Business Unit<span className="text-red-500 ml-1">*</span></label>
+          <div className="flex-1 flex items-center gap-2">
+            <input
+              type="text"
+              value={document.businessUnit}
+              className="flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
+        </div>
+
+        {/* Department */}
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Department</label>
+          <div className="flex-1 flex items-center gap-2">
+            <input
+              type="text"
+              value={document.department}
+              readOnly
+              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            />
+          </div>
+        </div>
+
+        {/* Knowledge Base */}
+        <div className="flex items-center gap-4">
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Knowledge Base</label>
+          <div className="flex-1 flex items-center gap-2">
+            <input
+              type="text"
+              value={document.knowledgeBase}
+              className="flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
         </div>
 
         {/* Periodic Review Cycle */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Periodic Review Cycle (Months)
-            <span className="text-red-500 ml-1">*</span>
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Periodic Review Cycle (Months)<span className="text-red-500 ml-1">*</span></label>
           <input
             type="number"
             value={document.periodicReviewCycle}
@@ -240,10 +181,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
 
         {/* Periodic Review Notification */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Periodic Review Notification (Days)
-            <span className="text-red-500 ml-1">*</span>
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Periodic Review Notification (Days)<span className="text-red-500 ml-1">*</span></label>
           <input
             type="number"
             value={document.periodicReviewNotification}
@@ -251,55 +189,44 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
           />
         </div>
 
-        {/* Effective Date */}
+        {/* Effective Date (read-only, auto-generated) */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Effective Date (yyyy-MM-dd)
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Effective Date (yyyy-MM-dd)</label>
           <input
             type="text"
             value={document.effectiveDate}
             readOnly
             className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            placeholder="Set when approved"
           />
         </div>
 
-        {/* Valid Until */}
+        {/* Valid Until (read-only, auto-generated) */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Valid Until (yyyy-MM-dd)
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Valid Until (yyyy-MM-dd)</label>
           <input
             type="text"
             value={document.validUntil}
             readOnly
             className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            placeholder="Set when approved"
           />
         </div>
 
         {/* Language */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
-            Language
-          </label>
-          <div className="flex-1">
-            <Select
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Language</label>
+          <input
+              type="text"
               value={document.language}
-              onChange={() => {}}
-              options={[
-                { label: "English", value: "English" },
-                { label: "Vietnamese", value: "Vietnamese" }
-              ]}
-              enableSearch={false}
+              readOnly
+              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
             />
-          </div>
         </div>
 
         {/* Description */}
         <div className="flex gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0 pt-2">
-            Description
-          </label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0 pt-2">Description</label>
           <textarea
             value={document.description}
             rows={4}

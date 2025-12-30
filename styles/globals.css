@@ -2,6 +2,11 @@
    GLOBAL STYLES - Quality Management System
    =================================== */
 
+/* Smooth scroll behavior for entire app */
+html {
+  scroll-behavior: smooth;
+}
+
 /* CSS Variables for theming */
 :root {
   /* Primary Colors */

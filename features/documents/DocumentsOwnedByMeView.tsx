@@ -12,6 +12,7 @@ import {
   Clock,
   AlertTriangle,
   GripVertical,
+  Home,
 } from "lucide-react";
 import { Button } from "../../components/ui/button/Button";
 import { Checkbox } from "../../components/ui/checkbox/Checkbox";
@@ -599,9 +600,11 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
             Documents Owned By Me
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
-            <span>Dashboard</span>
+            <span className="hidden sm:inline">Dashboard</span>
+            <Home className="h-4 w-4 sm:hidden" />
             <ChevronRight className="h-4 w-4 text-slate-400" />
-            <span>Document Management</span>
+            <span className="hidden sm:inline">Document Management</span>
+            <span className="sm:hidden">...</span>
             <ChevronRight className="h-4 w-4 text-slate-400" />
             <span className="text-slate-700 font-medium">Documents Owned By Me</span>
           </div>

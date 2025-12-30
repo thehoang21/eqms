@@ -1,33 +1,27 @@
 import React from 'react';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
-import { Sidebar } from './components/Sidebar';
-import { Header } from './components/Header';
-import { Footer } from './components/Layout/Footer';
+import { Sidebar } from './components/Layout/Sidebar/Sidebar';
+import { Header } from './components/Layout/Header/Header';
+import { Footer } from './components/Layout/Footer/Footer';
 import { useResponsiveSidebar } from './MainLayout/useResponsiveSidebar';
 import { useNavigation } from './MainLayout/useNavigation';
 
 export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isSidebarCollapsed, isMobileMenuOpen, toggleSidebar, setIsMobileMenuOpen } = useResponsiveSidebar();
+  const { isSidebarCollapsed, isMobileMenuOpen, toggleSidebar, closeMobileMenu } = useResponsiveSidebar();
   const { activeId, handleNavigate } = useNavigation();
 
   return (
     <div className="flex h-screen w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
-      {/* Sidebar - Responsive */}
+      {/* Sidebar - Off-canvas on mobile, sticky on desktop */}
       <Sidebar
         isCollapsed={isSidebarCollapsed}
         activeId={activeId}
         onNavigate={handleNavigate}
+        isMobileOpen={isMobileMenuOpen}
+        onClose={closeMobileMenu}
       />
-
-      {/* Mobile Overlay when sidebar is visible on mobile */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-20 md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
 
       {/* Main Content Wrapper */}
       <div className="flex-1 flex flex-col min-w-0 h-full transition-all duration-300 ease-in-out">
@@ -35,6 +29,7 @@ export const MainLayout: React.FC = () => {
         <Header 
           onToggleSidebar={toggleSidebar}
           isSidebarCollapsed={isSidebarCollapsed}
+          isMobileMenuOpen={isMobileMenuOpen}
           onNavigateToProfile={() => navigate('/profile')}
         />
 
@@ -43,7 +38,7 @@ export const MainLayout: React.FC = () => {
           {/* Main Content: Responsive padding */}
           <main className="w-full p-4 md:p-6 lg:p-8 pb-6">
             <div className="w-full max-w-[1920px] mx-auto space-y-4 md:space-y-6">
-              <Outlet key={location.pathname} />
+              <Outlet />
             </div>
           </main>
         </div>
