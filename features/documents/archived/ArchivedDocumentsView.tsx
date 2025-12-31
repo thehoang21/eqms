@@ -200,10 +200,10 @@ export const ArchivedDocumentsView: React.FC = () => {
                         <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
                             <span className="hidden sm:inline">Dashboard</span>
                             <Home className="h-3 w-3 sm:hidden" />
-                            <ChevronRight className="h-3 w-3 text-slate-400" />
+                            <ChevronRight className="h-3 w-3" />
                             <span className="hidden sm:inline">Document Control</span>
                             <span className="sm:hidden">...</span>
-                            <ChevronRight className="h-3 w-3 text-slate-400" />
+                            <ChevronRight className="h-3 w-3" />
                             <span className="text-slate-700 font-medium">Archived Documents</span>
                         </div>
                     </div>

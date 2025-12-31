@@ -90,7 +90,7 @@ export const FileSystemItem: React.FC<FileSystemItemProps> = ({
                 <div 
                     onDoubleClick={handleDoubleClick}
                     onContextMenu={handleContextMenu}
-                    className="group relative flex flex-col p-4 bg-white border border-slate-200 rounded-xl hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer select-none"
+                    className="group relative flex flex-col p-4 bg-white border border-slate-200 rounded-xl hover:border-emerald-500 transition-all cursor-pointer select-none"
                 >
                     <div className="flex items-start justify-between mb-3">
                         <div className="h-10 w-10">
