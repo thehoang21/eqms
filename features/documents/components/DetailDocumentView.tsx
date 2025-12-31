@@ -209,7 +209,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                                 onClick={onBack}
                                 className="hover:text-slate-700 transition-colors hidden sm:inline"
                             >
-                                Document Management
+                                Document Control
                             </button>
                             <span className="sm:hidden">...</span>
                             <ChevronRight className="h-4 w-4 text-slate-400" />

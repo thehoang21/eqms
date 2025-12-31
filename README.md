@@ -59,7 +59,7 @@ quality-management/
 ## 🎯 Tính năng chính
 
 - Dashboard: thẻ chỉ số, thông báo hệ thống, responsive grid
-- Document Management: danh sách, lọc trạng thái, e-signature, xuất CSV
+- Document Control: danh sách, lọc trạng thái, e-signature, xuất CSV
 - My Tasks: xem dạng bảng/thẻ, lọc nâng cao, chi tiết có timeline
 - Đang phát triển: Training, Deviation, CAPA, Change Control, Complaints, Audit Trail, Settings
 

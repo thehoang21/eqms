@@ -11,18 +11,23 @@ interface HeaderProps {
   isSidebarCollapsed: boolean;
   isMobileMenuOpen: boolean;
   onNavigateToProfile?: () => void;
+  onLogout?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollapsed, isMobileMenuOpen, onNavigateToProfile }) => {
+export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollapsed, isMobileMenuOpen, onNavigateToProfile, onLogout }) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const menuDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close user menu when clicking outside
   useEffect(() => {
     if (!isUserMenuOpen) return;
     const handleClick = (e: MouseEvent) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+      if (
+        userMenuRef.current && !userMenuRef.current.contains(e.target as Node) &&
+        menuDropdownRef.current && !menuDropdownRef.current.contains(e.target as Node)
+      ) {
         setIsUserMenuOpen(false);
       }
     };
@@ -31,13 +36,12 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
   }, [isUserMenuOpen]);
 
   return (
-    <header className="h-16 md:h-18 w-full sticky top-0 z-60 border-b border-slate-200 bg-white/95 backdrop-blur-sm px-4 md:px-6 flex items-center justify-between shadow-sm/30 shrink-0 transition-all">
+    <header className="h-16 md:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm px-4 md:px-6 flex items-center justify-between shadow-sm/30 shrink-0 transition-all">
       
-      {/* Overlay to close menus when clicking outside */}
+      {/* Overlay for visual effect */}
       {isUserMenuOpen && createPortal(
         <div 
-          className="fixed inset-0 z-50 bg-slate-900/10 backdrop-blur-[1px]"
-          onClick={() => setIsUserMenuOpen(false)}
+          className="fixed inset-0 z-40 bg-slate-900/10 backdrop-blur-[1px]"
         />,
         document.body
       )}
@@ -108,8 +112,9 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
 
           {/* Dropdown Menu */}
           {isUserMenuOpen && createPortal(
-            <div 
-                className="fixed w-56 origin-top-right bg-white border border-slate-200 rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none animate-in fade-in zoom-in-95 duration-200 z-[100]"
+            <div
+                ref={menuDropdownRef}
+                className="fixed w-56 origin-top-right bg-white border border-slate-200 rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none animate-in fade-in zoom-in-95 duration-200 z-50"
                 style={{
                     top: `${userMenuRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
                     right: `${window.innerWidth - userMenuRef.current?.getBoundingClientRect().right! - window.scrollX}px`
@@ -121,8 +126,9 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                </div>
                <div className="py-1">
                  <button 
-                    className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary flex items-center"
+                    className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary flex items-center transition-colors"
                     onClick={() => {
+                      console.log('Profile clicked, navigating...');
                       setIsUserMenuOpen(false);
                       onNavigateToProfile?.();
                     }}
@@ -133,8 +139,12 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                </div>
                <div className="border-t border-slate-100 py-1">
                  <button 
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
-                    onClick={() => setIsUserMenuOpen(false)}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center transition-colors"
+                    onClick={() => {
+                      console.log('Logout clicked');
+                      setIsUserMenuOpen(false);
+                      onLogout?.();
+                    }}
                  >
                     <LogOut className="h-4 w-4 mr-2" />
                     Logout

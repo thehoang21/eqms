@@ -5,7 +5,7 @@ import { NAV_CONFIG } from '../../../constants';
 import { cn } from '../../ui/utils';
 
 // 1. IMPORT LOGO: Sử dụng cơ chế import để Vite xử lý hash đường dẫn chính xác
-import logoImg from '../assets/images/favicon/document-color-32.png';
+import logoImg from '../../../assets/images/favicon/document-color-32.png';
 
 interface SidebarProps {
   isCollapsed: boolean;

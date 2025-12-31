@@ -12,6 +12,13 @@ export const MainLayout: React.FC = () => {
   const { isSidebarCollapsed, isMobileMenuOpen, toggleSidebar, closeMobileMenu } = useResponsiveSidebar();
   const { activeId, handleNavigate } = useNavigation();
 
+  const handleLogout = () => {
+    // Clear any auth tokens/session data here if needed
+    console.log('Logging out...');
+    // Navigate to login page
+    navigate('/login');
+  };
+
   return (
     <div className="flex h-screen w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
       {/* Sidebar - Off-canvas on mobile, sticky on desktop */}
@@ -31,6 +38,7 @@ export const MainLayout: React.FC = () => {
           isSidebarCollapsed={isSidebarCollapsed}
           isMobileMenuOpen={isMobileMenuOpen}
           onNavigateToProfile={() => navigate('/profile')}
+          onLogout={handleLogout}
         />
 
         {/* Scrollable Content Area */}

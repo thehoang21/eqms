@@ -169,7 +169,7 @@ export const NewDocumentView: React.FC = () => {
                                 onClick={() => navigate("/documents/all")}
                                 className="hover:text-slate-700 transition-colors"
                             >
-                                Document Management
+                                Document Control
                             </button>
                             <ChevronRight className="h-4 w-4 text-slate-400" />
                             <button

@@ -7,7 +7,8 @@ import { NewDocumentView } from '../features/documents/new-document';
 import { ExternalDocumentsView } from '../features/documents/external-documents';
 import { ArchivedDocumentsView } from '../features/documents/archived';
 import { MyTasksView } from '../features/my-tasks';
-import { ProfileView } from '../features/settings';
+import { ProfileView, UserManagementView } from '../features/settings';
+import { LoginView } from '../features/auth';
 import { UIShowcase } from '../features/ui-showcase/UIShowcase';
 import { UnderConstruction } from './UnderConstruction';
 import { MainLayout } from '../MainLayout';
@@ -24,6 +25,10 @@ export const AppRoutes: React.FC = () => {
 
   return (
     <Routes>
+      {/* Login Route (No Layout) */}
+      <Route path="/login" element={<LoginView onLogin={() => navigate('/dashboard')} />} />
+      
+      {/* Protected Routes (With Layout) */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<DashboardView />} />
@@ -43,6 +48,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/:id" element={<DetailDocumentViewWrapper />} />
         {/* Profile */}
         <Route path="profile" element={<ProfileView onBack={() => navigate(-1)} />} />
+        {/* Settings */}
+        <Route path="settings/users" element={<UserManagementView />} />
         {/* UI Showcase */}
         <Route path="ui-demo" element={<UIShowcase />} />
         {/* Fallback for other routes */}

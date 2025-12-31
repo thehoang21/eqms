@@ -830,10 +830,10 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
             <span className="hidden sm:inline">Dashboard</span>
             <Home className="h-4 w-4 sm:hidden" />
-            <ChevronRight className="h-4 w-4 text-slate-400" />
-            <span className="hidden sm:inline text-slate-700 font-medium">Document Management</span>
+            <ChevronRight className="h-4 w-4" />
+            <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>
-            <ChevronRight className="h-4 w-4 text-slate-400" />
+            <ChevronRight className="h-4 w-4" />
             <span className="text-slate-700 font-medium">All Documents</span>
           </div>
         </div>

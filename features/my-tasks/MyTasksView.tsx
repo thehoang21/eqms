@@ -447,7 +447,7 @@ const TaskFilters: React.FC<{
   const moduleOptions: SelectOption[] = [
     { label: "All", value: "All Modules" },
     {
-      label: "Document Management",
+      label: "Document Control",
       value: "DMS",
     },
     {

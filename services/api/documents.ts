@@ -1,5 +1,5 @@
 /**
- * Document Management API Service
+ * Document Control API Service
  * All API calls related to documents
  */
 
