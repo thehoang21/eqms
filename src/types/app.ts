@@ -3,7 +3,7 @@ import { LucideIcon } from 'lucide-react';
 export interface NavItem {
   id: string;
   label: string;
-  icon?: LucideIcon;
+  icon?: LucideIcon | any;
   children?: NavItem[];
   path?: string; // Route path for navigation
 }

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import logoImg from '@/assets/images/favicon/document-color-32.png';
+import { IconUser } from '@tabler/icons-react';
 
 interface LoginViewProps {
   onLogin?: (username: string, password: string, rememberMe: boolean) => void;
@@ -134,7 +135,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-slate-400" />
+                    <IconUser className=" text-slate-400" />
                   </div>
                   <input
                     id="username"

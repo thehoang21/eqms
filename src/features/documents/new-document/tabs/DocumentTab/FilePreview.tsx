@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FileText, File as FileIcon, Image as ImageIcon, AlertCircle } from "lucide-react";
+import { convertWordToPdf } from "@/services/api/documentConverter";
+import "./docx-preview.css";
 
 interface FilePreviewProps {
     file: File | null;
@@ -10,37 +12,74 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
     const [previewType, setPreviewType] = useState<"pdf" | "image" | "text" | "unsupported">("unsupported");
     const [textContent, setTextContent] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isConverting, setIsConverting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!file) {
             setPreviewUrl(null);
             setPreviewType("unsupported");
             setTextContent("");
+            setError(null);
             return;
         }
 
         setIsLoading(true);
+        setError(null);
 
         const fileType = file.type;
         const fileName = file.name.toLowerCase();
 
-        // Determine preview type
+        console.log("Processing file:", { fileName, fileType, size: file.size });
+
+        // PDF - use iframe
         if (fileType === "application/pdf" || fileName.endsWith(".pdf")) {
             setPreviewType("pdf");
             const url = URL.createObjectURL(file);
             setPreviewUrl(url);
             setIsLoading(false);
-        } else if (fileType.startsWith("image/")) {
+        }
+        // Word documents - convert to PDF for preview
+        else if (
+            fileName.endsWith(".docx") ||
+            fileName.endsWith(".doc") ||
+            fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+            fileType === "application/msword"
+        ) {
+            setPreviewType("pdf"); // Will display as PDF after conversion
+            setIsConverting(true);
+            
+            convertWordToPdf(file)
+                .then((pdfBlob) => {
+                    const url = URL.createObjectURL(pdfBlob);
+                    console.log("Word converted to PDF, blob URL:", url);
+                    setPreviewUrl(url);
+                    setIsLoading(false);
+                    setIsConverting(false);
+                })
+                .catch((err) => {
+                    console.error("Error converting Word to PDF:", err);
+                    setError(err.message || "Failed to convert Word document to PDF. Please check if the backend conversion service is available.");
+                    setPreviewType("unsupported");
+                    setIsLoading(false);
+                    setIsConverting(false);
+                });
+        }
+        // Images
+        else if (fileType.startsWith("image/")) {
             setPreviewType("image");
             const url = URL.createObjectURL(file);
             setPreviewUrl(url);
             setIsLoading(false);
-        } else if (
+        }
+        // Text files
+        else if (
             fileType === "text/plain" ||
             fileName.endsWith(".txt") ||
             fileName.endsWith(".md") ||
             fileName.endsWith(".json") ||
-            fileName.endsWith(".xml")
+            fileName.endsWith(".xml") ||
+            fileName.endsWith(".csv")
         ) {
             setPreviewType("text");
             const reader = new FileReader();
@@ -49,10 +88,14 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                 setIsLoading(false);
             };
             reader.onerror = () => {
+                setError("Failed to read text file");
                 setIsLoading(false);
             };
             reader.readAsText(file);
-        } else {
+        }
+        // Unsupported
+        else {
+            console.warn("Unsupported file type:", { fileName, fileType });
             setPreviewType("unsupported");
             setIsLoading(false);
         }
@@ -79,12 +122,19 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
         );
     }
 
-    if (isLoading) {
+    if (isLoading || isConverting) {
         return (
             <div className="h-full flex items-center justify-center bg-white rounded-xl border border-slate-200">
                 <div className="text-center">
                     <div className="animate-spin h-12 w-12 border-4 border-emerald-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-                    <p className="text-slate-600 font-medium">Loading preview...</p>
+                    <p className="text-slate-600 font-medium">
+                        {isConverting ? "Converting Word to PDF..." : "Loading preview..."}
+                    </p>
+                    {isConverting && (
+                        <p className="text-xs text-slate-500 mt-2">
+                            This may take a few moments
+                        </p>
+                    )}
                 </div>
             </div>
         );
@@ -113,17 +163,33 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
             </div>
 
             {/* Preview Content */}
-            <div className="flex-1 overflow-auto p-6">
-                {previewType === "pdf" && previewUrl && (
-                    <iframe
-                        src={previewUrl}
-                        className="w-full h-full min-h-[600px] border-0 rounded-lg"
-                        title={file.name}
-                    />
+            <div className="flex-1 overflow-auto">
+                {error && (
+                    <div className="h-full flex items-center justify-center p-6">
+                        <div className="text-center max-w-md">
+                            <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+                            <h4 className="text-lg font-semibold text-slate-900 mb-2">
+                                Error Loading Preview
+                            </h4>
+                            <p className="text-sm text-slate-600 mb-4">
+                                {error}
+                            </p>
+                        </div>
+                    </div>
                 )}
 
-                {previewType === "image" && previewUrl && (
-                    <div className="flex items-center justify-center h-full">
+                {!error && previewType === "pdf" && previewUrl && (
+                    <div className="h-full">
+                        <iframe
+                            src={previewUrl}
+                            className="w-full h-full min-h-[600px] border-0"
+                            title={file.name}
+                        />
+                    </div>
+                )}
+
+                {!error && previewType === "image" && previewUrl && (
+                    <div className="flex items-center justify-center h-full p-6">
                         <img
                             src={previewUrl}
                             alt={file.name}
@@ -132,14 +198,16 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                     </div>
                 )}
 
-                {previewType === "text" && (
-                    <div className="bg-slate-50 rounded-lg p-4 font-mono text-sm">
-                        <pre className="whitespace-pre-wrap text-slate-700">{textContent}</pre>
+                {!error && previewType === "text" && (
+                    <div className="p-6">
+                        <div className="bg-slate-50 rounded-lg p-4 font-mono text-sm">
+                            <pre className="whitespace-pre-wrap text-slate-700">{textContent}</pre>
+                        </div>
                     </div>
                 )}
 
-                {previewType === "unsupported" && (
-                    <div className="h-full flex items-center justify-center">
+                {!error && previewType === "unsupported" && (
+                    <div className="h-full flex items-center justify-center p-6">
                         <div className="text-center max-w-md">
                             <AlertCircle className="h-16 w-16 text-amber-500 mx-auto mb-4" />
                             <h4 className="text-lg font-semibold text-slate-900 mb-2">
@@ -148,17 +216,18 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                             <p className="text-sm text-slate-600 mb-4">
                                 Preview is not supported for this file type.
                             </p>
-                            <div className="bg-slate-50 rounded-lg p-4">
-                                <p className="text-xs text-slate-500 mb-2">File Details:</p>
-                                <div className="text-sm space-y-1 text-slate-700">
-                                    <p><span className="font-medium">Name:</span> {file.name}</p>
-                                    <p><span className="font-medium">Type:</span> {file.type || "Unknown"}</p>
-                                    <p><span className="font-medium">Size:</span> {(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                                </div>
+                            <div className="text-xs text-slate-500 bg-slate-50 rounded-lg p-4 text-left">
+                                <p className="font-semibold mb-2">Supported formats:</p>
+                                <ul className="space-y-1 list-disc list-inside">
+                                    <li>PDF Documents (.pdf)</li>
+                                    <li>Word Documents (.doc, .docx) - Auto-converted to PDF</li>
+                                    <li>Images (.jpg, .png, .gif, .webp, etc.)</li>
+                                    <li>Text Files (.txt, .md, .json, .xml, .csv)</li>
+                                </ul>
+                                <p className="mt-3 text-blue-600">
+                                    💡 Word documents are automatically converted to PDF for optimal preview.
+                                </p>
                             </div>
-                            <p className="text-xs text-slate-500 mt-4">
-                                Supported preview formats: PDF, Images (JPG, PNG, GIF), Text files
-                            </p>
                         </div>
                     </div>
                 )}

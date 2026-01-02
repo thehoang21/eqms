@@ -127,6 +127,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
         <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3">
           {shouldShowCancel && (
             <Button
+              size='sm'
               variant="outline"
               onClick={onClose}
               disabled={isLoading}
@@ -136,6 +137,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
           )}
 
           <Button
+            size='sm'
             onClick={onConfirm || onClose}
             className={getConfirmButtonClass()}
             disabled={isLoading}

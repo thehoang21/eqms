@@ -38,13 +38,13 @@ export const TaskTable: React.FC<{
     switch (column.id) {
       case 'no':
         return (
-          <th key={column.id} className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left w-[100px]">
+          <th key={column.id} className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
             {column.label}
           </th>
         );
       case 'taskId':
         return (
-          <th key={column.id} className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left w-[200px]">
+          <th key={column.id} className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
             {column.label}
           </th>
         );
@@ -252,7 +252,7 @@ export const TaskTable: React.FC<{
             >
               <Calendar className="h-4 w-4" />
               {task.dueDate}
-              {overdue && <AlertCircle className="h-4 w-4" />}
+              {/* {overdue && <AlertCircle className="h-4 w-4" />} */}
             </div>
           </td>
         );

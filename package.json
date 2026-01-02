@@ -15,9 +15,13 @@
     "@mui/material": "^7.3.6",
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
+    "@tabler/icons-react": "^3.36.0",
+    "docx-preview": "^0.3.7",
     "lucide-react": "^0.562.0",
+    "mammoth": "^1.11.0",
     "pdfjs-dist": "^3.11.174",
     "react": "^19.2.3",
+    "react-doc-viewer": "^0.1.15",
     "react-dom": "^19.2.3",
     "react-router": "^7.11.0",
     "react-router-dom": "^7.11.0"

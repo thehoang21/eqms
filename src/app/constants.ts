@@ -20,24 +20,25 @@ import {
   Palette
 } from 'lucide-react';
 import { NavItem } from '@/types';
+import { IconAlertTriangle, IconChecklist, IconDeviceDesktopCog, IconFileDescription, IconHistory, IconInfoCircle, IconLayoutDashboard, IconLayoutKanban, IconReplace, IconSchool, IconSettings2, IconShieldCheck, IconUsersGroup } from '@tabler/icons-react';
 
 export const NAV_CONFIG: NavItem[] = [
   {
     id: 'dashboard',
     label: 'Dashboard',
-    icon: LayoutDashboard,
+    icon: IconLayoutDashboard,
     path: '/dashboard',
   },
   {
     id: 'my-tasks',
     label: 'My Tasks',
-    icon: CheckSquare,
+    icon: IconChecklist,
     path: '/my-tasks',
   },
   {
     id: 'doc-control',
     label: 'Document Control',
-    icon: FileText,
+    icon: IconFileDescription,
     children: [
       { id: 'doc-owned-me', label: 'Documents Owned By Me', path: '/documents/owned' },
       { id: 'doc-all', label: 'All Documents', path: '/documents/all' },
@@ -67,25 +68,25 @@ export const NAV_CONFIG: NavItem[] = [
   {
     id: 'training-management',
     label: 'Training Management',
-    icon: GraduationCap,
+    icon: IconSchool,
     path: '/training-management',
   },
   {
     id: 'deviation-ncs',
     label: 'Deviation & NCs',
-    icon: AlertTriangle,
+    icon: IconAlertTriangle,
     path: '/deviations-ncs',
   },
   {
     id: 'capa-management',
     label: 'CAPA Management',
-    icon: Shield,
+    icon: IconShieldCheck,
     path: '/capa-management',
   },
   {
     id: 'change-management',
     label: 'Change Management',
-    icon: GitPullRequest,
+    icon: IconReplace,
     path: '/change-management',
   },
   {
@@ -115,19 +116,19 @@ export const NAV_CONFIG: NavItem[] = [
   {
     id: 'audit-trail',
     label: 'Audit Trail System',
-    icon: History,
+    icon: IconHistory,
     path: '/audit-trail',
   },
   {
     id: 'settings',
     label: 'Setting',
-    icon: Settings,
+    icon: IconSettings2,
     children: [
-      { id: 'user-management', label: 'User Management', icon: Users, path: '/settings/users' },
+      { id: 'user-management', label: 'User Management', icon: IconUsersGroup, path: '/settings/users' },
       { id: 'roles', label: 'Roles & Permissions', icon: ShieldUser, path: '/settings/roles' },
       { id: 'dictionaries', label: 'Dictionaries', icon: Book, path: '/settings/dictionaries' },
-      { id: 'config', label: 'Configuration', icon: MonitorCog, path: '/settings/config' },
-      { id: 'info-sys', label: 'Information System', icon: Database, path: '/settings/info-system' },
+      { id: 'config', label: 'Configuration', icon: IconDeviceDesktopCog, path: '/settings/config' },
+      { id: 'info-sys', label: 'System Information', icon: IconInfoCircle, path: '/settings/info-system' },
       { id: 'ui-demo', label: 'UI Showcase', icon: Palette, path: '/ui-demo' },
     ],
   },
