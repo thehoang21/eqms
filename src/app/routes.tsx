@@ -4,6 +4,7 @@ import { DashboardView } from '@/features/dashboard';
 import { DocumentListView, DocumentsOwnedByMeView, DetailDocumentView } from '@/features/documents';
 import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView } from '@/features/documents/document-revisions';
 import { NewDocumentView } from '@/features/documents/new-document';
+import { BatchDocumentView } from '@/features/documents/batch-document/BatchDocumentView';
 import { ExternalDocumentsView } from '@/features/documents/external-documents';
 import { ArchivedDocumentsView } from '@/features/documents/archived';
 import { MyTasksView } from '@/features/my-tasks';
@@ -37,6 +38,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/owned" element={<DocumentsOwnedByMeView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/all" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/all/new" element={<NewDocumentView />} />
+        <Route path="documents/batch/new" element={<BatchDocumentView />} />
         <Route path="documents/revisions/all" element={<RevisionListView />} />
         <Route path="documents/revisions/owned" element={<RevisionsOwnedByMeView />} />
         <Route path="documents/revisions/new" element={<NewRevisionView />} />      <Route path="/documents/revisions/workspace" element={<RevisionWorkspaceView />} />        <Route path="documents/revisions/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />

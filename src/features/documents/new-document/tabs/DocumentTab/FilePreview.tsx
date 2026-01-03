@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FileText, File as FileIcon, Image as ImageIcon, AlertCircle } from "lucide-react";
-import { convertWordToPdf } from "@/services/api/documentConverter";
 import "./docx-preview.css";
 
 interface FilePreviewProps {
@@ -12,7 +11,6 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
     const [previewType, setPreviewType] = useState<"pdf" | "image" | "text" | "unsupported">("unsupported");
     const [textContent, setTextContent] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
-    const [isConverting, setIsConverting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -39,31 +37,15 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
             setPreviewUrl(url);
             setIsLoading(false);
         }
-        // Word documents - convert to PDF for preview
+        // Word documents - not supported for now
         else if (
             fileName.endsWith(".docx") ||
             fileName.endsWith(".doc") ||
             fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
             fileType === "application/msword"
         ) {
-            setPreviewType("pdf"); // Will display as PDF after conversion
-            setIsConverting(true);
-            
-            convertWordToPdf(file)
-                .then((pdfBlob) => {
-                    const url = URL.createObjectURL(pdfBlob);
-                    console.log("Word converted to PDF, blob URL:", url);
-                    setPreviewUrl(url);
-                    setIsLoading(false);
-                    setIsConverting(false);
-                })
-                .catch((err) => {
-                    console.error("Error converting Word to PDF:", err);
-                    setError(err.message || "Failed to convert Word document to PDF. Please check if the backend conversion service is available.");
-                    setPreviewType("unsupported");
-                    setIsLoading(false);
-                    setIsConverting(false);
-                });
+            setPreviewType("unsupported");
+            setIsLoading(false);
         }
         // Images
         else if (fileType.startsWith("image/")) {
@@ -122,19 +104,12 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
         );
     }
 
-    if (isLoading || isConverting) {
+    if (isLoading) {
         return (
             <div className="h-full flex items-center justify-center bg-white rounded-xl border border-slate-200">
                 <div className="text-center">
                     <div className="animate-spin h-12 w-12 border-4 border-emerald-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-                    <p className="text-slate-600 font-medium">
-                        {isConverting ? "Converting Word to PDF..." : "Loading preview..."}
-                    </p>
-                    {isConverting && (
-                        <p className="text-xs text-slate-500 mt-2">
-                            This may take a few moments
-                        </p>
-                    )}
+                    <p className="text-slate-600 font-medium">Loading preview...</p>
                 </div>
             </div>
         );
@@ -220,12 +195,11 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                                 <p className="font-semibold mb-2">Supported formats:</p>
                                 <ul className="space-y-1 list-disc list-inside">
                                     <li>PDF Documents (.pdf)</li>
-                                    <li>Word Documents (.doc, .docx) - Auto-converted to PDF</li>
                                     <li>Images (.jpg, .png, .gif, .webp, etc.)</li>
                                     <li>Text Files (.txt, .md, .json, .xml, .csv)</li>
                                 </ul>
-                                <p className="mt-3 text-blue-600">
-                                    💡 Word documents are automatically converted to PDF for optimal preview.
+                                <p className="mt-3 text-slate-600">
+                                    📄 Word documents (.doc, .docx) can be uploaded but preview is not available yet.
                                 </p>
                             </div>
                         </div>

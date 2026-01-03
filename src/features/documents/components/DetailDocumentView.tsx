@@ -158,7 +158,7 @@ const MOCK_DOCUMENT: DocumentDetail = {
 export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
     documentId,
     onBack,
-    initialTab = "general",
+    initialTab = "document",
 }) => {
     // In real app, fetch document by documentId
     const document = MOCK_DOCUMENT;
@@ -179,9 +179,9 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
     };
 
     const tabs = [
+        { id: "document" as TabType, label: "Document", icon: FileText },
         { id: "general" as TabType, label: "General Information", icon: Info },
         { id: "training" as TabType, label: "Training Information", icon: GraduationCap },
-        { id: "document" as TabType, label: "Document", icon: FileText },
         { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
         { id: "audit" as TabType, label: "Audit Trail", icon: History },
         { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },

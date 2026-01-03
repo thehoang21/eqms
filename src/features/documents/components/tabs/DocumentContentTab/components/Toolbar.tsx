@@ -12,6 +12,7 @@ import {
     Download,
     UserRoundPenIcon
 } from "lucide-react";
+import { IconSignature } from "@tabler/icons-react";
 
 interface ToolbarProps {
     scale: number;
@@ -140,7 +141,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                         }`}
                     title="View Signatures"
                 >
-                    <UserRoundPenIcon className="h-4 w-4" />
+                    <IconSignature className="h-4 w-4" />
                 </button>
 
                 {userCanDownload && (

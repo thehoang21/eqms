@@ -3,7 +3,8 @@ import { Eye, EyeOff, Lock, Mail, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
-import logoImg from '@/assets/images/favicon/document-color-32.png';
+import logoImg from '@/assets/images/logo_nobg.png';
+import factoryLoginBg from '@/assets/images/factory-login.jpg';
 import { IconUser } from '@tabler/icons-react';
 
 interface LoginViewProps {
@@ -84,34 +85,37 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-emerald-50 via-cyan-50 to-blue-50 relative overflow-hidden flex items-center justify-center p-4 md:p-6 lg:p-8">
-      {/* Animated Background Patterns */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+    <div className="min-h-screen w-full relative overflow-hidden flex items-center justify-center p-4 md:p-6 lg:p-8">
+      {/* Background Image with Blur */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src={factoryLoginBg} 
+          alt="Factory Background" 
+          className="w-full h-full object-cover blur-lg scale-105"
+        />
+        <div className="absolute inset-0 bg-black/10" />
       </div>
 
       {/* Login Card */}
       <div className="w-full max-w-md relative z-10">
         {/* Card Container */}
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Header Section */}
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-6 md:px-8 py-8 md:py-10 text-center">
             <div className="flex justify-center mb-4">
-              <div className="h-16 w-16 md:h-20 md:w-20 bg-white rounded-2xl shadow-lg flex items-center justify-center">
+              <div className="h-16 w-auto px-4 md:h-20 md:px-6 bg-white rounded-2xl shadow-lg flex items-center justify-center">
                 <img 
                   src={logoImg} 
                   alt="QualiGuard Logo" 
-                  className="h-10 w-10 md:h-12 md:w-12 object-contain"
+                  className="h-10 md:h-12 w-auto object-contain"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
               </div>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">Welcome Back</h1>
-            <p className="text-emerald-50 text-sm md:text-base">Sign in to continue to Zenith Quality</p>
+            <h1 className="text-xl font-bold text-white mb-2">Welcome Back</h1>
+            <p className="text-emerald-50 text-2xl md:text-2xl font-bold">Quality Management System</p>
           </div>
 
           {/* Form Section */}
@@ -243,10 +247,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 )}
               </Button>
             </form>
-          </div>
-        </div>
-
-        {/* Footer Text */}
+                    {/* Footer Text */}
         <div className="mt-6 text-center">
           <p className="text-sm text-slate-600">
             Don't have an account?{' '}
@@ -255,10 +256,14 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             </button>
           </p>
         </div>
+          </div>
+        </div>
 
         {/* Copyright */}
-        <div className="mt-8 text-center text-xs text-slate-500">
-          &copy; {new Date().getFullYear()} Zenith Quality. All rights reserved. EU-GMP Compliant.
+        <div className="mt-8 text-center">
+          <p className="text-xs text-white/90 font-base drop-shadow-md tracking-wide">
+            &copy; {new Date().getFullYear()} Ngoc Thien Pharma. All rights reserved. EU-GMP Compliant.
+          </p>
         </div>
       </div>
     </div>

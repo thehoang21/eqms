@@ -26,6 +26,7 @@ import {
     SignaturesTab,
     AuditTab,
     WorkflowTab,
+    type UploadedFile,
 } from "./tabs";
 
 // --- Types ---
@@ -35,12 +36,16 @@ type TabType = "general" | "training" | "document" | "signatures" | "audit" | "w
 
 export const NewDocumentView: React.FC = () => {
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState<TabType>("general");
+    const [activeTab, setActiveTab] = useState<TabType>("document");
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isESignOpen, setIsESignOpen] = useState(false);
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
     const [validationModalMessage, setValidationModalMessage] = useState<React.ReactNode>(null);
+
+    // File state
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -140,9 +145,9 @@ export const NewDocumentView: React.FC = () => {
     const currentStepIndex = 0; // Always "Draft" for new documents
 
     const tabs = [
+        { id: "document" as TabType, label: "Document", icon: FileText },
         { id: "general" as TabType, label: "General Information", icon: Info },
         { id: "training" as TabType, label: "Training Information", icon: GraduationCap },
-        { id: "document" as TabType, label: "Document", icon: FileText },
         { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
         { id: "audit" as TabType, label: "Audit Trail", icon: History },
         { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },
@@ -154,7 +159,7 @@ export const NewDocumentView: React.FC = () => {
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+                        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
                             New Document
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
@@ -166,7 +171,6 @@ export const NewDocumentView: React.FC = () => {
                             </button>
                             <ChevronRight className="h-4 w-4 text-slate-400" />
                             <button
-                                onClick={() => navigate("/documents/all")}
                                 className="hover:text-slate-700 transition-colors"
                             >
                                 Document Control
@@ -315,7 +319,12 @@ export const NewDocumentView: React.FC = () => {
                     )}
 
                     {activeTab === "document" && (
-                        <DocumentTab />
+                        <DocumentTab 
+                            uploadedFiles={uploadedFiles}
+                            onFilesChange={setUploadedFiles}
+                            selectedFile={selectedFile}
+                            onSelectFile={setSelectedFile}
+                        />
                     )}
 
                     {activeTab === "signatures" && (

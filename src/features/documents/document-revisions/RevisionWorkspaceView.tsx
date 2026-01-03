@@ -26,11 +26,11 @@ import { AlertModal } from "@/components/ui/modal/AlertModal";
 import {
     GeneralTab,
     TrainingTab,
-    DocumentTab,
     SignaturesTab,
     AuditTab,
     WorkflowTab,
 } from "../new-document/tabs";
+import { MultiDocumentUpload } from "./components/MultiDocumentUpload";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -84,8 +84,9 @@ export const RevisionWorkspaceView: React.FC = () => {
     const location = useLocation();
     const state = location.state as LocationState;
 
-    const [activeTab, setActiveTab] = useState<TabType>("general");
+    const [activeTab, setActiveTab] = useState<TabType>("document");
     const [currentDocIndex, setCurrentDocIndex] = useState(0);
+    const [uploadedFiles, setUploadedFiles] = useState<{ [documentId: string]: File | null }>({});
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isESignOpen, setIsESignOpen] = useState(false);
@@ -98,38 +99,100 @@ export const RevisionWorkspaceView: React.FC = () => {
     const [workspaceDocuments, setWorkspaceDocuments] = useState<WorkspaceDocument[]>([]);
 
     useEffect(() => {
-        if (state?.linkedDocuments && state?.impactDecisions) {
-            // Create draft documents for upgraded items
-            const upgradedDocs = state.linkedDocuments
-                .filter(doc => state.impactDecisions![doc.id])
-                .map(doc => ({
-                    id: doc.id,
-                    code: doc.code,
-                    name: doc.name,
-                    type: doc.type,
-                    currentVersion: doc.currentVersion,
-                    nextVersion: doc.nextVersion,
-                    isUpgraded: true,
-                    formData: {
-                        title: doc.name,
-                        type: "SOP" as DocumentType,
-                        author: "",
-                        businessUnit: "",
-                        department: "",
-                        knowledgeBase: "",
-                        subType: "-- None --",
-                        periodicReviewCycle: 24,
-                        periodicReviewNotification: 14,
-                        language: "English",
-                        description: "",
-                        isTemplate: false,
-                    }
-                }));
-            setWorkspaceDocuments(upgradedDocs);
+        if (state?.sourceDocument) {
+            const documents: WorkspaceDocument[] = [];
+
+            // Add Source Document (always included)
+            documents.push({
+                id: `source-${state.sourceDocument.code}`,
+                code: state.sourceDocument.code,
+                name: state.sourceDocument.name,
+                type: "Form", // Default type, can be adjusted
+                currentVersion: state.sourceDocument.version,
+                nextVersion: incrementVersion(state.sourceDocument.version),
+                isUpgraded: true,
+                formData: {
+                    title: state.sourceDocument.name,
+                    type: "SOP" as DocumentType,
+                    author: "",
+                    businessUnit: "",
+                    department: "",
+                    knowledgeBase: "",
+                    subType: "-- None --",
+                    periodicReviewCycle: 24,
+                    periodicReviewNotification: 14,
+                    language: "English",
+                    description: "",
+                    isTemplate: false,
+                }
+            });
+
+            // Add upgraded linked documents (if any)
+            if (state.linkedDocuments && state.impactDecisions) {
+                const upgradedDocs = state.linkedDocuments
+                    .filter(doc => state.impactDecisions![doc.id])
+                    .map(doc => ({
+                        id: doc.id,
+                        code: doc.code,
+                        name: doc.name,
+                        type: doc.type,
+                        currentVersion: doc.currentVersion,
+                        nextVersion: doc.nextVersion,
+                        isUpgraded: true,
+                        formData: {
+                            title: doc.name,
+                            type: "SOP" as DocumentType,
+                            author: "",
+                            businessUnit: "",
+                            department: "",
+                            knowledgeBase: "",
+                            subType: "-- None --",
+                            periodicReviewCycle: 24,
+                            periodicReviewNotification: 14,
+                            language: "English",
+                            description: "",
+                            isTemplate: false,
+                        }
+                    }));
+                documents.push(...upgradedDocs);
+            }
+
+            setWorkspaceDocuments(documents);
         }
     }, [state]);
 
+    // Helper function to increment version
+    const incrementVersion = (version: string): string => {
+        const parts = version.split('.');
+        if (parts.length > 0) {
+            const lastPart = parseInt(parts[parts.length - 1]);
+            parts[parts.length - 1] = String(lastPart + 1);
+            return parts.join('.');
+        }
+        return version;
+    };
+
     const currentDocument = workspaceDocuments[currentDocIndex];
+    
+    // Check if all files are uploaded
+    const allFilesUploaded = useMemo(() => {
+        return workspaceDocuments.every(doc => uploadedFiles[doc.id] !== null && uploadedFiles[doc.id] !== undefined);
+    }, [workspaceDocuments, uploadedFiles]);
+
+    // Check if current document has all required fields
+    const isCurrentDocumentValid = useMemo(() => {
+        if (!currentDocument) return false;
+        const formData = currentDocument.formData;
+        
+        return !!(
+            formData.title.trim() &&
+            String(formData.type || "").trim() &&
+            formData.author.trim() &&
+            formData.businessUnit.trim() &&
+            Number.isFinite(formData.periodicReviewCycle) && formData.periodicReviewCycle > 0 &&
+            Number.isFinite(formData.periodicReviewNotification) && formData.periodicReviewNotification > 0
+        );
+    }, [currentDocument]);
 
     const missingRequiredFields = useMemo(() => {
         if (!currentDocument) return [];
@@ -253,17 +316,37 @@ export const RevisionWorkspaceView: React.FC = () => {
     };
 
     const handleNextDocument = () => {
+        // Validate current document before moving to next
+        if (!isCurrentDocumentValid) {
+            setValidationModalMessage(
+                <div className="space-y-2">
+                    <p>Please fill in all required fields before proceeding:</p>
+                    <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
+                        {missingRequiredFields.map((field) => (
+                            <li key={field}>{field}</li>
+                        ))}
+                    </ul>
+                </div>
+            );
+            setIsValidationModalOpen(true);
+            return;
+        }
+
         if (currentDocIndex < workspaceDocuments.length - 1) {
             setCurrentDocIndex(prev => prev + 1);
-            setActiveTab("general"); // Reset to general tab
+            // Stay on general tab for data entry
         }
     };
 
     const handlePreviousDocument = () => {
         if (currentDocIndex > 0) {
             setCurrentDocIndex(prev => prev - 1);
-            setActiveTab("general"); // Reset to general tab
+            // Stay on general tab for data entry
         }
+    };
+
+    const handleFilesChange = (files: { [documentId: string]: File | null }) => {
+        setUploadedFiles(files);
     };
 
     // Status workflow steps
@@ -271,9 +354,9 @@ export const RevisionWorkspaceView: React.FC = () => {
     const currentStepIndex = 0; // Always "Draft" for new revisions
 
     const tabs = [
+        { id: "document" as TabType, label: "Document", icon: FileText },
         { id: "general" as TabType, label: "General Information", icon: Info },
         { id: "training" as TabType, label: "Training Information", icon: GraduationCap },
-        { id: "document" as TabType, label: "Document", icon: FileText },
         { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
         { id: "audit" as TabType, label: "Audit Trail", icon: History },
         { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },
@@ -346,63 +429,21 @@ export const RevisionWorkspaceView: React.FC = () => {
                         </Button>
                         <Button
                             onClick={handleSave}
-                            disabled={isSaving || isSubmitting}
+                            disabled={isSaving || isSubmitting || !allFilesUploaded}
                             size="sm"
-                            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+                            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
                         >
                             <Save className="h-4 w-4" />
                             {isSaving ? "Saving..." : "Save Draft"}
                         </Button>
                         <Button
                             onClick={handleSubmitForReview}
-                            disabled={isSaving || isSubmitting}
+                            disabled={isSaving || isSubmitting || !allFilesUploaded}
                             size="sm"
-                            className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white"
+                            className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300"
                         >
                             <Send className="h-4 w-4" />
                             {isSubmitting ? "Submitting..." : "Submit for Review"}
-                        </Button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Document Navigator */}
-            <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-xl border border-slate-200 shadow-sm p-4">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-                            <Layers className="h-5 w-5 text-emerald-600" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-semibold text-slate-900">
-                                Document {currentDocIndex + 1} of {workspaceDocuments.length}
-                            </p>
-                            <p className="text-xs text-slate-600">
-                                {currentDocument?.code} - {currentDocument?.name}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={handlePreviousDocument}
-                            disabled={currentDocIndex === 0}
-                            className="px-3"
-                        >
-                            Previous
-                        </Button>
-                        <div className="px-3 py-2 bg-white rounded-md border border-slate-200 text-sm font-medium">
-                            {currentDocIndex + 1} / {workspaceDocuments.length}
-                        </div>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={handleNextDocument}
-                            disabled={currentDocIndex === workspaceDocuments.length - 1}
-                            className="px-3"
-                        >
-                            Next
                         </Button>
                     </div>
                 </div>
@@ -498,35 +539,117 @@ export const RevisionWorkspaceView: React.FC = () => {
 
                 {/* Tab Content */}
                 <div className="p-6">
-                    {currentDocument && (
-                        <>
-                            {activeTab === "general" && (
-                                <GeneralTab 
-                                    formData={currentDocument.formData} 
-                                    onFormChange={handleFormChange} 
-                                />
-                            )}
+                    {activeTab === "document" && (
+                        <MultiDocumentUpload
+                            documents={workspaceDocuments.map(doc => ({
+                                id: doc.id,
+                                code: doc.code,
+                                name: doc.name,
+                                type: doc.type,
+                                nextVersion: doc.nextVersion,
+                            }))}
+                            uploadedFiles={uploadedFiles}
+                            onFilesChange={handleFilesChange}
+                        />
+                    )}
 
-                            {activeTab === "training" && (
-                                <TrainingTab />
-                            )}
+                    {activeTab === "general" && currentDocument && (
+                        <div className="space-y-6">
+                            {/* Current Document Context */}
+                            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-6">
+                                <div className="flex items-start justify-between gap-4">
+                                    <div className="flex-1">
+                                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                                            Editing: {currentDocument.code}
+                                        </h3>
+                                        <p className="text-sm text-slate-600 mb-2">
+                                            {currentDocument.name}
+                                        </p>
+                                        {uploadedFiles[currentDocument.id] && (
+                                            <div className="flex items-center gap-2 text-sm">
+                                                <FileText className="h-4 w-4 text-blue-600" />
+                                                <span className="text-blue-700 font-medium">
+                                                    File: {uploadedFiles[currentDocument.id]?.name}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-sm text-slate-600">Document</div>
+                                        <div className="text-2xl font-bold text-slate-900">
+                                            {currentDocIndex + 1} / {workspaceDocuments.length}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                            {activeTab === "document" && (
-                                <DocumentTab />
-                            )}
+                            <GeneralTab 
+                                formData={currentDocument.formData} 
+                                onFormChange={handleFormChange} 
+                            />
 
-                            {activeTab === "signatures" && (
-                                <SignaturesTab />
-                            )}
+                            {/* Navigation Buttons */}
+                            <div className="flex items-center justify-between pt-6 border-t border-slate-200">
+                                <Button
+                                    onClick={handlePreviousDocument}
+                                    disabled={currentDocIndex === 0}
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex items-center gap-2"
+                                >
+                                    <ChevronRight className="h-4 w-4 rotate-180" />
+                                    Previous Document
+                                </Button>
 
-                            {activeTab === "audit" && (
-                                <AuditTab />
-                            )}
+                                <div className="flex items-center gap-2">
+                                    {missingRequiredFields.length > 0 && (
+                                        <div className="text-xs text-amber-600 flex items-center gap-1">
+                                            <AlertCircle className="h-4 w-4" />
+                                            {missingRequiredFields.length} required field(s) missing
+                                        </div>
+                                    )}
+                                </div>
 
-                            {activeTab === "workflow" && (
-                                <WorkflowTab />
-                            )}
-                        </>
+                                {currentDocIndex < workspaceDocuments.length - 1 ? (
+                                    <Button
+                                        onClick={handleNextDocument}
+                                        variant="default"
+                                        size="sm"
+                                        className="flex items-center gap-2"
+                                    >
+                                        Next Document
+                                        <ChevronRight className="h-4 w-4" />
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onClick={() => setActiveTab("training")}
+                                        variant="default"
+                                        size="sm"
+                                        disabled={!isCurrentDocumentValid}
+                                        className="flex items-center gap-2"
+                                    >
+                                        Complete & Continue
+                                        <CheckCircle2 className="h-4 w-4" />
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === "training" && (
+                        <TrainingTab />
+                    )}
+
+                    {activeTab === "signatures" && (
+                        <SignaturesTab />
+                    )}
+
+                    {activeTab === "audit" && (
+                        <AuditTab />
+                    )}
+
+                    {activeTab === "workflow" && (
+                        <WorkflowTab />
                     )}
                 </div>
             </div>

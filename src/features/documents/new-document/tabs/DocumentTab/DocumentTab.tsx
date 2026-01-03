@@ -2,8 +2,9 @@ import React, { useState, useRef } from "react";
 import { Upload, File, X, FileText, CheckCircle2, AlertCircle, Eye } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { FilePreview } from "./FilePreview";
+import { IconCloudUpload } from "@tabler/icons-react";
 
-interface UploadedFile {
+export interface UploadedFile {
     id: string;
     file: File;
     progress: number;
@@ -11,10 +12,20 @@ interface UploadedFile {
     error?: string;
 }
 
-export const DocumentTab: React.FC = () => {
-    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+interface DocumentTabProps {
+    uploadedFiles: UploadedFile[];
+    onFilesChange: (files: UploadedFile[] | ((prev: UploadedFile[]) => UploadedFile[])) => void;
+    selectedFile: File | null;
+    onSelectFile: (file: File | null) => void;
+}
+
+export const DocumentTab: React.FC<DocumentTabProps> = ({
+    uploadedFiles,
+    onFilesChange,
+    selectedFile,
+    onSelectFile
+}) => {
     const [isDragging, setIsDragging] = useState(false);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -50,11 +61,11 @@ export const DocumentTab: React.FC = () => {
             status: "uploading",
         }));
 
-        setUploadedFiles((prev) => [...prev, ...newFiles]);
+        onFilesChange((prev) => [...prev, ...newFiles]);
 
         // Auto-select first file for preview
         if (!selectedFile && newFiles.length > 0) {
-            setSelectedFile(newFiles[0].file);
+            onSelectFile(newFiles[0].file);
         }
 
         // Simulate upload progress
@@ -68,7 +79,7 @@ export const DocumentTab: React.FC = () => {
         const interval = setInterval(() => {
             progress += 10;
             
-            setUploadedFiles((prev) =>
+            onFilesChange((prev) =>
                 prev.map((f) =>
                     f.id === fileId
                         ? { ...f, progress: Math.min(progress, 100) }
@@ -78,7 +89,7 @@ export const DocumentTab: React.FC = () => {
 
             if (progress >= 100) {
                 clearInterval(interval);
-                setUploadedFiles((prev) =>
+                onFilesChange((prev) =>
                     prev.map((f) =>
                         f.id === fileId
                             ? { ...f, status: "success" }
@@ -91,12 +102,12 @@ export const DocumentTab: React.FC = () => {
 
     const handleRemoveFile = (fileId: string) => {
         const fileToRemove = uploadedFiles.find((f) => f.id === fileId);
-        setUploadedFiles((prev) => prev.filter((f) => f.id !== fileId));
+        onFilesChange((prev) => prev.filter((f) => f.id !== fileId));
         
         // If removed file was selected, clear preview or select another
         if (fileToRemove && selectedFile === fileToRemove.file) {
             const remaining = uploadedFiles.filter((f) => f.id !== fileId);
-            setSelectedFile(remaining.length > 0 ? remaining[0].file : null);
+            onSelectFile(remaining.length > 0 ? remaining[0].file : null);
         }
     };
 
@@ -138,7 +149,7 @@ export const DocumentTab: React.FC = () => {
                             "w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors",
                             isDragging ? "bg-emerald-100" : "bg-slate-200"
                         )}>
-                            <Upload className={cn(
+                            <IconCloudUpload className={cn(
                                 "h-7 w-7 transition-colors",
                                 isDragging ? "text-emerald-600" : "text-slate-500"
                             )} />
@@ -181,7 +192,7 @@ export const DocumentTab: React.FC = () => {
                                             ? "border-emerald-500 shadow-md ring-2 ring-emerald-100"
                                             : "border-slate-200 hover:shadow-md hover:border-emerald-300"
                                     )}
-                                    onClick={() => setSelectedFile(uploadedFile.file)}
+                                    onClick={() => onSelectFile(uploadedFile.file)}
                                 >
                                     <div className="flex items-start gap-3">
                                         {/* File Icon */}
@@ -219,7 +230,7 @@ export const DocumentTab: React.FC = () => {
                                                             <button
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
-                                                                    setSelectedFile(uploadedFile.file);
+                                                                    onSelectFile(uploadedFile.file);
                                                                 }}
                                                                 className="p-1 hover:bg-emerald-50 rounded transition-colors"
                                                                 title="Preview"
@@ -285,7 +296,7 @@ export const DocumentTab: React.FC = () => {
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="flex items-start gap-2.5">
                         <File className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
-                        <div className="text-xs text-blue-800">
+                        <div className="text-sm text-blue-800">
                             <p className="font-medium mb-1">Upload Guidelines</p>
                             <ul className="space-y-0.5 text-blue-700">
                                 <li>• Upload main document and supporting files</li>

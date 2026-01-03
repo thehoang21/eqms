@@ -30,6 +30,7 @@ import { cn } from '@/components/ui/utils';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 import { DocumentFilters } from "./components/DocumentFilters";
 import { DetailDocumentView } from "./components/DetailDocumentView";
+import { NewDocumentModal } from "./components/NewDocumentModal";
 
 // --- Types ---
 
@@ -713,11 +714,20 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [selectedDocumentTab, setSelectedDocumentTab] = useState<string>("general");
   const [isLoading, setIsLoading] = useState(true);
+  const [isNewDocModalOpen, setIsNewDocModalOpen] = useState(false);
 
   const itemsPerPage = 10;
 
   const handleNewDocument = () => {
+    setIsNewDocModalOpen(true);
+  };
+
+  const handleSelectSingleDocument = () => {
     navigate("/documents/all/new");
+  };
+
+  const handleSelectBatchDocument = () => {
+    navigate("/documents/batch/new");
   };
 
   const handleViewDocument = (documentId: string, tab: string = "general") => {
@@ -1121,6 +1131,14 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
           )}
         </div>
       </div>
+
+      {/* New Document Modal */}
+      <NewDocumentModal
+        isOpen={isNewDocModalOpen}
+        onClose={() => setIsNewDocModalOpen(false)}
+        onSelectSingle={handleSelectSingleDocument}
+        onSelectBatch={handleSelectBatchDocument}
+      />
     </div>
   );
 };

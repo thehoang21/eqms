@@ -17,6 +17,7 @@
     "@react-pdf-viewer/default-layout": "^3.12.0",
     "@tabler/icons-react": "^3.36.0",
     "docx-preview": "^0.3.7",
+    "framer-motion": "^12.23.26",
     "lucide-react": "^0.562.0",
     "mammoth": "^1.11.0",
     "pdfjs-dist": "^3.11.174",

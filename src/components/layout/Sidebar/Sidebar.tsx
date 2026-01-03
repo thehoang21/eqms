@@ -6,6 +6,8 @@ import { cn } from '@/components/ui/utils';
 
 // 1. IMPORT LOGO: Sử dụng cơ chế import để Vite xử lý hash đường dẫn chính xác
 import logoImg from '@/assets/images/favicon/document-color-32.png';
+import logoFull from '@/assets/images/logo_nobg.png';
+import logoCollapsed from '@/assets/images/LOGO.png';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -203,16 +205,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         "h-16 md:h-18 flex items-center border-b border-slate-100 bg-white transition-all duration-200 ease-in-out relative",
         isCollapsed ? "justify-center px-0" : "justify-start px-4"
       )}>
-        <div className="flex items-center overflow-hidden w-full">
+        <div className="flex items-center overflow-hidden w-full justify-center">
           {/* LOGO CONTAINER */}
           <div className={cn(
-            "h-8 w-8 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ease-out z-10",
-            isCollapsed ? "mx-auto" : "mr-2"
-          )}
-            style={{ willChange: 'margin' }}
-          >
+            "flex items-center justify-center shrink-0 transition-all duration-200 ease-out z-10",
+            isCollapsed ? "h-10 w-10" : "h-12 w-auto"
+          )}>
             <img
-              src={logoImg} // Sử dụng biến đã import
+              src={isCollapsed ? logoCollapsed : logoFull}
               alt="Logo"
               className="h-full w-full object-contain"
               // Xử lý lỗi nếu ảnh không tải được
@@ -221,19 +221,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 e.currentTarget.style.display = 'none';
               }}
             />
-          </div>
-
-          {/* TEXT CONTAINER */}
-          <div className={cn(
-            "overflow-hidden transition-all duration-200 ease-out whitespace-nowrap",
-            // Sử dụng max-width cụ thể thay vì auto để animation mượt hơn
-            isCollapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"
-          )}
-            style={{ willChange: 'max-width, opacity' }}
-          >
-            <span className="font-bold text-slate-800 tracking-tight text-lg">
-              Zenith Quality
-            </span>
           </div>
         </div>
       </div>
