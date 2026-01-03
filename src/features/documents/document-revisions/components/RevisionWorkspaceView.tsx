@@ -29,8 +29,8 @@ import {
     SignaturesTab,
     AuditTab,
     WorkflowTab,
-} from "../new-document/tabs";
-import { MultiDocumentUpload } from "./components/MultiDocumentUpload";
+} from "../../new-document/tabs";
+import { MultiDocumentUpload } from "./MultiDocumentUpload";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";

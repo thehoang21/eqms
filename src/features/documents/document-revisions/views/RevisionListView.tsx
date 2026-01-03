@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge';
-import { DocumentFilters } from "../components/DocumentFilters";
+import { DocumentFilters } from "../../components/DocumentFilters";
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 

@@ -26,7 +26,7 @@ import {
     SignaturesTab,
     AuditTab,
     WorkflowTab,
-} from "../new-document/tabs";
+} from "./../tabs";
 import { BatchDocumentUpload } from "./components/BatchDocumentUpload";
 import { DocumentTreeView } from "./components/DocumentTreeView";
 

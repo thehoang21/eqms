@@ -1,5 +1,7 @@
-export { RevisionListView } from "./RevisionListView";
-export { RevisionsOwnedByMeView } from './RevisionsOwnedByMeView';
-export { NewRevisionView } from "./NewRevisionView";
-export { RevisionWorkspaceView } from "./RevisionWorkspaceView";
+export { RevisionListView } from "./views/RevisionListView";
+export { RevisionsOwnedByMeView } from './views/RevisionsOwnedByMeView';
+export { NewRevisionView } from "./components/NewRevisionView";
+export { RevisionWorkspaceView } from "./components/RevisionWorkspaceView";
+export { PendingMyReviewView } from "./views/PendingMyReviewView";
+export { PendingMyApprovalView } from "./views/PendingMyApprovalView";
 

@@ -5,6 +5,7 @@ import { Button } from '../../ui/button/Button';
 import { cn } from '../../ui/utils';
 import { SearchDropdown } from './SearchDropdown';
 import { NotificationsDropdown } from './NotificationsDropdown';
+import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand } from '@tabler/icons-react';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -36,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
   }, [isUserMenuOpen]);
 
   return (
-    <header className="h-16 md:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm px-4 md:px-6 flex items-center justify-between shadow-sm/30 shrink-0 transition-all">
+    <header className="h-16 md:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm px-4 md:px-2 flex items-center justify-between shadow-sm/30 shrink-0 transition-all">
       
       {/* Overlay for visual effect */}
       {isUserMenuOpen && createPortal(
@@ -55,22 +56,39 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
             className="text-slate-500 hover:bg-slate-100 relative overflow-hidden"
             title={isMobileMenuOpen ? "Close Menu" : (isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar")}
         >
-            {/* Menu Icon (Hamburger) - Show on desktop or when mobile menu is closed */}
-            <Menu className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-all duration-200 ease-out",
-              "lg:opacity-100 lg:rotate-0 lg:scale-100",
-              isMobileMenuOpen 
-                ? "opacity-0 rotate-90 scale-75" 
+            {/* Desktop: Expand Icon - Show when sidebar is collapsed */}
+            <IconLayoutSidebarLeftExpand className={cn(
+              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out hidden lg:block origin-center",
+              isSidebarCollapsed 
+                ? "opacity-100 rotate-0 scale-100" 
+                : "opacity-0 rotate-180 scale-90"
+            )} 
+              style={{ willChange: 'transform, opacity' }}
+            />
+            {/* Desktop: Collapse Icon - Show when sidebar is expanded */}
+            <IconLayoutSidebarLeftCollapse className={cn(
+              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out hidden lg:block origin-center",
+              isSidebarCollapsed 
+                ? "opacity-0 -rotate-180 scale-90" 
                 : "opacity-100 rotate-0 scale-100"
             )} 
               style={{ willChange: 'transform, opacity' }}
             />
-            {/* X Icon (Close) - Show on mobile when menu is open */}
+            {/* Mobile: Menu Icon - Show when mobile menu is closed */}
+            <IconLayoutSidebarLeftCollapse className={cn(
+              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out lg:hidden origin-center",
+              isMobileMenuOpen 
+                ? "opacity-0 rotate-180 scale-90" 
+                : "opacity-100 rotate-0 scale-100"
+            )} 
+              style={{ willChange: 'transform, opacity' }}
+            />
+            {/* Mobile: X Icon - Show when mobile menu is open */}
             <X className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-all duration-200 ease-out lg:hidden",
+              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out lg:hidden origin-center",
               isMobileMenuOpen 
                 ? "opacity-100 rotate-0 scale-100" 
-                : "opacity-0 -rotate-90 scale-75"
+                : "opacity-0 -rotate-180 scale-90"
             )} 
               style={{ willChange: 'transform, opacity' }}
             />
