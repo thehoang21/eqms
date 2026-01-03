@@ -3,6 +3,7 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar';
 import { Header } from '@/components/layout/Header/Header';
 import { Footer } from '@/components/layout/Footer/Footer';
+import { NetworkStatusMonitor } from '@/components/NetworkStatusMonitor';
 import { useResponsiveSidebar } from './useResponsiveSidebar';
 import { useNavigation } from './useNavigation';
 
@@ -21,6 +22,9 @@ export const MainLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
+      {/* Network Status Monitor - Global */}
+      <NetworkStatusMonitor />
+      
       {/* Sidebar - Off-canvas on mobile, sticky on desktop */}
       <Sidebar
         isCollapsed={isSidebarCollapsed}
