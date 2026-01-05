@@ -1,11 +1,10 @@
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { DashboardView } from '@/features/dashboard';
-import { DocumentListView, DocumentsOwnedByMeView, DetailDocumentView, TemplateLibraryView } from '@/features/documents';
+import { DocumentsOwnedByMeView, DetailDocumentView } from '@/features/documents';
 import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingMyReviewView, PendingMyApprovalView } from '@/features/documents/document-revisions';
-import { DocumentReviewView } from '@/features/documents/review';
-import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/documents/new-document';
-import { ExternalDocumentsView } from '@/features/documents/external-documents';
+import { DocumentReviewView } from '@/features/documents/all-document/new-document/review';
+import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/documents/all-document/new-document';
 import { ArchivedDocumentsView } from '@/features/documents/archived';
 import { MyTasksView } from '@/features/my-tasks';
 import { ProfileView, UserManagementView } from '@/features/settings';
@@ -13,6 +12,8 @@ import { LoginView } from '@/features/auth';
 import { UIShowcase } from '@/features/ui-showcase/UIShowcase';
 import { UnderConstruction } from './UnderConstruction';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { DocumentListView } from '@/features/documents/all-document';
+import { TemplateLibraryView } from '@/features/documents/template';
 
 // Wrapper for Detail View to extract ID from params
 const DetailDocumentViewWrapper = () => {
@@ -55,7 +56,6 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/templates" element={<TemplateLibraryView onViewTemplate={(id) => navigate(`/documents/templates/${id}`)} onCreateTemplate={() => navigate('/documents/templates/new')} />} />
         <Route path="documents/templates/new" element={<NewTemplateView />} />
         <Route path="documents/archived" element={<ArchivedDocumentsView />} />
-        <Route path="documents/external" element={<ExternalDocumentsView />} />
         {/* Detail View */}
         <Route path="documents/:id" element={<DetailDocumentViewWrapper />} />
         {/* Document Review */}

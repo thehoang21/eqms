@@ -34,7 +34,7 @@ import {
     SignaturesTab,
     AuditTrailTab,
     WorkflowDiagramTab,
-} from "../components/tabs";
+} from "../../../components/tabs";
 import { IconListNumbers } from "@tabler/icons-react";
 
 // --- Types ---

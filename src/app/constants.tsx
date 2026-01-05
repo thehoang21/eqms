@@ -117,11 +117,6 @@ export const NAV_CONFIG: NavItem[] = [
         label: "Archived Documents",
         path: "/documents/archived",
       },
-      {
-        id: "external-documents",
-        label: "External Documents",
-        path: "/documents/external",
-      },
     ],
   },
   {

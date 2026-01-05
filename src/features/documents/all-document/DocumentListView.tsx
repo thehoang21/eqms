@@ -28,9 +28,9 @@ import { Select } from '@/components/ui/select/Select';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
-import { DocumentFilters } from "./components/DocumentFilters";
-import { DetailDocumentView } from "./components/DetailDocumentView";
-import { NewDocumentModal } from "./components/NewDocumentModal";
+import { DocumentFilters } from "../components/DocumentFilters";
+import { DetailDocumentView } from "../components/DetailDocumentView";
+import { NewDocumentModal } from "./new-document/NewDocumentModal";
 
 // --- Types ---
 

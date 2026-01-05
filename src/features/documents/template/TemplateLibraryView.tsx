@@ -19,7 +19,7 @@ import {
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
-import { TemplateFilters } from "./components/TemplateFilters";
+import { TemplateFilters } from "./TemplateFilters";
 import { IconTemplate } from "@tabler/icons-react";
 
 // --- Types ---

@@ -29,7 +29,7 @@ import {
     SignaturesTab,
     AuditTab,
     WorkflowTab,
-} from "../../new-document/tabs";
+} from "../../all-document/new-document/tabs";
 import { MultiDocumentUpload } from "./MultiDocumentUpload";
 
 // --- Types ---
