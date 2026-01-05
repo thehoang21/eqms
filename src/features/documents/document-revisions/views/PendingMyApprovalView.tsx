@@ -1,22 +1,17 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import {
-  ChevronDown,
   ChevronRight,
   MoreVertical,
   Eye,
-  Download,
   History,
   AlertCircle,
   CheckCircle2,
   Clock,
-  AlertTriangle,
-  GripVertical,
   Home,
   FileText,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
-import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "../../components/DocumentFilters";
 
@@ -192,162 +187,7 @@ const DropdownMenu: React.FC<{
   );
 };
 
-const ColumnCustomizer: React.FC<{
-  columns: TableColumn[];
-  onColumnsChange: (columns: TableColumn[]) => void;
-}> = ({ columns, onColumnsChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
-  // Close when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const reorderableColumns = useMemo(() => 
-    [...columns].sort((a, b) => a.order - b.order)
-  , [columns]);
-
-  const toggleVisibility = (id: string) => {
-    if (columns.find(c => c.id === id)?.locked) return;
-    
-    const newColumns = columns.map(col => 
-      col.id === id ? { ...col, visible: !col.visible } : col
-    );
-    onColumnsChange(newColumns);
-  };
-
-  const handleDragStart = (index: number) => {
-    setDraggedIndex(index);
-  };
-
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index) return;
-
-    const newColumns = [...reorderableColumns];
-    const draggedItem = newColumns[draggedIndex];
-    newColumns.splice(draggedIndex, 1);
-    newColumns.splice(index, 0, draggedItem);
-
-    // Update order
-    const updatedColumns = newColumns.map((col, idx) => ({
-      ...col,
-      order: idx
-    }));
-
-    onColumnsChange(updatedColumns);
-    setDraggedIndex(index);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-  };
-
-  const resetToDefault = () => {
-    const defaultColumns: TableColumn[] = [
-      { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-      { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
-      { id: 'created', label: 'Created', visible: true, order: 2 },
-      { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
-      { id: 'title', label: 'Document Name', visible: true, order: 4 },
-      { id: 'status', label: 'State', visible: true, order: 5 },
-      { id: 'type', label: 'Document Type', visible: true, order: 6 },
-      { id: 'department', label: 'Department', visible: true, order: 7 },
-      { id: 'author', label: 'Author', visible: true, order: 8 },
-      { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
-      { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
-      { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
-    ];
-    onColumnsChange(defaultColumns);
-  };
-
-  return (
-    <div ref={containerRef} className="relative">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "flex items-center justify-between gap-2 w-full px-3 h-11 border rounded-md bg-white text-sm transition-all",
-          isOpen 
-            ? "border-emerald-500 ring-2 ring-emerald-500" 
-            : "border-slate-200 hover:border-slate-300"
-        )}
-      >
-        <span className="text-slate-700 font-medium">Customize Columns</span>
-        <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 left-0 top-full mt-2 z-50 w-full bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
-          <div className="px-4 py-2 border-b border-slate-100">
-            <h3 className="text-sm font-semibold text-slate-700">Customize Columns</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Scroll to View, Drag to reorder</p>
-          </div>
-
-          <div className="p-2 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
-            {reorderableColumns.map((column, index) => (
-              <div
-                key={column.id}
-                draggable
-                onDragStart={() => handleDragStart(index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDragEnd={handleDragEnd}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 mb-1 rounded-md border border-transparent transition-all cursor-move group',
-                  draggedIndex === index
-                    ? 'bg-blue-50 border-blue-200 opacity-50'
-                    : 'hover:bg-slate-50'
-                )}
-              >
-                <Checkbox
-                  id={`column-${column.id}`}
-                  checked={column.visible}
-                  onChange={() => toggleVisibility(column.id)}
-                  className="flex-shrink-0"
-                />
-                
-                <span className={cn(
-                  "text-sm font-medium flex-1",
-                  column.visible ? "text-slate-700" : "text-slate-400"
-                )}>
-                  {column.label}
-                </span>
-
-                <GripVertical className="h-4 w-4 text-slate-400 flex-shrink-0" />
-              </div>
-            ))}
-          </div>
-
-          <div className="px-3 py-2 rounded-b-lg border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={resetToDefault}
-              className="flex-1"
-            >
-              Reset
-            </Button>
-            <Button
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              className="flex-1"
-            >
-              Done
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 // --- Main Component ---
 
@@ -357,7 +197,7 @@ interface PendingMyApprovalViewProps {
 
 export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ onViewDocument }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<DocumentStatus | "All">("All");
+  const statusFilter: DocumentStatus = "Pending Approval"; // Fixed to Pending Approval
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
   const [departmentFilter, setDepartmentFilter] = useState<string>("All");
   const [authorFilter, setAuthorFilter] = useState<string>("All");
@@ -370,20 +210,6 @@ export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ on
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-  const [columns, setColumns] = useState<TableColumn[]>([
-    { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-    { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
-    { id: 'created', label: 'Created', visible: true, order: 2 },
-    { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
-    { id: 'title', label: 'Document Name', visible: true, order: 4 },
-    { id: 'status', label: 'State', visible: true, order: 5 },
-    { id: 'type', label: 'Document Type', visible: true, order: 6 },
-    { id: 'department', label: 'Department', visible: true, order: 7 },
-    { id: 'author', label: 'Author', visible: true, order: 8 },
-    { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
-    { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
-    { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
-  ]);
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
 
   const itemsPerPage = 10;
@@ -398,7 +224,7 @@ export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ on
         doc.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter === "All" || doc.status === statusFilter;
+      const matchesStatus = doc.status === statusFilter;
       const matchesType = typeFilter === "All" || doc.type === typeFilter;
       const matchesDepartment = departmentFilter === "All" || doc.department === departmentFilter;
       const matchesAuthor = authorFilter === "All" || doc.author === authorFilter;
@@ -477,7 +303,7 @@ export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ on
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
+        onStatusChange={() => {}} // No-op since disabled
         typeFilter={typeFilter}
         onTypeChange={setTypeFilter}
         departmentFilter={departmentFilter}
@@ -496,9 +322,7 @@ export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ on
         onValidFromDateChange={setValidFromDate}
         validToDate={validToDate}
         onValidToDateChange={setValidToDate}
-        columns={columns}
-        onColumnsChange={setColumns}
-        ColumnCustomizerComponent={ColumnCustomizer}
+        disableStatusFilter={true}
       />
 
       {/* Table */}
@@ -507,30 +331,18 @@ export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ on
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                {columns.sort((a, b) => a.order - b.order).map((column) => {
-                  if (!column.visible) return null;
-                  
-                  if (column.id === 'action') {
-                    return (
-                      <th 
-                        key={column.id}
-                        className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]"
-                        style={{ width: '60px' }}
-                      >
-                        {column.label}
-                      </th>
-                    );
-                  }
-
-                  return (
-                    <th
-                      key={column.id}
-                      className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left"
-                    >
-                      {column.label}
-                    </th>
-                  );
-                })}
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Document Number</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Created</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Opened By</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Document Name</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">State</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Document Type</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Department</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Author</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Effective Date</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Valid Until</th>
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]" style={{ width: '60px' }}>Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
@@ -541,52 +353,38 @@ export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ on
                     onClick={() => onViewDocument?.(doc.id)}
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                   >
-                    {columns.sort((a, b) => a.order - b.order).map((column) => {
-                      if (!column.visible) return null;
-
-                      if (column.id === 'action') {
-                        return (
-                          <td
-                            key={column.id}
-                            onClick={(e) => e.stopPropagation()}
-                            className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
-                          >
-                            <button
-                              ref={getButtonRef(doc.id)}
-                              onClick={(e) => handleDropdownToggle(doc.id, e)}
-                              className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
-                            >
-                              <MoreVertical className="h-4 w-4 text-slate-600" />
-                            </button>
-                          </td>
-                        );
-                      }
-
-                      return (
-                        <td key={column.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
-                          {column.id === 'no' && startIndex + index + 1}
-                          {column.id === 'documentId' && (
-                            <span className="font-medium text-emerald-600">{doc.documentId}</span>
-                          )}
-                          {column.id === 'created' && doc.created}
-                          {column.id === 'openedBy' && doc.openedBy}
-                          {column.id === 'title' && (
-                            <span className="font-medium text-slate-900">{doc.title}</span>
-                          )}
-                          {column.id === 'status' && <StatusBadge status={doc.status} />}
-                          {column.id === 'type' && doc.type}
-                          {column.id === 'department' && doc.department}
-                          {column.id === 'author' && doc.author}
-                          {column.id === 'effectiveDate' && doc.effectiveDate}
-                          {column.id === 'validUntil' && doc.validUntil}
-                        </td>
-                      );
-                    })}
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{startIndex + index + 1}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <span className="font-medium text-emerald-600">{doc.documentId}</span>
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.created}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.openedBy}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <span className="font-medium text-slate-900">{doc.title}</span>
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap"><StatusBadge status={doc.status} /></td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.type}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.department}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.author}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.effectiveDate}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.validUntil}</td>
+                    <td
+                      onClick={(e) => e.stopPropagation()}
+                      className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                    >
+                      <button
+                        ref={getButtonRef(doc.id)}
+                        onClick={(e) => handleDropdownToggle(doc.id, e)}
+                        className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                      >
+                        <MoreVertical className="h-4 w-4 text-slate-600" />
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.filter(c => c.visible).length} className="py-12 text-center">
+                  <td colSpan={12} className="py-12 text-center">
                     <div className="flex flex-col items-center justify-center text-slate-500">
                       <div className="bg-slate-50 p-4 rounded-full mb-3">
                         <FileText className="h-8 w-8 text-slate-400" />

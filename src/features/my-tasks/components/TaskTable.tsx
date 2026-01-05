@@ -160,7 +160,10 @@ export const TaskTable: React.FC<{
                 getModuleBadgeStyle(task.module)
               )}
             >
-              {getModuleIcon(task.module)}
+              {(() => {
+                const ModuleIcon = getModuleIcon(task.module);
+                return <ModuleIcon className="h-3.5 w-3.5" />;
+              })()}
               {task.module}
             </span>
           </td>

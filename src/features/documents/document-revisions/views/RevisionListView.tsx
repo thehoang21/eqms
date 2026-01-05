@@ -515,9 +515,6 @@ export const RevisionListView: React.FC = () => {
           setValidToDate(dateStr);
           setCurrentPage(1);
         }}
-        columns={columns}
-        onColumnsChange={setColumns}
-        ColumnCustomizerComponent={RevisionColumnCustomizer}
         showTypeFilter={false}
         showDepartmentFilter={false}
       />

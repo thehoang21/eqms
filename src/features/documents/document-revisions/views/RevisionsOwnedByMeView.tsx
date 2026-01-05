@@ -86,159 +86,6 @@ const DEFAULT_COLUMNS: TableColumn[] = [
   { id: "action", label: "Action", visible: true, order: 10, locked: true },
 ];
 
-// --- Column Customizer Component ---
-interface RevisionColumnCustomizerProps {
-  columns: TableColumn[];
-  onColumnsChange: (columns: TableColumn[]) => void;
-}
-
-const RevisionColumnCustomizer: React.FC<RevisionColumnCustomizerProps> = ({
-  columns,
-  onColumnsChange,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const reorderableColumns = columns.filter(col => !col.locked);
-  const lockedColumns = columns.filter(col => col.locked);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleDragStart = (index: number) => {
-    setDraggedIndex(index);
-  };
-
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index) return;
-
-    const newColumns = [...reorderableColumns];
-    const draggedColumn = newColumns[draggedIndex];
-    newColumns.splice(draggedIndex, 1);
-    newColumns.splice(index, 0, draggedColumn);
-
-    const updatedReorderable = newColumns.map((col, idx) => ({
-      ...col,
-      order: idx + 1,
-    }));
-
-    const finalColumns = [
-      ...lockedColumns,
-      ...updatedReorderable,
-    ].sort((a, b) => a.order - b.order);
-
-    onColumnsChange(finalColumns);
-    setDraggedIndex(index);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-  };
-
-  const toggleVisibility = (columnId: string) => {
-    const updatedColumns = columns.map(col =>
-      col.id === columnId ? { ...col, visible: !col.visible } : col
-    );
-    onColumnsChange(updatedColumns);
-  };
-
-  const resetToDefault = () => {
-    onColumnsChange([...DEFAULT_COLUMNS]);
-  };
-
-  const handleDone = () => {
-    setIsOpen(false);
-  };
-
-  return (
-    <div ref={containerRef} className="relative">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "flex items-center justify-between gap-2 w-full px-3 h-11 border rounded-md bg-white text-sm transition-all",
-          isOpen 
-            ? "border-emerald-500 ring-2 ring-emerald-500" 
-            : "border-slate-200 hover:border-slate-300"
-        )}
-      >
-        <span className="text-slate-700 font-medium">Customize Columns</span>
-        <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 left-0 top-full mt-2 z-50 w-full bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
-          <div className="px-4 py-2 border-b border-slate-100">
-            <h3 className="text-sm font-semibold text-slate-700">Customize Columns</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Scroll to View, Drag to reorder</p>
-          </div>
-
-          <div className="p-2 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
-            {reorderableColumns.map((column, index) => (
-              <div
-                key={column.id}
-                draggable
-                onDragStart={() => handleDragStart(index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDragEnd={handleDragEnd}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 mb-1 rounded-md border border-transparent transition-all cursor-move group',
-                  draggedIndex === index
-                    ? 'bg-blue-50 border-blue-200 opacity-50'
-                    : 'hover:bg-slate-50'
-                )}
-              >
-                <Checkbox
-                  id={`column-${column.id}`}
-                  checked={column.visible}
-                  onChange={() => toggleVisibility(column.id)}
-                  className="flex-shrink-0"
-                />
-                
-                <span className={cn(
-                  "text-sm font-medium flex-1",
-                  column.visible ? "text-slate-700" : "text-slate-400"
-                )}>
-                  {column.label}
-                </span>
-
-                <GripVertical className="h-4 w-4 text-slate-400 flex-shrink-0" />
-              </div>
-            ))}
-          </div>
-
-          <div className="px-3 py-2 rounded-b-lg border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={resetToDefault}
-              className="flex-1"
-            >
-              Reset
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleDone}
-              className="flex-1"
-            >
-              Done
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 // --- Filters Component ---
 interface MyRevisionFiltersProps {
   searchQuery: string;
@@ -259,8 +106,6 @@ interface MyRevisionFiltersProps {
   onValidFromDateChange: (value: string) => void;
   validToDate: string;
   onValidToDateChange: (value: string) => void;
-  columns: TableColumn[];
-  onColumnsChange: (columns: TableColumn[]) => void;
 }
 
 const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
@@ -282,8 +127,6 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
   onValidFromDateChange,
   validToDate,
   onValidToDateChange,
-  columns,
-  onColumnsChange,
 }) => {
   const statusOptions = [
     { label: "All Status", value: "All" },
@@ -318,19 +161,8 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           />
         </div>
 
-        {/* Column Customizer */}
-        <div className="xl:col-span-2">
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            Columns
-          </label>
-          <RevisionColumnCustomizer
-            columns={columns}
-            onColumnsChange={onColumnsChange}
-          />
-        </div>
-
         {/* Status Filter */}
-        <div className="xl:col-span-2">
+        <div className="xl:col-span-3">
           <Select
             label="Status"
             value={statusFilter}
@@ -340,7 +172,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
         </div>
 
         {/* Type Filter */}
-        <div className="xl:col-span-2">
+        <div className="xl:col-span-3">
           <Select
             label="Type"
             value={typeFilter}
@@ -633,8 +465,6 @@ export const RevisionsOwnedByMeView: React.FC = () => {
           setValidToDate(value);
           setCurrentPage(1);
         }}
-        columns={columns}
-        onColumnsChange={setColumns}
       />
 
       {/* Table Container */}

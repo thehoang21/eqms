@@ -39,9 +39,16 @@ interface FormData {
 interface GeneralTabProps {
     formData: FormData;
     onFormChange: (data: FormData) => void;
+    isTemplateMode?: boolean;
+    hideTemplateCheckbox?: boolean;
 }
 
-export const GeneralTab: React.FC<GeneralTabProps> = ({ formData, onFormChange }) => {
+export const GeneralTab: React.FC<GeneralTabProps> = ({ 
+    formData, 
+    onFormChange, 
+    isTemplateMode = false,
+    hideTemplateCheckbox = false
+}) => {
     const [activeSubtab, setActiveSubtab] = useState<SubTabId>("revisions");
 
     const setFormData = (data: Partial<FormData>) => {
@@ -114,17 +121,19 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ formData, onFormChange }
                     </div>
                 </div>
 
-                {/* Is Template */}
-                <div className="flex items-center gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Is Template?</label>
-                    <div className="flex-1">
-                        <Checkbox
-                            id="isTemplate"
-                            checked={formData.isTemplate}
-                            onChange={(checked) => setFormData({ isTemplate: checked })}
-                        />
+                {/* Is Template - HIDDEN in template mode OR when hideTemplateCheckbox is true */}
+                {!isTemplateMode && !hideTemplateCheckbox && (
+                    <div className="flex items-center gap-4">
+                        <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Is Template?</label>
+                        <div className="flex-1">
+                            <Checkbox
+                                id="isTemplate"
+                                checked={formData.isTemplate}
+                                onChange={(checked) => setFormData({ isTemplate: checked })}
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Document Name */}
                 <div className="flex items-center gap-4">
@@ -142,7 +151,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ formData, onFormChange }
 
                 {/* Document Type (Select) */}
                 <div className="flex items-center gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Document Type</label>
+                    <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Document Type<span className="text-red-500 ml-1">*</span></label>
                     <div className="flex-1">
                         <Select
                             value={formData.type}

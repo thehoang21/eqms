@@ -23,11 +23,18 @@ import {
   Paperclip,
   History,
   MoreVertical,
+  LayoutGrid,
+  List,
+  BarChart3,
+  GitBranch,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { Task, ModuleType } from "./types";
+import { Task, ModuleType, ViewMode } from "./types";
 import { TaskTable } from "./components/TaskTable";
+import { TaskBoardView } from "./components/TaskBoardView";
+import { TaskCalendarView } from "./components/TaskCalendarView";
+import { TaskGanttView } from "./components/TaskGanttView";
 import { TaskDetailDrawer } from "./components/TaskDetailDrawer";
 import { ColumnCustomizer } from "./components/ColumnCustomizer";
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
@@ -43,12 +50,12 @@ const MOCK_TASKS: Task[] = [
       "Review the updated sampling plan appendices. Ensure alignment with Annex 16.",
     module: "Document",
     priority: "High",
-    dueDate: "2023-10-25",
+    dueDate: "2026-01-25",
     status: "Pending",
     assignee: "Dr. A. Smith",
     reporter: "System",
     progress: 0,
-    timeline: [{ date: "2023-10-01", action: "Task Created", user: "System" }],
+    timeline: [{ date: "2026-01-01", action: "Task Created", user: "System" }],
   },
   {
     id: "2",
@@ -58,15 +65,15 @@ const MOCK_TASKS: Task[] = [
       "Root cause analysis for Zone B sensor failure. Interview logistics staff.",
     module: "Deviation",
     priority: "Critical",
-    dueDate: "2023-10-20",
+    dueDate: "2026-01-08",
     status: "In-Progress",
     assignee: "Dr. A. Smith",
     reporter: "W. House",
     progress: 45,
     timeline: [
-      { date: "2023-10-05", action: "Deviation Logged", user: "W. House" },
+      { date: "2025-12-20", action: "Deviation Logged", user: "W. House" },
       {
-        date: "2023-10-06",
+        date: "2025-12-21",
         action: "Investigation Started",
         user: "Dr. A. Smith",
       },
@@ -79,12 +86,12 @@ const MOCK_TASKS: Task[] = [
     description: "Annual mandatory training requirement.",
     module: "Training",
     priority: "Medium",
-    dueDate: "2023-11-01",
+    dueDate: "2026-01-15",
     status: "Pending",
     assignee: "Dr. A. Smith",
     reporter: "HR Training",
     progress: 0,
-    timeline: [{ date: "2023-09-15", action: "Assigned", user: "HR Training" }],
+    timeline: [{ date: "2025-12-01", action: "Assigned", user: "HR Training" }],
   },
   {
     id: "4",
@@ -94,15 +101,15 @@ const MOCK_TASKS: Task[] = [
       "Check new label stock for adhesion properties after fix implementation.",
     module: "CAPA",
     priority: "Medium",
-    dueDate: "2023-10-28",
+    dueDate: "2026-01-20",
     status: "Reviewing",
     assignee: "J. Doe",
     reporter: "QA Lead",
     progress: 90,
     timeline: [
-      { date: "2023-09-01", action: "CAPA Opened", user: "QA Lead" },
-      { date: "2023-09-20", action: "Actions Implemented", user: "Ops Team" },
-      { date: "2023-10-01", action: "Verification Started", user: "J. Doe" },
+      { date: "2025-12-01", action: "CAPA Opened", user: "QA Lead" },
+      { date: "2025-12-15", action: "Actions Implemented", user: "Ops Team" },
+      { date: "2026-01-02", action: "Verification Started", user: "J. Doe" },
     ],
   },
   {
@@ -112,7 +119,7 @@ const MOCK_TASKS: Task[] = [
     description: "Final approval required for Line 4.",
     module: "Document",
     priority: "High",
-    dueDate: "2023-10-15",
+    dueDate: "2026-01-10",
     status: "Pending",
     assignee: "Dr. A. Smith",
     reporter: "V. Validation",
@@ -126,7 +133,7 @@ const MOCK_TASKS: Task[] = [
     description: "Assess impact on air change rates.",
     module: "Document",
     priority: "Low",
-    dueDate: "2023-11-15",
+    dueDate: "2026-02-15",
     status: "In-Progress",
     assignee: "Engineering",
     reporter: "Fac. Manager",
@@ -140,7 +147,7 @@ const MOCK_TASKS: Task[] = [
     description: "Investigate potential electrode aging.",
     module: "Deviation",
     priority: "Medium",
-    dueDate: "2023-10-30",
+    dueDate: "2026-01-30",
     status: "Pending",
     assignee: "QC Lab",
     reporter: "QC Lead",
@@ -154,7 +161,7 @@ const MOCK_TASKS: Task[] = [
     description: "New global policy rollout.",
     module: "Training",
     priority: "Low",
-    dueDate: "2023-11-05",
+    dueDate: "2026-02-05",
     status: "Pending",
     assignee: "Dr. A. Smith",
     reporter: "HR Training",
@@ -168,7 +175,7 @@ const MOCK_TASKS: Task[] = [
     description: "Post-audit requirement.",
     module: "CAPA",
     priority: "Critical",
-    dueDate: "2023-10-10",
+    dueDate: "2025-12-28",
     status: "Completed",
     assignee: "QA Risk",
     reporter: "Auditor Ext",
@@ -182,7 +189,7 @@ const MOCK_TASKS: Task[] = [
     description: "Regular biennial review.",
     module: "Document",
     priority: "Low",
-    dueDate: "2023-12-01",
+    dueDate: "2026-03-01",
     status: "Pending",
     assignee: "Dr. A. Smith",
     reporter: "System",
@@ -196,7 +203,7 @@ const MOCK_TASKS: Task[] = [
     description: "Quantity mismatch in raw material receipt.",
     module: "Deviation",
     priority: "High",
-    dueDate: "2023-10-22",
+    dueDate: "2026-01-22",
     status: "Pending",
     assignee: "Warehousing",
     reporter: "Supply Chain",
@@ -210,7 +217,7 @@ const MOCK_TASKS: Task[] = [
     description: "Physical demonstration required.",
     module: "Training",
     priority: "High",
-    dueDate: "2023-11-10",
+    dueDate: "2026-02-10",
     status: "Pending",
     assignee: "Dr. A. Smith",
     reporter: "Microbio QA",
@@ -224,7 +231,7 @@ const MOCK_TASKS: Task[] = [
     description: "Update sampling points map.",
     module: "Document",
     priority: "High",
-    dueDate: "2023-12-05",
+    dueDate: "2026-01-12",
     status: "Pending",
     assignee: "Dr. A. Smith",
     reporter: "EM Lead",
@@ -641,6 +648,9 @@ const SkeletonLoader = () => {
 export const MyTasksView: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
+  // View Mode State
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+
   // Drawer State
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
@@ -737,12 +747,64 @@ export const MyTasksView: React.FC = () => {
     <div className="space-y-6 w-full flex-1 flex flex-col mb-12">
       {" "}
       {/* Added mb-12 for footer spacing */}
-      {/* 1. Header: Title */}
+      {/* 1. Header: Title + View Mode Toggle */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             My Tasks
           </h1>
+        </div>
+
+        {/* View Mode Toggle */}
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+          <button
+            onClick={() => setViewMode("list")}
+            className={cn(
+              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              viewMode === "list"
+                ? "bg-white text-emerald-700 shadow-sm"
+                : "text-slate-600 hover:text-slate-900"
+            )}
+          >
+            <List className="h-4 w-4" />
+            <span className="hidden sm:inline">List</span>
+          </button>
+          <button
+            onClick={() => setViewMode("board")}
+            className={cn(
+              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              viewMode === "board"
+                ? "bg-white text-emerald-700 shadow-sm"
+                : "text-slate-600 hover:text-slate-900"
+            )}
+          >
+            <LayoutGrid className="h-4 w-4" />
+            <span className="hidden sm:inline">Board</span>
+          </button>
+          <button
+            onClick={() => setViewMode("calendar")}
+            className={cn(
+              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              viewMode === "calendar"
+                ? "bg-white text-emerald-700 shadow-sm"
+                : "text-slate-600 hover:text-slate-900"
+            )}
+          >
+            <Calendar className="h-4 w-4" />
+            <span className="hidden sm:inline">Calendar</span>
+          </button>
+          <button
+            onClick={() => setViewMode("gantt")}
+            className={cn(
+              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              viewMode === "gantt"
+                ? "bg-white text-emerald-700 shadow-sm"
+                : "text-slate-600 hover:text-slate-900"
+            )}
+          >
+            <BarChart3 className="h-4 w-4" />
+            <span className="hidden sm:inline">Gantt</span>
+          </button>
         </div>
       </div>
       {/* 2. Filter Card */}
@@ -764,32 +826,85 @@ export const MyTasksView: React.FC = () => {
           onColumnsChange={setTableColumns}
         />
       </div>
-      {/* 3. Data Display (Loading / Table) */}
+      {/* 3. Data Display (Loading / View-based Rendering) */}
       <div className="flex-1 min-h-0 flex flex-col">
         {isLoading ? (
           <SkeletonLoader />
         ) : (
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
-            {paginatedData.length > 0 ? (
-              <>
-                <TaskTable
-                  tasks={paginatedData}
-                  onTaskClick={setSelectedTask}
-                  startIndex={(currentPage - 1) * ITEMS_PER_PAGE + 1}
-                  columns={tableColumns}
-                />
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  totalItems={totalItems}
-                  itemsPerPage={ITEMS_PER_PAGE}
-                  onPageChange={setCurrentPage}
-                />
-              </>
-            ) : (
-              <EmptyState />
+          <>
+            {/* List View (Table) */}
+            {viewMode === "list" && (
+              <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
+                {paginatedData.length > 0 ? (
+                  <>
+                    <TaskTable
+                      tasks={paginatedData}
+                      onTaskClick={setSelectedTask}
+                      startIndex={(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                      columns={tableColumns}
+                    />
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      totalItems={totalItems}
+                      itemsPerPage={ITEMS_PER_PAGE}
+                      onPageChange={setCurrentPage}
+                    />
+                  </>
+                ) : (
+                  <EmptyState />
+                )}
+              </div>
             )}
-          </div>
+
+            {/* Board View */}
+            {viewMode === "board" && (
+              <>
+                {filteredData.length > 0 ? (
+                  <TaskBoardView
+                    tasks={filteredData}
+                    onTaskClick={setSelectedTask}
+                  />
+                ) : (
+                  <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <EmptyState />
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Calendar View */}
+            {viewMode === "calendar" && (
+              <>
+                {filteredData.length > 0 ? (
+                  <TaskCalendarView
+                    tasks={filteredData}
+                    onTaskClick={setSelectedTask}
+                  />
+                ) : (
+                  <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <EmptyState />
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Gantt View */}
+            {viewMode === "gantt" && (
+              <>
+                {filteredData.length > 0 ? (
+                  <TaskGanttView
+                    tasks={filteredData}
+                    onTaskClick={setSelectedTask}
+                  />
+                ) : (
+                  <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <EmptyState />
+                  </div>
+                )}
+              </>
+            )}
+          </>
         )}
       </div>
       {/* 4. Task Detail Drawer */}

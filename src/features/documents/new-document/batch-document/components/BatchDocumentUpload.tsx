@@ -1,8 +1,9 @@
 import React, { useState, useRef } from "react";
-import { Upload, FileText, CheckCircle2, AlertCircle, X, Star, Trash2, Eye, Check } from "lucide-react";
+import { Upload, FileText, CheckCircle2, AlertCircle, X, Star, Trash2, Eye, Check, Network, XCircle } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
+import { Select } from "@/components/ui/select/Select";
 import { IconCloudUpload, IconTrash } from "@tabler/icons-react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import pdfIcon from "@/assets/images/image-file/pdf.png";
@@ -11,12 +12,30 @@ import excelIcon from "@/assets/images/image-file/excel.png";
 
 type ChildDocumentType = "Form" | "Annex" | "Attachment";
 
+// Mock parent documents for selection
+interface ParentDocumentOption {
+    id: string;
+    documentId: string;
+    documentName: string;
+    type: string;
+    version: string;
+    status: "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+}
+
+const MOCK_PARENT_DOCUMENTS: ParentDocumentOption[] = [
+    { id: "1", documentId: "DOC-SOP-001", documentName: "Quality Management System Overview", type: "SOP", version: "2.0", status: "Effective" },
+    { id: "2", documentId: "DOC-POL-002", documentName: "Document Control Policy", type: "Policy", version: "1.5", status: "Effective" },
+    { id: "3", documentId: "DOC-SOP-003", documentName: "Training Management Procedure", type: "SOP", version: "3.0", status: "Approved" }, // Not Effective - will be filtered
+    { id: "4", documentId: "DOC-SPEC-004", documentName: "Product Specifications Standard", type: "Specification", version: "1.8", status: "Effective" },
+    { id: "5", documentId: "DOC-SOP-005", documentName: "Change Control Procedure", type: "SOP", version: "2.2", status: "Effective" },
+    { id: "6", documentId: "DOC-POL-006", documentName: "Quality Policy (Draft)", type: "Policy", version: "1.0", status: "Draft" }, // Not Effective - will be filtered
+];
+
 interface BatchDocument {
     id: string;
     fileName: string;
     file: File;
-    isParent: boolean;
-    childType?: ChildDocumentType; // Only for child documents
+    childType?: ChildDocumentType; // Type if this is a child document
     uploadProgress?: number; // 0-100
     isUploading?: boolean;
     formData: {
@@ -38,14 +57,42 @@ interface BatchDocument {
 interface BatchDocumentUploadProps {
     documents: BatchDocument[];
     onDocumentsChange: (documents: BatchDocument[] | ((prev: BatchDocument[]) => BatchDocument[])) => void;
+    onGlobalParentChange?: (parentId: string, parentData?: ParentDocumentOption) => void; // Callback when global parent changes to load metadata
+    globalParentId?: string; // Controlled global parent ID
+    batchParentId?: string; // Controlled batch parent ID
+    onBatchParentChange?: (docId: string) => void; // Callback when batch parent changes
 }
 
 export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
     documents,
     onDocumentsChange,
+    onGlobalParentChange,
+    globalParentId: externalGlobalParentId,
+    batchParentId: externalBatchParentId,
+    onBatchParentChange,
 }) => {
     const [dragOver, setDragOver] = useState(false);
     const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
+    
+    // Use controlled props if provided, otherwise use internal state
+    const [internalBatchParentId, setInternalBatchParentId] = useState<string>("");
+    const [internalGlobalParentId, setInternalGlobalParentId] = useState<string>("");
+    
+    const batchParentId = externalBatchParentId !== undefined ? externalBatchParentId : internalBatchParentId;
+    const globalParentId = externalGlobalParentId !== undefined ? externalGlobalParentId : internalGlobalParentId;
+    
+    const setBatchParentId = (id: string) => {
+        if (onBatchParentChange) {
+            onBatchParentChange(id);
+        } else {
+            setInternalBatchParentId(id);
+        }
+    };
+    
+    const setGlobalParentId = (id: string) => {
+        setInternalGlobalParentId(id);
+    };
+    
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const getFileIcon = (fileName: string) => {
@@ -86,8 +133,8 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
             id: `doc-${Date.now()}-${index}`,
             fileName: file.name,
             file: file,
-            isParent: documents.length === 0 && index === 0, // First document is parent by default
-            childType: documents.length === 0 && index === 0 ? undefined : "Form", // Default child type
+            parentDocumentId: undefined, // No parent by default (Level 1 documents)
+            childType: undefined, // No child type by default
             uploadProgress: 0,
             isUploading: true,
             formData: {
@@ -147,13 +194,63 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
         }, delay);
     };
 
-    const handleSetParent = (id: string) => {
+    const handleSetAsBatchParent = (docId: string) => {
+        // Set this document as parent of all other documents in batch
+        setBatchParentId(docId);
+        
+        // Clear global parent when batch parent is set
+        setGlobalParentId("");
+        
+        // Update all documents (except the parent) to have this as child type
         const updatedDocuments = documents.map(doc => ({
             ...doc,
-            isParent: doc.id === id,
-            childType: doc.id === id ? undefined : (doc.childType || "Form")
+            childType: doc.id === docId ? undefined : (doc.childType || "Form")
         }));
         onDocumentsChange(updatedDocuments);
+    };
+
+    const handleClearBatchParent = () => {
+        setBatchParentId("");
+        
+        // Clear child types from all documents
+        const updatedDocuments = documents.map(doc => ({
+            ...doc,
+            childType: undefined
+        }));
+        onDocumentsChange(updatedDocuments);
+    };
+
+    const handleGlobalParentChange = (parentId: string) => {
+        setGlobalParentId(parentId);
+        
+        // Clear batch parent when global parent is selected
+        if (parentId) {
+            setBatchParentId("");
+            
+            // Set all documents as children
+            const updatedDocuments = documents.map(doc => ({
+                ...doc,
+                childType: doc.childType || "Form"
+            }));
+            onDocumentsChange(updatedDocuments);
+            
+            // Notify parent component to load metadata
+            const parentData = MOCK_PARENT_DOCUMENTS.find(p => p.id === parentId);
+            if (onGlobalParentChange && parentData) {
+                onGlobalParentChange(parentId, parentData);
+            }
+        } else {
+            // Clear child types when no parent
+            const updatedDocuments = documents.map(doc => ({
+                ...doc,
+                childType: undefined
+            }));
+            onDocumentsChange(updatedDocuments);
+            
+            if (onGlobalParentChange) {
+                onGlobalParentChange("");
+            }
+        }
     };
 
     const handleChildTypeChange = (id: string, type: ChildDocumentType) => {
@@ -164,14 +261,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
     };
 
     const handleRemoveDocument = (id: string) => {
-        const removedDoc = documents.find(doc => doc.id === id);
         const filteredDocuments = documents.filter(doc => doc.id !== id);
-        
-        // If removed document was parent, make first remaining document the parent
-        if (removedDoc?.isParent && filteredDocuments.length > 0) {
-            filteredDocuments[0].isParent = true;
-        }
-        
         onDocumentsChange(filteredDocuments);
     };
 
@@ -182,17 +272,79 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
         setTimeout(() => URL.revokeObjectURL(fileURL), 100);
     };
 
-    const parentDocument = documents.find(doc => doc.isParent);
-    const childDocuments = documents.filter(doc => !doc.isParent);
+    // Get effective parent for a document
+    const getEffectiveParent = (doc: BatchDocument) => {
+        // If this document is the batch parent, it has no parent
+        if (doc.id === batchParentId) {
+            return "";
+        }
+        
+        // If there's a batch parent, return it
+        if (batchParentId) {
+            return batchParentId;
+        }
+        
+        // Otherwise return global parent (if any)
+        return globalParentId;
+    };
+    
+    // Check if document is the batch parent
+    const isBatchParent = (docId: string) => {
+        return docId === batchParentId;
+    };
+    
+    // Get parent info (from batch or existing documents)
+    const getParentInfo = (parentId: string) => {
+        // Check if it's from batch
+        const batchParent = documents.find(d => d.id === parentId);
+        if (batchParent) {
+            return {
+                id: batchParent.id,
+                label: batchParent.fileName,
+                source: 'batch' as const
+            };
+        }
+        
+        // Check existing documents (only Effective)
+        const existingParent = MOCK_PARENT_DOCUMENTS.find(p => p.id === parentId && p.status === "Effective");
+        if (existingParent) {
+            return {
+                id: existingParent.id,
+                label: `${existingParent.documentId} - ${existingParent.documentName}`,
+                source: 'existing' as const
+            };
+        }
+        
+        return null;
+    };
+
+    // Count documents by category
+    const independentDocs = documents.filter(doc => !getEffectiveParent(doc));
+    const childDocs = documents.filter(doc => !!getEffectiveParent(doc));
+    
+    // Prepare parent document options for global dropdown (only Effective from existing docs)
+    const globalParentOptions = [
+        { label: "-- No Global Parent --", value: "" },
+        ...MOCK_PARENT_DOCUMENTS
+            .filter(parent => parent.status === "Effective")
+            .map(parent => ({
+                label: `${parent.documentId} - ${parent.documentName} (v${parent.version})`,
+                value: parent.id
+            }))
+    ];
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-emerald-50 to-cyan-50 border border-emerald-200 rounded-xl p-5 md:p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-base md:text-lg font-semibold text-slate-900">
-                        Upload Multiple Documents
-                    </h3>
+            {/* Combined: Document Hierarchy + Upload Info */}
+            <div className="bg-white border-2 border-emerald-300 rounded-xl p-5 shadow-sm">
+                {/* Header with actions */}
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                        <Network className="h-5 w-5 text-emerald-600" />
+                        <h4 className="text-base font-semibold text-slate-900">
+                            {(batchParentId || globalParentId) ? "Document Relationship" : "Upload Multiple Documents"}
+                        </h4>
+                    </div>
                     {documents.length > 0 && (
                         <Button
                             size="sm"
@@ -204,35 +356,171 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                         </Button>
                     )}
                 </div>
+                
+                {/* Description */}
                 <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                    Upload all document files at once. You can then select one document to be the parent document, 
-                    and the rest will be child documents.
+                    {(batchParentId || globalParentId) 
+                        ? "Documents are linked in a parent-child hierarchy. The parent document manages its children."
+                        : "Upload all document files at once. By default, all documents are independent (Level 1). You can optionally assign a parent document to create child relationships."
+                    }
                 </p>
-                <div className="flex flex-wrap items-center gap-3 md:gap-4 text-sm">
+                
+                {/* Stats Row */}
+                <div className="flex flex-wrap items-center gap-3 md:gap-4 text-sm mb-4">
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-emerald-600"></div>
+                        <FileText className="h-4 w-4 text-slate-600" />
                         <span className="text-slate-700">
-                            <span className="font-semibold">{documents.length}</span> document(s) uploaded
+                            <span className="font-semibold">{documents.length}</span> total
                         </span>
                     </div>
-                    {parentDocument && (
+                    {independentDocs.length > 0 && (
                         <div className="flex items-center gap-2">
-                            <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                            <FileText className="h-4 w-4 text-slate-600" />
                             <span className="text-slate-700">
-                                <span className="font-semibold">1</span> parent
+                                <span className="font-semibold">{independentDocs.length}</span> independent
                             </span>
                         </div>
                     )}
-                    {childDocuments.length > 0 && (
+                    {childDocs.length > 0 && (
                         <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-blue-600" />
+                            <Network className="h-4 w-4 text-blue-600" />
                             <span className="text-slate-700">
-                                <span className="font-semibold">{childDocuments.length}</span> child(ren)
+                                <span className="font-semibold">{childDocs.length}</span> with parent
                             </span>
                         </div>
                     )}
                 </div>
+                
+                {/* Hierarchy Tree - Show when parent exists */}
+                {(batchParentId || globalParentId) && documents.length > 0 && (
+                    <div className="space-y-3 pt-3 border-t border-slate-200">
+                        {/* Parent Node */}
+                        {batchParentId ? (
+                            <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300 rounded-lg">
+                                <Star className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-semibold text-emerald-800 uppercase tracking-wide">
+                                        Parent Document (Batch)
+                                    </p>
+                                    <p className="text-sm font-medium text-slate-900 mt-1 truncate">
+                                        {documents.find(d => d.id === batchParentId)?.fileName}
+                                    </p>
+                                </div>
+                            </div>
+                        ) : globalParentId && (() => {
+                            const parentInfo = getParentInfo(globalParentId);
+                            return parentInfo ? (
+                                <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg">
+                                    <FileText className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-xs font-semibold text-blue-800 uppercase tracking-wide">
+                                            Parent Document (External)
+                                        </p>
+                                        <p className="text-sm font-medium text-slate-900 mt-1 truncate">
+                                            {parentInfo.label}
+                                        </p>
+                                    </div>
+                                </div>
+                            ) : null;
+                        })()}
+                        
+                        {/* Children Nodes */}
+                        {childDocs.length > 0 && (
+                            <div className="ml-8 space-y-2 border-l-2 border-slate-300 pl-4">
+                                <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">
+                                    Child Documents ({childDocs.length})
+                                </p>
+                                {childDocs.map((doc) => (
+                                    <div key={doc.id} className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <FileText className="h-4 w-4 text-blue-600 shrink-0" />
+                                        <p className="text-xs text-slate-700 truncate">
+                                            {doc.fileName}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
+
+            {/* Global Parent Assignment Section - Only show when no batch parent is set */}
+            {documents.length > 0 && !batchParentId && (
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-xl p-5 shadow-sm">
+                    <div className="flex items-start gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                            <Network className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                            <h4 className="text-base font-semibold text-slate-900 mb-1">
+                                External Parent Assignment (Optional)
+                            </h4>
+                            <p className="text-sm text-slate-600 leading-relaxed">
+                                Select an existing Effective document as parent for all uploaded files. 
+                                <strong className="text-blue-700"> Metadata will be inherited from the selected parent.</strong>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+                        <Select
+                            label="Parent Document (Effective Only)"
+                            value={globalParentId}
+                            onChange={handleGlobalParentChange}
+                            options={globalParentOptions}
+                            placeholder="Select parent document to inherit metadata"
+                            enableSearch={true}
+                        />
+                        
+                        {globalParentId && (
+                            <div className="flex items-center gap-2 p-3 bg-emerald-100 border border-emerald-200 rounded-lg">
+                                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                                <span className="text-sm text-emerald-800">
+                                    Metadata will be loaded from parent
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+            
+            {/* Batch Parent Info - Show when batch parent is set */}
+            {documents.length > 0 && batchParentId && (
+                <div className="bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-300 rounded-xl p-5 shadow-sm">
+                    <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                            <Star className="h-5 w-5 text-emerald-600" />
+                        </div>
+                        <div className="flex-1">
+                            <div className="flex items-center justify-between mb-2">
+                                <h4 className="text-base font-semibold text-slate-900">
+                                    Batch Parent Document
+                                </h4>
+                                <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={handleClearBatchParent}
+                                >
+                                    <XCircle className="h-4 w-4 mr-1.5" />
+                                    Clear
+                                </Button>
+                            </div>
+                            <div className="flex items-center gap-2 p-3 bg-white border border-emerald-200 rounded-lg">
+                                <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
+                                <span className="text-sm text-slate-700 font-medium">
+                                    {documents.find(d => d.id === batchParentId)?.fileName}
+                                </span>
+                                <span className="text-xs text-slate-500 ml-auto">
+                                    Parent of {childDocs.length} document{childDocs.length !== 1 ? 's' : ''}
+                                </span>
+                            </div>
+                            <p className="text-xs text-slate-600 mt-2">
+                                Other documents in this batch will be linked as child documents
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Upload Area */}
             {documents.length === 0 ? (
@@ -277,223 +565,178 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                 <LayoutGroup>
                     {/* Documents List */}
                     <div className="space-y-3">
-                        {/* Parent Document */}
-                        <AnimatePresence mode="popLayout">
-                            {parentDocument && (
-                                <motion.div
-                                    layoutId={parentDocument.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                >
-                                    <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                                        <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                                        Parent Document
-                                    </h4>
-                                    <div className="border-2 border-amber-300 bg-amber-50/50 rounded-xl p-5 shadow-sm">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-14 h-14 md:w-12 md:h-12 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
-                                                {getFileIcon(parentDocument.fileName) ? (
-                                                    <img 
-                                                        src={getFileIcon(parentDocument.fileName)!} 
-                                                        alt="File Icon" 
-                                                        className="h-10 w-10 md:h-8 md:w-8 object-contain"
-                                                    />
-                                                ) : (
-                                                    <FileText className="h-7 w-7 md:h-6 md:w-6 text-amber-600" />
-                                                )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-semibold text-slate-900 truncate">
-                                                    {parentDocument.fileName}
-                                                </p>
-                                                <p className="text-xs text-slate-500 mt-1">
-                                                    {(parentDocument.file.size / 1024).toFixed(2)} KB
-                                                </p>
-                                                
-                                                {/* Upload Progress Bar */}
-                                                {parentDocument.isUploading && (
-                                                    <div className="mt-2 space-y-1">
-                                                        <div className="flex items-center justify-between text-xs text-slate-600">
-                                                            <span>Uploading...</span>
-                                                            <span>{Math.round(parentDocument.uploadProgress || 0)}%</span>
-                                                        </div>
-                                                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                                            <div 
-                                                                className="h-full bg-emerald-600 rounded-full transition-all duration-300 ease-out"
-                                                                style={{ width: `${parentDocument.uploadProgress || 0}%` }}
+                        <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-slate-600" />
+                            Documents ({documents.length})
+                        </h4>
+                        <div className="space-y-3">
+                            <AnimatePresence mode="popLayout">
+                                {documents.map((doc, index) => {
+                                    const effectiveParent = getEffectiveParent(doc);
+                                    
+                                    return (
+                                        <motion.div
+                                            key={doc.id}
+                                            layoutId={doc.id}
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                        >
+                                            <div className={cn(
+                                                "border-2 rounded-xl p-5 transition-all",
+                                                isBatchParent(doc.id)
+                                                    ? "border-emerald-300 bg-gradient-to-br from-emerald-50 to-green-50 hover:border-emerald-400 ring-2 ring-emerald-200"
+                                                    : effectiveParent
+                                                        ? "border-blue-200 bg-blue-50/30 hover:border-blue-300"
+                                                        : "border-slate-200 bg-white hover:border-slate-300",
+                                                "hover:shadow-md"
+                                            )}>
+                                                <div className="flex items-start gap-4">
+                                                    {/* Document Number */}
+                                                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 border-2 border-slate-200 shrink-0">
+                                                        <span className="text-xs font-bold text-slate-700">
+                                                            {index + 1}
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    {/* File Icon */}
+                                                    <div className={cn(
+                                                        "w-14 h-14 md:w-12 md:h-12 rounded-lg flex items-center justify-center shrink-0",
+                                                        isBatchParent(doc.id)
+                                                            ? "bg-emerald-100"
+                                                            : effectiveParent 
+                                                                ? "bg-blue-100" 
+                                                                : "bg-slate-100"
+                                                    )}>
+                                                        {getFileIcon(doc.fileName) ? (
+                                                            <img 
+                                                                src={getFileIcon(doc.fileName)!} 
+                                                                alt="File Icon" 
+                                                                className="h-10 w-10 md:h-8 md:w-8 object-contain"
                                                             />
-                                                        </div>
+                                                        ) : (
+                                                            <FileText className={cn(
+                                                                "h-7 w-7 md:h-6 md:w-6",
+                                                                isBatchParent(doc.id)
+                                                                    ? "text-emerald-600"
+                                                                    : effectiveParent 
+                                                                        ? "text-blue-600" 
+                                                                        : "text-slate-600"
+                                                            )} />
+                                                        )}
                                                     </div>
-                                                )}
-                                                
-                                                {/* Upload Complete Indicator */}
-                                                {!parentDocument.isUploading && parentDocument.uploadProgress === 100 && (
-                                                    <div className="mt-2 flex items-center gap-1.5 text-xs text-emerald-600">
-                                                        <Check className="h-3.5 w-3.5" />
-                                                        <span>Upload complete</span>
-                                                    </div>
-                                                )}
-                                                
-                                                <div className="flex items-center gap-2 mt-2">
-                                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-100 text-amber-700 rounded text-xs font-medium">
-                                                        <Star className="h-3 w-3 fill-amber-700" />
-                                                        Primary Document
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => handlePreviewDocument(parentDocument.file)}
-                                                    className="px-3 py-2.5 text-xs font-medium text-slate-600 hover:text-blue-700 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
-                                                    title="Preview document"
-                                                >
-                                                    <Eye className="h-3.5 w-3.5 inline mr-1" />
-                                                    <span className="hidden sm:inline">Preview</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRemoveDocument(parentDocument.id)}
-                                                    className="px-3 py-2.5 text-xs font-medium text-slate-600 hover:text-red-700 hover:bg-red-50 border border-slate-200 hover:border-red-200 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
-                                                    title="Remove document"
-                                                >
-                                                    <IconTrash className="h-3.5 w-3.5 inline mr-1" />
-                                                    <span className="hidden sm:inline">Remove</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
-                        {/* Child Documents */}
-                        {childDocuments.length > 0 && (
-                            <div>
-                                <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                                    <FileText className="h-4 w-4 text-blue-600" />
-                                    Child Documents ({childDocuments.length})
-                                </h4>
-                                <div className="space-y-3">
-                                    <AnimatePresence mode="popLayout">
-                                        {childDocuments.map((doc, index) => (
-                                            <motion.div
-                                                key={doc.id}
-                                                layoutId={doc.id}
-                                                initial={{ opacity: 0, scale: 0.9 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                exit={{ opacity: 0, scale: 0.9 }}
-                                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                                className="relative"
-                                            >
-                                                {/* Connection Line */}
-                                                <div className="absolute left-7 md:left-6 -top-3 w-0.5 h-6 bg-gradient-to-b from-amber-200 to-blue-200"></div>
-                                                
-                                                <div className="border-2 border-slate-200 bg-white rounded-xl p-5 hover:border-blue-300 hover:shadow-md transition-all">
-                                                    <div className="flex items-start gap-4">
-                                                        <div className="w-14 h-14 md:w-12 md:h-12 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-                                                            {getFileIcon(doc.fileName) ? (
-                                                                <img 
-                                                                    src={getFileIcon(doc.fileName)!} 
-                                                                    alt="File Icon" 
-                                                                    className="h-10 w-10 md:h-8 md:w-8 object-contain"
-                                                                />
-                                                            ) : (
-                                                                <FileText className="h-7 w-7 md:h-6 md:w-6 text-blue-600" />
+                                                    
+                                                    <div className="flex-1 min-w-0 space-y-3">
+                                                        {/* File Info */}
+                                                        <div>
+                                                            <p className="text-sm font-semibold text-slate-900 truncate">
+                                                                {doc.fileName}
+                                                            </p>
+                                                            <p className="text-xs text-slate-500 mt-1">
+                                                                {(doc.file.size / 1024).toFixed(2)} KB
+                                                            </p>
+                                                            
+                                                            {/* Upload Progress Bar */}
+                                                            {doc.isUploading && (
+                                                                <div className="mt-2 space-y-1">
+                                                                    <div className="flex items-center justify-between text-xs text-slate-600">
+                                                                        <span>Uploading...</span>
+                                                                        <span>{Math.round(doc.uploadProgress || 0)}%</span>
+                                                                    </div>
+                                                                    <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                                                        <div 
+                                                                            className="h-full bg-emerald-600 rounded-full transition-all duration-300 ease-out"
+                                                                            style={{ width: `${doc.uploadProgress || 0}%` }}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                            
+                                                            {/* Upload Complete Indicator */}
+                                                            {!doc.isUploading && doc.uploadProgress === 100 && (
+                                                                <div className="mt-2 flex items-center gap-1.5 text-xs text-emerald-600">
+                                                                    <Check className="h-3.5 w-3.5" />
+                                                                    <span>Upload complete</span>
+                                                                </div>
                                                             )}
                                                         </div>
-                                                        <div className="flex-1 min-w-0 space-y-3">
-                                                            <div>
-                                                                <p className="text-sm font-semibold text-slate-900 truncate">
-                                                                    {doc.fileName}
-                                                                </p>
-                                                                <p className="text-xs text-slate-500 mt-1">
-                                                                    {(doc.file.size / 1024).toFixed(2)} KB
-                                                                </p>
-                                                                
-                                                                {/* Upload Progress Bar */}
-                                                                {doc.isUploading && (
-                                                                    <div className="mt-2 space-y-1">
-                                                                        <div className="flex items-center justify-between text-xs text-slate-600">
-                                                                            <span>Uploading...</span>
-                                                                            <span>{Math.round(doc.uploadProgress || 0)}%</span>
-                                                                        </div>
-                                                                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                                                            <div 
-                                                                                className="h-full bg-emerald-600 rounded-full transition-all duration-300 ease-out"
-                                                                                style={{ width: `${doc.uploadProgress || 0}%` }}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-                                                                
-                                                                {/* Upload Complete Indicator */}
-                                                                {!doc.isUploading && doc.uploadProgress === 100 && (
-                                                                    <div className="mt-2 flex items-center gap-1.5 text-xs text-emerald-600">
-                                                                        <Check className="h-3.5 w-3.5" />
-                                                                        <span>Upload complete</span>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            
-                                                            {/* Child Type Selector - iPad Optimized */}
-                                                            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                                                                <label className="text-xs font-medium text-slate-600 whitespace-nowrap">
-                                                                    Document Type:
-                                                                </label>
-                                                                <div className="flex gap-2">
-                                                                    {(["Form", "Annex", "Attachment"] as ChildDocumentType[]).map((type) => (
-                                                                        <button
-                                                                            key={type}
-                                                                            onClick={() => handleChildTypeChange(doc.id, type)}
-                                                                            className={cn(
-                                                                                "px-4 py-2 text-xs font-medium rounded-lg transition-all touch-manipulation",
-                                                                                doc.childType === type
-                                                                                    ? "bg-emerald-600 text-white shadow-sm"
-                                                                                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95"
-                                                                            )}
-                                                                        >
-                                                                            {type}
-                                                                        </button>
-                                                                    ))}
+                                                        
+                                                        {/* Parent/Child Status Badge */}
+                                                        {isBatchParent(doc.id) ? (
+                                                            <div className="flex items-center gap-2 p-2.5 bg-gradient-to-r from-emerald-100 to-green-100 border-2 border-emerald-300 rounded-lg">
+                                                                <Star className="h-4 w-4 text-emerald-600 shrink-0" />
+                                                                <div className="flex-1">
+                                                                    <p className="text-xs font-bold text-emerald-800 uppercase tracking-wide">
+                                                                        Parent Document
+                                                                    </p>
+                                                                    <p className="text-xs text-emerald-600 mt-0.5">
+                                                                        Other {childDocs.length} file{childDocs.length !== 1 ? 's' : ''} will be linked as children
+                                                                    </p>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="flex items-center gap-2 shrink-0">
+                                                        ) : effectiveParent ? (
+                                                            <div className="flex items-start gap-2 p-2.5 bg-blue-100 border border-blue-200 rounded-lg">
+                                                                <Network className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
+                                                                <div className="flex-1 min-w-0">
+                                                                    {(() => {
+                                                                        const parentInfo = getParentInfo(effectiveParent);
+                                                                        if (!parentInfo) return null;
+                                                                        
+                                                                        return (
+                                                                            <>
+                                                                                <p className="text-xs text-blue-800 font-medium">
+                                                                                    Child of: {parentInfo.source === 'batch' ? '📄 Batch' : '🏢 External'}
+                                                                                </p>
+                                                                                <p className="text-xs text-blue-600 truncate">
+                                                                                    {parentInfo.label}
+                                                                                </p>
+                                                                            </>
+                                                                        );
+                                                                    })()}
+                                                                </div>
+                                                            </div>
+                                                        ) : null}
+                                                    </div>
+                                                    
+                                                    {/* Actions */}
+                                                    <div className="flex flex-wrap items-center gap-2 shrink-0">
+                                                        {/* Set Parent Button - Show on all documents except current parent */}
+                                                        {!isBatchParent(doc.id) && (
                                                             <button
-                                                                onClick={() => handlePreviewDocument(doc.file)}
-                                                                className="px-3 py-2.5 text-xs font-medium text-slate-600 hover:text-blue-700 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
-                                                                title="Preview document"
-                                                            >
-                                                                <Eye className="h-3.5 w-3.5 inline mr-1" />
-                                                                <span className="hidden sm:inline">Preview</span>
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleSetParent(doc.id)}
-                                                                className="px-3 py-2.5 text-xs font-medium text-slate-600 hover:text-amber-700 hover:bg-amber-50 border border-slate-200 hover:border-amber-200 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
+                                                                onClick={() => handleSetAsBatchParent(doc.id)}
+                                                                className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 border border-emerald-600 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
                                                                 title="Set as parent document"
                                                             >
-                                                                <Star className="h-3.5 w-3.5 inline mr-1" />
+                                                                <Star className="h-3.5 w-3.5" />
                                                                 <span className="hidden sm:inline">Set Parent</span>
-                                                                <span className="sm:hidden">Parent</span>
                                                             </button>
-                                                            <button
-                                                                onClick={() => handleRemoveDocument(doc.id)}
-                                                                className="px-3 py-2.5 text-xs font-medium text-slate-600 hover:text-red-700 hover:bg-red-50 border border-slate-200 hover:border-red-200 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
-                                                                title="Remove document"
-                                                            >
-                                                                <IconTrash className="h-3.5 w-3.5 inline mr-1" />
-                                                                <span className="hidden sm:inline">Remove</span>
-                                                            </button>
-                                                        </div>
+                                                        )}
+                                                        
+                                                        <button
+                                                            onClick={() => handlePreviewDocument(doc.file)}
+                                                            className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 border border-blue-600 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
+                                                            title="Preview document"
+                                                        >
+                                                            <Eye className="h-3.5 w-3.5" />
+                                                            <span className="hidden sm:inline">Preview</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleRemoveDocument(doc.id)}
+                                                            className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium bg-red-600 text-white hover:bg-red-700 border border-red-600 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
+                                                            title="Remove document"
+                                                        >
+                                                            <IconTrash className="h-3.5 w-3.5" />
+                                                            <span className="hidden sm:inline">Remove</span>
+                                                        </button>
                                                     </div>
                                                 </div>
-                                            </motion.div>
-                                        ))}
-                                    </AnimatePresence>
-                                </div>
-                            </div>
-                        )}
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </AnimatePresence>
+                        </div>
                     </div>
 
                     {/* Add More Documents */}
@@ -529,23 +772,10 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                         </Button>
                     </div>
 
-                    {/* Validation Warning */}
-                    {documents.length > 0 && !parentDocument && (
-                        <div className="flex items-start gap-3 bg-amber-50 border-2 border-amber-300 rounded-xl p-5 shadow-sm">
-                            <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                            <div className="flex-1">
-                                <p className="text-sm font-medium text-amber-900">
-                                    No Parent Document Selected
-                                </p>
-                                <p className="text-xs text-amber-700 mt-1 leading-relaxed">
-                                    Please select one document to be the parent document before proceeding.
-                                </p>
-                            </div>
-                        </div>
-                    )}
+                    {/* Validation Warning - Removed, no longer needed */}
 
                     {/* Success Message */}
-                    {documents.length > 0 && parentDocument && (
+                    {documents.length > 0 && (
                         <div className="flex items-start gap-3 bg-emerald-50 border-2 border-emerald-300 rounded-xl p-5 shadow-sm">
                             <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
                             <div className="flex-1">
@@ -553,7 +783,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                                     Ready to Continue
                                 </p>
                                 <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
-                                    {documents.length} document(s) uploaded with 1 parent and {childDocuments.length} child document(s). 
+                                    {documents.length} document(s) uploaded: {independentDocs.length} independent document(s) and {childDocs.length} with parent relationship(s). 
                                     Click on the <strong>General Information</strong> tab to enter metadata for each document.
                                 </p>
                             </div>

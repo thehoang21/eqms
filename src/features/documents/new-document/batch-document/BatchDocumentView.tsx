@@ -29,6 +29,7 @@ import {
 } from "./../tabs";
 import { BatchDocumentUpload } from "./components/BatchDocumentUpload";
 import { DocumentTreeView } from "./components/DocumentTreeView";
+import { IconStar } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -40,7 +41,6 @@ interface BatchDocument {
     id: string;
     fileName: string;
     file: File;
-    isParent: boolean;
     childType?: ChildDocumentType;
     formData: {
         title: string;
@@ -64,6 +64,9 @@ export const BatchDocumentView: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabType>("document");
     const [currentDocIndex, setCurrentDocIndex] = useState(0);
     const [documents, setDocuments] = useState<BatchDocument[]>([]);
+    const [globalParentId, setGlobalParentId] = useState<string>(""); // External parent (Effective docs)
+    const [batchParentId, setBatchParentId] = useState<string>(""); // Batch parent document ID
+    const [globalParentData, setGlobalParentData] = useState<any>(null); // Store parent metadata
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isESignOpen, setIsESignOpen] = useState(false);
@@ -219,6 +222,26 @@ export const BatchDocumentView: React.FC = () => {
 
     const handleDocumentsChange = (docs: BatchDocument[]) => {
         setDocuments(docs);
+    };
+    
+    const handleGlobalParentChange = (parentId: string, parentData?: any) => {
+        setGlobalParentId(parentId);
+        setGlobalParentData(parentData);
+        
+        // Clear batch parent when global parent is selected
+        if (parentId) {
+            setBatchParentId("");
+        }
+    };
+    
+    const handleBatchParentChange = (docId: string) => {
+        setBatchParentId(docId);
+        
+        // Clear global parent when batch parent is selected
+        if (docId) {
+            setGlobalParentId("");
+            setGlobalParentData(null);
+        }
     };
 
     const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
@@ -405,6 +428,10 @@ export const BatchDocumentView: React.FC = () => {
                         <BatchDocumentUpload
                             documents={documents}
                             onDocumentsChange={handleDocumentsChange}
+                            globalParentId={globalParentId}
+                            batchParentId={batchParentId}
+                            onGlobalParentChange={handleGlobalParentChange}
+                            onBatchParentChange={handleBatchParentChange}
                         />
                     )}
 
@@ -417,18 +444,75 @@ export const BatchDocumentView: React.FC = () => {
                                         documents={documents}
                                         currentDocumentIndex={currentDocIndex}
                                         onDocumentSelect={(index) => setCurrentDocIndex(index)}
+                                        batchParentId={batchParentId}
+                                        globalParentId={globalParentId}
+                                        globalParentData={globalParentData}
                                     />
                                 </div>
                             </div>
 
                             {/* Main Content */}
                             <div className="lg:col-span-9 xl:col-span-9 space-y-4 md:space-y-6">
+                                {/* Global Parent Info - Show when external parent is selected */}
+                                {globalParentId && globalParentData && (
+                                    <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300 rounded-lg md:rounded-xl p-4 md:p-5">
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                                                <FileText className="h-5 w-5 text-emerald-600" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-sm md:text-base font-semibold text-slate-900 mb-1">
+                                                    🏢 External Parent Document
+                                                </h4>
+                                                <p className="text-xs md:text-sm text-slate-700 font-medium">
+                                                    {globalParentData.documentId} - {globalParentData.documentName}
+                                                </p>
+                                                <p className="text-xs text-slate-600 mt-1">
+                                                    Version {globalParentData.version} • {globalParentData.type} • Status: {globalParentData.status}
+                                                </p>
+                                                <div className="mt-2 px-3 py-1.5 bg-white border border-emerald-200 rounded-lg inline-block">
+                                                    <p className="text-xs text-emerald-700">
+                                                        ✓ Metadata inherited from parent document
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* Batch Parent Info - Show when batch parent is selected */}
+                                {batchParentId && documents.find(d => d.id === batchParentId) && (
+                                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg md:rounded-xl p-4 md:p-5">
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                                                <IconStar className="h-5 w-5 text-blue-600" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-sm md:text-base font-semibold text-slate-900 mb-1">
+                                                    ⭐ Batch Parent Document
+                                                </h4>
+                                                <p className="text-xs md:text-sm text-slate-700 font-medium">
+                                                    {documents.find(d => d.id === batchParentId)?.fileName}
+                                                </p>
+                                                <p className="text-xs text-slate-600 mt-1">
+                                                    Parent of {documents.filter(d => d.id !== batchParentId).length} document(s) in this batch
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                
                                 {/* Current Document Context */}
                                 <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-lg md:rounded-xl p-4 md:p-5 lg:p-6">
                                     <div className="flex items-start justify-between gap-3 md:gap-4">
                                         <div className="flex-1 min-w-0">
                                             <h3 className="text-sm md:text-base lg:text-lg font-semibold text-slate-900 mb-1.5 md:mb-2">
-                                                {currentDocument.isParent ? "📌 Parent Document" : `${currentDocument.childType === "Form" ? "📝" : currentDocument.childType === "Annex" ? "📎" : "📄"} ${currentDocument.childType || "Child Document"}`}
+                                                {currentDocument.id === batchParentId 
+                                                    ? "⭐ Batch Parent Document" 
+                                                    : (batchParentId || globalParentId)
+                                                        ? `${currentDocument.childType === "Form" ? "📝" : currentDocument.childType === "Annex" ? "📎" : "📄"} ${currentDocument.childType || "Child Document"}`
+                                                        : "📄 Document"
+                                                }
                                             </h3>
                                             <p className="text-xs md:text-sm text-slate-600 mb-1 md:mb-2 truncate">
                                                 File: {currentDocument.fileName}
@@ -446,6 +530,7 @@ export const BatchDocumentView: React.FC = () => {
                                 <GeneralTab
                                     formData={currentDocument.formData}
                                     onFormChange={handleFormChange}
+                                    hideTemplateCheckbox={true}
                                 />
 
                                 {/* Navigation Buttons */}
@@ -557,8 +642,20 @@ export const BatchDocumentView: React.FC = () => {
                         <p>Are you sure you want to save all documents as drafts?</p>
                         <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
                             <p><span className="font-semibold">Total Documents:</span> {documents.length}</p>
-                            <p><span className="font-semibold">Parent Document:</span> {documents.find(d => d.isParent)?.fileName || "None"}</p>
-                            <p><span className="font-semibold">Child Documents:</span> {documents.filter(d => !d.isParent).length}</p>
+                            <p><span className="font-semibold">Parent Document:</span> {
+                                batchParentId 
+                                    ? documents.find(d => d.id === batchParentId)?.fileName || "None"
+                                    : globalParentId && globalParentData
+                                        ? globalParentData.documentId
+                                        : "None"
+                            }</p>
+                            <p><span className="font-semibold">Child Documents:</span> {
+                                batchParentId 
+                                    ? documents.filter(d => d.id !== batchParentId).length
+                                    : globalParentId
+                                        ? documents.length
+                                        : 0
+                            }</p>
                         </div>
                     </div>
                 }

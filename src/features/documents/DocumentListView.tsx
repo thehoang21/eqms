@@ -914,9 +914,6 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
           setValidToDate(dateStr);
           setCurrentPage(1);
         }}
-        columns={columns}
-        onColumnsChange={setColumns}
-        ColumnCustomizerComponent={DocumentColumnCustomizer}
       />
 
       {/* Table Container - Match MyTasksView wrapper */}

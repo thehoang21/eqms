@@ -1,7 +1,7 @@
 export type Priority = "Critical" | "High" | "Medium" | "Low";
 export type TaskStatus = "Pending" | "In-Progress" | "Reviewing" | "Completed";
 export type ModuleType = "Document" | "Deviation" | "CAPA" | "Training";
-export type ViewMode = "table" | "card";
+export type ViewMode = "list" | "board" | "calendar" | "gantt" | "timeline";
 
 export interface TimelineEvent {
   date: string;

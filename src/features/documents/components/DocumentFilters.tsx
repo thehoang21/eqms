@@ -37,14 +37,10 @@ interface DocumentFiltersProps {
     onValidFromDateChange: (value: string) => void;
     validToDate: string;
     onValidToDateChange: (value: string) => void;
-    columns: TableColumn[];
-    onColumnsChange: (columns: TableColumn[]) => void;
-    ColumnCustomizerComponent: React.ComponentType<{
-        columns: TableColumn[];
-        onColumnsChange: (columns: TableColumn[]) => void;
-    }>;
+
     showTypeFilter?: boolean;
     showDepartmentFilter?: boolean;
+    disableStatusFilter?: boolean;
 }
 
 export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
@@ -70,19 +66,17 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
     onValidFromDateChange,
     validToDate,
     onValidToDateChange,
-    columns,
-    onColumnsChange,
-    ColumnCustomizerComponent,
     showTypeFilter = true,
     showDepartmentFilter = true,
+    disableStatusFilter = false,
 }) => {
     return (
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-                {/* Row 1: Search, Status, Type, Department */}
+                {/* Row 1: Search, Type, Department */}
 
                 {/* Search */}
-                <div className="xl:col-span-4 w-full">
+                <div className="xl:col-span-6 w-full">
                     <label className="text-sm font-medium text-slate-700 mb-1.5 block">
                         Search
                     </label>
@@ -98,17 +92,6 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                             className="block w-full pl-10 pr-3 h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
                         />
                     </div>
-                </div>
-
-                {/* Display Columns */}
-                <div className="xl:col-span-2 w-full">
-                    <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                        Display
-                    </label>
-                    <ColumnCustomizerComponent
-                        columns={columns}
-                        onColumnsChange={onColumnsChange}
-                    />
                 </div>
 
                 {/* Type Filter */}
@@ -163,7 +146,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                     <Select
                         label="Status"
                         value={statusFilter}
-                        onChange={(value) => onStatusChange(value as DocumentStatus | "All")}
+                        onChange={(value) => !disableStatusFilter && onStatusChange(value as DocumentStatus | "All")}
                         options={[
                             { label: "All", value: "All" },
                             { label: "Draft", value: "Draft" },
@@ -175,6 +158,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         ]}
                         placeholder="Select status"
                         searchPlaceholder="Search status..."
+                        className={disableStatusFilter ? "opacity-60 pointer-events-none" : ""}
                     />
                 </div>
 

@@ -668,9 +668,6 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
           setValidToDate(dateStr);
           setCurrentPage(1);
         }}
-        columns={columns}
-        onColumnsChange={setColumns}
-        ColumnCustomizerComponent={DocumentColumnCustomizer}
       />
 
       {/* Table Container with Pagination */}

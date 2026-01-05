@@ -40,13 +40,13 @@ export const getStatusBadgeStyle = (s: TaskStatus) => {
 export const getModuleIcon = (m: ModuleType) => {
   switch (m) {
     case "Document":
-      return <FileText className="h-3.5 w-3.5" />;
+      return FileText;
     case "Deviation":
-      return <AlertTriangle className="h-3.5 w-3.5" />;
+      return AlertTriangle;
     case "CAPA":
-      return <Shield className="h-3.5 w-3.5" />;
+      return Shield;
     case "Training":
-      return <GraduationCap className="h-3.5 w-3.5" />;
+      return GraduationCap;
   }
 };
 

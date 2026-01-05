@@ -585,7 +585,8 @@ export const RevisionWorkspaceView: React.FC = () => {
 
                             <GeneralTab 
                                 formData={currentDocument.formData} 
-                                onFormChange={handleFormChange} 
+                                onFormChange={handleFormChange}
+                                hideTemplateCheckbox={true}
                             />
 
                             {/* Navigation Buttons */}

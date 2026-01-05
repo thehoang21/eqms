@@ -14,6 +14,7 @@ import {
     Send,
     CheckCircle2,
     AlertCircle,
+    Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
@@ -34,7 +35,7 @@ type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Pr
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
 type TabType = "general" | "training" | "document" | "signatures" | "audit" | "workflow";
 
-export const NewDocumentView: React.FC = () => {
+export const NewTemplateView: React.FC = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<TabType>("document");
     const [isSaving, setIsSaving] = useState(false);
@@ -47,7 +48,7 @@ export const NewDocumentView: React.FC = () => {
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    // Form state
+    // Form state - isTemplate is ALWAYS true for templates
     const [formData, setFormData] = useState({
         title: "",
         type: "SOP" as DocumentType,
@@ -60,12 +61,12 @@ export const NewDocumentView: React.FC = () => {
         periodicReviewNotification: 14,
         language: "English",
         description: "",
-        isTemplate: false,
+        isTemplate: true, // Always true for template creation
     });
 
     const missingRequiredFields = useMemo(() => {
         const missing: string[] = [];
-        if (!formData.title.trim()) missing.push("Document Name");
+        if (!formData.title.trim()) missing.push("Template Name");
         if (!String(formData.type || "").trim()) missing.push("Document Type");
         if (!formData.author.trim()) missing.push("Author");
         if (!formData.businessUnit.trim()) missing.push("Business Unit");
@@ -103,7 +104,7 @@ export const NewDocumentView: React.FC = () => {
     };
 
     const handleBack = () => {
-        navigate("/documents/all");
+        navigate("/documents/templates");
     };
 
     const handleSave = async () => {
@@ -112,10 +113,10 @@ export const NewDocumentView: React.FC = () => {
             if (!validateOrWarn()) return;
 
             // TODO: Integrate with API service
-            console.log("Document created:", formData);
-            navigate("/documents/all");
+            console.log("Template created:", { ...formData, isTemplate: true });
+            navigate("/documents/templates");
         } catch (error) {
-            console.error("Error creating document:", error);
+            console.error("Error creating template:", error);
         } finally {
             setIsSaving(false);
         }
@@ -130,11 +131,11 @@ export const NewDocumentView: React.FC = () => {
         setIsSubmitting(true);
         try {
             // TODO: Integrate with API service
-            console.log("Document submitted for activation:", { ...formData, eSignatureReason: reason });
+            console.log("Template submitted for activation:", { ...formData, isTemplate: true, eSignatureReason: reason });
             setIsESignOpen(false);
-            navigate("/documents/all");
+            navigate("/documents/templates");
         } catch (error) {
-            console.error("Error submitting document:", error);
+            console.error("Error submitting template:", error);
         } finally {
             setIsSubmitting(false);
         }
@@ -142,7 +143,7 @@ export const NewDocumentView: React.FC = () => {
 
     // Status workflow steps
     const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
-    const currentStepIndex = 0; // Always "Draft" for new documents
+    const currentStepIndex = 0; // Always "Draft" for new templates
 
     const tabs = [
         { id: "document" as TabType, label: "Document", icon: FileText },
@@ -160,30 +161,23 @@ export const NewDocumentView: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-                            New Document
+                            New Template
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+                            <span className="hidden sm:inline">Dashboard</span>
+                            <Home className="h-4 w-4 sm:hidden" />
+                            <ChevronRight className="h-4 w-4" />
+                            <span className="hidden sm:inline">Document Control</span>
+                            <span className="sm:hidden">...</span>
+                            <ChevronRight className="h-4 w-4" />
                             <button
-                                onClick={() => navigate("/dashboard")}
+                                onClick={() => navigate("/documents/templates")}
                                 className="hover:text-slate-700 transition-colors"
                             >
-                                Dashboard
+                                Template Library
                             </button>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
-                            <button
-                                className="hover:text-slate-700 transition-colors"
-                            >
-                                Document Control
-                            </button>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
-                            <button
-                                onClick={() => navigate("/documents/all")}
-                                className="hover:text-slate-700 transition-colors"
-                            >
-                                All Documents
-                            </button>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
-                            <span className="text-slate-700 font-medium">New Document</span>
+                            <ChevronRight className="h-4 w-4" />
+                            <span className="text-slate-700 font-medium">New Template</span>
                         </div>
                     </div>
 
@@ -314,7 +308,7 @@ export const NewDocumentView: React.FC = () => {
                         <GeneralTab 
                             formData={formData} 
                             onFormChange={setFormData}
-                            hideTemplateCheckbox={true}
+                            isTemplateMode={true}
                         />
                     )}
 
@@ -353,7 +347,7 @@ export const NewDocumentView: React.FC = () => {
                     setIsESignOpen(false);
                 }}
                 onConfirm={handleESignConfirm}
-                actionTitle="Submit document for activation"
+                actionTitle="Submit template for activation"
             />
 
             <AlertModal

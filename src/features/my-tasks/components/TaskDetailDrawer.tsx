@@ -169,7 +169,10 @@ export const TaskDetailDrawer: React.FC<{
                   getModuleBadgeStyle(task.module)
                 )}
               >
-                {getModuleIcon(task.module)}
+                {(() => {
+                  const ModuleIcon = getModuleIcon(task.module);
+                  return <ModuleIcon className="h-3.5 w-3.5" />;
+                })()}
                 {task.module}
               </span>
               <span className="text-sm font-mono text-slate-500 font-medium">

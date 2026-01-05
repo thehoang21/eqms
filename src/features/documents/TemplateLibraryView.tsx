@@ -7,23 +7,25 @@ import {
   Eye,
   Download,
   History,
-  AlertCircle,
-  CheckCircle2,
-  Clock,
-  AlertTriangle,
+  Plus,
+  Copy,
+  Edit,
+  Trash2,
   GripVertical,
   Home,
   FileText,
+  CheckCircle2,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
-import { DocumentFilters } from "../../components/DocumentFilters";
+import { TemplateFilters } from "./components/TemplateFilters";
+import { IconTemplate } from "@tabler/icons-react";
 
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type TemplateStatus = "Draft" | "Active" | "Archived";
 
 interface TableColumn {
   id: string;
@@ -33,90 +35,108 @@ interface TableColumn {
   locked?: boolean;
 }
 
-interface Document {
+interface Template {
   id: string;
-  documentId: string;
-  title: string;
-  type: DocumentType;
+  templateId: string;
+  templateName: string;
+  documentType: DocumentType;
   version: string;
-  status: DocumentStatus;
-  effectiveDate: string;
-  validUntil: string;
-  author: string;
+  status: TemplateStatus;
+  createdBy: string;
+  createdDate: string;
+  lastModified: string;
   department: string;
-  created: string;
-  openedBy: string;
   description?: string;
+  usageCount: number;
 }
 
 // --- Mock Data ---
-const MOCK_DOCUMENTS: Document[] = [
+const MOCK_TEMPLATES: Template[] = [
   {
     id: "1",
-    documentId: "SOP-QA-002",
-    title: "Batch Record Review Procedure",
-    type: "SOP",
-    version: "1.0",
-    status: "Pending Review",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "John Doe",
+    templateId: "TMPL-SOP-001",
+    templateName: "Standard Operating Procedure Template",
+    documentType: "SOP",
+    version: "2.0",
+    status: "Active",
+    createdBy: "Dr. Sarah Johnson",
+    createdDate: "2023-01-15",
+    lastModified: "2023-06-20",
     department: "Quality Assurance",
-    created: "2023-10-01",
-    openedBy: "QA Admin",
-    description: "Procedure for reviewing batch records",
+    description: "Standard template for creating SOPs",
+    usageCount: 45,
   },
   {
     id: "2",
-    documentId: "POL-IT-001",
-    title: "Information Security Policy",
-    type: "Policy",
-    version: "2.0",
-    status: "Pending Review",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "Jane Smith",
-    department: "IT",
-    created: "2023-10-05",
-    openedBy: "IT Manager",
-    description: "Policy for information security",
+    templateId: "TMPL-POL-001",
+    templateName: "Policy Document Template",
+    documentType: "Policy",
+    version: "1.5",
+    status: "Active",
+    createdBy: "John Smith",
+    createdDate: "2023-02-10",
+    lastModified: "2023-08-15",
+    department: "Human Resources",
+    description: "Template for creating company policies",
+    usageCount: 28,
   },
   {
     id: "3",
-    documentId: "FORM-QC-005",
-    title: "Lab Equipment Calibration Log",
-    type: "Form",
-    version: "1.2",
-    status: "Pending Review",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "Mike Johnson",
+    templateId: "TMPL-FORM-001",
+    templateName: "Inspection Form Template",
+    documentType: "Form",
+    version: "1.0",
+    status: "Active",
+    createdBy: "Emily Davis",
+    createdDate: "2023-03-05",
+    lastModified: "2023-07-10",
     department: "Quality Control",
-    created: "2023-10-10",
-    openedBy: "QC Supervisor",
-    description: "Log for equipment calibration",
+    description: "Template for creating inspection forms",
+    usageCount: 62,
+  },
+  {
+    id: "4",
+    templateId: "TMPL-RPT-001",
+    templateName: "Validation Report Template",
+    documentType: "Report",
+    version: "1.8",
+    status: "Active",
+    createdBy: "Michael Brown",
+    createdDate: "2023-04-12",
+    lastModified: "2023-09-25",
+    department: "Validation",
+    description: "Template for validation reports",
+    usageCount: 18,
+  },
+  {
+    id: "5",
+    templateId: "TMPL-SPEC-001",
+    templateName: "Product Specification Template",
+    documentType: "Specification",
+    version: "2.2",
+    status: "Active",
+    createdBy: "Dr. Sarah Johnson",
+    createdDate: "2023-05-20",
+    lastModified: "2023-10-05",
+    department: "Quality Assurance",
+    description: "Template for product specifications",
+    usageCount: 35,
   },
 ];
 
 // --- Helper Components ---
 
-const StatusBadge = ({ status }: { status: DocumentStatus }) => {
+const StatusBadge = ({ status }: { status: TemplateStatus }) => {
   const styles = {
     Draft: "bg-slate-100 text-slate-700 border-slate-200",
-    "Pending Review": "bg-amber-50 text-amber-700 border-amber-200",
-    "Pending Approval": "bg-blue-50 text-blue-700 border-blue-200",
-    Approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    Effective: "bg-green-50 text-green-700 border-green-200",
-    Archive: "bg-gray-100 text-gray-600 border-gray-200",
+    Active: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    Archived: "bg-red-50 text-red-700 border-red-200",
   };
 
   const icons = {
     Draft: History,
-    "Pending Review": AlertCircle,
-    "Pending Approval": Clock,
-    Approved: CheckCircle2,
-    Effective: CheckCircle2,
-    Archive: History,
+    Active: CheckCircle2,
+    Archived: History,
   };
 
   const Icon = icons[status];
@@ -150,7 +170,7 @@ const DropdownMenu: React.FC<{
         }}
       />
       <div
-        className="fixed z-50 min-w-[160px] bg-white rounded-lg shadow-lg border border-slate-200 py-1 animate-in fade-in zoom-in-95 duration-100"
+        className="fixed z-50 min-w-[180px] bg-white rounded-lg shadow-lg border border-slate-200 py-1 animate-in fade-in zoom-in-95 duration-100"
         style={{ top: position.top, left: position.left }}
       >
         <button
@@ -162,29 +182,41 @@ const DropdownMenu: React.FC<{
           className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
         >
           <Eye className="h-4 w-4 text-slate-400" />
-          View Details
+          View Template
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onAction('review');
+            onAction('edit');
             onClose();
           }}
           className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
         >
-          <CheckCircle2 className="h-4 w-4 text-slate-400" />
-          Review
+          <Edit className="h-4 w-4 text-slate-400" />
+          Edit Template
         </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onAction('history');
+            onAction('duplicate');
             onClose();
           }}
           className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
         >
-          <History className="h-4 w-4 text-slate-400" />
-          History
+          <Copy className="h-4 w-4 text-slate-400" />
+          Duplicate
+        </button>
+        <div className="border-t border-slate-100 my-1" />
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onAction('delete');
+            onClose();
+          }}
+          className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+        >
+          <Trash2 className="h-4 w-4" />
+          Delete
         </button>
       </div>
     </>,
@@ -200,7 +232,6 @@ const ColumnCustomizer: React.FC<{
   const containerRef = useRef<HTMLDivElement>(null);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
-  // Close when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -237,7 +268,6 @@ const ColumnCustomizer: React.FC<{
     newColumns.splice(draggedIndex, 1);
     newColumns.splice(index, 0, draggedItem);
 
-    // Update order
     const updatedColumns = newColumns.map((col, idx) => ({
       ...col,
       order: idx
@@ -254,17 +284,16 @@ const ColumnCustomizer: React.FC<{
   const resetToDefault = () => {
     const defaultColumns: TableColumn[] = [
       { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-      { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
-      { id: 'created', label: 'Created', visible: true, order: 2 },
-      { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
-      { id: 'title', label: 'Document Name', visible: true, order: 4 },
-      { id: 'status', label: 'State', visible: true, order: 5 },
-      { id: 'type', label: 'Document Type', visible: true, order: 6 },
-      { id: 'department', label: 'Department', visible: true, order: 7 },
-      { id: 'author', label: 'Author', visible: true, order: 8 },
-      { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
-      { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
-      { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+      { id: 'templateId', label: 'Template ID', visible: true, order: 1 },
+      { id: 'templateName', label: 'Template Name', visible: true, order: 2 },
+      { id: 'documentType', label: 'Document Type', visible: true, order: 3 },
+      { id: 'version', label: 'Version', visible: true, order: 4 },
+      { id: 'status', label: 'Status', visible: true, order: 5 },
+      { id: 'createdBy', label: 'Created By', visible: true, order: 6 },
+      { id: 'createdDate', label: 'Created Date', visible: true, order: 7 },
+      { id: 'lastModified', label: 'Last Modified', visible: true, order: 8 },
+      { id: 'usageCount', label: 'Usage Count', visible: true, order: 9 },
+      { id: 'action', label: 'Action', visible: true, order: 10, locked: true },
     ];
     onColumnsChange(defaultColumns);
   };
@@ -351,84 +380,75 @@ const ColumnCustomizer: React.FC<{
 
 // --- Main Component ---
 
-interface PendingMyReviewViewProps {
-  onViewDocument?: (documentId: string) => void;
+interface TemplateLibraryViewProps {
+  onViewTemplate?: (templateId: string) => void;
+  onCreateTemplate?: () => void;
 }
 
-export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onViewDocument }) => {
+export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({ 
+  onViewTemplate,
+  onCreateTemplate 
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter] = useState<DocumentStatus | "All">("Pending Review"); // Fixed to Pending Review
+  const [statusFilter, setStatusFilter] = useState<TemplateStatus | "All">("All");
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
   const [departmentFilter, setDepartmentFilter] = useState<string>("All");
   const [authorFilter, setAuthorFilter] = useState<string>("All");
   const [createdFromDate, setCreatedFromDate] = useState<string>("");
   const [createdToDate, setCreatedToDate] = useState<string>("");
-  const [effectiveFromDate, setEffectiveFromDate] = useState<string>("");
-  const [effectiveToDate, setEffectiveToDate] = useState<string>("");
-  const [validFromDate, setValidFromDate] = useState<string>("");
-  const [validToDate, setValidToDate] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [columns, setColumns] = useState<TableColumn[]>([
     { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-    { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
-    { id: 'created', label: 'Created', visible: true, order: 2 },
-    { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
-    { id: 'title', label: 'Document Name', visible: true, order: 4 },
-    { id: 'status', label: 'State', visible: true, order: 5 },
-    { id: 'type', label: 'Document Type', visible: true, order: 6 },
-    { id: 'department', label: 'Department', visible: true, order: 7 },
-    { id: 'author', label: 'Author', visible: true, order: 8 },
-    { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
-    { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
-    { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+    { id: 'templateId', label: 'Template ID', visible: true, order: 1 },
+    { id: 'templateName', label: 'Template Name', visible: true, order: 2 },
+    { id: 'documentType', label: 'Document Type', visible: true, order: 3 },
+    { id: 'version', label: 'Version', visible: true, order: 4 },
+    { id: 'status', label: 'Status', visible: true, order: 5 },
+    { id: 'createdBy', label: 'Created By', visible: true, order: 6 },
+    { id: 'createdDate', label: 'Created Date', visible: true, order: 7 },
+    { id: 'lastModified', label: 'Last Modified', visible: true, order: 8 },
+    { id: 'usageCount', label: 'Usage Count', visible: true, order: 9 },
+    { id: 'action', label: 'Action', visible: true, order: 10, locked: true },
   ]);
-  const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
 
   const itemsPerPage = 10;
 
-  // Filter documents
-  const filteredDocuments = useMemo(() => {
-    return MOCK_DOCUMENTS.filter((doc) => {
+  // Filter templates
+  const filteredTemplates = useMemo(() => {
+    return MOCK_TEMPLATES.filter((template) => {
       const matchesSearch =
-        doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.documentId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
+        template.templateName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.templateId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.createdBy.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.department.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter === "All" || doc.status === statusFilter;
-      const matchesType = typeFilter === "All" || doc.type === typeFilter;
-      const matchesDepartment = departmentFilter === "All" || doc.department === departmentFilter;
-      const matchesAuthor = authorFilter === "All" || doc.author === authorFilter;
+      const matchesStatus = statusFilter === "All" || template.status === statusFilter;
+      const matchesType = typeFilter === "All" || template.documentType === typeFilter;
+      const matchesDepartment = departmentFilter === "All" || template.department === departmentFilter;
+      const matchesAuthor = authorFilter === "All" || template.createdBy === authorFilter;
 
-      // Date filtering
-      const matchesCreatedFrom = !createdFromDate || new Date(doc.created) >= new Date(createdFromDate);
-      const matchesCreatedTo = !createdToDate || new Date(doc.created) <= new Date(createdToDate);
-      const matchesEffectiveFrom = !effectiveFromDate || new Date(doc.effectiveDate) >= new Date(effectiveFromDate);
-      const matchesEffectiveTo = !effectiveToDate || new Date(doc.effectiveDate) <= new Date(effectiveToDate);
-      const matchesValidFrom = !validFromDate || new Date(doc.validUntil) >= new Date(validFromDate);
-      const matchesValidTo = !validToDate || new Date(doc.validUntil) <= new Date(validToDate);
+      const matchesCreatedFrom = !createdFromDate || new Date(template.createdDate) >= new Date(createdFromDate);
+      const matchesCreatedTo = !createdToDate || new Date(template.createdDate) <= new Date(createdToDate);
 
       return matchesSearch && matchesStatus && matchesType && matchesDepartment && 
-             matchesAuthor && matchesCreatedFrom && matchesCreatedTo && 
-             matchesEffectiveFrom && matchesEffectiveTo && matchesValidFrom && matchesValidTo;
+             matchesAuthor && matchesCreatedFrom && matchesCreatedTo;
     });
   }, [searchQuery, statusFilter, typeFilter, departmentFilter, authorFilter,
-      createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, 
-      validFromDate, validToDate]);
+      createdFromDate, createdToDate]);
 
-  const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredTemplates.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentDocuments = filteredDocuments.slice(startIndex, endIndex);
+  const currentTemplates = filteredTemplates.slice(startIndex, endIndex);
 
   const handleDropdownToggle = (
-    docId: string,
+    templateId: string,
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    if (openDropdownId === docId) {
+    if (openDropdownId === templateId) {
       setOpenDropdownId(null);
       return;
     }
@@ -439,23 +459,23 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
       top: rect.bottom + window.scrollY + 4,
       left: rect.right + window.scrollX - 200,
     });
-    setOpenDropdownId(docId);
+    setOpenDropdownId(templateId);
   };
 
-  const getButtonRef = (docId: string) => {
-    if (!buttonRefs.current[docId]) {
-      buttonRefs.current[docId] = React.createRef<HTMLButtonElement>();
+  const getButtonRef = (templateId: string) => {
+    if (!buttonRefs.current[templateId]) {
+      buttonRefs.current[templateId] = React.createRef<HTMLButtonElement>();
     }
-    return buttonRefs.current[docId];
+    return buttonRefs.current[templateId];
   };
 
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
-      {/* Header: Title + Breadcrumb (No Action Button) */}
+      {/* Header: Title + Breadcrumb + Action Button */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Pending My Review
+            Template Library
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
             <span className="hidden sm:inline">Dashboard</span>
@@ -464,20 +484,25 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>
             <ChevronRight className="h-4 w-4" />
-            <span className="hidden sm:inline">Document Revisions</span>
-            <span className="sm:hidden">...</span>
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-slate-700 font-medium">Pending My Review</span>
+            <span className="text-slate-700 font-medium">Template Library</span>
           </div>
         </div>
+        <Button
+          size="sm"
+          onClick={onCreateTemplate}
+          className="flex items-center gap-2 shadow-sm"
+        >
+          <IconTemplate className="h-4 w-4" />
+          New Template
+        </Button>
       </div>
 
       {/* Filters */}
-      <DocumentFilters
+      <TemplateFilters
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         statusFilter={statusFilter}
-        onStatusChange={() => {}} // No-op since disabled
+        onStatusChange={setStatusFilter}
         typeFilter={typeFilter}
         onTypeChange={setTypeFilter}
         departmentFilter={departmentFilter}
@@ -488,15 +513,6 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
         onCreatedFromDateChange={setCreatedFromDate}
         createdToDate={createdToDate}
         onCreatedToDateChange={setCreatedToDate}
-        effectiveFromDate={effectiveFromDate}
-        onEffectiveFromDateChange={setEffectiveFromDate}
-        effectiveToDate={effectiveToDate}
-        onEffectiveToDateChange={setEffectiveToDate}
-        validFromDate={validFromDate}
-        onValidFromDateChange={setValidFromDate}
-        validToDate={validToDate}
-        onValidToDateChange={setValidToDate}
-        disableStatusFilter={true}
       />
 
       {/* Table */}
@@ -532,11 +548,11 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
-              {currentDocuments.length > 0 ? (
-                currentDocuments.map((doc, index) => (
+              {currentTemplates.length > 0 ? (
+                currentTemplates.map((template, index) => (
                   <tr
-                    key={doc.id}
-                    onClick={() => onViewDocument?.(doc.id)}
+                    key={template.id}
+                    onClick={() => onViewTemplate?.(template.id)}
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                   >
                     {columns.sort((a, b) => a.order - b.order).map((column) => {
@@ -550,8 +566,8 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
                             className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                           >
                             <button
-                              ref={getButtonRef(doc.id)}
-                              onClick={(e) => handleDropdownToggle(doc.id, e)}
+                              ref={getButtonRef(template.id)}
+                              onClick={(e) => handleDropdownToggle(template.id, e)}
                               className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
                             >
                               <MoreVertical className="h-4 w-4 text-slate-600" />
@@ -563,20 +579,23 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
                       return (
                         <td key={column.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
                           {column.id === 'no' && startIndex + index + 1}
-                          {column.id === 'documentId' && (
-                            <span className="font-medium text-emerald-600">{doc.documentId}</span>
+                          {column.id === 'templateId' && (
+                            <span className="font-medium text-emerald-600">{template.templateId}</span>
                           )}
-                          {column.id === 'created' && doc.created}
-                          {column.id === 'openedBy' && doc.openedBy}
-                          {column.id === 'title' && (
-                            <span className="font-medium text-slate-900">{doc.title}</span>
+                          {column.id === 'templateName' && (
+                            <span className="font-medium text-slate-900">{template.templateName}</span>
                           )}
-                          {column.id === 'status' && <StatusBadge status={doc.status} />}
-                          {column.id === 'type' && doc.type}
-                          {column.id === 'department' && doc.department}
-                          {column.id === 'author' && doc.author}
-                          {column.id === 'effectiveDate' && doc.effectiveDate}
-                          {column.id === 'validUntil' && doc.validUntil}
+                          {column.id === 'documentType' && template.documentType}
+                          {column.id === 'version' && template.version}
+                          {column.id === 'status' && <StatusBadge status={template.status} />}
+                          {column.id === 'createdBy' && template.createdBy}
+                          {column.id === 'createdDate' && template.createdDate}
+                          {column.id === 'lastModified' && template.lastModified}
+                          {column.id === 'usageCount' && (
+                            <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium">
+                              {template.usageCount}
+                            </span>
+                          )}
                         </td>
                       );
                     })}
@@ -589,7 +608,7 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
                       <div className="bg-slate-50 p-4 rounded-full mb-3">
                         <FileText className="h-8 w-8 text-slate-400" />
                       </div>
-                      <p className="text-base font-medium text-slate-900">No documents found</p>
+                      <p className="text-base font-medium text-slate-900">No templates found</p>
                       <p className="text-sm mt-1">Try adjusting your search or filters</p>
                     </div>
                   </td>
@@ -603,8 +622,8 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-white">
           <div className="text-sm text-slate-600">
             Showing <span className="font-medium text-slate-900">{startIndex + 1}</span> to{" "}
-            <span className="font-medium text-slate-900">{Math.min(endIndex, filteredDocuments.length)}</span> of{" "}
-            <span className="font-medium text-slate-900">{filteredDocuments.length}</span> results
+            <span className="font-medium text-slate-900">{Math.min(endIndex, filteredTemplates.length)}</span> of{" "}
+            <span className="font-medium text-slate-900">{filteredTemplates.length}</span> results
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -633,7 +652,7 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
         onClose={() => setOpenDropdownId(null)}
         position={dropdownPosition}
         onAction={(action) => {
-          console.log(`Action ${action} on document ${openDropdownId}`);
+          console.log(`Action ${action} on template ${openDropdownId}`);
           // Handle actions
         }}
       />
