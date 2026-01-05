@@ -25,8 +25,8 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password || !reason) {
-      setError('Password and Reason for Change are mandatory for Audit Trail.');
+    if (!username || !password || !reason) {
+      setError('Username, Password and Reason for Change are mandatory for Audit Trail.');
       return;
     }
     // Simulate verification
@@ -72,8 +72,9 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
             <input 
               type="text" 
               value={username} 
-              disabled 
-              className="w-full px-3 py-2 border border-slate-200 rounded-md bg-slate-50 text-slate-500 text-sm"
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
+              placeholder="Enter your username"
             />
           </div>
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Users, Plus, Trash2, Search, User, X, ShieldCheck, Check } from "lucide-react";
+import { Users, Plus, Trash2, Search, User, X, ShieldCheck, Check, GripVertical, ArrowRight } from "lucide-react";
 import { createPortal } from "react-dom";
+import { IconListNumbers } from "@tabler/icons-react";
 
 interface Reviewer {
     id: string;
@@ -8,11 +9,18 @@ interface Reviewer {
     role: string;
     email: string;
     department: string;
+    order: number;
 }
 
 interface ReviewersTabProps {
     onCountChange?: (count: number) => void;
+    reviewers: Reviewer[];
+    onReviewersChange: (reviewers: Reviewer[]) => void;
+    reviewFlowType: ReviewFlowType;
+    onReviewFlowTypeChange: (type: ReviewFlowType) => void;
 }
+
+type ReviewFlowType = 'sequential' | 'parallel';
 
 // Mock Data for User Selection
 const MOCK_USERS = [
@@ -164,27 +172,72 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
     );
 };
 
-export const ReviewersTab: React.FC<ReviewersTabProps> = ({ onCountChange }) => {
-    const [reviewers, setReviewers] = useState<Reviewer[]>([]);
+export const ReviewersTab: React.FC<ReviewersTabProps> = ({ 
+    onCountChange,
+    reviewers,
+    onReviewersChange,
+    reviewFlowType,
+    onReviewFlowTypeChange
+}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
     useEffect(() => {
         onCountChange?.(reviewers.length);
     }, [reviewers.length, onCountChange]);
 
     const handleAddReviewers = (users: typeof MOCK_USERS) => {
-        const newReviewers = users.map(user => ({
+        const maxOrder = reviewers.length > 0 ? Math.max(...reviewers.map(r => r.order)) : 0;
+        const newReviewers = users.map((user, idx) => ({
             id: user.id,
             name: user.name,
             role: user.role,
             email: user.email,
-            department: user.department
+            department: user.department,
+            order: maxOrder + idx + 1
         }));
-        setReviewers([...reviewers, ...newReviewers]);
+        onReviewersChange([...reviewers, ...newReviewers]);
     };
 
     const removeReviewer = (id: string) => {
-        setReviewers(reviewers.filter(r => r.id !== id));
+        const updatedReviewers = reviewers.filter(r => r.id !== id);
+        // Reorder after removal
+        const reordered = updatedReviewers.map((r, idx) => ({ ...r, order: idx + 1 }));
+        onReviewersChange(reordered);
+    };
+
+    const handleDragStart = (e: React.DragEvent, index: number) => {
+        setDraggedIndex(index);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
+        if (e.currentTarget instanceof HTMLElement) {
+            e.currentTarget.style.opacity = '0.4';
+        }
+    };
+
+    const handleDragEnd = (e: React.DragEvent) => {
+        if (e.currentTarget instanceof HTMLElement) {
+            e.currentTarget.style.opacity = '1';
+        }
+        setDraggedIndex(null);
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+        e.preventDefault();
+        if (draggedIndex === null || draggedIndex === dropIndex) return;
+
+        const reordered = [...reviewers];
+        const [draggedItem] = reordered.splice(draggedIndex, 1);
+        reordered.splice(dropIndex, 0, draggedItem);
+
+        // Update order numbers
+        const updatedReviewers = reordered.map((r, idx) => ({ ...r, order: idx + 1 }));
+        onReviewersChange(updatedReviewers);
     };
 
     return (
@@ -203,11 +256,79 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({ onCountChange }) => 
                 </button>
             </div>
 
+            {reviewers.length > 0 && (
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
+                    <div>
+                        <label className="text-sm font-medium text-slate-700 block mb-2">Review Flow Type</label>
+                        <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
+                            <button
+                                onClick={() => onReviewFlowTypeChange('parallel')}
+                                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
+                                    reviewFlowType === 'parallel'
+                                        ? 'bg-emerald-600 text-white shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                                }`}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Users className="h-4 w-4" />
+                                    <span>Parallel</span>
+                                </div>
+                            </button>
+                            <button
+                                onClick={() => onReviewFlowTypeChange('sequential')}
+                                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
+                                    reviewFlowType === 'sequential'
+                                        ? 'bg-emerald-600 text-white shadow-sm'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                                }`}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <IconListNumbers className="h-4 w-4" />
+                                    <span>Sequential</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div className="text-xs text-slate-600 bg-white rounded-lg p-3 border border-slate-200">
+                        {reviewFlowType === 'parallel' ? (
+                            <>
+                                <span className="font-semibold text-slate-900">Parallel Review:</span> All reviewers will receive notification at the same time and can review independently.
+                            </>
+                        ) : (
+                            <>
+                                <span className="font-semibold text-slate-900">Sequential Review:</span> Reviewers will be notified one after another. The next reviewer will only be notified after the previous reviewer approves. Drag to reorder.
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
+
             {reviewers.length > 0 ? (
                 <div className="grid grid-cols-1 gap-3">
-                    {reviewers.map((reviewer) => (
-                        <div key={reviewer.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                    {reviewers
+                        .sort((a, b) => a.order - b.order)
+                        .map((reviewer, index) => (
+                        <div 
+                            key={reviewer.id} 
+                            draggable={reviewFlowType === 'sequential'}
+                            onDragStart={(e) => reviewFlowType === 'sequential' && handleDragStart(e, index)}
+                            onDragEnd={handleDragEnd}
+                            onDragOver={(e) => reviewFlowType === 'sequential' && handleDragOver(e)}
+                            onDrop={(e) => reviewFlowType === 'sequential' && handleDrop(e, index)}
+                            className={`bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-all ${
+                                reviewFlowType === 'sequential' ? 'cursor-move' : ''
+                            }`}
+                        >
                             <div className="p-4 flex items-center gap-4">
+                                {reviewFlowType === 'sequential' && (
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <GripVertical className="h-5 w-5 text-slate-400" />
+                                        <div className="h-8 w-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold">
+                                            {index + 1}
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="h-10 w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
                                     {reviewer.name.charAt(0)}
                                 </div>

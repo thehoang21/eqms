@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import {
   X,
   AlertCircle,
@@ -8,6 +9,7 @@ import {
   Calendar,
   History,
   ArrowRight,
+  Eye,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
@@ -25,6 +27,7 @@ export const TaskDetailDrawer: React.FC<{
 }> = ({ task, onClose }) => {
   const drawerRef = useRef<HTMLDivElement>(null);
   const [isClosing, setIsClosing] = useState(false);
+  const navigate = useNavigate();
 
   // Handle close with animation
   const handleClose = () => {
@@ -57,6 +60,16 @@ export const TaskDetailDrawer: React.FC<{
   if (!task) return null;
 
   const overdue = isOverdue(task.dueDate) && task.status !== "Completed";
+
+  // Check if task is a document review task
+  const isDocumentReviewTask = task.module === "Document" && task.taskId.includes("REV");
+
+  const handleStartReview = () => {
+    // Extract document ID from taskId (e.g., "SOP-REV-001" -> "1")
+    const docId = task.id;
+    navigate(`/documents/${docId}/review`);
+    handleClose();
+  };
 
   // Using React Portal to render outside of the nested DOM structure (Fixes z-index issues)
   return createPortal(
@@ -362,9 +375,19 @@ export const TaskDetailDrawer: React.FC<{
           >
             Close
           </Button>
-          <Button className="w-full md:w-auto bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20">
-            Process Task <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          {isDocumentReviewTask ? (
+            <Button
+              onClick={handleStartReview}
+              className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
+            >
+              <Eye className="mr-2 h-4 w-4" />
+              Start Review
+            </Button>
+          ) : (
+            <Button className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
+              Process Task <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          )}
         </div>
       </div>
     </div>,

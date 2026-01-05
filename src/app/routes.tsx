@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-do
 import { DashboardView } from '@/features/dashboard';
 import { DocumentListView, DocumentsOwnedByMeView, DetailDocumentView, TemplateLibraryView } from '@/features/documents';
 import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingMyReviewView, PendingMyApprovalView } from '@/features/documents/document-revisions';
+import { DocumentReviewView } from '@/features/documents/review';
 import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/documents/new-document';
 import { ExternalDocumentsView } from '@/features/documents/external-documents';
 import { ArchivedDocumentsView } from '@/features/documents/archived';
@@ -18,6 +19,13 @@ const DetailDocumentViewWrapper = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   return <DetailDocumentView documentId={id!} onBack={() => navigate(-1)} />;
+};
+
+// Wrapper for Review View to extract ID from params
+const DocumentReviewViewWrapper = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  return <DocumentReviewView documentId={id!} onBack={() => navigate(-1)} currentUserId="1" />;
 };
 
 export const AppRoutes: React.FC = () => {
@@ -50,6 +58,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/external" element={<ExternalDocumentsView />} />
         {/* Detail View */}
         <Route path="documents/:id" element={<DetailDocumentViewWrapper />} />
+        {/* Document Review */}
+        <Route path="documents/:id/review" element={<DocumentReviewViewWrapper />} />
         {/* Profile */}
         <Route path="profile" element={<ProfileView onBack={() => navigate(-1)} />} />
         {/* Settings */}
