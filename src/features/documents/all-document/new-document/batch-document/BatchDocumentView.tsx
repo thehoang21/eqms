@@ -330,7 +330,7 @@ export const BatchDocumentView: React.FC = () => {
                             className="flex items-center gap-1.5 md:gap-2 !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300 touch-manipulation"
                         >
                             <Send className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                            <span className="text-xs md:text-sm">{isSubmitting ? "Submitting..." : "Submit for Review"}</span>
+                            <span className="text-xs md:text-sm">{isSubmitting ? "Submitting..." : "Submit"}</span>
                         </Button>
                     </div>
                 </div>

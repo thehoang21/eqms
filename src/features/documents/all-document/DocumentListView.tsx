@@ -365,7 +365,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           },
           {
             icon: Send,
-            label: "Submit for Review",
+            label: "Submit",
             onClick: () => {
               console.log("Submit for review:", document.id);
               onClose();

@@ -416,7 +416,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                             className="flex items-center gap-2"
                         >
                             <ChevronRight className="h-4 w-4 rotate-180" />
-                            Back to Impact Analysis
+                            Back
                         </Button>
                         <Button                            onClick={handleBack}
                             variant="outline"
@@ -442,7 +442,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                             className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300"
                         >
                             <Send className="h-4 w-4" />
-                            {isSubmitting ? "Submitting..." : "Submit for Review"}
+                            {isSubmitting ? "Submitting..." : "Submit"}
                         </Button>
                     </div>
                 </div>
