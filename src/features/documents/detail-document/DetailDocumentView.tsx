@@ -9,7 +9,6 @@ import {
     History,
     Check,
     FileSignature,
-    GitBranch,
     Info,
     ArrowLeft,
     Home,
@@ -21,13 +20,13 @@ import {
     DocumentContentTab,
     SignaturesTab,
     AuditTrailTab,
-    WorkflowDiagramTab,
 } from "./tabs";
+import { Button } from "@/components/ui/button/Button";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
-type TabType = "general" | "training" | "document" | "signatures" | "audit" | "workflow";
+type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 interface DocumentDetail {
     id: string;
@@ -184,7 +183,6 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
         { id: "training" as TabType, label: "Training", icon: GraduationCap },
         { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
         { id: "audit" as TabType, label: "Audit Trail", icon: History },
-        { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },
     ];
 
     return (
@@ -223,13 +221,14 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                             <span className="text-slate-700 font-medium">{document.documentId}</span>
                         </div>
                     </div>
-                    <button
+                    <Button
                         onClick={onBack}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
+                        size="sm"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-black hover:bg-slate-50 transition-colors shadow-sm"
                     >
                         <ArrowLeft className="h-4 w-4" />
                         Back to List
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -326,7 +325,6 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                     {activeTab === "document" && <DocumentContentTab />}
                     {activeTab === "signatures" && <SignaturesTab />}
                     {activeTab === "audit" && <AuditTrailTab />}
-                    {activeTab === "workflow" && <WorkflowDiagramTab />}
                 </div>
             </div>
         </div>

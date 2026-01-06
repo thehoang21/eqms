@@ -171,7 +171,7 @@ export const DocumentContentTab: React.FC<DocumentContentTabProps> = ({
                                 "h-4 w-4 shrink-0 transition-transform duration-300",
                                 isComparisonMode ? "rotate-180 text-white" : "text-emerald-600"
                             )} />
-                            <span className="hidden sm:inline">Compare v{previousVersion}</span>
+                            <span className="hidden sm:inline">Compare {previousVersion}</span>
                             <span className="sm:hidden">v{previousVersion}</span>
                             {isComparisonMode && (
                                 <span className="relative flex h-2 w-2">

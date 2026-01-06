@@ -206,6 +206,21 @@ const MOCK_DOCUMENTS: Document[] = [
       created: "2023-08-10",
       openedBy: "QM Director",
   },
+  {
+    id: "11",
+    documentId: "SOP-GMP-015",
+    title: "Good Manufacturing Practice Guidelines",
+    type: "SOP",
+    version: "4.2",
+    status: "Pending Approval",
+    effectiveDate: "2023-10-15",
+    validUntil: "2024-10-15",
+    author: "Michael Chen",
+    department: "Manufacturing",
+    created: "2023-09-01",
+    openedBy: "Manufacturing Manager",
+    description: "Comprehensive GMP guidelines for pharmaceutical manufacturing",
+  },
 ];
 
 // --- Helper Functions ---
@@ -215,6 +230,8 @@ const getStatusColor = (status: DocumentStatus) => {
     case "Effective":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
     case "Approved":
+      return "bg-blue-50 text-blue-700 border-blue-200";
+    case "Pending Approval":
       return "bg-blue-50 text-blue-700 border-blue-200";
     case "Pending Review":
       return "bg-amber-50 text-amber-700 border-amber-200";
@@ -364,7 +381,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             icon: FileCheck,
             label: "Review Document",
             onClick: () => {
-              console.log("Review document:", document.id);
+              onViewDocument?.(document.id);
               onClose();
             },
             color: "text-purple-700"
@@ -387,7 +404,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             icon: CheckCircle,
             label: "Approve Document",
             onClick: () => {
-              console.log("Approve document:", document.id);
+              onViewDocument?.(document.id);
               onClose();
             },
             color: "text-emerald-700"
@@ -731,8 +748,22 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
   };
 
   const handleViewDocument = (documentId: string, tab: string = "general") => {
-    setSelectedDocumentId(documentId);
-    setSelectedDocumentTab(tab);
+    // Find document to check status
+    const document = MOCK_DOCUMENTS.find(doc => doc.id === documentId);
+    
+    // If document has "Pending Review" status, navigate to Review page
+    if (document?.status === "Pending Review") {
+      navigate(`/documents/${documentId}/review`);
+    } 
+    // If document has "Pending Approval" status, navigate to Approval page
+    else if (document?.status === "Pending Approval") {
+      navigate(`/documents/${documentId}/approval`);
+    } 
+    else {
+      // Otherwise, open Detail view (drawer)
+      setSelectedDocumentId(documentId);
+      setSelectedDocumentTab(tab);
+    }
   };
 
   // Simulate loading data

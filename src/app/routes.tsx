@@ -4,6 +4,7 @@ import { DashboardView } from '@/features/dashboard';
 import { DocumentsOwnedByMeView, DetailDocumentView } from '@/features/documents';
 import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingMyReviewView, PendingMyApprovalView } from '@/features/documents/document-revisions';
 import { DocumentReviewView } from '@/features/documents/all-document/new-document/review-document';
+import { DocumentApprovalView } from '@/features/documents/all-document/new-document/approval-document';
 import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/documents/all-document/new-document';
 import { ArchivedDocumentsView } from '@/features/documents/archived-document';
 import { MyTasksView } from '@/features/my-tasks';
@@ -29,6 +30,13 @@ const DocumentReviewViewWrapper = () => {
   return <DocumentReviewView documentId={id!} onBack={() => navigate(-1)} currentUserId="1" />;
 };
 
+// Wrapper for Approval View to extract ID from params
+const DocumentApprovalViewWrapper = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  return <DocumentApprovalView documentId={id!} onBack={() => navigate(-1)} currentUserId="1" />;
+};
+
 export const AppRoutes: React.FC = () => {
   const navigate = useNavigate();
 
@@ -51,7 +59,9 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/revisions/owned" element={<RevisionsOwnedByMeView />} />
         <Route path="documents/revisions/pending-review" element={<PendingMyReviewView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/revisions/pending-approval" element={<PendingMyApprovalView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
-        <Route path="documents/revisions/new" element={<NewRevisionView />} />      <Route path="/documents/revisions/workspace" element={<RevisionWorkspaceView />} />        <Route path="documents/revisions/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
+        <Route path="documents/revisions/new" element={<NewRevisionView />} />
+        <Route path="/documents/revisions/workspace" element={<RevisionWorkspaceView />} />
+        <Route path="documents/revisions/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/controlled-copies/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/templates" element={<TemplateLibraryView onViewTemplate={(id) => navigate(`/documents/templates/${id}`)} onCreateTemplate={() => navigate('/documents/templates/new')} />} />
         <Route path="documents/templates/new" element={<NewTemplateView />} />
@@ -60,6 +70,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/:id" element={<DetailDocumentViewWrapper />} />
         {/* Document Review */}
         <Route path="documents/:id/review" element={<DocumentReviewViewWrapper />} />
+        {/* Document Approval */}
+        <Route path="documents/:id/approval" element={<DocumentApprovalViewWrapper />} />
         {/* Profile */}
         <Route path="profile" element={<ProfileView onBack={() => navigate(-1)} />} />
         {/* Settings */}

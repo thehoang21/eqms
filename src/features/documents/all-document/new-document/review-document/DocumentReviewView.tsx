@@ -252,7 +252,7 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
     const [eSignAction, setESignAction] = useState<'approve' | 'reject'>('approve');
 
     // Status workflow steps
-    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective"];
+    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
     const currentStepIndex = statusSteps.indexOf(document.status);
 
     // Determine if current user can review

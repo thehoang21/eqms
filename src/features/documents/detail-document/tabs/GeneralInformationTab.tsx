@@ -111,7 +111,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
 
         {/* Document Type */}
         <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Document Type</label>
+          <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Document Type<span className="text-red-500 ml-1">*</span></label>
           <div className="flex-1 flex items-center gap-2">
             <input
               type="text"
