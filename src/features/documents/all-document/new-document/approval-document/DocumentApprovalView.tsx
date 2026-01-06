@@ -16,7 +16,7 @@ import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../DocumentWorkfl
 import {
     GeneralInformationTab,
     TrainingInformationTab,
-    DocumentContentTab,
+    DocumentTab,
     SignaturesTab,
     AuditTrailTab,
 } from "@/features/documents/detail-document/tabs";
@@ -248,17 +248,7 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                 <div className="space-y-6">
                     {/* PDF Preview Section */}
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <DocumentContentTab
-                            documentStatus={document.status}
-                            documentName={document.title}
-                            documentNumber={document.documentId}
-                            documentVersion={document.version}
-                            userCanPrint={false}
-                            userCanDownload={false}
-                            userCanCopy={false}
-                            currentUser={approver?.name || "Current User"}
-                            previousVersion={document.documentType === 'Revision' ? document.previousVersion : undefined}
-                        />
+                        <DocumentTab />
                     </div>
 
                     {/* Approval Workflow Info */}

@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Download, AlertTriangle } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { ArchivedDocument } from '../types';
+import { Worker } from "@react-pdf-viewer/core";
+import { Viewer } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import samplePdf from '@/assets/sample.pdf';
 
 interface PreviewModalProps {
     isOpen: boolean;
@@ -114,38 +119,12 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
                             ))}
                         </div>
 
-                        {/* Mock PDF Preview */}
+                        {/* PDF Viewer */}
                         <div className="h-full overflow-auto p-8">
-                            <div className="bg-white shadow-lg rounded-lg p-12 max-w-4xl mx-auto relative">
-                                <div className="prose prose-slate max-w-none">
-                                    <h1 className="text-2xl font-bold text-slate-900 mb-4">{document.documentName}</h1>
-                                    <div className="grid grid-cols-2 gap-4 text-sm border-b border-slate-200 pb-4 mb-6">
-                                        <div>
-                                            <span className="font-semibold text-slate-700">Document Code:</span>
-                                            <span className="ml-2 text-slate-600">{document.code}</span>
-                                        </div>
-                                        <div>
-                                            <span className="font-semibold text-slate-700">Version:</span>
-                                            <span className="ml-2 text-slate-600">{document.version}</span>
-                                        </div>
-                                        <div>
-                                            <span className="font-semibold text-slate-700">Effective Date:</span>
-                                            <span className="ml-2 text-slate-600">{new Date(document.effectiveDate).toLocaleDateString()}</span>
-                                        </div>
-                                        <div>
-                                            <span className="font-semibold text-slate-700">Archived Date:</span>
-                                            <span className="ml-2 text-slate-600">{new Date(document.archivedDate).toLocaleDateString()}</span>
-                                        </div>
-                                    </div>
-                                    <p className="text-slate-600 leading-relaxed">
-                                        This is a preview of the archived document. The actual document content would be rendered here.
-                                        In a production environment, this would display the PDF content using a library like PDF.js or similar.
-                                    </p>
-                                    <p className="text-slate-600 leading-relaxed mt-4">
-                                        The watermark overlay ensures that anyone viewing this archived document is clearly aware
-                                        that it is obsolete and should not be used for current operations.
-                                    </p>
-                                </div>
+                            <div className="max-w-4xl mx-auto">
+                                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+                                    <Viewer fileUrl={samplePdf} />
+                                </Worker>
                             </div>
                         </div>
                     </div>

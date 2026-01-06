@@ -29,3 +29,11 @@ declare module '*.webp' {
   const value: string;
   export default value;
 }
+
+declare module '*.pdf' {
+  const value: string;
+  export default value;
+}
+
+declare module '@react-pdf-viewer/core/lib/styles/index.css';
+declare module '@react-pdf-viewer/default-layout/lib/styles/index.css';

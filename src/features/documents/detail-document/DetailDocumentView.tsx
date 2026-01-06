@@ -17,7 +17,7 @@ import { cn } from '@/components/ui/utils';
 import {
     GeneralInformationTab,
     TrainingInformationTab,
-    DocumentContentTab,
+    DocumentTab,
     SignaturesTab,
     AuditTrailTab,
 } from "./tabs";
@@ -322,7 +322,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                 <div className="p-6">
                     {activeTab === "general" && <GeneralInformationTab document={document} />}
                     {activeTab === "training" && <TrainingInformationTab />}
-                    {activeTab === "document" && <DocumentContentTab />}
+                    {activeTab === "document" && <DocumentTab />}
                     {activeTab === "signatures" && <SignaturesTab />}
                     {activeTab === "audit" && <AuditTrailTab />}
                 </div>

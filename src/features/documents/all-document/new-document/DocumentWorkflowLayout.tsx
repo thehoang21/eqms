@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     ChevronRight,
     FileText,
@@ -12,6 +12,10 @@ import {
     FileSignature,
     History,
     Info,
+    ChevronLeft,
+    ChevronRight as ChevronRightIcon,
+    List,
+    CheckCircle,
 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Button } from "@/components/ui/button/Button";
@@ -19,6 +23,14 @@ import { Button } from "@/components/ui/button/Button";
 // --- Types ---
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
+
+interface BatchDocument {
+    id: string;
+    documentId: string;
+    title: string;
+    status?: string;
+    isCompleted?: boolean;
+}
 
 interface BreadcrumbItem {
     label: string;
@@ -51,6 +63,15 @@ interface DocumentWorkflowLayoutProps {
     activeTab: TabType;
     onTabChange: (tab: TabType) => void;
     
+    // Batch navigation (optional)
+    batchInfo?: {
+        currentIndex: number;
+        totalDocuments: number;
+        documents: BatchDocument[];
+        onNavigate: (documentId: string, index: number) => void;
+        onFinishBatch?: () => void;
+    };
+    
     // Content
     children: React.ReactNode;
 }
@@ -80,6 +101,187 @@ export const DEFAULT_WORKFLOW_TABS: TabItem[] = [
     { id: "audit", label: "Audit Trail", icon: History },
 ];
 
+// --- Batch Navigation Bar Component ---
+interface BatchNavigationBarProps {
+    currentIndex: number;
+    totalDocuments: number;
+    documents: BatchDocument[];
+    onNavigate: (documentId: string, index: number) => void;
+    onFinishBatch?: () => void;
+}
+
+const BatchNavigationBar: React.FC<BatchNavigationBarProps> = ({
+    currentIndex,
+    totalDocuments,
+    documents,
+    onNavigate,
+    onFinishBatch,
+}) => {
+    const [isListOpen, setIsListOpen] = useState(false);
+    const isFirstDocument = currentIndex === 0;
+    const isLastDocument = currentIndex === totalDocuments - 1;
+
+    const handlePrevious = () => {
+        if (!isFirstDocument) {
+            const prevDoc = documents[currentIndex - 1];
+            onNavigate(prevDoc.id, currentIndex - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (!isLastDocument) {
+            const nextDoc = documents[currentIndex + 1];
+            onNavigate(nextDoc.id, currentIndex + 1);
+        }
+    };
+
+    const handleFinish = () => {
+        if (onFinishBatch) {
+            onFinishBatch();
+        }
+    };
+
+    const handleDocumentClick = (doc: BatchDocument, index: number) => {
+        onNavigate(doc.id, index);
+        setIsListOpen(false);
+    };
+
+    return (
+        <div className="bg-slate-50 border-b border-slate-200 min-h-[50px] px-4 md:px-6 py-3">
+            <div className="flex items-center justify-between gap-4">
+                {/* Left: Progress Info */}
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-emerald-600" />
+                        <span className="text-sm font-semibold text-slate-900">
+                            Tài liệu {currentIndex + 1}/{totalDocuments}
+                        </span>
+                        <span className="text-xs text-slate-500">trong lô</span>
+                    </div>
+                    
+                    {/* Progress Bar */}
+                    <div className="hidden md:flex items-center gap-2">
+                        <div className="w-32 h-2 bg-slate-200 rounded-full overflow-hidden">
+                            <div 
+                                className="h-full bg-emerald-600 transition-all duration-300"
+                                style={{ width: `${((currentIndex + 1) / totalDocuments) * 100}%` }}
+                            />
+                        </div>
+                        <span className="text-xs text-slate-500">
+                            {Math.round(((currentIndex + 1) / totalDocuments) * 100)}%
+                        </span>
+                    </div>
+                </div>
+
+                {/* Right: Navigation Buttons */}
+                <div className="flex items-center gap-2">
+                    {/* View Batch List Button */}
+                    <div className="relative">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsListOpen(!isListOpen)}
+                            className="gap-2 min-h-[44px] md:min-h-[40px]"
+                        >
+                            <List className="h-4 w-4" />
+                            <span className="hidden md:inline">Danh sách lô</span>
+                        </Button>
+
+                        {/* Batch List Popover */}
+                        {isListOpen && (
+                            <>
+                                {/* Backdrop */}
+                                <div 
+                                    className="fixed inset-0 z-40"
+                                    onClick={() => setIsListOpen(false)}
+                                />
+                                
+                                {/* Popover */}
+                                <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-lg border border-slate-200 z-50 max-h-96 overflow-hidden flex flex-col">
+                                    <div className="px-4 py-3 border-b border-slate-200 bg-slate-50">
+                                        <h4 className="font-semibold text-slate-900">Tài liệu trong lô</h4>
+                                        <p className="text-xs text-slate-500 mt-1">{totalDocuments} tài liệu</p>
+                                    </div>
+                                    <div className="overflow-y-auto">
+                                        {documents.map((doc, index) => (
+                                            <button
+                                                key={doc.id}
+                                                onClick={() => handleDocumentClick(doc, index)}
+                                                className={cn(
+                                                    "w-full px-4 py-3 text-left hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-b-0",
+                                                    index === currentIndex && "bg-emerald-50 hover:bg-emerald-50"
+                                                )}
+                                            >
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <span className={cn(
+                                                                "text-xs font-semibold",
+                                                                index === currentIndex ? "text-emerald-700" : "text-slate-500"
+                                                            )}>
+                                                                #{index + 1}
+                                                            </span>
+                                                            <span className="text-sm font-medium text-slate-900 truncate">
+                                                                {doc.documentId}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-xs text-slate-600 truncate">{doc.title}</p>
+                                                    </div>
+                                                    {doc.isCompleted && (
+                                                        <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0 mt-1" />
+                                                    )}
+                                                    {index === currentIndex && (
+                                                        <div className="h-2 w-2 rounded-full bg-emerald-600 shrink-0 mt-2" />
+                                                    )}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Previous Button */}
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePrevious}
+                        disabled={isFirstDocument}
+                        className="gap-2 min-h-[44px] md:min-h-[40px] min-w-[44px] md:min-w-[auto]"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                        <span className="hidden md:inline">Previous</span>
+                    </Button>
+
+                    {/* Next/Finish Button */}
+                    {isLastDocument ? (
+                        <Button
+                            variant="default"
+                            size="sm"
+                            onClick={handleFinish}
+                            className="gap-2 min-h-[44px] md:min-h-[40px] bg-emerald-600 hover:bg-emerald-700"
+                        >
+                            <CheckCircle className="h-4 w-4" />
+                            <span>Finish Batch</span>
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="default"
+                            size="sm"
+                            onClick={handleNext}
+                            className="gap-2 min-h-[44px] md:min-h-[40px] min-w-[44px] md:min-w-[auto] bg-emerald-600 hover:bg-emerald-700"
+                        >
+                            <span className="hidden md:inline">Next</span>
+                            <ChevronRightIcon className="h-4 w-4" />
+                        </Button>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- Main Component ---
 export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
     title,
@@ -92,12 +294,23 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
     tabs,
     activeTab,
     onTabChange,
+    batchInfo,
     children,
 }) => {
     const currentStepIndex = statusSteps.indexOf(currentStatus);
 
     return (
         <div className="space-y-6 w-full">
+            {/* Batch Navigation Bar */}
+            {batchInfo && (
+                <BatchNavigationBar
+                    currentIndex={batchInfo.currentIndex}
+                    totalDocuments={batchInfo.totalDocuments}
+                    documents={batchInfo.documents}
+                    onNavigate={batchInfo.onNavigate}
+                    onFinishBatch={batchInfo.onFinishBatch}
+                />
+            )}
             {/* Header */}
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
