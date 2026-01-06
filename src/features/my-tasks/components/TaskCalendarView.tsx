@@ -115,19 +115,19 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+    <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-3 sm:p-4 md:p-6">
       {/* Calendar Header */}
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col gap-3 mb-4 sm:mb-6">
         <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-emerald-600" />
-          <h3 className="text-lg font-semibold text-slate-900">
+          <Calendar className="h-5 w-5 text-emerald-600 shrink-0" />
+          <h3 className="text-base sm:text-lg font-semibold text-slate-900">
             Task Calendar
           </h3>
         </div>
 
         {/* Month and Year Selectors */}
-        <div className="flex items-center gap-2 overflow-x-auto py-2 px-1">
-          <div className="w-36 shrink-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <div className="flex-1 sm:flex-none sm:w-36">
             <Select
               value={selectedMonth.toString()}
               onChange={(value) => setSelectedMonth(Number(value))}
@@ -139,7 +139,7 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
             />
           </div>
           
-          <div className="w-20 shrink-0">
+          <div className="flex-1 sm:flex-none sm:w-24">
             <Select
               value={selectedYear.toString()}
               onChange={(value) => setSelectedYear(Number(value))}
@@ -151,137 +151,128 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
             />
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2 justify-between sm:justify-start">
             <Button
               variant="outline"
               size="sm"
               onClick={handleToday}
+              className="flex-1 sm:flex-none"
             >
               Today
             </Button>
-            <Button
-              variant="outline"
-              size="icon-sm"
-              onClick={handlePrevMonth}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon-sm"
-              onClick={handleNextMonth}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={handlePrevMonth}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={handleNextMonth}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-1.5 md:gap-2">
+      <div className="grid grid-cols-7 gap-0.5 sm:gap-1 md:gap-2">
         {/* Day Headers */}
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="text-center py-2 text-xs md:text-sm font-bold text-slate-600 uppercase tracking-wider">
-            {day}
+        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
+          <div key={idx} className="text-center py-1.5 sm:py-2 text-[9px] sm:text-xs font-bold text-slate-600 uppercase tracking-wider">
+            <span className="hidden sm:inline">{['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][idx]}</span>
+            <span className="sm:hidden">{day}</span>
           </div>
         ))}
 
-        {/* Calendar Days */}
-        {calendarDays.map((day, index) => {
-          const dayTasks = tasksByDate[day.fullDate] || [];
-          const isCurrentMonth = day.month === 'current';
+      {/* Calendar Days */}
+      {calendarDays.map((day, index) => {
+        const dayTasks = tasksByDate[day.fullDate] || [];
+        const isCurrentMonth = day.month === 'current';
 
-          return (
-            <div
-              key={index}
-              className={cn(
-                "min-h-[120px] md:min-h-[140px] lg:min-h-[160px] border rounded-lg p-1.5 md:p-2 transition-all",
-                isCurrentMonth
-                  ? "bg-white border-slate-200 hover:border-emerald-300"
-                  : "bg-slate-50 border-slate-100",
-                day.isToday && "ring-2 ring-emerald-500 border-emerald-500 bg-emerald-50"
-              )}
-            >
-              {/* Date Number */}
-              <div className="flex items-center justify-between mb-2">
-                <span className={cn(
-                  "text-sm font-semibold",
-                  isCurrentMonth ? "text-slate-900" : "text-slate-400",
-                  day.isToday && "text-emerald-700"
-                )}>
-                  {day.date}
+        return (
+          <div
+            key={index}
+            className={cn(
+              "min-h-[70px] sm:min-h-[100px] md:min-h-[120px] lg:min-h-[140px] border rounded p-0.5 sm:p-1 md:p-1.5 transition-all",
+              isCurrentMonth
+                ? "bg-white border-slate-200 hover:border-emerald-300"
+                : "bg-slate-50 border-slate-100",
+              day.isToday && "ring-1 sm:ring-2 ring-emerald-500 border-emerald-500 bg-emerald-50"
+            )}
+          >
+            {/* Date Number */}
+            <div className="flex items-center justify-between mb-0.5 sm:mb-1">
+              <span className={cn(
+                "text-[10px] sm:text-xs md:text-sm font-semibold leading-none",
+                isCurrentMonth ? "text-slate-900" : "text-slate-400",
+                day.isToday && "text-emerald-700"
+              )}>
+                {day.date}
+              </span>
+              {dayTasks.length > 0 && (
+                <span className="text-[8px] sm:text-[10px] font-bold text-emerald-600 bg-emerald-100 px-0.5 sm:px-1 py-0.5 rounded leading-none">
+                  {dayTasks.length}
                 </span>
-                {dayTasks.length > 0 && (
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full">
-                    {dayTasks.length}
-                  </span>
-                )}
-              </div>
-
-              {/* Tasks */}
-              <div className="space-y-1.5">
-                {dayTasks.slice(0, 2).map(task => {
-                  const ModuleIcon = getModuleIcon(task.module as any);
-                  const overdueStatus = isOverdue(task.dueDate) && task.status !== "Completed";
-                  
-                  return (
-                    <div
-                      key={task.id}
-                      onClick={() => onTaskClick(task)}
-                      className={cn(
-                        "p-1.5 md:p-2 rounded-md cursor-pointer hover:shadow-md transition-all border",
-                        overdueStatus
-                          ? "bg-red-50 border-red-200 hover:bg-red-100"
-                          : "bg-slate-50 border-slate-200 hover:bg-slate-100"
-                      )}
-                    >
-                      {/* Header: Module + Priority */}
-                      <div className="flex items-center justify-between gap-1 mb-1 min-w-0">
-                        <div className={cn(
-                          "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border truncate max-w-[calc(100%-12px)]",
-                          getModuleBadgeStyle(task.module as any)
-                        )}>
-                          <ModuleIcon className="h-2.5 w-2.5 shrink-0" />
-                          <span className="truncate">{task.module}</span>
-                        </div>
-                        <span className={cn(
-                          "w-2 h-2 rounded-full shrink-0",
-                          task.priority === "Critical" && "bg-red-600",
-                          task.priority === "High" && "bg-orange-600",
-                          task.priority === "Medium" && "bg-amber-600",
-                          task.priority === "Low" && "bg-blue-600"
-                        )} />
-                      </div>
-
-                      {/* Task Info */}
-                      <div className="space-y-0.5">
-                        <p className="text-[11px] md:text-xs font-semibold text-slate-900 truncate" title={task.title}>
-                          {task.title}
-                        </p>
-                        <div className="flex items-center justify-between gap-1 min-w-0">
-                          <span className="text-[9px] md:text-[10px] font-mono text-slate-500 truncate">{task.taskId}</span>
-                          <span className={cn(
-                            "text-[10px] font-medium px-1.5 py-0.5 rounded shrink-0",
-                            task.status === "Completed" && "bg-emerald-100 text-emerald-700",
-                            task.status === "In-Progress" && "bg-blue-100 text-blue-700",
-                            task.status === "Pending" && "bg-amber-100 text-amber-700"
-                          )}>
-                            {task.status}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-                {dayTasks.length > 2 && (
-                  <div className="text-xs text-slate-500 text-center py-1 font-medium">
-                    +{dayTasks.length - 2} more
-                  </div>
-                )}
-              </div>
+              )}
             </div>
-          );
-        })}
+
+            {/* Tasks */}
+            <div className="space-y-0.5 sm:space-y-1">
+              {dayTasks.slice(0, 2).map(task => {
+                const ModuleIcon = getModuleIcon(task.module as any);
+                const overdueStatus = isOverdue(task.dueDate) && task.status !== "Completed";
+                
+                return (
+                  <div
+                    key={task.id}
+                    onClick={() => onTaskClick(task)}
+                    className={cn(
+                      "p-0.5 sm:p-1 rounded cursor-pointer hover:shadow-sm transition-all border",
+                      overdueStatus
+                        ? "bg-red-50 border-red-200 hover:bg-red-100"
+                        : "bg-slate-50 border-slate-200 hover:bg-slate-100"
+                    )}
+                  >
+                    {/* Header: Module + Priority */}
+                    <div className="flex items-center justify-between gap-0.5 mb-0.5 min-w-0">
+                      <div className={cn(
+                        "inline-flex items-center gap-0.5 px-0.5 sm:px-1 py-0.5 rounded text-[7px] sm:text-[9px] font-medium border truncate max-w-[calc(100%-10px)]",
+                        getModuleBadgeStyle(task.module as any)
+                      )}>
+                        <ModuleIcon className="h-1.5 w-1.5 sm:h-2 sm:w-2 shrink-0" />
+                        <span className="truncate hidden sm:inline">{task.module}</span>
+                      </div>
+                      <span className={cn(
+                        "w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full shrink-0",
+                        task.priority === "Critical" && "bg-red-600",
+                        task.priority === "High" && "bg-orange-600",
+                        task.priority === "Medium" && "bg-amber-600",
+                        task.priority === "Low" && "bg-blue-600"
+                      )} />
+                    </div>
+
+                    {/* Task Info */}
+                    <p className="text-[8px] sm:text-[10px] font-medium text-slate-900 truncate leading-tight" title={task.title}>
+                      {task.title}
+                    </p>
+                  </div>
+                );
+              })}
+              {dayTasks.length > 2 && (
+                <div className="text-[8px] sm:text-[10px] text-slate-500 text-center font-medium leading-none">
+                  +{dayTasks.length - 2}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })}
       </div>
 
       {/* Legend */}

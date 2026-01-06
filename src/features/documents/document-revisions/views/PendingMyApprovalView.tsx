@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { DocumentFilters } from "../../components/DocumentFilters";
+import { DocumentFilters } from "../../DocumentFilters";
 
 // --- Types ---
 

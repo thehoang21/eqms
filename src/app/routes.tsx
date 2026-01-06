@@ -3,9 +3,9 @@ import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-do
 import { DashboardView } from '@/features/dashboard';
 import { DocumentsOwnedByMeView, DetailDocumentView } from '@/features/documents';
 import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingMyReviewView, PendingMyApprovalView } from '@/features/documents/document-revisions';
-import { DocumentReviewView } from '@/features/documents/all-document/new-document/review';
+import { DocumentReviewView } from '@/features/documents/all-document/new-document/review-document';
 import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/documents/all-document/new-document';
-import { ArchivedDocumentsView } from '@/features/documents/archived';
+import { ArchivedDocumentsView } from '@/features/documents/archived-document';
 import { MyTasksView } from '@/features/my-tasks';
 import { ProfileView, UserManagementView } from '@/features/settings';
 import { LoginView } from '@/features/auth';
@@ -13,7 +13,7 @@ import { UIShowcase } from '@/features/ui-showcase/UIShowcase';
 import { UnderConstruction } from './UnderConstruction';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { DocumentListView } from '@/features/documents/all-document';
-import { TemplateLibraryView } from '@/features/documents/template';
+import { TemplateLibraryView } from '@/features/documents/template-library';
 
 // Wrapper for Detail View to extract ID from params
 const DetailDocumentViewWrapper = () => {

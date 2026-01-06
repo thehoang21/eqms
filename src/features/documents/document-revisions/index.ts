@@ -5,3 +5,7 @@ export { RevisionWorkspaceView } from "./components/RevisionWorkspaceView";
 export { PendingMyReviewView } from "./views/PendingMyReviewView";
 export { PendingMyApprovalView } from "./views/PendingMyApprovalView";
 
+// Export revision tabs
+export * from './revision-tabs';
+
+

@@ -29,7 +29,7 @@ import {
     SignaturesTab,
     AuditTab,
     WorkflowTab,
-} from "../../all-document/new-document/tabs";
+} from "../revision-tabs";
 import { MultiDocumentUpload } from "./MultiDocumentUpload";
 
 // --- Types ---
@@ -356,10 +356,9 @@ export const RevisionWorkspaceView: React.FC = () => {
     const tabs = [
         { id: "document" as TabType, label: "Document", icon: FileText },
         { id: "general" as TabType, label: "General Information", icon: Info },
-        { id: "training" as TabType, label: "Training Information", icon: GraduationCap },
+        { id: "training" as TabType, label: "Training", icon: GraduationCap },
         { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
         { id: "audit" as TabType, label: "Audit Trail", icon: History },
-        { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },
     ];
 
     if (workspaceDocuments.length === 0) {
@@ -647,10 +646,6 @@ export const RevisionWorkspaceView: React.FC = () => {
 
                     {activeTab === "audit" && (
                         <AuditTab />
-                    )}
-
-                    {activeTab === "workflow" && (
-                        <WorkflowTab />
                     )}
                 </div>
             </div>

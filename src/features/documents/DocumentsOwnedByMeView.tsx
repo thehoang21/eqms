@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
-import { DocumentFilters } from "./components/DocumentFilters";
+import { DocumentFilters } from "./DocumentFilters";
 
 // --- Types ---
 

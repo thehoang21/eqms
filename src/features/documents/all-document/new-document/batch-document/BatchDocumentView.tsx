@@ -25,8 +25,7 @@ import {
     TrainingTab,
     SignaturesTab,
     AuditTab,
-    WorkflowTab,
-} from "./../tabs";
+} from "@/features/documents/all-document/new-document/new-tabs";
 import { BatchDocumentUpload } from "./components/BatchDocumentUpload";
 import { DocumentTreeView } from "./components/DocumentTreeView";
 import { IconStar } from "@tabler/icons-react";
@@ -250,7 +249,7 @@ export const BatchDocumentView: React.FC = () => {
     const tabs = [
         { id: "document" as TabType, label: "Upload Documents", icon: FileText },
         { id: "general" as TabType, label: "General Information", icon: Info },
-        { id: "training" as TabType, label: "Training Information", icon: GraduationCap },
+        { id: "training" as TabType, label: "Training", icon: GraduationCap },
         { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
         { id: "audit" as TabType, label: "Audit Trail", icon: History },
         { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },
@@ -300,7 +299,7 @@ export const BatchDocumentView: React.FC = () => {
                                 All Documents
                             </button>
                             <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-400" />
-                            <span className="text-slate-700 font-medium">Batch Creation</span>
+                            <span className="text-slate-700 font-medium">Batch Document Creation</span>
                         </div>
                     </div>
 
@@ -586,7 +585,6 @@ export const BatchDocumentView: React.FC = () => {
                     {activeTab === "training" && <TrainingTab />}
                     {activeTab === "signatures" && <SignaturesTab />}
                     {activeTab === "audit" && <AuditTab />}
-                    {activeTab === "workflow" && <WorkflowTab />}
                 </div>
             </div>
 
@@ -616,7 +614,7 @@ export const BatchDocumentView: React.FC = () => {
                 onClose={() => setShowCancelModal(false)}
                 onConfirm={handleConfirmCancel}
                 type="warning"
-                title="Cancel Batch Creation?"
+                title="Cancel Creation?"
                 description={
                     <div className="space-y-3">
                         <p>Are you sure you want to cancel batch document creation?</p>
