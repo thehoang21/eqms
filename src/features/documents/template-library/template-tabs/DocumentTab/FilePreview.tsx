@@ -4,6 +4,11 @@ import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import FilePreviewLib from "reactjs-file-preview";
+import filePlaceholder from "@/assets/images/image-file/file.png";
+import { renderAsync } from "docx-preview";
+import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button/Button";
 
 
 interface FilePreviewProps {
@@ -14,6 +19,8 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
     const [fileUrl, setFileUrl] = React.useState<string | null>(null);
+    const docxContainerRef = React.useRef<HTMLDivElement>(null);
+    const [zoomLevel, setZoomLevel] = React.useState<number>(80);
 
     React.useEffect(() => {
         if (file) {
@@ -27,6 +34,17 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
         }
     }, [file]);
 
+    React.useEffect(() => {
+        const isDocx = file?.name.toLowerCase().endsWith(".docx") || file?.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        
+        if (file && isDocx && docxContainerRef.current) {
+            docxContainerRef.current.innerHTML = "";
+            renderAsync(file, docxContainerRef.current).catch((error) => {
+                console.error("Error rendering docx:", error);
+            });
+        }
+    }, [file]);
+
     if (!file) {
         return (
             <div className="w-full flex items-center justify-center h-full text-slate-400 text-sm" style={{ height: "calc(100vh - 300px)" }}>
@@ -35,23 +53,87 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
         );
     }
 
-    // Only support PDF preview for now
     const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    const isDocx = file.name.toLowerCase().endsWith(".docx") || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+    const handleZoomIn = () => {
+        setZoomLevel((prev) => Math.min(prev + 10, 200));
+    };
+
+    const handleZoomOut = () => {
+        setZoomLevel((prev) => Math.max(prev - 10, 50));
+    };
+
+    const handleResetZoom = () => {
+        setZoomLevel(80);
+    };
+
+    if (isDocx) {
+        return (
+            <div className="w-full h-full flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
+                {/* Toolbar */}
+                <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-slate-700">Word Document Preview</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            variant="outline"
+                            size="icon-sm"
+                            onClick={handleZoomOut}
+                            disabled={zoomLevel <= 50}
+                            title="Zoom Out"
+                        >
+                            <ZoomOut className="h-4 w-4" />
+                        </Button>
+                        <div className="min-w-[70px] text-center">
+                            <span className="text-sm font-medium text-slate-700">{zoomLevel}%</span>
+                        </div>
+                        <Button
+                            variant="outline"
+                            size="icon-sm"
+                            onClick={handleZoomIn}
+                            disabled={zoomLevel >= 200}
+                            title="Zoom In"
+                        >
+                            <ZoomIn className="h-4 w-4" />
+                        </Button>
+                        <div className="w-px h-6 bg-slate-300 mx-1" />
+                        <Button
+                            variant="outline"
+                            size="icon-sm"
+                            onClick={handleResetZoom}
+                            title="Reset Zoom"
+                        >
+                            <RotateCcw className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+                {/* Document Content */}
+                <div className="flex-1 overflow-auto bg-white">
+                    <div className="max-w-[850px] mx-auto">
+                        <div
+                            ref={docxContainerRef}
+                            className="docx-preview-container transition-transform duration-200"
+                            style={{
+                                transform: `scale(${zoomLevel / 100})`,
+                                transformOrigin: 'top center',
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (!isPdf) {
         return (
-            <div className="w-full flex flex-col items-center justify-center h-full text-slate-500 text-center" style={{ height: "calc(100vh - 300px)" }}>
-                <span className="text-lg font-semibold mb-2">Previewing this file is not supported.</span>
-                <span className="text-sm">Only PDF file preview is supported.<br/>Please download the file to view its content.</span>
-                {fileUrl && (
-                    <a
-                        href={fileUrl}
-                        download={file.name}
-                        className="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm"
-                    >
-                        Download
-                    </a>
-                )}
+            <div className="w-full" style={{ height: "calc(100vh - 300px)" }}>
+                <FilePreviewLib
+                    preview={file}
+                    placeHolderImage={filePlaceholder}
+                    errorImage={filePlaceholder}
+                />
             </div>
         );
     }

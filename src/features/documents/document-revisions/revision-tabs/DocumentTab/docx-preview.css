@@ -1,4 +1,8 @@
 /* Styles for docx-preview library */
+.docx-wrapper {
+    background: white !important;
+}
+
 .docx-preview-container {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;

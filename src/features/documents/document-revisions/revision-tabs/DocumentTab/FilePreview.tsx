@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { FileText, File as FileIcon, Image as ImageIcon, AlertCircle } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { FileText, File as FileIcon, Image as ImageIcon, AlertCircle, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "./docx-preview.css";
+import FilePreviewLib from "reactjs-file-preview";
+import filePlaceholder from "@/assets/images/image-file/file.png";
+import { renderAsync } from "docx-preview";
+import { Button } from "@/components/ui/button/Button";
 
 interface FilePreviewProps {
     file: File | null;
@@ -11,10 +15,24 @@ interface FilePreviewProps {
 
 export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [previewType, setPreviewType] = useState<"pdf" | "image" | "text" | "unsupported">("unsupported");
+    const [previewType, setPreviewType] = useState<"pdf" | "image" | "text" | "docx" | "unsupported">("unsupported");
+    const docxContainerRef = useRef<HTMLDivElement>(null);
+    const [zoomLevel, setZoomLevel] = useState<number>(80);
     const [textContent, setTextContent] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const handleZoomIn = () => {
+        setZoomLevel((prev) => Math.min(prev + 10, 200));
+    };
+
+    const handleZoomOut = () => {
+        setZoomLevel((prev) => Math.max(prev - 10, 50));
+    };
+
+    const handleResetZoom = () => {
+        setZoomLevel(80);
+    };
 
     useEffect(() => {
         if (!file) {
@@ -40,11 +58,29 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
             setPreviewUrl(url);
             setIsLoading(false);
         }
-        // Word documents - not supported for now
+        // Word documents - use docx-preview
         else if (
             fileName.endsWith(".docx") ||
+            fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ) {
+            setPreviewType("docx");
+            setIsLoading(true);
+            if (docxContainerRef.current) {
+                docxContainerRef.current.innerHTML = "";
+                renderAsync(file, docxContainerRef.current)
+                    .then(() => setIsLoading(false))
+                    .catch((error) => {
+                        console.error("Error rendering docx:", error);
+                        setError("Failed to render Word document");
+                        setIsLoading(false);
+                    });
+            } else {
+                setIsLoading(false);
+            }
+        }
+        // Old .doc format - not supported
+        else if (
             fileName.endsWith(".doc") ||
-            fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
             fileType === "application/msword"
         ) {
             setPreviewType("unsupported");
@@ -182,25 +218,82 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                     </div>
                 )}
 
+                {!error && previewType === "docx" && (
+                    <div className="flex flex-col h-full">
+                        {/* Toolbar */}
+                        <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-slate-700">Word Document Preview</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="icon-sm"
+                                    onClick={handleZoomOut}
+                                    disabled={zoomLevel <= 50}
+                                    title="Zoom Out"
+                                >
+                                    <ZoomOut className="h-4 w-4" />
+                                </Button>
+                                <div className="min-w-[70px] text-center">
+                                    <span className="text-sm font-medium text-slate-700">{zoomLevel}%</span>
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    size="icon-sm"
+                                    onClick={handleZoomIn}
+                                    disabled={zoomLevel >= 200}
+                                    title="Zoom In"
+                                >
+                                    <ZoomIn className="h-4 w-4" />
+                                </Button>
+                                <div className="w-px h-6 bg-slate-300 mx-1" />
+                                <Button
+                                    variant="outline"
+                                    size="icon-sm"
+                                    onClick={handleResetZoom}
+                                    title="Reset Zoom"
+                                >
+                                    <RotateCcw className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
+                        {/* Document Content */}
+                        <div className="flex-1 overflow-auto bg-white">
+                            <div className="max-w-[850px] mx-auto">
+                                <div
+                                    ref={docxContainerRef}
+                                    className="docx-preview-container transition-transform duration-200"
+                                    style={{
+                                        transform: `scale(${zoomLevel / 100})`,
+                                        transformOrigin: 'top center',
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {!error && previewType === "unsupported" && (
                     <div className="h-full flex items-center justify-center p-6">
-                        <div className="text-center max-w-md">
-                            <AlertCircle className="h-16 w-16 text-amber-500 mx-auto mb-4" />
-                            <h4 className="text-lg font-semibold text-slate-900 mb-2">
-                                Preview Not Available
-                            </h4>
-                            <p className="text-sm text-slate-600 mb-4">
-                                Preview is not supported for this file type.
-                            </p>
-                            <div className="text-xs text-slate-500 bg-slate-50 rounded-lg p-4 text-left">
+                        <div className="text-center w-full">
+                            <div className="w-full h-[calc(100vh-380px)]">
+                                <FilePreviewLib
+                                    preview={file}
+                                    placeHolderImage={filePlaceholder}
+                                    errorImage={filePlaceholder}
+                                />
+                            </div>
+                            <div className="text-xs text-slate-500 bg-slate-50 rounded-lg p-4 text-left mt-4 inline-block text-left">
                                 <p className="font-semibold mb-2">Supported formats:</p>
                                 <ul className="space-y-1 list-disc list-inside">
                                     <li>PDF Documents (.pdf)</li>
+                                    <li>Word Documents (.docx)</li>
                                     <li>Images (.jpg, .png, .gif, .webp, etc.)</li>
                                     <li>Text Files (.txt, .md, .json, .xml, .csv)</li>
                                 </ul>
                                 <p className="mt-3 text-slate-600">
-                                    📄 Word documents (.doc, .docx) can be uploaded but preview is not available yet.
+                                    ⚠️ Old Word format (.doc) is not supported. Please use .docx format.
                                 </p>
                             </div>
                         </div>
