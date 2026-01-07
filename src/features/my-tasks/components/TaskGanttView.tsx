@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
-import { Calendar, Clock, User, ChevronRight, ChevronDown, AlertCircle, ZoomIn, ZoomOut } from "lucide-react";
+import { Calendar, Clock, User, ChevronRight, ChevronDown, AlertCircle, ZoomIn, ZoomOut, BarChart3 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Task } from "../types";
 import {
@@ -220,7 +220,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 lg:gap-0">
           <div>
             <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-emerald-600" />
+              <BarChart3 className="h-5 w-5 text-emerald-600" />
               <h3 className="text-lg font-semibold text-slate-900">Gantt Chart</h3>
             </div>
           </div>

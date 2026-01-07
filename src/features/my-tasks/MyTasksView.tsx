@@ -427,14 +427,14 @@ const TaskFilters: React.FC<{
   setModule: (val: string) => void;
   priority: string;
   setPriority: (val: string) => void;
+  status: string;
+  setStatus: (val: string) => void;
   fromDate: string;
   setFromDate: (val: string) => void;
   toDate: string;
   setToDate: (val: string) => void;
   assignee: string;
   setAssignee: (val: string) => void;
-  tableColumns: TableColumn[];
-  onColumnsChange: (columns: TableColumn[]) => void;
 }> = ({
   search,
   setSearch,
@@ -442,14 +442,14 @@ const TaskFilters: React.FC<{
   setModule,
   priority,
   setPriority,
+  status,
+  setStatus,
   fromDate,
   setFromDate,
   toDate,
   setToDate,
   assignee,
   setAssignee,
-  tableColumns,
-  onColumnsChange,
 }) => {
   const moduleOptions: SelectOption[] = [
     { label: "All", value: "All Modules" },
@@ -492,6 +492,13 @@ const TaskFilters: React.FC<{
       value: "Low",
       icon: <div className="h-2 w-2 rounded-full bg-blue-500" />,
     },
+  ];
+  const statusOptions: SelectOption[] = [
+    { label: "All", value: "All Statuses" },
+    { label: "Pending", value: "Pending" },
+    { label: "In Progress", value: "In-Progress" },
+    { label: "Reviewing", value: "Reviewing" },
+    { label: "Completed", value: "Completed" },
   ];
   const assigneeOptions: SelectOption[] = [
     { label: "All Assignees", value: "All Assignees" },
@@ -566,7 +573,16 @@ const TaskFilters: React.FC<{
           />
         </div>
 
-        {/* Row 2: Assignee, Columns, Date Range */}
+        {/* Row 2: Status, Assignee, Date Range */}
+        <div className="xl:col-span-3 w-full">
+          <SearchableCombobox
+            label="Status"
+            value={status}
+            onChange={setStatus}
+            options={statusOptions}
+            searchPlaceholder="Filter status..."
+          />
+        </div>
         <div className="xl:col-span-3 w-full">
           <SearchableCombobox
             label="Assignee"
@@ -574,15 +590,6 @@ const TaskFilters: React.FC<{
             onChange={setAssignee}
             options={assigneeOptions}
             searchPlaceholder="Find user..."
-          />
-        </div>
-        <div className="xl:col-span-3 w-full">
-          <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-            Display
-          </label>
-          <ColumnCustomizer 
-            columns={tableColumns} 
-            onColumnsChange={onColumnsChange} 
           />
         </div>
         <div className="xl:col-span-3 w-full">
@@ -658,6 +665,7 @@ export const MyTasksView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [moduleFilter, setModuleFilter] = useState("All Modules");
   const [priorityFilter, setPriorityFilter] = useState("All Priorities");
+  const [statusFilter, setStatusFilter] = useState("All Statuses");
   const [fromDateFilter, setFromDateFilter] = useState("");
   const [toDateFilter, setToDateFilter] = useState("");
   const [assigneeFilter, setAssigneeFilter] = useState("All Assignees");
@@ -692,6 +700,7 @@ export const MyTasksView: React.FC = () => {
     searchQuery,
     moduleFilter,
     priorityFilter,
+    statusFilter,
     fromDateFilter,
     toDateFilter,
     assigneeFilter,
@@ -714,6 +723,8 @@ export const MyTasksView: React.FC = () => {
       data = data.filter((t) => t.module === moduleFilter);
     if (priorityFilter !== "All Priorities")
       data = data.filter((t) => t.priority === priorityFilter);
+    if (statusFilter !== "All Statuses")
+      data = data.filter((t) => t.status === statusFilter);
     if (assigneeFilter !== "All Assignees")
       data = data.filter((t) => t.assignee === assigneeFilter);
 
@@ -730,6 +741,7 @@ export const MyTasksView: React.FC = () => {
     searchQuery,
     moduleFilter,
     priorityFilter,
+    statusFilter,
     fromDateFilter,
     toDateFilter,
     assigneeFilter,
@@ -816,14 +828,14 @@ export const MyTasksView: React.FC = () => {
           setModule={setModuleFilter}
           priority={priorityFilter}
           setPriority={setPriorityFilter}
+          status={statusFilter}
+          setStatus={setStatusFilter}
           fromDate={fromDateFilter}
           setFromDate={setFromDateFilter}
           toDate={toDateFilter}
           setToDate={setToDateFilter}
           assignee={assigneeFilter}
           setAssignee={setAssigneeFilter}
-          tableColumns={tableColumns}
-          onColumnsChange={setTableColumns}
         />
       </div>
       {/* 3. Data Display (Loading / View-based Rendering) */}

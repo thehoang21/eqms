@@ -89,7 +89,7 @@ export const TemplateFilters: React.FC<TemplateFiltersProps> = ({
                 {/* Search Input */}
                 <div className="xl:col-span-5">
                     <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                        Search Templates
+                        Search
                     </label>
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />

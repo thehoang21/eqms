@@ -310,7 +310,19 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
             {/* Right Column: File Preview */}
             <div className="h-full min-h-[600px]">
-                <FilePreview file={selectedFile} />
+                                {(() => {
+                                    const selected = uploadedFiles.find(f => f.file === selectedFile);
+                                    if (!selected || selected.status !== 'success') {
+                                        return (
+                                            <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm" style={{ height: 'calc(100vh - 300px)' }}>
+                                                {selected && selected.status === 'uploading' && 'Đang tải lên...'}
+                                                {selected && selected.status === 'error' && 'Tải file thất bại'}
+                                                {!selected && 'Chưa chọn file để xem trước'}
+                                            </div>
+                                        );
+                                    }
+                                    return <FilePreview file={selectedFile} />;
+                                })()}
             </div>
         </div>
     );

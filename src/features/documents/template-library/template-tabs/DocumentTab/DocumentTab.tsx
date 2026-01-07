@@ -1,8 +1,11 @@
 import React, { useState, useRef } from "react";
-import { Upload, File, X, FileText, CheckCircle2, AlertCircle, Eye } from "lucide-react";
+import { Upload, File, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { FilePreview } from "./FilePreview";
-import { IconCloudUpload } from "@tabler/icons-react";
+import { IconCloudUpload, IconTrash } from "@tabler/icons-react";
+import pdfIcon from '@/assets/images/image-file/pdf.png';
+import wordIcon from '@/assets/images/image-file/word.png';
+import excelIcon from '@/assets/images/image-file/excel.png';
 
 export interface UploadedFile {
     id: string;
@@ -213,9 +216,24 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 {/* Uploaded Files List */}
                 {uploadedFiles.length > 0 && (
                     <div className="space-y-3">
-                        <h4 className="text-sm font-semibold text-slate-700">
-                            Uploaded Files ({uploadedFiles.length})
-                        </h4>
+                        <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-semibold text-slate-700">
+                                Uploaded Files ({uploadedFiles.length})
+                            </h4>
+                            {uploadedFiles.length > 1 && (
+                                <button
+                                    type="button"
+                                    className="text-xs px-3 py-1.5 rounded-lg bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors font-medium inline-flex items-center gap-1.5"
+                                    onClick={() => {
+                                        onFilesChange([]);
+                                        onSelectFile(null);
+                                    }}
+                                >
+                                    <IconTrash className="h-3.5 w-3.5 text-red-700" />
+                                    Remove All Files
+                                </button>
+                            )}
+                        </div>
 
                         <div className="space-y-2 max-h-[500px] overflow-y-auto">
                             {uploadedFiles.map((uploadedFile) => (
@@ -237,12 +255,22 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                                 ? "bg-emerald-100"
                                                 : "bg-slate-50"
                                         )}>
-                                            <FileText className={cn(
-                                                "h-4 w-4",
-                                                selectedFile === uploadedFile.file
-                                                    ? "text-emerald-600"
-                                                    : "text-slate-500"
-                                            )} />
+                                            {(() => {
+                                                const name = uploadedFile.file.name.toLowerCase();
+                                                let iconSrc: string | null = null;
+                                                if (name.endsWith('.pdf')) iconSrc = pdfIcon;
+                                                else if (name.endsWith('.doc') || name.endsWith('.docx')) iconSrc = wordIcon;
+                                                else if (name.endsWith('.xls') || name.endsWith('.xlsx')) iconSrc = excelIcon;
+                                                if (iconSrc) {
+                                                    return <img src={iconSrc} alt="file icon" className="h-6 w-6 object-contain" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />;
+                                                }
+                                                return <File className={cn(
+                                                    "h-4 w-4",
+                                                    selectedFile === uploadedFile.file
+                                                        ? "text-emerald-600"
+                                                        : "text-slate-500"
+                                                )} />;
+                                            })()}
                                         </div>
 
                                         {/* File Info */}
@@ -260,19 +288,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                                 {/* Status Icon */}
                                                 <div className="flex items-center gap-1.5">
                                                     {uploadedFile.status === "success" && (
-                                                        <>
-                                                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                                                            <button
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    onSelectFile(uploadedFile.file);
-                                                                }}
-                                                                className="p-1 hover:bg-emerald-50 rounded transition-colors"
-                                                                title="Preview"
-                                                            >
-                                                                <Eye className="h-4 w-4 text-emerald-600" />
-                                                            </button>
-                                                        </>
+                                                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                                                     )}
                                                     {uploadedFile.status === "error" && (
                                                         <AlertCircle className="h-4 w-4 text-red-600" />
@@ -330,7 +346,6 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 {/* Info Box */}
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="flex items-start gap-2.5">
-                        <File className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <div className="text-sm text-blue-800">
                             <p className="font-medium mb-1">Upload Guidelines</p>
                             <ul className="space-y-0.5 text-blue-700">
@@ -342,11 +357,22 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                     </div>
                 </div>
             </div>
-
-            {/* Right Column: File Preview */}
-            <div className="h-full min-h-[600px]">
-                <FilePreview file={selectedFile} />
-            </div>
+                        {/* Right Column: File Preview */}
+                        <div className="h-full min-h-[600px]">
+                                {(() => {
+                                    const selected = uploadedFiles.find(f => f.file === selectedFile);
+                                    if (!selected || selected.status !== 'success') {
+                                        return (
+                                            <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm" style={{ height: "calc(100vh - 300px)" }}>
+                                                {selected && selected.status === 'uploading' && 'Uploading...'}
+                                                {selected && selected.status === 'error' && 'Upload failed'}
+                                                {!selected && 'No file selected for preview'}
+                                            </div>
+                                        );
+                                    }
+                                    return <FilePreview file={selectedFile} />;
+                                })()}
+                        </div>
         </div>
     );
 };
