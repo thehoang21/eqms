@@ -23,7 +23,7 @@ import {
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
 
@@ -221,7 +221,7 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
     };
 
     // Status workflow steps
-    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
+    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Pending Training", "Ready for Publishing", "Published", "Effective", "Archive"];
 
     // Breadcrumbs
     const breadcrumbs = [

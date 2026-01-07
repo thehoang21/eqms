@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button/Button";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 interface DocumentDetail {
@@ -164,7 +164,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
     const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
     // Status workflow steps
-    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
+    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Pending Training", "Ready for Publishing", "Published", "Effective", "Archive"];
     const currentStepIndex = statusSteps.indexOf(document.status);
 
     const handleShare = () => {
@@ -234,18 +234,19 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
 
             {/* Status Stepper */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="flex items-stretch">
-                    {statusSteps.map((step, index) => {
-                        const isCompleted = index < currentStepIndex;
-                        const isCurrent = index === currentStepIndex;
-                        const isFirst = index === 0;
-                        const isLast = index === statusSteps.length - 1;
+                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+                    <div className="flex items-stretch min-w-full">
+                        {statusSteps.map((step, index) => {
+                            const isCompleted = index < currentStepIndex;
+                            const isCurrent = index === currentStepIndex;
+                            const isFirst = index === 0;
+                            const isLast = index === statusSteps.length - 1;
 
-                        return (
-                            <div
-                                key={step}
-                                className="relative flex-1 flex items-center justify-center"
-                                style={{ minHeight: '60px' }}
+                            return (
+                                <div
+                                    key={step}
+                                    className="relative flex-1 flex items-center justify-center min-w-[150px]"
+                                    style={{ minHeight: '60px' }}
                             >
                                 {/* Arrow Shape Background */}
                                 <div
@@ -287,6 +288,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                             </div>
                         );
                     })}
+                    </div>
                 </div>
             </div>
 

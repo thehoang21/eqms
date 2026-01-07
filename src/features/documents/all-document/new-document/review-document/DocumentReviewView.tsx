@@ -40,6 +40,9 @@ type DocumentStatus =
   | "Pending Review"
   | "Pending Approval"
   | "Approved"
+  | "Pending Training"
+  | "Ready for Publishing"
+  | "Published"
   | "Effective"
   | "Archive";
 type ReviewFlowType = "sequential" | "parallel";
@@ -289,6 +292,9 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
     "Pending Review",
     "Pending Approval",
     "Approved",
+    "Pending Training",
+    "Ready for Publishing",
+    "Published",
     "Effective",
     "Archive",
   ];

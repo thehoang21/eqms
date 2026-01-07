@@ -21,7 +21,7 @@ import { cn } from '@/components/ui/utils';
 import { Button } from "@/components/ui/button/Button";
 
 // --- Types ---
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
 
 interface BatchDocument {
@@ -85,6 +85,9 @@ const getStatusIcon = (status: DocumentStatus) => {
         case "Pending Approval":
             return <AlertCircle className="h-4 w-4" />;
         case "Approved":
+        case "Pending Training":
+        case "Ready for Publishing":
+        case "Published":
         case "Effective":
             return <CheckCircle2 className="h-4 w-4" />;
         default:
@@ -372,18 +375,19 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
 
             {/* Status Stepper */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="flex items-stretch">
-                    {statusSteps.map((step, index) => {
-                        const isCompleted = index < currentStepIndex;
-                        const isCurrent = index === currentStepIndex;
-                        const isFirst = index === 0;
-                        const isLast = index === statusSteps.length - 1;
+                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+                    <div className="flex items-stretch min-w-full">
+                        {statusSteps.map((step, index) => {
+                            const isCompleted = index < currentStepIndex;
+                            const isCurrent = index === currentStepIndex;
+                            const isFirst = index === 0;
+                            const isLast = index === statusSteps.length - 1;
 
-                        return (
-                            <div
-                                key={step}
-                                className="relative flex-1 flex items-center justify-center"
-                                style={{ minHeight: '60px' }}
+                            return (
+                                <div
+                                    key={step}
+                                    className="relative flex-1 flex items-center justify-center min-w-[150px]"
+                                    style={{ minHeight: '60px' }}
                             >
                                 {/* Arrow Shape Background */}
                                 <div
@@ -461,6 +465,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                     {children}
                 </div>
             </div>
+        </div>
         </div>
     );
 };

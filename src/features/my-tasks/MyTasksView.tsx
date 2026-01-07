@@ -757,9 +757,6 @@ export const MyTasksView: React.FC = () => {
 
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col mb-12">
-      {" "}
-      {/* Added mb-12 for footer spacing */}
-      {/* 1. Header: Title + View Mode Toggle */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">

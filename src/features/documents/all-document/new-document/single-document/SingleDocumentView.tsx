@@ -30,7 +30,7 @@ import {
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 type TabType = "general" | "training" | "document" | "signatures" | "audit" | "workflow";
 
 export const SingleDocumentView: React.FC = () => {
@@ -158,7 +158,7 @@ export const SingleDocumentView: React.FC = () => {
     };
 
     // Status workflow steps
-    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
+    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Pending Training", "Ready for Publishing", "Published", "Effective", "Archive"];
     const currentStepIndex = 0; // Always "Draft" for new documents
 
     const tabs = [
@@ -238,18 +238,19 @@ export const SingleDocumentView: React.FC = () => {
 
             {/* Status Stepper */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="flex items-stretch">
-                    {statusSteps.map((step, index) => {
-                        const isCompleted = index < currentStepIndex;
-                        const isCurrent = index === currentStepIndex;
-                        const isFirst = index === 0;
-                        const isLast = index === statusSteps.length - 1;
+                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+                    <div className="flex items-stretch min-w-full">
+                        {statusSteps.map((step, index) => {
+                            const isCompleted = index < currentStepIndex;
+                            const isCurrent = index === currentStepIndex;
+                            const isFirst = index === 0;
+                            const isLast = index === statusSteps.length - 1;
 
-                        return (
-                            <div
-                                key={step}
-                                className="relative flex-1 flex items-center justify-center"
-                                style={{ minHeight: '60px' }}
+                            return (
+                                <div
+                                    key={step}
+                                    className="relative flex-1 flex items-center justify-center min-w-[150px]"
+                                    style={{ minHeight: '60px' }}
                             >
                                 {/* Arrow Shape Background */}
                                 <div
@@ -390,6 +391,7 @@ export const SingleDocumentView: React.FC = () => {
                 cancelText="No, Stay"
                 showCancel={true}
             />
+        </div>
         </div>
     );
 };
