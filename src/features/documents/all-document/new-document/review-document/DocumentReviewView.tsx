@@ -209,12 +209,13 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
   const currentReviewer = document.reviewers.find(
     (r) => r.id === currentUserId
   );
-  const canReview =
+  const canReview = !!(
     currentReviewer &&
     currentReviewer.status === "pending" &&
     (document.reviewFlowType === "parallel" ||
       (document.reviewFlowType === "sequential" &&
-        currentReviewer.order === document.currentReviewerIndex + 1));
+        currentReviewer.order === document.currentReviewerIndex + 1))
+  );
 
   const handleApprove = () => {
     if (!currentReviewer) return;
@@ -364,89 +365,177 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
                   : "max-h-0 opacity-0"
               )}
             >
-              <div className="px-6 pb-6 space-y-3">
-                {document.reviewers.map((reviewer, index) => {
-                  const isCurrentUserReviewer = reviewer.id === currentUserId;
-                  const isActiveReviewer =
-                    document.reviewFlowType === "sequential"
-                      ? reviewer.order === document.currentReviewerIndex + 1
-                      : reviewer.status === "pending";
+              {/* Sequential: Vertical Stepper */}
+              {document.reviewFlowType === "sequential" && (
+                <div className="px-6 pb-6">
+                  <ul className="relative ml-6">
+                    <div className="absolute left-6 top-0 bottom-0 w-px bg-slate-200" />
+                    {document.reviewers
+                      .slice()
+                      .sort((a, b) => a.order - b.order)
+                      .map((reviewer) => {
+                        const isCurrentUserReviewer = reviewer.id === currentUserId;
+                        const isCurrent =
+                          reviewer.status === "pending" &&
+                          reviewer.order === document.currentReviewerIndex + 1;
+                        const isBlocked =
+                          reviewer.status === "pending" &&
+                          reviewer.order > document.currentReviewerIndex + 1;
+                        const isApproved = reviewer.status === "approved";
+                        const isRejected = reviewer.status === "rejected";
 
-                  return (
-                    <div
-                      key={reviewer.id}
-                      className={cn(
-                        "p-4 rounded-lg border transition-all",
-                        isCurrentUserReviewer && isActiveReviewer
-                          ? "bg-emerald-50 border-emerald-200"
-                          : "bg-white border-slate-200"
-                      )}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          {document.reviewFlowType === "sequential" && (
-                            <div className="h-8 w-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-sm font-bold shrink-0">
-                              {reviewer.order}
+                        return (
+                          <li key={reviewer.id} className="relative pl-16 py-3">
+                            {/* Step indicator */}
+                            <div
+                              className={cn(
+                                "absolute left-6 -translate-x-1/2 top-2 h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold",
+                                isApproved && "bg-emerald-600 text-white",
+                                isRejected && "bg-red-600 text-white",
+                                isCurrent && "bg-blue-600 text-white",
+                                isBlocked && "bg-slate-200 text-slate-700"
+                              )}
+                              aria-hidden="true"
+                            >
+                              {isApproved && <CheckCircle className="h-4 w-4" />}
+                              {isRejected && <XCircle className="h-4 w-4" />}
+                              {isCurrent && reviewer.order}
+                              {isBlocked && reviewer.order}
                             </div>
+
+                            {/* Content */}
+                            <div
+                              className={cn(
+                                "p-4 rounded-lg border transition-colors",
+                                isCurrent && "bg-emerald-50 border-emerald-200",
+                                isApproved && "bg-white border-slate-200",
+                                isRejected && "bg-white border-slate-200",
+                                isBlocked && "bg-white border-slate-200"
+                              )}
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-4">
+                                  <div className="h-10 w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                                    {reviewer.name.charAt(0)}
+                                  </div>
+                                  <div>
+                                    <div className="flex items-center gap-2">
+                                      <h4 className="font-medium text-slate-900">{reviewer.name}</h4>
+                                      {isCurrentUserReviewer && (
+                                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                                          You
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                                      <span>{reviewer.role}</span>
+                                      <span className="w-1 h-1 rounded-full bg-slate-300" />
+                                      <span>{reviewer.department}</span>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                  {reviewer.reviewDate && (isApproved || isRejected) && (
+                                    <span className="text-xs text-slate-500">
+                                      {formatDate(reviewer.reviewDate)}
+                                    </span>
+                                  )}
+                                  {isApproved && (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full">
+                                      <CheckCircle className="h-4 w-4" />
+                                      <span className="text-xs font-medium">Approved</span>
+                                    </span>
+                                  )}
+                                  {isRejected && (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 rounded-full">
+                                      <XCircle className="h-4 w-4" />
+                                      <span className="text-xs font-medium">Rejected</span>
+                                    </span>
+                                  )}
+                                  {isCurrent && (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full">
+                                      <Clock className="h-4 w-4" />
+                                      <span className="text-xs font-medium">Current Reviewer</span>
+                                    </span>
+                                  )}
+                                  {isBlocked && (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-full">
+                                      <Clock className="h-4 w-4" />
+                                      <span className="text-xs font-medium">Blocked</span>
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                </div>
+              )}
+
+              {/* Parallel: Grid of reviewers */}
+              {document.reviewFlowType === "parallel" && (
+                <div className="px-6 pb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {document.reviewers.map((reviewer) => {
+                      const isCurrentUserReviewer = reviewer.id === currentUserId;
+                      const isSigned = reviewer.status !== "pending";
+                      return (
+                        <div
+                          key={reviewer.id}
+                          className={cn(
+                            "p-4 rounded-lg border bg-white",
+                            isCurrentUserReviewer && reviewer.status === "pending"
+                              ? "ring-1 ring-emerald-200"
+                              : "border-slate-200"
                           )}
-                          <div className="h-10 w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
-                            {reviewer.name.charAt(0)}
-                          </div>
-                          <div>
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-4">
+                              <div className="h-10 w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                                {reviewer.name.charAt(0)}
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h4 className="font-medium text-slate-900">{reviewer.name}</h4>
+                                  {isCurrentUserReviewer && (
+                                    <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                                      You
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 text-xs text-slate-500">
+                                  <span>{reviewer.role}</span>
+                                  <span className="w-1 h-1 rounded-full bg-slate-300" />
+                                  <span>{reviewer.department}</span>
+                                </div>
+                              </div>
+                            </div>
                             <div className="flex items-center gap-2">
-                              <h4 className="font-medium text-slate-900">
-                                {reviewer.name}
-                              </h4>
-                              {isCurrentUserReviewer && (
-                                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
-                                  You
+                              {isSigned ? (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full">
+                                  <CheckCircle className="h-4 w-4" />
+                                  <span className="text-xs font-medium">Signed</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-full">
+                                  <Clock className="h-4 w-4" />
+                                  <span className="text-xs font-medium">Pending</span>
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-2 text-xs text-slate-500">
-                              <span>{reviewer.role}</span>
-                              <span className="w-1 h-1 rounded-full bg-slate-300" />
-                              <span>{reviewer.department}</span>
-                            </div>
                           </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          {reviewer.reviewDate && (
-                            <span className="text-xs text-slate-500">
-                              {formatDate(reviewer.reviewDate)}
-                            </span>
-                          )}
-                          {reviewer.status === "approved" && (
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full">
-                              <CheckCircle className="h-4 w-4" />
-                              <span className="text-xs font-medium">
-                                Approved
-                              </span>
-                            </div>
-                          )}
-                          {reviewer.status === "rejected" && (
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 rounded-full">
-                              <XCircle className="h-4 w-4" />
-                              <span className="text-xs font-medium">
-                                Rejected
-                              </span>
-                            </div>
-                          )}
-                          {reviewer.status === "pending" && (
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-full">
-                              <Clock className="h-4 w-4" />
-                              <span className="text-xs font-medium">
-                                Pending
-                              </span>
-                            </div>
+                          {isSigned && reviewer.reviewDate && (
+                            <div className="mt-2 text-xs text-slate-500">Signed on {formatDate(reviewer.reviewDate)}</div>
                           )}
                         </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

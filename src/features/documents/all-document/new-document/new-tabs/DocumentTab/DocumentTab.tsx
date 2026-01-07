@@ -4,8 +4,16 @@ import { cn } from '@/components/ui/utils';
 import { FilePreview } from "./FilePreview";
 import { IconCloudUpload } from "@tabler/icons-react";
 import pdfIcon from '@/assets/images/image-file/pdf.png';
-import wordIcon from '@/assets/images/image-file/word.png';
-import excelIcon from '@/assets/images/image-file/excel.png';
+import docIcon from '@/assets/images/image-file/doc.png';
+import docxIcon from '@/assets/images/image-file/docx.png';
+import xlsIcon from '@/assets/images/image-file/xls.png';
+import xlsxIcon from '@/assets/images/image-file/xlsx.png';
+import pptIcon from '@/assets/images/image-file/ppt.png';
+import fileIcon from '@/assets/images/image-file/file.png';
+// Map pptx to ppt icon; remove incorrect jpg mapping
+import jpgIcon from '@/assets/images/image-file/jpg.png';
+import jpegIcon from '@/assets/images/image-file/jpeg.png';
+import pngIcon from '@/assets/images/image-file/png.png';
 
 export interface UploadedFile {
     id: string;
@@ -234,27 +242,24 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                 >
                                     <div className="flex items-start gap-3">
                                         {/* File Icon */}
-                                        <div className={cn(
-                                            "w-9 h-9 rounded-lg flex items-center justify-center shrink-0",
-                                            selectedFile === uploadedFile.file
-                                                ? "bg-emerald-100"
-                                                : "bg-slate-50"
-                                        )}>
+                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
                                             {(() => {
                                                 const name = uploadedFile.file.name.toLowerCase();
-                                                let iconSrc: string | null = null;
-                                                if (name.endsWith('.pdf')) iconSrc = pdfIcon;
-                                                else if (name.endsWith('.doc') || name.endsWith('.docx')) iconSrc = wordIcon;
-                                                else if (name.endsWith('.xls') || name.endsWith('.xlsx')) iconSrc = excelIcon;
-                                                if (iconSrc) {
-                                                    return <img src={iconSrc} alt="file icon" className="h-6 w-6 object-contain" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />;
-                                                }
-                                                return <File className={cn(
-                                                    "h-4 w-4",
-                                                    selectedFile === uploadedFile.file
-                                                        ? "text-emerald-600"
-                                                        : "text-slate-500"
-                                                )} />;
+                                                const ext = name.split('.').pop() || '';
+                                                const iconMap: Record<string, string> = {
+                                                    pdf: pdfIcon,
+                                                    doc: docIcon,
+                                                    docx: docxIcon,
+                                                    xls: xlsIcon,
+                                                    xlsx: xlsxIcon,
+                                                    ppt: pptIcon,
+                                                    pptx: pptIcon,
+                                                    jpg: jpgIcon,
+                                                    jpeg: jpegIcon,
+                                                    png: pngIcon,
+                                                };
+                                                const iconSrc = iconMap[ext] || fileIcon;
+                                                return <img src={iconSrc} alt="file icon" className="h-8 w-8 object-contain" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />;
                                             })()}
                                         </div>
 

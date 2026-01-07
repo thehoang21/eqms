@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Worker, Viewer } from "@react-pdf-viewer/core";
+import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
@@ -60,7 +60,11 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
         <div className="w-full" style={{ height: "calc(100vh - 300px)" }}>
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                 {fileUrl && (
-                    <Viewer fileUrl={fileUrl} plugins={[defaultLayoutPluginInstance]} />
+                    <Viewer
+                        fileUrl={fileUrl}
+                        plugins={[defaultLayoutPluginInstance]}
+                        defaultScale={SpecialZoomLevel.ActualSize}
+                    />
                 )}
             </Worker>
         </div>

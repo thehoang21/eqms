@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FileText, File as FileIcon, Image as ImageIcon, AlertCircle } from "lucide-react";
-import { Worker } from "@react-pdf-viewer/core";
-import { Viewer } from "@react-pdf-viewer/default-layout";
+import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "./docx-preview.css";
@@ -160,7 +159,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                 {!error && previewType === "pdf" && previewUrl && (
                     <div className="h-full">
                         <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                            <Viewer fileUrl={previewUrl} />
+                            <Viewer fileUrl={previewUrl} defaultScale={SpecialZoomLevel.ActualSize} />
                         </Worker>
                     </div>
                 )}

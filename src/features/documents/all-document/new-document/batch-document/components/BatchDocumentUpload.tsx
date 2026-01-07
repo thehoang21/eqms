@@ -6,9 +6,17 @@ import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { Select } from "@/components/ui/select/Select";
 import { IconCloudUpload, IconTrash } from "@tabler/icons-react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-import pdfIcon from "@/assets/images/image-file/pdf.png";
-import wordIcon from "@/assets/images/image-file/word.png";
-import excelIcon from "@/assets/images/image-file/excel.png";
+import pdfIcon from '@/assets/images/image-file/pdf.png';
+import docIcon from '@/assets/images/image-file/doc.png';
+import docxIcon from '@/assets/images/image-file/docx.png';
+import xlsIcon from '@/assets/images/image-file/xls.png';
+import xlsxIcon from '@/assets/images/image-file/xlsx.png';
+import pptIcon from '@/assets/images/image-file/ppt.png';
+import pptxIcon from '@/assets/images/image-file/pptx.png';
+import jpgIcon from '@/assets/images/image-file/jpg.png';
+import jpegIcon from '@/assets/images/image-file/jpeg.png';
+import pngIcon from '@/assets/images/image-file/png.png';
+import fileIcon from '@/assets/images/image-file/file.png';
 
 type ChildDocumentType = "Form" | "Annex" | "Attachment";
 
@@ -98,9 +106,16 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
     const getFileIcon = (fileName: string) => {
         const extension = fileName.split('.').pop()?.toLowerCase();
         if (extension === 'pdf') return pdfIcon;
-        if (['doc', 'docx'].includes(extension || '')) return wordIcon;
-        if (['xls', 'xlsx'].includes(extension || '')) return excelIcon;
-        return null;
+        if (extension === 'doc') return docIcon;
+        if (extension === 'docx') return docxIcon;
+        if (extension === 'xls') return xlsIcon;
+        if (extension === 'xlsx') return xlsxIcon;
+        if (extension === 'ppt') return pptIcon;
+        if (extension === 'pptx') return pptxIcon;
+        if (extension === 'jpg') return jpgIcon;
+        if (extension === 'jpeg') return jpegIcon;
+        if (extension === 'png') return pngIcon;
+        return fileIcon;
     };
 
     const handleDragOver = (e: React.DragEvent) => {

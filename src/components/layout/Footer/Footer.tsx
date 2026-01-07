@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-slate-200 bg-white py-4 px-6 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
+    <footer className="border-t border-slate-200 bg-white py-3 px-6 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
       <div>
         &copy; {new Date().getFullYear()} Ngoc Thien Pharma. All rights reserved. EU-GMP Compliant.
       </div>
