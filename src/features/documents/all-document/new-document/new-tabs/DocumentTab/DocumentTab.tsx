@@ -1,8 +1,11 @@
 import React, { useState, useRef } from "react";
-import { Upload, File, X, FileText, CheckCircle2, AlertCircle, Eye } from "lucide-react";
+import { Upload, File, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { FilePreview } from "./FilePreview";
 import { IconCloudUpload } from "@tabler/icons-react";
+import pdfIcon from '@/assets/images/image-file/pdf.png';
+import wordIcon from '@/assets/images/image-file/word.png';
+import excelIcon from '@/assets/images/image-file/excel.png';
 
 export interface UploadedFile {
     id: string;
@@ -237,12 +240,22 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                                 ? "bg-emerald-100"
                                                 : "bg-slate-50"
                                         )}>
-                                            <FileText className={cn(
-                                                "h-4 w-4",
-                                                selectedFile === uploadedFile.file
-                                                    ? "text-emerald-600"
-                                                    : "text-slate-500"
-                                            )} />
+                                            {(() => {
+                                                const name = uploadedFile.file.name.toLowerCase();
+                                                let iconSrc: string | null = null;
+                                                if (name.endsWith('.pdf')) iconSrc = pdfIcon;
+                                                else if (name.endsWith('.doc') || name.endsWith('.docx')) iconSrc = wordIcon;
+                                                else if (name.endsWith('.xls') || name.endsWith('.xlsx')) iconSrc = excelIcon;
+                                                if (iconSrc) {
+                                                    return <img src={iconSrc} alt="file icon" className="h-6 w-6 object-contain" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />;
+                                                }
+                                                return <File className={cn(
+                                                    "h-4 w-4",
+                                                    selectedFile === uploadedFile.file
+                                                        ? "text-emerald-600"
+                                                        : "text-slate-500"
+                                                )} />;
+                                            })()}
                                         </div>
 
                                         {/* File Info */}
@@ -260,19 +273,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                                 {/* Status Icon */}
                                                 <div className="flex items-center gap-1.5">
                                                     {uploadedFile.status === "success" && (
-                                                        <>
-                                                            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                                                            <button
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    onSelectFile(uploadedFile.file);
-                                                                }}
-                                                                className="p-1 hover:bg-emerald-50 rounded transition-colors"
-                                                                title="Preview"
-                                                            >
-                                                                <Eye className="h-4 w-4 text-emerald-600" />
-                                                            </button>
-                                                        </>
+                                                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                                                     )}
                                                     {uploadedFile.status === "error" && (
                                                         <AlertCircle className="h-4 w-4 text-red-600" />
@@ -330,7 +331,6 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 {/* Info Box */}
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <div className="flex items-start gap-2.5">
-                        <File className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                         <div className="text-sm text-blue-800">
                             <p className="font-medium mb-1">Upload Guidelines</p>
                             <ul className="space-y-0.5 text-blue-700">

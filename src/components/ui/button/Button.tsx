@@ -15,10 +15,10 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const variants = {
-    default: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm active:scale-95',
-    ghost: 'hover:bg-slate-100 hover:text-slate-900 active:scale-95',
-    outline: 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 shadow-sm active:scale-95',
-    secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200 active:scale-95',
+    default: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm hover:shadow-md active:scale-[0.97] transition-all duration-200',
+    ghost: 'hover:bg-slate-100 hover:text-slate-900 active:scale-[0.97] transition-all duration-200',
+    outline: 'border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-900 shadow-sm hover:shadow active:scale-[0.97] transition-all duration-200',
+    secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200 active:scale-[0.97] transition-all duration-200',
   };
 
   const sizes = {

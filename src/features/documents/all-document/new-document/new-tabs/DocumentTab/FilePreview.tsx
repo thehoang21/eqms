@@ -47,7 +47,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                     <a
                         href={fileUrl}
                         download={file.name}
-                        className="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition-colors text-sm"
+                        className="mt-4 inline-block px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm"
                     >
                         Download
                     </a>
