@@ -1,12 +1,30 @@
 /* Styles for docx-preview library */
-.docx-wrapper {
-    background: white !important;
-}
-
 .docx-preview-container {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
     color: #1e293b;
+}
+
+/* Set white background for docx wrapper */
+.docx-preview-container .docx-wrapper,
+.docx-preview-container .docx {
+    background-color: white !important;
+}
+
+/* Add page breaks for multi-page documents */
+.docx-preview-container section {
+    background-color: white;
+    padding: 2cm 1.5cm;
+    margin: 0 auto 2cm auto;
+    max-width: 21cm;
+    min-height: 29.7cm;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: block;
+    position: relative;
+}
+
+.docx-preview-container section:last-child {
+    margin-bottom: 0;
 }
 
 .docx-preview-container p {

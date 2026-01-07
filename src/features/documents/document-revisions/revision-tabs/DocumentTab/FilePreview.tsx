@@ -67,7 +67,14 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
             setIsLoading(true);
             if (docxContainerRef.current) {
                 docxContainerRef.current.innerHTML = "";
-                renderAsync(file, docxContainerRef.current)
+                renderAsync(file, docxContainerRef.current, undefined, {
+                    breakPages: true,
+                    inWrapper: true,
+                    ignoreWidth: false,
+                    ignoreHeight: false,
+                    renderHeaders: true,
+                    renderFooters: true,
+                })
                     .then(() => setIsLoading(false))
                     .catch((error) => {
                         console.error("Error rendering docx:", error);
@@ -219,12 +226,12 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                 )}
 
                 {!error && previewType === "docx" && (
-                    <div className="flex flex-col h-full">
-                        {/* Toolbar */}
-                        <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-slate-700">Word Document Preview</span>
-                            </div>
+                    <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
+                {/* Toolbar */}
+                <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-slate-700">Word Document Preview</span>
+                    </div>
                             <div className="flex items-center gap-2">
                                 <Button
                                     variant="outline"
@@ -259,7 +266,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                             </div>
                         </div>
                         {/* Document Content */}
-                        <div className="flex-1 overflow-auto bg-white">
+                        <div className="flex-1 overflow-auto">
                             <div className="max-w-[850px] mx-auto">
                                 <div
                                     ref={docxContainerRef}

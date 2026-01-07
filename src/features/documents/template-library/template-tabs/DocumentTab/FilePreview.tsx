@@ -9,6 +9,7 @@ import filePlaceholder from "@/assets/images/image-file/file.png";
 import { renderAsync } from "docx-preview";
 import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
+import "./docx-preview.css";
 
 
 interface FilePreviewProps {
@@ -39,7 +40,14 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
         
         if (file && isDocx && docxContainerRef.current) {
             docxContainerRef.current.innerHTML = "";
-            renderAsync(file, docxContainerRef.current).catch((error) => {
+            renderAsync(file, docxContainerRef.current, undefined, {
+                breakPages: true,
+                inWrapper: true,
+                ignoreWidth: false,
+                ignoreHeight: false,
+                renderHeaders: true,
+                renderFooters: true,
+            }).catch((error) => {
                 console.error("Error rendering docx:", error);
             });
         }
@@ -70,9 +78,9 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
 
     if (isDocx) {
         return (
-            <div className="w-full h-full flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
+            <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
                 {/* Toolbar */}
-                <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+                <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
                         <span className="text-sm font-medium text-slate-700">Word Document Preview</span>
                     </div>
@@ -110,7 +118,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                     </div>
                 </div>
                 {/* Document Content */}
-                <div className="flex-1 overflow-auto bg-white">
+                <div className="flex-1 overflow-auto">
                     <div className="max-w-[850px] mx-auto">
                         <div
                             ref={docxContainerRef}

@@ -6,13 +6,7 @@ import {
   ChevronDown,
   Info,
   Monitor,
-  CheckCircle2,
-  FileEdit,
-  X,
-  Eye,
-  ChevronLeft,
-  ChevronRight,
-  BadgeCheck
+  X
 } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { Select, SelectOption } from "@/components/ui/select/Select";
@@ -117,13 +111,6 @@ const mockAuditData: AuditEntry[] = [
   }
 ];
 
-const milestones = [
-  { label: "Created", date: "23 Dec", status: "completed", icon: FileEdit },
-  { label: "Reviewed", date: "25 Dec", status: "completed", icon: Eye },
-  { label: "Approved", date: "27 Dec", status: "completed", icon: CheckCircle2 },
-  { label: "Effective", date: "27 Dec", status: "current", icon: BadgeCheck }
-];
-
 const actionTypeOptions: SelectOption[] = [
   { value: "all", label: "All Actions"},
   { value: "create", label: "Create" },
@@ -210,61 +197,8 @@ export const AuditTrailTab: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Visual Timeline */}
-      <div className="bg-white border rounded-xl border-slate-200 px-6 py-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-slate-900">Document Lifecycle</h3>
-          <span className="text-xs text-slate-500">SOP-QA-001 v2.0</span>
-        </div>
-        <div className="relative flex items-center justify-between">
-          {milestones.map((milestone, index) => (
-            <div key={index} className="flex flex-col items-center flex-1 relative">
-              {/* Connector Line */}
-              {index < milestones.length - 1 && (
-                <div className={cn(
-                  "absolute top-5 left-1/2 w-full h-0.5",
-                  milestone.status === "completed" ? "bg-emerald-500" : "bg-slate-200"
-                )} />
-              )}
-              
-              {/* Icon */}
-              <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center relative z-10 border-2",
-                milestone.status === "completed" 
-                  ? "bg-emerald-50 border-emerald-500" 
-                  : milestone.status === "current"
-                  ? "bg-emerald-50 border-emerald-500 ring-4 ring-emerald-100"
-                  : "bg-slate-50 border-slate-300"
-              )}>
-                <milestone.icon className={cn(
-                  "h-5 w-5",
-                  milestone.status === "completed"
-                    ? "text-emerald-600"
-                    : milestone.status === "current"
-                    ? "text-emerald-600"
-                    : "text-slate-400"
-                )} />
-              </div>
-              
-              {/* Label */}
-              <div className="mt-2 text-center">
-                <div className={cn(
-                  "text-xs font-medium",
-                  milestone.status === "completed" || milestone.status === "current"
-                    ? "text-slate-900"
-                    : "text-slate-500"
-                )}>
-                  {milestone.label}
-                </div>
-                <div className="text-xs text-slate-500 mt-0.5">{milestone.date}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Filter Section */}
-      <div className="bg-white w-full mt-8 mb-8">
+      <div className="bg-white w-full mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Row 1: Search, Action Type, User */}
           
@@ -275,7 +209,7 @@ export const AuditTrailTab: React.FC = () => {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <Search className="h-4.5 w-4.5 text-slate-400" />
+                <Search className="h-4 w-4 text-slate-400" />
               </div>
               <input
                 type="text"

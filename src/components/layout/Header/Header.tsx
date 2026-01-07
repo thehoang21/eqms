@@ -5,7 +5,7 @@ import { Button } from '../../ui/button/Button';
 import { cn } from '../../ui/utils';
 import { SearchDropdown } from './SearchDropdown';
 import { NotificationsDropdown } from './NotificationsDropdown';
-import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand } from '@tabler/icons-react';
+import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand, IconLogout } from '@tabler/icons-react';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -164,7 +164,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                       onLogout?.();
                     }}
                  >
-                    <LogOut className="h-4 w-4 mr-2" />
+                    <IconLogout className="h-4 w-4 mr-2" />
                     Logout
                  </button>
                </div>

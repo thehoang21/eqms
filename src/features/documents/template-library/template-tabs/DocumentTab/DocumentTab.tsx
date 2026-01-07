@@ -363,7 +363,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 </div>
             </div>
                         {/* Right Column: File Preview */}
-                        <div className="h-full min-h-[600px]">
+                        <div className="h-full min-h-[600px] border rounded-xl">
                                 {(() => {
                                     const selected = uploadedFiles.find(f => f.file === selectedFile);
                                     if (!selected || selected.status !== 'success') {
