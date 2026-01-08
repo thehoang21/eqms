@@ -94,10 +94,10 @@ export const UIShowcase: React.FC = () => {
 
   // Mock Data for Table
   const allTableData = [
-    { id: 1, code: 'SOP-001', title: 'Document Control Procedure', version: '1.0', status: 'effective', author: 'John Doe', date: '2023-12-01' },
-    { id: 2, code: 'WI-005', title: 'Equipment Calibration', version: '2.1', status: 'pendingReview', author: 'Jane Smith', date: '2023-12-05' },
-    { id: 3, code: 'FORM-012', title: 'Change Request Form', version: '1.0', status: 'draft', author: 'Mike Johnson', date: '2023-12-10' },
-    { id: 4, code: 'POL-003', title: 'Quality Policy', version: '3.0', status: 'approved', author: 'Sarah Wilson', date: '2023-11-20' },
+    { id: 1, code: 'SOP.0001.01', title: 'Document Control Procedure', version: '1.0', status: 'effective', author: 'John Doe', date: '2023-12-01' },
+    { id: 2, code: 'POL.0001.02', title: 'Environmental Policy', version: '2.0', status: 'pendingReview', author: 'Jane Smith', date: '2023-12-05' },
+    { id: 3, code: 'FORM.0012.01', title: 'Change Request Form', version: '1.0', status: 'draft', author: 'Mike Johnson', date: '2023-12-10' },
+    { id: 4, code: 'POL.0003.03', title: 'Quality Policy', version: '3.0', status: 'approved', author: 'Sarah Wilson', date: '2023-11-20' },
     { id: 5, code: 'SOP-002', title: 'Internal Audit Procedure', version: '1.2', status: 'obsolete', author: 'David Brown', date: '2023-10-15' },
     { id: 6, code: 'SOP-003', title: 'Deviation Management', version: '2.0', status: 'effective', author: 'Emily Chen', date: '2023-12-15' },
     { id: 7, code: 'WI-010', title: 'Sample Testing Protocol', version: '1.5', status: 'approved', author: 'Tom Anderson', date: '2023-12-08' },

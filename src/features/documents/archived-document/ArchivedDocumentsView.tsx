@@ -29,7 +29,7 @@ import {
 const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
     {
         id: '1',
-        code: 'QMS-SOP-001',
+        code: 'QMS.0001.01',
         documentName: 'Quality Management System Procedure v1.0',
         version: '1.0',
         effectiveDate: '2023-01-15',
@@ -41,12 +41,12 @@ const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
         department: 'Quality Assurance',
         category: 'SOP',
         reason: 'Replaced by v2.0',
-        replacedBy: 'QMS-SOP-001-v2',
+        replacedBy: 'QMS.0001.02',
         fileSize: '2.5 MB'
     },
     {
         id: '2',
-        code: 'MFG-WI-045',
+        code: 'MFG.0045.01',
         documentName: 'Manufacturing Process Work Instruction',
         version: '3.2',
         effectiveDate: '2022-08-10',

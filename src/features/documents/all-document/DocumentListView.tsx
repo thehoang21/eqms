@@ -67,7 +67,7 @@ interface Document {
 const MOCK_DOCUMENTS: Document[] = [
   {
     id: "1",
-    documentId: "SOP-QA-001",
+    documentId: "SOP.0001.03",
     title: "Standard Operating Procedure for Quality Control Testing",
     type: "SOP",
     version: "3.0",
@@ -83,7 +83,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "2",
-    documentId: "POL-QMS-005",
+    documentId: "POL.0005.02",
     title: "Quality Management System Policy",
     type: "Policy",
     version: "2.1",
@@ -99,7 +99,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "3",
-    documentId: "SOP-PR-012",
+    documentId: "SOP.0012.04",
     title: "Batch Production Record Procedure",
     type: "SOP",
     version: "4.2",
@@ -115,7 +115,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "4",
-    documentId: "FORM-DEV-001",
+    documentId: "FORM.0001.01",
     title: "Deviation Report Form",
     type: "Form",
     version: "1.5",
@@ -130,7 +130,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "5",
-    documentId: "SPEC-RAW-045",
+    documentId: "SPEC.0045.02",
     title: "Raw Material Specification - API Grade A",
     type: "Specification",
     version: "2.0",
@@ -145,7 +145,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "6",
-    documentId: "PROT-VAL-008",
+    documentId: "PROT.0008.03",
     title: "Cleaning Validation Protocol",
     type: "Protocol",
     version: "3.1",
@@ -160,7 +160,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "7",
-    documentId: "REP-AUD-2023-Q2",
+    documentId: "REP.0001.01",
     title: "Internal Audit Report Q2 2023",
     type: "Report",
     version: "1.0",
@@ -175,7 +175,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "8",
-    documentId: "SOP-EQ-023",
+    documentId: "SOP.0023.05",
     title: "Equipment Calibration Procedure",
     type: "SOP",
     version: "5.0",
@@ -190,7 +190,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "9",
-    documentId: "SOP-TR-007",
+    documentId: "SOP.0007.02",
     title: "Training Management Standard Operating Procedure",
     type: "SOP",
     version: "2.3",
@@ -204,7 +204,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "10",
-    documentId: "POL-DI-002",
+    documentId: "POL.0002.01",
     title: "Data Integrity Policy",
     type: "Policy",
     version: "1.0",
@@ -218,7 +218,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "11",
-    documentId: "SOP-GMP-015",
+    documentId: "SOP.0015.04",
     title: "Good Manufacturing Practice Guidelines",
     type: "SOP",
     version: "4.2",

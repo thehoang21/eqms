@@ -37,7 +37,7 @@ interface SourceDocument {
 
 // --- Mock Data ---
 const MOCK_SOURCE_DOCUMENT: SourceDocument = {
-    code: "SOP-QA-001",
+    code: "SOP.0001.01",
     name: "Standard Operating Procedure for Quality Control Testing",
     version: "v1.0",
     type: "SOP",
@@ -48,7 +48,7 @@ const MOCK_SOURCE_DOCUMENT: SourceDocument = {
 const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
     {
         id: "1",
-        code: "FORM-QA-001-A",
+        code: "FORM.0001.01",
         name: "Quality Control Test Record Form",
         type: "Form",
         currentVersion: "v1.0",
@@ -57,7 +57,7 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
     },
     {
         id: "2",
-        code: "ANNEX-QA-001-B",
+        code: "ANNEX.0001.01",
         name: "Calibration Certificate Template",
         type: "Annex",
         currentVersion: "v1.2",
@@ -66,7 +66,7 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
     },
     {
         id: "3",
-        code: "FORM-QA-001-C",
+        code: "FORM.0002.01",
         name: "Non-Conformance Report",
         type: "Form",
         currentVersion: "v1.5",
