@@ -97,6 +97,19 @@ export const NewRevisionView: React.FC = () => {
     const location = useLocation();
     const state = location.state as any;
     
+    // Get sourceDocId from URL query params
+    const searchParams = new URLSearchParams(location.search);
+    const sourceDocId = searchParams.get('sourceDocId');
+    
+    // TODO: Fetch source document data based on sourceDocId
+    // For now, using MOCK_SOURCE_DOCUMENT
+    useEffect(() => {
+        if (sourceDocId) {
+            console.log('Creating revision for document:', sourceDocId);
+            // TODO: Fetch document details and linked documents from API
+        }
+    }, [sourceDocId]);
+    
     // State for impact decisions
     const [impactDecisions, setImpactDecisions] = useState<{ [key: string]: boolean }>(
         MOCK_LINKED_DOCUMENTS.reduce((acc, doc) => {
@@ -127,7 +140,7 @@ export const NewRevisionView: React.FC = () => {
 
     const handleConfirmCancel = () => {
         setShowCancelModal(false);
-        navigate("/documents/revisions/all");
+        navigate("/documents/all");
     };
 
     const handleToggleDecision = (docId: string) => {
@@ -539,7 +552,7 @@ export const NewRevisionView: React.FC = () => {
                                 <p><span className="font-semibold">Draft Reason:</span> {reasonForChange.length} characters written</p>
                             )}
                         </div>
-                        <p className="text-xs text-slate-500">You will be redirected back to the All Revisions screen.</p>
+                        <p className="text-xs text-slate-500">You will be redirected back to the All Documents screen.</p>
                     </div>
                 }
                 confirmText="Yes, Cancel"

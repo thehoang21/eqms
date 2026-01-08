@@ -5,12 +5,10 @@ import {
   ChevronRight,
   MoreVertical,
   Eye,
-  Download,
   History,
   GripVertical,
   ChevronDown,
   Plus,
-  FileText,
   Home,
   ThumbsUp,
 } from "lucide-react";
@@ -19,6 +17,7 @@ import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge
 import { DocumentFilters } from "../../DocumentFilters";
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
+import { IconFileCheck, IconFileTime, IconInfoCircle } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -378,13 +377,10 @@ export const RevisionListView: React.FC = () => {
       case "review":
         navigate(`/documents/revisions/review/${id}`);
         break;
-      case "download":
-        // TODO: Implement download functionality
-        console.log(`Download revision: ${id}`);
-        break;
-      case "history":
-        // TODO: Implement version history functionality
-        console.log(`View history for revision: ${id}`);
+      case "audit":
+        // TODO: Navigate to audit trail view
+        console.log(`View audit trail for revision: ${id}`);
+        navigate(`/documents/${id}?tab=audit`);
         break;
       default:
         console.log(`Unknown action: ${action}`);
@@ -429,36 +425,26 @@ export const RevisionListView: React.FC = () => {
     <div className="space-y-4 md:space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              All Revisions
-            </h1>
-            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
-              <button className="hover:text-slate-700 transition-colors hidden sm:inline">Dashboard</button>
-              <Home className="h-4 w-4 sm:hidden" />
-              <ChevronRight className="h-4 w-4" />
-              <button className="hover:text-slate-700 transition-colors hidden sm:inline">
-                Document Control
-              </button>
-              <span className="sm:hidden">...</span>
-              <ChevronRight className="h-4 w-4" />
-              <button className="hover:text-slate-700 transition-colors hidden sm:inline">
-                Document Revisions
-              </button>
-              <span className="sm:hidden">...</span>
-              <ChevronRight className="h-4 w-4" />
-              <span className="text-slate-700 font-medium">All Revisions</span>
-            </div>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+            All Revisions
+          </h1>
+          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+            <button className="hover:text-slate-700 transition-colors hidden sm:inline">Dashboard</button>
+            <Home className="h-4 w-4 sm:hidden" />
+            <ChevronRight className="h-4 w-4" />
+            <button className="hover:text-slate-700 transition-colors hidden sm:inline">
+              Document Control
+            </button>
+            <span className="sm:hidden">...</span>
+            <ChevronRight className="h-4 w-4" />
+            <button className="hover:text-slate-700 transition-colors hidden sm:inline">
+              Document Revisions
+            </button>
+            <span className="sm:hidden">...</span>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-slate-700 font-medium">All Revisions</span>
           </div>
-          <Button
-            onClick={() => navigate("/documents/revisions/new")}
-            size="sm"
-            className="flex items-center gap-2 shadow-sm"
-          >
-            <FileText className="h-4 w-4" />
-            New Revision
-          </Button>
         </div>
       </div>
 
@@ -643,9 +629,9 @@ export const RevisionListView: React.FC = () => {
                     e.stopPropagation();
                     handleMenuAction("view", openDropdownId);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                 >
-                  <Eye className="h-4 w-4 text-slate-500" />
+                  <IconInfoCircle className="h-4 w-4 text-slate-500" />
                   <span>View Details</span>
                 </button>
                 <button
@@ -653,30 +639,20 @@ export const RevisionListView: React.FC = () => {
                     e.stopPropagation();
                     handleMenuAction("review", openDropdownId);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                 >
-                  <ThumbsUp className="h-4 w-4 text-slate-500" />
+                  <IconFileCheck className="h-4 w-4 text-slate-500" />
                   <span>Review Revision</span>
                 </button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleMenuAction("download", openDropdownId);
+                    handleMenuAction("audit", openDropdownId);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                  <Download className="h-4 w-4 text-slate-500" />
-                  <span>Download</span>
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleMenuAction("history", openDropdownId);
-                  }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                 >
                   <History className="h-4 w-4 text-slate-500" />
-                  <span>Version History</span>
+                  <span>View Audit Trail</span>
                 </button>
               </div>
             </div>

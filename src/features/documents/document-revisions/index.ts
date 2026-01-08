@@ -4,7 +4,7 @@ export { NewRevisionView } from "./components/NewRevisionView";
 export { RevisionWorkspaceView } from "./components/RevisionWorkspaceView";
 export { PendingMyReviewView } from "./views/PendingMyReviewView";
 export { PendingMyApprovalView } from "./views/PendingMyApprovalView";
-export { RevisionReviewView, RevisionReviewViewWithBatch } from "./review-revision";
+export { RevisionReviewView } from "./review-revision";
 
 // Export revision tabs
 export * from './revision-tabs';

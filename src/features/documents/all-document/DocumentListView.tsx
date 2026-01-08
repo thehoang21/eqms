@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavigateFunction } from "react-router-dom";
 import {
   Search,
   FileText,
@@ -8,7 +8,6 @@ import {
   ChevronRight,
   MoreVertical,
   Eye,
-  Download,
   History,
   Plus,
   GripVertical,
@@ -22,6 +21,8 @@ import {
   ClipboardList,
   Info,
   Home,
+  FilePlus2,
+  Loader2,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
@@ -324,6 +325,7 @@ interface DropdownMenuProps {
   onClose: () => void;
   position: { top: number; left: number };
   onViewDocument?: (documentId: string, tab?: string) => void;
+  navigate: NavigateFunction;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -332,7 +334,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onClose,
   position,
   onViewDocument,
+  navigate,
 }) => {
+  const [isNavigating, setIsNavigating] = useState(false);
+
   if (!isOpen) return null;
 
   // Dynamic menu items based on document status
@@ -347,7 +352,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         onViewDocument?.(document.id);
         onClose();
       },
-      color: "text-slate-700"
+      color: "text-slate-500"
     });
 
     // Status-specific actions
@@ -361,16 +366,16 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               console.log("Edit document:", document.id);
               onClose();
             },
-            color: "text-slate-700"
+            color: "text-slate-500"
           },
           {
             icon: Send,
-            label: "Submit",
+            label: "Submit for Review",
             onClick: () => {
               console.log("Submit for review:", document.id);
               onClose();
             },
-            color: "text-blue-700"
+            color: "text-slate-500"
           }
         );
         break;
@@ -384,16 +389,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               onViewDocument?.(document.id);
               onClose();
             },
-            color: "text-purple-700"
-          },
-          {
-            icon: XCircle,
-            label: "Reject",
-            onClick: () => {
-              console.log("Reject document:", document.id);
-              onClose();
-            },
-            color: "text-red-700"
+            color: "text-slate-500"
           }
         );
         break;
@@ -407,31 +403,41 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               onViewDocument?.(document.id);
               onClose();
             },
-            color: "text-emerald-700"
-          },
-          {
-            icon: XCircle,
-            label: "Reject",
-            onClick: () => {
-              console.log("Reject document:", document.id);
-              onClose();
-            },
-            color: "text-red-700"
+            color: "text-slate-500"
           }
         );
         break;
 
       case "Approved":
+        items.push(
+          {
+            icon: Edit,
+            label: "Request Change",
+            onClick: () => {
+              console.log("Request change:", document.id);
+              onClose();
+            },
+            color: "text-slate-500"
+          }
+        );
+        break;
+
       case "Effective":
         items.push(
           {
-            icon: Download,
-            label: "Download PDF",
+            icon: FilePlus2,
+            label: "New Revision",
             onClick: () => {
-              console.log("Download document:", document.id);
-              onClose();
+              setIsNavigating(true);
+              // Add slight delay for loading animation
+              setTimeout(() => {
+                navigate(`/documents/revisions/new?sourceDocId=${document.id}`);
+                onClose();
+                setIsNavigating(false);
+              }, 400);
             },
-            color: "text-slate-700"
+            color: "text-slate-500",
+            isLoading: isNavigating,
           },
           {
             icon: Edit,
@@ -440,23 +446,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               console.log("Request change:", document.id);
               onClose();
             },
-            color: "text-amber-700"
+            color: "text-slate-500"
           }
         );
         break;
 
       case "Archive":
-        items.push(
-          {
-            icon: Download,
-            label: "Download PDF",
-            onClick: () => {
-              console.log("Download document:", document.id);
-              onClose();
-            },
-            color: "text-slate-700"
-          }
-        );
+        // No specific actions for archived documents
         break;
     }
 
@@ -469,7 +465,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           onViewDocument?.(document.id, "audit");
           onClose();
         },
-        color: "text-slate-700"
+        color: "text-slate-500"
       }
     );
 
@@ -500,20 +496,30 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         <div className="py-1">
           {menuItems.map((item, index) => {
             const Icon = item.icon;
+            const isLoadingItem = 'isLoading' in item && item.isLoading;
             return (
               <button
                 key={index}
                 onClick={(e) => {
                   e.stopPropagation();
-                  item.onClick();
+                  if (!isNavigating) {
+                    item.onClick();
+                  }
                 }}
+                disabled={isNavigating}
                 className={cn(
                   "flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors",
                   item.color,
-                  "hover:bg-slate-50 active:bg-slate-100"
+                  isNavigating
+                    ? "opacity-60 cursor-not-allowed"
+                    : "hover:bg-slate-50 active:bg-slate-100"
                 )}
               >
-                <Icon className="h-4 w-4 flex-shrink-0" />
+                {isLoadingItem ? (
+                  <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin" />
+                ) : (
+                  <Icon className="h-4 w-4 flex-shrink-0" />
+                )}
                 <span className="font-medium">{item.label}</span>
               </button>
             );
@@ -1115,6 +1121,7 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
                               onClose={() => setOpenDropdownId(null)}
                               position={dropdownPosition}
                               onViewDocument={handleViewDocument}
+                              navigate={navigate}
                             />
                           </td>
                         );

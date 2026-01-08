@@ -11,6 +11,47 @@ import {
   getStatusBadgeStyle,
   getPriorityColor,
 } from "../utils";
+import { IconCircleCheckFilled } from "@tabler/icons-react";
+
+// Add diagonal stripes pattern for completed tasks
+const diagonalStripesStyle = `
+  .completed-row {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(148, 163, 184, 0.08) 10px,
+      rgba(148, 163, 184, 0.08) 20px
+    );
+  }
+  .completed-row:hover {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(248, 250, 252, 0.9),
+      rgba(248, 250, 252, 0.9) 10px,
+      rgba(148, 163, 184, 0.12) 10px,
+      rgba(148, 163, 184, 0.12) 20px
+    );
+  }
+  .completed-row-cell {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(148, 163, 184, 0.08) 10px,
+      rgba(148, 163, 184, 0.08) 20px
+    );
+  }
+  .completed-row:hover .completed-row-cell {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(248, 250, 252, 0.9),
+      rgba(248, 250, 252, 0.9) 10px,
+      rgba(148, 163, 184, 0.12) 10px,
+      rgba(148, 163, 184, 0.12) 20px
+    );
+  }
+`;
 
 export const TaskTable: React.FC<{
   tasks: Task[];
@@ -130,7 +171,7 @@ export const TaskTable: React.FC<{
       case 'taskId':
         return (
           <td key={column.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
-            <button className="text-primary font-bold hover:underline text-sm">
+            <button className="text-primary font-medium hover:underline text-sm">
               {task.taskId}
             </button>
           </td>
@@ -142,8 +183,8 @@ export const TaskTable: React.FC<{
             <span
               title={task.description || task.title}
               className={cn(
-                "font-normal text-sm md:text-base text-slate-900",
-                task.status === "Completed" && "line-through text-slate-500"
+                "font-normal text-sm text-slate-900",
+                task.status === "Completed" && "text-slate-500"
               )}
             >
               {task.title}
@@ -276,7 +317,13 @@ export const TaskTable: React.FC<{
       
       case 'action':
         return (
-          <td key={column.id} className="sticky right-0 bg-white z-20 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] py-3.5 px-4 text-sm whitespace-nowrap text-center w-[140px]">
+          <td 
+            key={column.id} 
+            className={cn(
+              "sticky right-0 bg-white z-20 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] py-3.5 px-4 text-sm whitespace-nowrap text-center w-[140px]",
+              task.status === "Completed" && "completed-row-cell"
+            )}
+          >
             {task.status !== "Completed" ? (
               <Button
                 size="xs"
@@ -299,6 +346,7 @@ export const TaskTable: React.FC<{
 
   return (
     <>
+      <style dangerouslySetInnerHTML={{ __html: diagonalStripesStyle }} />
       <div className="overflow-x-auto flex-1">
         <table className="w-full min-w-[1800px] md:min-w-[2000px] xl:min-w-[2200px]">
           <thead className="bg-slate-50/80 border-b border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
@@ -311,7 +359,10 @@ export const TaskTable: React.FC<{
               <tr
                 key={task.id}
                 onClick={() => onTaskClick(task)}
-                className="hover:bg-slate-50/80 transition-colors group relative cursor-pointer"
+                className={cn(
+                  "hover:bg-slate-50/80 transition-colors group relative cursor-pointer",
+                  task.status === "Completed" && "completed-row"
+                )}
               >
                 {visibleColumns.map(column => renderCell(column, task, idx))}
               </tr>

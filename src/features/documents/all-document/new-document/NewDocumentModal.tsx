@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { FileText, Files, X } from "lucide-react";
+import { FileText, Files, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 
@@ -17,6 +17,33 @@ export const NewDocumentModal: React.FC<NewDocumentModalProps> = ({
     onSelectSingle,
     onSelectBatch,
 }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingType, setLoadingType] = useState<"single" | "batch" | null>(null);
+
+    const handleSelectSingle = () => {
+        setIsLoading(true);
+        setLoadingType("single");
+        // Simulate loading delay for better UX
+        setTimeout(() => {
+            onSelectSingle();
+            onClose();
+            setIsLoading(false);
+            setLoadingType(null);
+        }, 500);
+    };
+
+    const handleSelectBatch = () => {
+        setIsLoading(true);
+        setLoadingType("batch");
+        // Simulate loading delay for better UX
+        setTimeout(() => {
+            onSelectBatch();
+            onClose();
+            setIsLoading(false);
+            setLoadingType(null);
+        }, 500);
+    };
+
     if (!isOpen) return null;
 
     return createPortal(
@@ -54,20 +81,24 @@ export const NewDocumentModal: React.FC<NewDocumentModalProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                             {/* Single Document Option */}
                             <button
-                                onClick={() => {
-                                    onSelectSingle();
-                                    onClose();
-                                }}
+                                onClick={handleSelectSingle}
+                                disabled={isLoading}
                                 className={cn(
                                     "group relative p-4 md:p-6 rounded-lg md:rounded-xl border-2 transition-all duration-200",
-                                    "border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50",
                                     "text-left focus:outline-none focus:ring-2 focus:ring-emerald-500",
-                                    "touch-manipulation active:scale-98"
+                                    "touch-manipulation active:scale-98",
+                                    isLoading
+                                        ? "border-slate-200 bg-slate-50 cursor-not-allowed opacity-60"
+                                        : "border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50"
                                 )}
                             >
                                 <div className="flex flex-col items-start gap-3 md:gap-4">
                                     <div className="w-12 h-12 md:w-16 md:h-16 rounded-lg md:rounded-xl bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
-                                        <FileText className="h-6 w-6 md:h-8 md:w-8 text-emerald-600" />
+                                        {isLoading && loadingType === "single" ? (
+                                            <Loader2 className="h-6 w-6 md:h-8 md:w-8 text-emerald-600 animate-spin" />
+                                        ) : (
+                                            <FileText className="h-6 w-6 md:h-8 md:w-8 text-emerald-600" />
+                                        )}
                                     </div>
                                     <div>
                                         <h3 className="text-base md:text-lg font-bold text-slate-900 mb-1 md:mb-2">
@@ -85,20 +116,24 @@ export const NewDocumentModal: React.FC<NewDocumentModalProps> = ({
 
                             {/* Batch Documents Option */}
                             <button
-                                onClick={() => {
-                                    onSelectBatch();
-                                    onClose();
-                                }}
+                                onClick={handleSelectBatch}
+                                disabled={isLoading}
                                 className={cn(
                                     "group relative p-4 md:p-6 rounded-lg md:rounded-xl border-2 transition-all duration-200",
-                                    "border-slate-200 hover:border-blue-500 hover:bg-blue-50/50",
                                     "text-left focus:outline-none focus:ring-2 focus:ring-blue-500",
-                                    "touch-manipulation active:scale-98"
+                                    "touch-manipulation active:scale-98",
+                                    isLoading
+                                        ? "border-slate-200 bg-slate-50 cursor-not-allowed opacity-60"
+                                        : "border-slate-200 hover:border-blue-500 hover:bg-blue-50/50"
                                 )}
                             >
                                 <div className="flex flex-col items-start gap-3 md:gap-4">
                                     <div className="w-12 h-12 md:w-16 md:h-16 rounded-lg md:rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                                        <Files className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
+                                        {isLoading && loadingType === "batch" ? (
+                                            <Loader2 className="h-6 w-6 md:h-8 md:w-8 text-blue-600 animate-spin" />
+                                        ) : (
+                                            <Files className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
+                                        )}
                                     </div>
                                     <div>
                                         <h3 className="text-base md:text-lg font-bold text-slate-900 mb-1 md:mb-2">
@@ -130,6 +165,7 @@ export const NewDocumentModal: React.FC<NewDocumentModalProps> = ({
                             variant="outline"
                             size="sm"
                             onClick={onClose}
+                            disabled={isLoading}
                             className="touch-manipulation"
                         >
                             Cancel

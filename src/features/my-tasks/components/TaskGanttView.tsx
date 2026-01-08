@@ -170,17 +170,24 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
     });
   };
 
-  // Calculate today's position
+  // Calculate today's position with time
   const getTodayPosition = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const daysSinceStart = Math.max(0, Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+    const now = new Date();
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+    
+    // Calculate days since start (to the start of today)
+    const daysSinceStart = Math.max(0, Math.ceil((todayStart.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+    
+    // Calculate the fraction of the current day that has passed
+    const hoursPassedToday = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+    const dayFraction = hoursPassedToday / 24; // 0 to 1
     
     if (timelineView === "month") {
-      const position = (daysSinceStart / totalDays) * 100;
+      const position = ((daysSinceStart + dayFraction) / totalDays) * 100;
       return position >= 0 && position <= 100 ? `${position}%` : null;
     } else {
-      const position = daysSinceStart * dayWidth;
+      const position = (daysSinceStart + dayFraction) * dayWidth;
       return position >= 0 && position <= (totalDays * dayWidth) ? `${position}px` : null;
     }
   };
