@@ -108,21 +108,21 @@ const formatDate = (dateString: string) => {
 const MOCK_BATCH_REVISIONS: BatchDocument[] = [
     {
         id: "1",
-        documentId: "SOP-QA-001",
+        documentId: "SOP.0001.02",
         title: "Standard Operating Procedure for Quality Control Testing (Rev 2.0)",
         status: "Pending Review",
         isCompleted: false,
     },
     {
         id: "2",
-        documentId: "SOP-QA-002",
+        documentId: "SOP.0002.02",
         title: "Quality Assurance Documentation Standards (Rev 1.5)",
         status: "Pending Review",
         isCompleted: false,
     },
     {
         id: "3",
-        documentId: "SOP-QA-003",
+        documentId: "SOP.0003.03",
         title: "Environmental Monitoring Procedures (Rev 3.1)",
         status: "Pending Review",
         isCompleted: false,
@@ -131,7 +131,7 @@ const MOCK_BATCH_REVISIONS: BatchDocument[] = [
 
 const MOCK_REVISION: DocumentDetail = {
     id: "1",
-    documentId: "SOP-QA-001",
+    documentId: "SOP.0001.02",
     title: "Standard Operating Procedure for Quality Control Testing",
     type: "SOP",
     version: "2.0",

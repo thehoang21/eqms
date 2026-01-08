@@ -6,6 +6,7 @@ import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { Select } from "@/components/ui/select/Select";
 import { IconCloudUpload, IconTrash } from "@tabler/icons-react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { DocumentType } from "@/types/documentTypes";
 import pdfIcon from '@/assets/images/image-file/pdf.png';
 import docIcon from '@/assets/images/image-file/doc.png';
 import docxIcon from '@/assets/images/image-file/docx.png';
@@ -48,7 +49,7 @@ interface BatchDocument {
     isUploading?: boolean;
     formData: {
         title: string;
-        type: "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
+        type: DocumentType;
         author: string;
         businessUnit: string;
         department: string;
@@ -154,7 +155,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
             isUploading: true,
             formData: {
                 title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
-                type: "SOP",
+                type: "Standard Operating Procedure" as DocumentType,
                 author: "",
                 businessUnit: "",
                 department: "",

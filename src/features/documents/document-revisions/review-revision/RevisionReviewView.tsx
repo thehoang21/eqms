@@ -120,7 +120,7 @@ const formatDate = (dateString: string) => {
 // --- Mock Data ---
 const MOCK_REVISION: DocumentDetail = {
   id: "1",
-  documentId: "SOP-QA-001",
+  documentId: "SOP.0001.02",
   title: "Standard Operating Procedure for Quality Control Testing",
   type: "SOP",
   version: "2.0",

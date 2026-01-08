@@ -27,9 +27,9 @@ import {
     AuditTab,
     type UploadedFile,
 } from "@/features/documents/all-document/new-document/new-tabs";
+import { DocumentType } from "@/types/documentTypes";
 
 // --- Types ---
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 type TabType = "general" | "training" | "document" | "signatures" | "audit" | "workflow";
 
@@ -50,7 +50,7 @@ export const SingleDocumentView: React.FC = () => {
     // Form state
     const [formData, setFormData] = useState({
         title: "",
-        type: "SOP" as DocumentType,
+        type: "Standard Operating Procedure" as DocumentType,
         author: "",
         businessUnit: "",
         department: "",

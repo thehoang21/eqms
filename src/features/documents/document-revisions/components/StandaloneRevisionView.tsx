@@ -41,7 +41,7 @@ const fetchSourceDocument = async (id: string): Promise<SourceDocument> => {
     // Mock data - replace with actual API call
     return {
         id,
-        documentId: `SOP-QA-${id.padStart(3, "0")}`,
+        documentId: `SOP.${id.padStart(4, "0")}.01`,
         title: "Standard Operating Procedure for Quality Control Testing",
         type: "SOP",
         version: "1.0",

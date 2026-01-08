@@ -59,7 +59,7 @@ const mapStatusToType = (status: string): StatusType => {
 // --- Mock Data (Owned by current user) ---
 const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => ({
   id: `my-${i + 1}`,
-  documentNumber: `MY-DOC-${String(i + 1).padStart(4, "0")}`,
+  documentNumber: `SOP.${String(i + 1).padStart(4, "0")}.0${(i % 2) + 1}`,
   revisionNumber: `Rev ${Math.floor(i / 2) + 1}.${i % 2}`,
   created: new Date(Date.now() - Math.random() * 10000000000).toISOString().split("T")[0],
   revisionName: `My Revision ${i + 1}`,
@@ -359,7 +359,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
       case "no":
         return startIndex + index + 1;
       case "documentNumber":
-        return revision.documentNumber;
+        return <span className="font-medium text-emerald-600">{revision.documentNumber}</span>;
       case "revisionNumber":
         return revision.revisionNumber;
       case "created":

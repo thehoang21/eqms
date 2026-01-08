@@ -75,7 +75,7 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
     },
     {
         id: "4",
-        code: "ANNEX-QA-001-D",
+        code: "ANNEX.0002.01",
         name: "Equipment Maintenance Log",
         type: "Annex",
         currentVersion: "v1.0",
@@ -84,7 +84,7 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
     },
     {
         id: "5",
-        code: "REF-QA-001-E",
+        code: "REF.0001.01",
         name: "Reference Standards Documentation",
         type: "Reference",
         currentVersion: "v1.1",
@@ -446,7 +446,7 @@ export const NewRevisionView: React.FC = () => {
                         setReasonForChange(e.target.value);
                         setShowError(false);
                     }}
-                    placeholder="e.g., Updated testing procedures to comply with new regulatory requirements. Forms FORM-QA-001-A and FORM-QA-001-C require updates to reflect new data fields..."
+                    placeholder="e.g., Updated testing procedures to comply with new regulatory requirements. Forms FORM.0001.01 and FORM.0002.01 require updates to reflect new data fields..."
                     className={cn(
                         "w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
                         showError && (reasonForChange.length < 50)

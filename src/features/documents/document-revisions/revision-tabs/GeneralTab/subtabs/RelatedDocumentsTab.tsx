@@ -18,10 +18,10 @@ export const RelatedDocumentsTab: React.FC = () => {
     const [relationship, setRelationship] = useState("References");
 
     const availableDocuments = [
-        { label: "SOP-QA-001 - Quality Control Testing", value: "SOP-QA-001|Quality Control Testing|SOP" },
-        { label: "POL-QMS-005 - Quality Management System Policy", value: "POL-QMS-005|Quality Management System Policy|Policy" },
-        { label: "SOP-PR-012 - Batch Production Record", value: "SOP-PR-012|Batch Production Record|SOP" },
-        { label: "SPEC-RAW-003 - Raw Material Specification", value: "SPEC-RAW-003|Raw Material Specification|Specification" }
+        { label: "SOP.0001.01 - Quality Control Testing", value: "SOP.0001.01|Quality Control Testing|SOP" },
+        { label: "POL.0005.02 - Quality Management System Policy", value: "POL.0005.02|Quality Management System Policy|Policy" },
+        { label: "SOP.0012.04 - Batch Production Record", value: "SOP.0012.04|Batch Production Record|SOP" },
+        { label: "SPEC.0045.02 - Raw Material Specification", value: "SPEC.0045.02|Raw Material Specification|Specification" }
     ];
 
     const relationshipTypes = [

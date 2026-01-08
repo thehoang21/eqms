@@ -29,15 +29,9 @@ import {
 import { BatchDocumentUpload } from "./components/BatchDocumentUpload";
 import { DocumentTreeView } from "./components/DocumentTreeView";
 import { IconStar } from "@tabler/icons-react";
+import { DocumentType } from "@/types/documentTypes";
 
 // --- Types ---
-type DocumentType =
-  | "SOP"
-  | "Policy"
-  | "Form"
-  | "Report"
-  | "Specification"
-  | "Protocol";
 type DocumentStatus =
   | "Draft"
   | "Pending Review"

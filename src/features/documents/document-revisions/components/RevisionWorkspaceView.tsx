@@ -31,15 +31,9 @@ import {
     WorkflowTab,
 } from "../revision-tabs";
 import { MultiDocumentUpload } from "./MultiDocumentUpload";
+import { DocumentType } from "@/types/documentTypes";
 
 // --- Types ---
-type DocumentType =
-    | "SOP"
-    | "Policy"
-    | "Form"
-    | "Report"
-    | "Specification"
-    | "Protocol";
 type DocumentStatus =
     | "Draft"
     | "Pending Review"

@@ -1,6 +1,7 @@
 import React from "react";
 import { FileText, Star, ChevronRight, CheckCircle2, Circle } from "lucide-react";
 import { cn } from "@/components/ui/utils";
+import { DocumentType } from "@/types/documentTypes";
 
 type ChildDocumentType = "Form" | "Annex" | "Attachment";
 
@@ -11,7 +12,7 @@ interface BatchDocument {
     childType?: ChildDocumentType;
     formData: {
         title: string;
-        type: "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
+        type: DocumentType;
         author: string;
         businessUnit: string;
         department: string;

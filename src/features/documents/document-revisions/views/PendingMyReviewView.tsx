@@ -53,7 +53,7 @@ interface Document {
 const MOCK_DOCUMENTS: Document[] = [
   {
     id: "1",
-    documentId: "SOP-QA-002",
+    documentId: "SOP.0002.01",
     title: "Batch Record Review Procedure",
     type: "SOP",
     version: "1.0",
@@ -68,7 +68,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "2",
-    documentId: "POL-IT-001",
+    documentId: "POL.0001.01",
     title: "Information Security Policy",
     type: "Policy",
     version: "2.0",
@@ -83,7 +83,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "3",
-    documentId: "FORM-QC-005",
+    documentId: "FORM.0005.01",
     title: "Lab Equipment Calibration Log",
     type: "Form",
     version: "1.2",

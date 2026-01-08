@@ -48,7 +48,7 @@ interface Document {
 const MOCK_DOCUMENTS: Document[] = [
   {
     id: "1",
-    documentId: "SOP-PROD-003",
+    documentId: "SOP.0003.01",
     title: "Production Line Setup",
     type: "SOP",
     version: "3.0",
@@ -63,7 +63,7 @@ const MOCK_DOCUMENTS: Document[] = [
   },
   {
     id: "2",
-    documentId: "RPT-VAL-002",
+    documentId: "REP.0002.01",
     title: "Validation Report for Autoclave",
     type: "Report",
     version: "1.0",

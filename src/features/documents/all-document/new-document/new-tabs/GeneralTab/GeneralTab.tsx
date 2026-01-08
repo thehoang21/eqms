@@ -12,8 +12,7 @@ import {
     RelatedDocumentsTab
 } from "./subtabs";
 import type { Revision } from './subtabs/types';
-
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
+import { DocumentType, DOCUMENT_TYPES } from "@/types/documentTypes";
 
 type SubTabId = "revisions" | "reviewers" | "approvers" | "knowledges" | "copies" | "related";
 
@@ -204,14 +203,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         <Select
                             value={formData.type}
                             onChange={(value) => setFormData({ type: value as DocumentType })}
-                            options={[
-                                { label: "SOP", value: "SOP" },
-                                { label: "Policy", value: "Policy" },
-                                { label: "Form", value: "Form" },
-                                { label: "Report", value: "Report" },
-                                { label: "Specification", value: "Specification" },
-                                { label: "Protocol", value: "Protocol" }
-                            ]}
+                            options={DOCUMENT_TYPES.map(type => ({ label: type, value: type }))}
                             enableSearch={true}
                         />
                     </div>
