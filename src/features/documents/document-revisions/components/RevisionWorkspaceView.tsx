@@ -15,7 +15,7 @@ import {
     CheckCircle2,
     AlertCircle,
     Home,
-    Layers
+    Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
@@ -33,9 +33,30 @@ import {
 import { MultiDocumentUpload } from "./MultiDocumentUpload";
 
 // --- Types ---
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
-type TabType = "general" | "training" | "document" | "signatures" | "audit" | "workflow";
+type DocumentType =
+    | "SOP"
+    | "Policy"
+    | "Form"
+    | "Report"
+    | "Specification"
+    | "Protocol";
+type DocumentStatus =
+    | "Draft"
+    | "Pending Review"
+    | "Pending Approval"
+    | "Approved"
+    | "Pending Training"
+    | "Ready for Publishing"
+    | "Published"
+    | "Effective"
+    | "Archive";
+type TabType =
+    | "general"
+    | "training"
+    | "document"
+    | "signatures"
+    | "audit"
+    | "workflow";
 
 interface WorkspaceDocument {
     id: string;
@@ -66,6 +87,7 @@ interface LocationState {
         code: string;
         name: string;
         version: string;
+        type?: string;
     };
     impactDecisions?: { [key: string]: boolean };
     linkedDocuments?: Array<{
@@ -77,6 +99,7 @@ interface LocationState {
         nextVersion: string;
     }>;
     reasonForChange?: string;
+    isStandalone?: boolean; // Flag để phân biệt standalone vs parent-child
 }
 
 export const RevisionWorkspaceView: React.FC = () => {
@@ -86,62 +109,42 @@ export const RevisionWorkspaceView: React.FC = () => {
 
     const [activeTab, setActiveTab] = useState<TabType>("document");
     const [currentDocIndex, setCurrentDocIndex] = useState(0);
-    const [uploadedFiles, setUploadedFiles] = useState<{ [documentId: string]: File | null }>({});
+    const [uploadedFiles, setUploadedFiles] = useState<{
+        [documentId: string]: File | null;
+    }>({});
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isESignOpen, setIsESignOpen] = useState(false);
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
-    const [validationModalMessage, setValidationModalMessage] = useState<React.ReactNode>(null);
+    const [validationModalMessage, setValidationModalMessage] =
+        useState<React.ReactNode>(null);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [showSaveModal, setShowSaveModal] = useState(false);
 
     // Initialize workspace documents from Impact Analysis decisions
-    const [workspaceDocuments, setWorkspaceDocuments] = useState<WorkspaceDocument[]>([]);
+    const [workspaceDocuments, setWorkspaceDocuments] = useState<
+        WorkspaceDocument[]
+    >([]);
 
     useEffect(() => {
         if (state?.sourceDocument) {
             const documents: WorkspaceDocument[] = [];
 
-            // Add Source Document (always included)
-            documents.push({
-                id: `source-${state.sourceDocument.code}`,
-                code: state.sourceDocument.code,
-                name: state.sourceDocument.name,
-                type: "Form", // Default type, can be adjusted
-                currentVersion: state.sourceDocument.version,
-                nextVersion: incrementVersion(state.sourceDocument.version),
-                isUpgraded: true,
-                formData: {
-                    title: state.sourceDocument.name,
-                    type: "SOP" as DocumentType,
-                    author: "",
-                    businessUnit: "",
-                    department: "",
-                    knowledgeBase: "",
-                    subType: "-- None --",
-                    periodicReviewCycle: 24,
-                    periodicReviewNotification: 14,
-                    language: "English",
-                    description: "",
-                    isTemplate: false,
-                }
-            });
-
-            // Add upgraded linked documents (if any)
-            if (state.linkedDocuments && state.impactDecisions) {
-                const upgradedDocs = state.linkedDocuments
-                    .filter(doc => state.impactDecisions![doc.id])
-                    .map(doc => ({
-                        id: doc.id,
-                        code: doc.code,
-                        name: doc.name,
-                        type: doc.type,
-                        currentVersion: doc.currentVersion,
-                        nextVersion: doc.nextVersion,
+            // Switch case để xử lý standalone vs parent-child
+            switch (state.isStandalone) {
+                case true:
+                    // CASE 1: Standalone Document (1 tài liệu duy nhất)
+                    documents.push({
+                        id: `source-${state.sourceDocument.code}`,
+                        code: state.sourceDocument.code,
+                        name: state.sourceDocument.name,
+                        type: "Form", // Default type
+                        currentVersion: state.sourceDocument.version,
+                        nextVersion: incrementVersion(state.sourceDocument.version),
                         isUpgraded: true,
                         formData: {
-                            title: doc.name,
-                            type: "SOP" as DocumentType,
+                            title: state.sourceDocument.name,
+                            type: (state.sourceDocument.type || "SOP") as DocumentType,
                             author: "",
                             businessUnit: "",
                             department: "",
@@ -152,9 +155,68 @@ export const RevisionWorkspaceView: React.FC = () => {
                             language: "English",
                             description: "",
                             isTemplate: false,
-                        }
-                    }));
-                documents.push(...upgradedDocs);
+                        },
+                    });
+                    break;
+
+                case false:
+                default:
+                    // CASE 2: Parent-Child Documents (nhiều tài liệu liên kết)
+                    // Add Source Document (always included)
+                    documents.push({
+                        id: `source-${state.sourceDocument.code}`,
+                        code: state.sourceDocument.code,
+                        name: state.sourceDocument.name,
+                        type: "Form", // Default type, can be adjusted
+                        currentVersion: state.sourceDocument.version,
+                        nextVersion: incrementVersion(state.sourceDocument.version),
+                        isUpgraded: true,
+                        formData: {
+                            title: state.sourceDocument.name,
+                            type: (state.sourceDocument.type || "SOP") as DocumentType,
+                            author: "",
+                            businessUnit: "",
+                            department: "",
+                            knowledgeBase: "",
+                            subType: "-- None --",
+                            periodicReviewCycle: 24,
+                            periodicReviewNotification: 14,
+                            language: "English",
+                            description: "",
+                            isTemplate: false,
+                        },
+                    });
+
+                    // Add upgraded linked documents (if any)
+                    if (state.linkedDocuments && state.impactDecisions) {
+                        const upgradedDocs = state.linkedDocuments
+                            .filter((doc) => state.impactDecisions![doc.id])
+                            .map((doc) => ({
+                                id: doc.id,
+                                code: doc.code,
+                                name: doc.name,
+                                type: doc.type,
+                                currentVersion: doc.currentVersion,
+                                nextVersion: doc.nextVersion,
+                                isUpgraded: true,
+                                formData: {
+                                    title: doc.name,
+                                    type: "SOP" as DocumentType,
+                                    author: "",
+                                    businessUnit: "",
+                                    department: "",
+                                    knowledgeBase: "",
+                                    subType: "-- None --",
+                                    periodicReviewCycle: 24,
+                                    periodicReviewNotification: 14,
+                                    language: "English",
+                                    description: "",
+                                    isTemplate: false,
+                                },
+                            }));
+                        documents.push(...upgradedDocs);
+                    }
+                    break;
             }
 
             setWorkspaceDocuments(documents);
@@ -163,34 +225,39 @@ export const RevisionWorkspaceView: React.FC = () => {
 
     // Helper function to increment version
     const incrementVersion = (version: string): string => {
-        const parts = version.split('.');
+        const parts = version.split(".");
         if (parts.length > 0) {
             const lastPart = parseInt(parts[parts.length - 1]);
             parts[parts.length - 1] = String(lastPart + 1);
-            return parts.join('.');
+            return parts.join(".");
         }
         return version;
     };
 
     const currentDocument = workspaceDocuments[currentDocIndex];
-    
+
     // Check if all files are uploaded
     const allFilesUploaded = useMemo(() => {
-        return workspaceDocuments.every(doc => uploadedFiles[doc.id] !== null && uploadedFiles[doc.id] !== undefined);
+        return workspaceDocuments.every(
+            (doc) =>
+                uploadedFiles[doc.id] !== null && uploadedFiles[doc.id] !== undefined
+        );
     }, [workspaceDocuments, uploadedFiles]);
 
     // Check if current document has all required fields
     const isCurrentDocumentValid = useMemo(() => {
         if (!currentDocument) return false;
         const formData = currentDocument.formData;
-        
+
         return !!(
             formData.title.trim() &&
             String(formData.type || "").trim() &&
             formData.author.trim() &&
             formData.businessUnit.trim() &&
-            Number.isFinite(formData.periodicReviewCycle) && formData.periodicReviewCycle > 0 &&
-            Number.isFinite(formData.periodicReviewNotification) && formData.periodicReviewNotification > 0
+            Number.isFinite(formData.periodicReviewCycle) &&
+            formData.periodicReviewCycle > 0 &&
+            Number.isFinite(formData.periodicReviewNotification) &&
+            formData.periodicReviewNotification > 0
         );
     }, [currentDocument]);
 
@@ -198,15 +265,21 @@ export const RevisionWorkspaceView: React.FC = () => {
         if (!currentDocument) return [];
         const missing: string[] = [];
         const formData = currentDocument.formData;
-        
+
         if (!formData.title.trim()) missing.push("Document Name");
         if (!String(formData.type || "").trim()) missing.push("Document Type");
         if (!formData.author.trim()) missing.push("Author");
         if (!formData.businessUnit.trim()) missing.push("Business Unit");
-        if (!Number.isFinite(formData.periodicReviewCycle) || formData.periodicReviewCycle <= 0) {
+        if (
+            !Number.isFinite(formData.periodicReviewCycle) ||
+            formData.periodicReviewCycle <= 0
+        ) {
             missing.push("Periodic Review Cycle (Months)");
         }
-        if (!Number.isFinite(formData.periodicReviewNotification) || formData.periodicReviewNotification <= 0) {
+        if (
+            !Number.isFinite(formData.periodicReviewNotification) ||
+            formData.periodicReviewNotification <= 0
+        ) {
             missing.push("Periodic Review Notification (Days)");
         }
         return missing;
@@ -217,7 +290,10 @@ export const RevisionWorkspaceView: React.FC = () => {
 
         setValidationModalMessage(
             <div className="space-y-2">
-                <p>Please fill in all required fields for <strong>{currentDocument?.name}</strong> before proceeding:</p>
+                <p>
+                    Please fill in all required fields for{" "}
+                    <strong>{currentDocument?.name}</strong> before proceeding:
+                </p>
                 <ul className="list-disc pl-5 space-y-1">
                     {missingRequiredFields.map((field) => (
                         <li key={field}>{field}</li>
@@ -239,23 +315,35 @@ export const RevisionWorkspaceView: React.FC = () => {
     };
 
     const handleBackToImpactAnalysis = () => {
-        // Navigate back to Impact Analysis with preserved state
-        navigate("/documents/revisions/new", {
-            state: {
-                sourceDocument: state?.sourceDocument,
-                impactDecisions: state?.impactDecisions,
-                linkedDocuments: state?.linkedDocuments,
-                reasonForChange: state?.reasonForChange
-            }
-        });
+        // Navigate back based on document type
+        if (state?.isStandalone) {
+            // Standalone: Navigate back to StandaloneRevisionView
+            navigate(
+                `/documents/revisions/standalone?sourceDocId=${state.sourceDocument?.code}`,
+                {
+                    state: {
+                        sourceDocument: state.sourceDocument,
+                        reasonForChange: state.reasonForChange,
+                    },
+                }
+            );
+        } else {
+            // Parent-Child: Navigate back to Impact Analysis
+            navigate("/documents/revisions/new", {
+                state: {
+                    sourceDocument: state?.sourceDocument,
+                    impactDecisions: state?.impactDecisions,
+                    linkedDocuments: state?.linkedDocuments,
+                    reasonForChange: state?.reasonForChange,
+                },
+            });
+        }
     };
 
     const handleFormChange = (newFormData: typeof currentDocument.formData) => {
-        setWorkspaceDocuments(prev => 
-            prev.map((doc, idx) => 
-                idx === currentDocIndex 
-                    ? { ...doc, formData: newFormData }
-                    : doc
+        setWorkspaceDocuments((prev) =>
+            prev.map((doc, idx) =>
+                idx === currentDocIndex ? { ...doc, formData: newFormData } : doc
             )
         );
     };
@@ -269,15 +357,15 @@ export const RevisionWorkspaceView: React.FC = () => {
         setIsSaving(true);
         try {
             // Simulate save operation
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+
             // TODO: Integrate with API service
             console.log("Revision workspace saved:", {
                 sourceDocument: state?.sourceDocument,
                 documents: workspaceDocuments,
-                reasonForChange: state?.reasonForChange
+                reasonForChange: state?.reasonForChange,
             });
-            
+
             setIsSaving(false);
             setShowSaveModal(false);
             navigate("/documents/revisions/all");
@@ -304,7 +392,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                 sourceDocument: state?.sourceDocument,
                 documents: workspaceDocuments,
                 eSignatureReason: reason,
-                reasonForChange: state?.reasonForChange
+                reasonForChange: state?.reasonForChange,
             });
             setIsESignOpen(false);
             navigate("/documents/revisions/all");
@@ -333,14 +421,14 @@ export const RevisionWorkspaceView: React.FC = () => {
         }
 
         if (currentDocIndex < workspaceDocuments.length - 1) {
-            setCurrentDocIndex(prev => prev + 1);
+            setCurrentDocIndex((prev) => prev + 1);
             // Stay on general tab for data entry
         }
     };
 
     const handlePreviousDocument = () => {
         if (currentDocIndex > 0) {
-            setCurrentDocIndex(prev => prev - 1);
+            setCurrentDocIndex((prev) => prev - 1);
             // Stay on general tab for data entry
         }
     };
@@ -350,7 +438,17 @@ export const RevisionWorkspaceView: React.FC = () => {
     };
 
     // Status workflow steps
-    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Pending Training", "Ready for Publishing", "Published", "Effective", "Archive"];
+    const statusSteps: DocumentStatus[] = [
+        "Draft",
+        "Pending Review",
+        "Pending Approval",
+        "Approved",
+        "Pending Training",
+        "Ready for Publishing",
+        "Published",
+        "Effective",
+        "Archive",
+    ];
     const currentStepIndex = 0; // Always "Draft" for new revisions
 
     const tabs = [
@@ -366,8 +464,12 @@ export const RevisionWorkspaceView: React.FC = () => {
             <div className="flex items-center justify-center h-screen">
                 <div className="text-center space-y-4">
                     <AlertCircle className="h-12 w-12 text-amber-500 mx-auto" />
-                    <h2 className="text-xl font-semibold text-slate-900">No Documents to Process</h2>
-                    <p className="text-slate-600">Please go back and complete the Impact Analysis.</p>
+                    <h2 className="text-xl font-semibold text-slate-900">
+                        No Documents to Process
+                    </h2>
+                    <p className="text-slate-600">
+                        Please go back and complete the Impact Analysis.
+                    </p>
                     <Button onClick={handleBack}>Back to Revisions</Button>
                 </div>
             </div>
@@ -392,25 +494,42 @@ export const RevisionWorkspaceView: React.FC = () => {
                             </button>
                             <Home className="h-4 w-4 sm:hidden" />
                             <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <span className="hidden sm:inline">Document Control</span>
+                            <span className="sm:hidden">...</span>
+                            <ChevronRight className="h-4 w-4" />
                             <button
                                 onClick={() => navigate("/documents/revisions/all")}
-                                className="hover:text-slate-700 transition-colors"
+                                className="hover:text-slate-700 transition-colors hidden sm:inline"
                             >
                                 All Revisions
                             </button>
+                            <span className="sm:hidden">...</span>
                             <ChevronRight className="h-4 w-4 text-slate-400" />
-                            <span className="text-slate-700 font-medium">Revision Workspace</span>
+                            <span className="text-slate-700 font-medium">
+                                Revision Workspace
+                            </span>
                         </div>
-                        {state?.sourceDocument && (
+                        {/* {state?.sourceDocument && (
                             <div className="mt-2 text-sm text-slate-600">
                                 <span className="font-medium">Source:</span> {state.sourceDocument.code} - {state.sourceDocument.name}
+                                {state.isStandalone && (
+                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                        Standalone
+                                    </span>
+                                )}
+                                {!state.isStandalone && workspaceDocuments.length > 1 && (
+                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                                        {workspaceDocuments.length} Documents
+                                    </span>
+                                )}
                             </div>
-                        )}
+                        )} */}
                     </div>
 
                     {/* Action Buttons */}
                     <div className="flex items-center gap-3">
-                        <Button                            onClick={handleBackToImpactAnalysis}
+                        <Button
+                            onClick={handleBackToImpactAnalysis}
                             variant="outline"
                             size="sm"
                             className="flex items-center gap-2"
@@ -418,7 +537,8 @@ export const RevisionWorkspaceView: React.FC = () => {
                             <ChevronRight className="h-4 w-4 rotate-180" />
                             Back
                         </Button>
-                        <Button                            onClick={handleBack}
+                        <Button
+                            onClick={handleBack}
                             variant="outline"
                             size="sm"
                             className="flex items-center gap-2"
@@ -462,51 +582,151 @@ export const RevisionWorkspaceView: React.FC = () => {
                                 <div
                                     key={step}
                                     className="relative flex-1 flex items-center justify-center min-w-[150px]"
-                                    style={{ minHeight: '60px' }}
-                            >
-                                {/* Arrow Shape Background */}
-                                <div
-                                    className={cn(
-                                        "absolute inset-0 transition-all",
-                                        isCompleted
-                                            ? "bg-emerald-100"
-                                            : isCurrent
-                                                ? "bg-emerald-600"
-                                                : "bg-slate-100"
-                                    )}
-                                    style={{
-                                        clipPath: isFirst
-                                            ? 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%)'
-                                            : isLast
-                                                ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%)'
-                                                : 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, 20px 50%)'
-                                    }}
-                                />
-
-                                {/* Content */}
-                                <div className="relative z-10 flex items-center gap-2 px-6">
-                                    {isCompleted && (
-                                        <Check className="h-4 w-4 text-emerald-600 shrink-0" />
-                                    )}
-                                    <span
+                                    style={{ minHeight: "60px" }}
+                                >
+                                    {/* Arrow Shape Background */}
+                                    <div
                                         className={cn(
-                                            "text-xs md:text-sm font-medium text-center",
-                                            isCurrent
-                                                ? "text-white"
-                                                : isCompleted
-                                                    ? "text-slate-700"
-                                                    : "text-slate-400"
+                                            "absolute inset-0 transition-all",
+                                            isCompleted
+                                                ? "bg-emerald-100"
+                                                : isCurrent
+                                                    ? "bg-emerald-600"
+                                                    : "bg-slate-100"
                                         )}
-                                    >
-                                        {step}
-                                    </span>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+                                        style={{
+                                            clipPath: isFirst
+                                                ? "polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%)"
+                                                : isLast
+                                                    ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%)"
+                                                    : "polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, 20px 50%)",
+                                        }}
+                                    />
 
+                                    {/* Content */}
+                                    <div className="relative z-10 flex items-center gap-2 px-6">
+                                        {isCompleted && (
+                                            <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+                                        )}
+                                        <span
+                                            className={cn(
+                                                "text-xs md:text-sm font-medium text-center",
+                                                isCurrent
+                                                    ? "text-white"
+                                                    : isCompleted
+                                                        ? "text-slate-700"
+                                                        : "text-slate-400"
+                                            )}
+                                        >
+                                            {step}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Modals */}
+                <ESignatureModal
+                    isOpen={isESignOpen}
+                    onClose={() => {
+                        if (isSubmitting) return;
+                        setIsESignOpen(false);
+                    }}
+                    onConfirm={handleESignConfirm}
+                    actionTitle="Submit revisions for review"
+                />
+
+                <AlertModal
+                    isOpen={isValidationModalOpen}
+                    onClose={() => setIsValidationModalOpen(false)}
+                    type="warning"
+                    title="Missing required information"
+                    description={validationModalMessage}
+                    confirmText="OK"
+                    showCancel={false}
+                />
+
+                {/* Cancel Confirmation Modal */}
+                <AlertModal
+                    isOpen={showCancelModal}
+                    onClose={() => setShowCancelModal(false)}
+                    onConfirm={handleConfirmCancel}
+                    type="warning"
+                    title="Cancel Revision Workspace?"
+                    description={
+                        <div className="space-y-3">
+                            <p>
+                                Are you sure you want to cancel and exit the Revision Workspace?
+                            </p>
+                            <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-1">
+                                <p className="text-amber-800">
+                                    ⚠️ <span className="font-semibold">Warning:</span> All unsaved
+                                    changes will be lost.
+                                </p>
+                                <p>
+                                    <span className="font-semibold">Documents in Progress:</span>{" "}
+                                    {workspaceDocuments.length} document(s)
+                                </p>
+                                {state?.reasonForChange && (
+                                    <p>
+                                        <span className="font-semibold">Draft Reason:</span>{" "}
+                                        {state.reasonForChange.length} characters
+                                    </p>
+                                )}
+                            </div>
+                            <p className="text-xs text-slate-500">
+                                You will be redirected back to the All Revisions screen.
+                            </p>
+                        </div>
+                    }
+                    confirmText="Yes, Cancel"
+                    cancelText="No, Stay"
+                    showCancel={true}
+                />
+
+                {/* Save Draft Confirmation Modal */}
+                <AlertModal
+                    isOpen={showSaveModal}
+                    onClose={() => setShowSaveModal(false)}
+                    onConfirm={handleConfirmSave}
+                    type="confirm"
+                    title="Save All Documents?"
+                    description={
+                        <div className="space-y-3">
+                            <p>
+                                Are you sure you want to save all documents in the workspace as
+                                drafts?
+                            </p>
+                            <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
+                                {state?.sourceDocument && (
+                                    <p>
+                                        <span className="font-semibold">Source Document:</span>{" "}
+                                        {state.sourceDocument.code}
+                                    </p>
+                                )}
+                                <p>
+                                    <span className="font-semibold">Total Documents:</span>{" "}
+                                    {workspaceDocuments.length}
+                                </p>
+                                <p>
+                                    <span className="font-semibold">Current Progress:</span>{" "}
+                                    Document {currentDocIndex + 1} of {workspaceDocuments.length}
+                                </p>
+                            </div>
+                            <p className="text-xs text-slate-500">
+                                You can continue editing these drafts later from the All
+                                Revisions screen.
+                            </p>
+                        </div>
+                    }
+                    confirmText="Save All"
+                    cancelText="Cancel"
+                    isLoading={isSaving}
+                    showCancel={true}
+                />
+            </div>
             {/* Tab Navigation */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="border-b border-slate-200">
@@ -524,12 +744,14 @@ export const RevisionWorkspaceView: React.FC = () => {
                                             : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                                     )}
                                 >
-                                    <Icon className={cn(
-                                        "h-4 w-4 shrink-0",
-                                        activeTab === tab.id
-                                            ? "text-emerald-600"
-                                            : "text-slate-400"
-                                    )} />
+                                    <Icon
+                                        className={cn(
+                                            "h-4 w-4 shrink-0",
+                                            activeTab === tab.id
+                                                ? "text-emerald-600"
+                                                : "text-slate-400"
+                                        )}
+                                    />
                                     <span className="hidden md:inline">{tab.label}</span>
                                 </button>
                             );
@@ -541,7 +763,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                 <div className="p-6">
                     {activeTab === "document" && (
                         <MultiDocumentUpload
-                            documents={workspaceDocuments.map(doc => ({
+                            documents={workspaceDocuments.map((doc) => ({
                                 id: doc.id,
                                 code: doc.code,
                                 name: doc.name,
@@ -583,8 +805,8 @@ export const RevisionWorkspaceView: React.FC = () => {
                                 </div>
                             </div>
 
-                            <GeneralTab 
-                                formData={currentDocument.formData} 
+                            <GeneralTab
+                                formData={currentDocument.formData}
                                 onFormChange={handleFormChange}
                                 hideTemplateCheckbox={true}
                             />
@@ -637,92 +859,13 @@ export const RevisionWorkspaceView: React.FC = () => {
                         </div>
                     )}
 
-                    {activeTab === "training" && (
-                        <TrainingTab />
-                    )}
+                    {activeTab === "training" && <TrainingTab />}
 
-                    {activeTab === "signatures" && (
-                        <SignaturesTab />
-                    )}
+                    {activeTab === "signatures" && <SignaturesTab />}
 
-                    {activeTab === "audit" && (
-                        <AuditTab />
-                    )}
+                    {activeTab === "audit" && <AuditTab />}
                 </div>
             </div>
-
-            {/* Modals */}
-            <ESignatureModal
-                isOpen={isESignOpen}
-                onClose={() => {
-                    if (isSubmitting) return;
-                    setIsESignOpen(false);
-                }}
-                onConfirm={handleESignConfirm}
-                actionTitle="Submit revisions for review"
-            />
-
-            <AlertModal
-                isOpen={isValidationModalOpen}
-                onClose={() => setIsValidationModalOpen(false)}
-                type="warning"
-                title="Missing required information"
-                description={validationModalMessage}
-                confirmText="OK"
-                showCancel={false}
-            />
-
-            {/* Cancel Confirmation Modal */}
-            <AlertModal
-                isOpen={showCancelModal}
-                onClose={() => setShowCancelModal(false)}
-                onConfirm={handleConfirmCancel}
-                type="warning"
-                title="Cancel Revision Workspace?"
-                description={
-                    <div className="space-y-3">
-                        <p>Are you sure you want to cancel and exit the Revision Workspace?</p>
-                        <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-1">
-                            <p className="text-amber-800">⚠️ <span className="font-semibold">Warning:</span> All unsaved changes will be lost.</p>
-                            <p><span className="font-semibold">Documents in Progress:</span> {workspaceDocuments.length} document(s)</p>
-                            {state?.reasonForChange && (
-                                <p><span className="font-semibold">Draft Reason:</span> {state.reasonForChange.length} characters</p>
-                            )}
-                        </div>
-                        <p className="text-xs text-slate-500">You will be redirected back to the All Revisions screen.</p>
-                    </div>
-                }
-                confirmText="Yes, Cancel"
-                cancelText="No, Stay"
-                showCancel={true}
-            />
-
-            {/* Save Draft Confirmation Modal */}
-            <AlertModal
-                isOpen={showSaveModal}
-                onClose={() => setShowSaveModal(false)}
-                onConfirm={handleConfirmSave}
-                type="confirm"
-                title="Save All Documents?"
-                description={
-                    <div className="space-y-3">
-                        <p>Are you sure you want to save all documents in the workspace as drafts?</p>
-                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
-                            {state?.sourceDocument && (
-                                <p><span className="font-semibold">Source Document:</span> {state.sourceDocument.code}</p>
-                            )}
-                            <p><span className="font-semibold">Total Documents:</span> {workspaceDocuments.length}</p>
-                            <p><span className="font-semibold">Current Progress:</span> Document {currentDocIndex + 1} of {workspaceDocuments.length}</p>
-                        </div>
-                        <p className="text-xs text-slate-500">You can continue editing these drafts later from the All Revisions screen.</p>
-                    </div>
-                }
-                confirmText="Save All"
-                cancelText="Cancel"
-                isLoading={isSaving}
-                showCancel={true}
-            />
-        </div>
         </div>
     );
 };

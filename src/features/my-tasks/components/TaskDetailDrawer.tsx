@@ -20,6 +20,7 @@ import {
   isOverdue,
   getPriorityColor,
 } from "../utils";
+import { IconPlayerPlay } from "@tabler/icons-react";
 
 export const TaskDetailDrawer: React.FC<{
   task: Task | null;
@@ -375,18 +376,22 @@ export const TaskDetailDrawer: React.FC<{
           >
             Close
           </Button>
-          {isDocumentReviewTask ? (
-            <Button
-              onClick={handleStartReview}
-              className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
-            >
-              <Eye className="mr-2 h-4 w-4" />
-              Start Review
-            </Button>
-          ) : (
-            <Button className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
-              Process Task <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+          {task.status !== "Completed" && (
+            <>
+              {isDocumentReviewTask ? (
+                <Button
+                  onClick={handleStartReview}
+                  className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
+                >
+                  <IconPlayerPlay className="mr-2 h-4 w-4" />
+                  Start Review
+                </Button>
+              ) : (
+                <Button className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
+                  Process Task <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              )}
+            </>
           )}
         </div>
       </div>

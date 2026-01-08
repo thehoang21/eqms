@@ -203,7 +203,7 @@ export const NewTemplateView: React.FC = () => {
                             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
                             <Save className="h-4 w-4" />
-                            {isSaving ? "Saving..." : "Save"}
+                            {isSaving ? "Saving..." : "Save Draft"}
                         </Button>
                         <Button
                             onClick={handleSubmitForActive}
@@ -276,8 +276,8 @@ export const NewTemplateView: React.FC = () => {
                     })}
                 </div>
             </div>
-
-            {/* Tab Navigation */}
+        </div>
+                    {/* Tab Navigation */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="border-b border-slate-200">
                     <div className="flex overflow-x-auto">
@@ -339,8 +339,7 @@ export const NewTemplateView: React.FC = () => {
                     )}
                 </div>
             </div>
-
-            {/* Modals */}
+                        {/* Modals */}
             <ESignatureModal
                 isOpen={isESignOpen}
                 onClose={() => {
@@ -372,7 +371,6 @@ export const NewTemplateView: React.FC = () => {
                 cancelText="No, keep editing"
                 showCancel={true}
             />
-        </div>
         </div>
     );
 };

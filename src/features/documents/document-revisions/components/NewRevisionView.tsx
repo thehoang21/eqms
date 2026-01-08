@@ -7,7 +7,8 @@ import {
     FileText, 
     AlertCircle,
     Info,
-    ArrowRight
+    ArrowRight,
+    Save
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
@@ -210,10 +211,17 @@ export const NewRevisionView: React.FC = () => {
                             <Home className="h-4 w-4 sm:hidden" />
                             <ChevronRight className="h-4 w-4 text-slate-400" />
                             <button
-                                onClick={handleBack}
                                 className="hover:text-slate-700 transition-colors hidden sm:inline"
                             >
-                                All Revisions
+                                Document Control
+                            </button>
+                            <span className="sm:hidden">...</span>
+                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <button
+                                onClick={() => navigate("/documents/all")}
+                                className="hover:text-slate-700 transition-colors hidden sm:inline"
+                            >
+                                All Documents
                             </button>
                             <span className="sm:hidden">...</span>
                             <ChevronRight className="h-4 w-4 text-slate-400" />
@@ -221,10 +229,12 @@ export const NewRevisionView: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <Button size="sm" variant="outline" onClick={() => setShowCancelModal(true)} className="border-red-600 text-red-600 hover:bg-red-50 shadow-sm">
+                        <Button size="sm" variant="outline" onClick={() => setShowCancelModal(true)} className="border-red-600 text-red-600 hover:bg-red-50 shadow-sm gap-1.5">
+                            <X className="h-4 w-4" />
                             Cancel
                         </Button>
-                        <Button size="sm" onClick={handleSaveDraft}>
+                        <Button size="sm" onClick={handleSaveDraft} className="flex items-center gap-1.5 md:gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300 touch-manipulation">
+                            <Save className="h-3.5 w-3.5 md:h-4 md:w-4" />
                             Save Draft
                         </Button>
                     </div>

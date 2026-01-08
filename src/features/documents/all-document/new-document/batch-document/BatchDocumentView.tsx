@@ -274,7 +274,7 @@ export const BatchDocumentView: React.FC = () => {
             <div className="flex flex-col gap-3 md:gap-4">
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 md:gap-4">
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-xl md:text-2xl lg:text-2xl font-bold tracking-tight text-slate-900">
+                        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
                             Batch Document Creation
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs md:text-sm">

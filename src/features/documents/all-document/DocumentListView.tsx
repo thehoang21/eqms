@@ -60,6 +60,7 @@ interface Document {
   created: string;
   openedBy: string;
   description?: string;
+  hasRelatedDocuments?: boolean;
 }
 
 // --- Mock Data ---
@@ -78,6 +79,7 @@ const MOCK_DOCUMENTS: Document[] = [
     created: "2023-05-01",
     openedBy: "QA Admin",
     description: "Comprehensive procedure for conducting quality control tests on pharmaceutical products",
+    hasRelatedDocuments: true,
   },
   {
     id: "2",
@@ -93,6 +95,7 @@ const MOCK_DOCUMENTS: Document[] = [
     created: "2023-07-10",
     openedBy: "System Admin",
     description: "Organization-wide quality management policy framework",
+    hasRelatedDocuments: false,
   },
   {
     id: "3",
@@ -108,6 +111,7 @@ const MOCK_DOCUMENTS: Document[] = [
     created: "2023-08-20",
     openedBy: "Production Lead",
     description: "Guidelines for maintaining and reviewing batch production records",
+    hasRelatedDocuments: true,
   },
   {
     id: "4",
@@ -122,6 +126,7 @@ const MOCK_DOCUMENTS: Document[] = [
     department: "Quality Assurance",
     created: "2023-04-15",
     openedBy: "QA Manager",
+    hasRelatedDocuments: false,
   },
   {
     id: "5",
@@ -136,6 +141,7 @@ const MOCK_DOCUMENTS: Document[] = [
     department: "Quality Control",
     created: "2023-06-01",
     openedBy: "QC Supervisor",
+    hasRelatedDocuments: true,
   },
   {
     id: "6",
@@ -150,6 +156,7 @@ const MOCK_DOCUMENTS: Document[] = [
     department: "Validation",
     created: "2023-03-10",
     openedBy: "Validation Team",
+    hasRelatedDocuments: false,
   },
   {
     id: "7",
@@ -164,6 +171,7 @@ const MOCK_DOCUMENTS: Document[] = [
     department: "Quality Assurance",
       created: "2023-06-20",
       openedBy: "Audit Team",
+    hasRelatedDocuments: true,
   },
   {
     id: "8",
@@ -178,6 +186,7 @@ const MOCK_DOCUMENTS: Document[] = [
     department: "Engineering",
       created: "2023-07-25",
       openedBy: "Engineering Lead",
+    hasRelatedDocuments: false,
   },
   {
     id: "9",
@@ -340,6 +349,42 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
   if (!isOpen) return null;
 
+  // Check if document has parent-child relationships
+  const hasRelationships = (doc: Document): boolean => {
+    // Check based on hasRelatedDocuments property from API
+    return doc.hasRelatedDocuments === true;
+  };
+
+  // Handle New Revision with relationship check
+  const handleNewRevision = async (doc: Document) => {
+    setIsNavigating(true);
+    
+    try {
+      // Check if document has parent-child relationships
+      const hasLinks = hasRelationships(doc);
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 400));
+      
+      if (hasLinks) {
+        // Has parent-child relationships → Navigate to Impact Analysis
+        navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
+      } else {
+        // Standalone document → Navigate to Standalone Revision
+        navigate(`/documents/revisions/standalone?sourceDocId=${doc.id}`);
+      }
+      
+      onClose();
+    } catch (error) {
+      console.error("Error checking relationships:", error);
+      // Fallback: Navigate to Impact Analysis
+      navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
+      onClose();
+    } finally {
+      setIsNavigating(false);
+    }
+  };
+
   // Dynamic menu items based on document status
   const getMenuItems = () => {
     const items = [];
@@ -427,15 +472,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           {
             icon: FilePlus2,
             label: "New Revision",
-            onClick: () => {
-              setIsNavigating(true);
-              // Add slight delay for loading animation
-              setTimeout(() => {
-                navigate(`/documents/revisions/new?sourceDocId=${document.id}`);
-                onClose();
-                setIsNavigating(false);
-              }, 400);
-            },
+            onClick: () => handleNewRevision(document),
             color: "text-slate-500",
             isLoading: isNavigating,
           },
@@ -606,11 +643,12 @@ const DocumentColumnCustomizer: React.FC<DocumentColumnCustomizerProps> = ({
       { id: 'title', label: 'Document Name', visible: true, order: 4 },
       { id: 'status', label: 'State', visible: true, order: 5 },
       { id: 'type', label: 'Document Type', visible: true, order: 6 },
-      { id: 'department', label: 'Department', visible: true, order: 7 },
-      { id: 'author', label: 'Author', visible: true, order: 8 },
-      { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
-      { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
-      { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+      { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
+      { id: 'department', label: 'Department', visible: true, order: 8 },
+      { id: 'author', label: 'Author', visible: true, order: 9 },
+      { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 10 },
+      { id: 'validUntil', label: 'Valid Until', visible: true, order: 11 },
+      { id: 'action', label: 'Action', visible: true, order: 12, locked: true },
     ];
     onColumnsChange(defaultColumns);
   };
@@ -726,11 +764,12 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
     { id: 'title', label: 'Document Name', visible: true, order: 4 },
     { id: 'status', label: 'State', visible: true, order: 5 },
     { id: 'type', label: 'Document Type', visible: true, order: 6 },
-    { id: 'department', label: 'Department', visible: true, order: 7 },
-    { id: 'author', label: 'Author', visible: true, order: 8 },
-    { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
-    { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
-    { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
+    { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
+    { id: 'department', label: 'Department', visible: true, order: 8 },
+    { id: 'author', label: 'Author', visible: true, order: 9 },
+    { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 10 },
+    { id: 'validUntil', label: 'Valid Until', visible: true, order: 11 },
+    { id: 'action', label: 'Action', visible: true, order: 12, locked: true },
   ]);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
@@ -1069,6 +1108,19 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
                               getTypeColor(doc.type)
                             )}>
                               {doc.type}
+                            </span>
+                          </td>
+                        );
+                      case 'relatedDocuments':
+                        return (
+                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                            <span className={cn(
+                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border",
+                              doc.hasRelatedDocuments 
+                                ? "bg-blue-50 text-blue-700 border-blue-200"
+                                : "bg-slate-50 text-slate-700 border-slate-200"
+                            )}>
+                              {doc.hasRelatedDocuments ? "Yes" : "No"}
                             </span>
                           </td>
                         );
