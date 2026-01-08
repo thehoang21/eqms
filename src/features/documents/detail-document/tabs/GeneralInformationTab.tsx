@@ -76,8 +76,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             <input
               type="text"
               value={document.author}
-              disabled={isReadOnly}
-              className={`flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm ${isReadOnly ? 'bg-slate-100 text-slate-700' : 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'}`}
+              readOnly
+              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
             />
             <Popover
               title=""
@@ -92,7 +92,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
         <div className="flex items-center gap-4">
           <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Is Template?</label>
           <div className="flex-1">
-            <Checkbox id="isTemplate" checked={document.isTemplate} disabled={isReadOnly} />
+            <Checkbox id="isTemplate" checked={document.isTemplate} disabled={true} />
           </div>
         </div>
 
@@ -103,8 +103,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             <input
               type="text"
               value={document.title}
-              disabled={isReadOnly}
-              className={`flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm ${isReadOnly ? 'bg-slate-100 text-slate-700' : 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'}`}
+              readOnly
+              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
         </div>
@@ -125,7 +125,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
         {/* Sub-Type */}
         <div className="flex items-center gap-4">
           <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Sub-Type</label>
-          <div className="flex-1">
+          <div className="flex-1 flex items-center gap-2">
             <input
               type="text"
               value={document.subType}
@@ -142,8 +142,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             <input
               type="text"
               value={document.businessUnit}
-              disabled={isReadOnly}
-              className={`flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm ${isReadOnly ? 'bg-slate-100 text-slate-700' : 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'}`}
+              readOnly
+              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
         </div>
@@ -168,8 +168,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             <input
               type="text"
               value={document.knowledgeBase}
-              disabled={isReadOnly}
-              className={`flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm ${isReadOnly ? 'bg-slate-100 text-slate-700' : 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'}`}
+              readOnly
+              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
         </div>
@@ -180,8 +180,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
           <input
             type="number"
             value={document.periodicReviewCycle}
-            disabled={isReadOnly}
-            className={`flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm ${isReadOnly ? 'bg-slate-100 text-slate-700' : 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'}`}
+            readOnly
+            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
           />
         </div>
 
@@ -191,8 +191,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
           <input
             type="number"
             value={document.periodicReviewNotification}
-            disabled={isReadOnly}
-            className={`flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm ${isReadOnly ? 'bg-slate-100 text-slate-700' : 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'}`}
+            readOnly
+            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
           />
         </div>
 
@@ -237,8 +237,8 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
           <textarea
             value={document.description}
             rows={4}
-            disabled={isReadOnly}
-            className={`flex-1 px-3 py-2 border border-slate-200 rounded-md text-sm resize-none ${isReadOnly ? 'bg-slate-100 text-slate-700' : 'focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'}`}
+            readOnly
+            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700 resize-none"
           />
         </div>
       </div>
