@@ -12,6 +12,7 @@ import {
   Plus,
   FileText,
   Home,
+  ThumbsUp,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge';
@@ -374,6 +375,9 @@ export const RevisionListView: React.FC = () => {
       case "view":
         navigate(`/documents/${id}`);
         break;
+      case "review":
+        navigate(`/documents/revisions/review/${id}`);
+        break;
       case "download":
         // TODO: Implement download functionality
         console.log(`Download revision: ${id}`);
@@ -643,6 +647,16 @@ export const RevisionListView: React.FC = () => {
                 >
                   <Eye className="h-4 w-4 text-slate-500" />
                   <span>View Details</span>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMenuAction("review", openDropdownId);
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  <ThumbsUp className="h-4 w-4 text-slate-500" />
+                  <span>Review Revision</span>
                 </button>
                 <button
                   onClick={(e) => {

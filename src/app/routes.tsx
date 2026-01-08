@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { DashboardView } from '@/features/dashboard';
 import { DocumentsOwnedByMeView, DetailDocumentView } from '@/features/documents';
-import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingMyReviewView, PendingMyApprovalView } from '@/features/documents/document-revisions';
+import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingMyReviewView, PendingMyApprovalView, RevisionReviewView } from '@/features/documents/document-revisions';
 import { DocumentReviewView } from '@/features/documents/all-document/new-document/review-document';
 import { DocumentApprovalView } from '@/features/documents/all-document/new-document/approval-document';
 import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/documents/all-document/new-document';
@@ -37,6 +37,13 @@ const DocumentApprovalViewWrapper = () => {
   return <DocumentApprovalView documentId={id!} onBack={() => navigate(-1)} currentUserId="1" />;
 };
 
+// Wrapper for Revision Review View to extract ID from params
+const RevisionReviewViewWrapper = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  return <RevisionReviewView documentId={id!} onBack={() => navigate(-1)} currentUserId="1" />;
+};
+
 export const AppRoutes: React.FC = () => {
   const navigate = useNavigate();
 
@@ -61,6 +68,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/revisions/pending-approval" element={<PendingMyApprovalView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/revisions/new" element={<NewRevisionView />} />
         <Route path="/documents/revisions/workspace" element={<RevisionWorkspaceView />} />
+        {/* Revision Review - must be before wildcard route */}
+        <Route path="documents/revisions/review/:id" element={<RevisionReviewViewWrapper />} />
         <Route path="documents/revisions/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/controlled-copies/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/templates" element={<TemplateLibraryView onViewTemplate={(id) => navigate(`/documents/templates/${id}`)} onCreateTemplate={() => navigate('/documents/templates/new')} />} />

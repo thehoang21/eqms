@@ -723,5 +723,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                 showCancel={true}
             />
         </div>
+        </div>
     );
 };

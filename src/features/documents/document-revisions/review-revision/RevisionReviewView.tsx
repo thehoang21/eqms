@@ -18,7 +18,7 @@ import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import {
   DocumentWorkflowLayout,
   DEFAULT_WORKFLOW_TABS,
-} from "../DocumentWorkflowLayout";
+} from "@/features/documents/all-document/new-document/DocumentWorkflowLayout";
 import {
   GeneralInformationTab,
   TrainingInformationTab,
@@ -73,12 +73,11 @@ interface DocumentDetail {
   department: string;
   created: string;
   description: string;
-  documentType: "Document" | "Revision"; // Distinguish Document vs Revision
-  previousVersion?: string; // Only for Revision
+  documentType: "Document" | "Revision";
+  previousVersion?: string;
   reviewFlowType: ReviewFlowType;
   reviewers: Reviewer[];
-  currentReviewerIndex: number; // For sequential review
-  // Extended fields for GeneralInformationTab
+  currentReviewerIndex: number;
   validUntil: string;
   openedBy: string;
   owner: string;
@@ -102,10 +101,10 @@ interface Comment {
   content: string;
 }
 
-interface DocumentReviewViewProps {
+interface RevisionReviewViewProps {
   documentId: string;
   onBack: () => void;
-  currentUserId: string; // ID of the logged-in user
+  currentUserId: string;
 }
 
 // --- Helper Functions ---
@@ -119,21 +118,20 @@ const formatDate = (dateString: string) => {
 };
 
 // --- Mock Data ---
-const MOCK_DOCUMENT: DocumentDetail = {
+const MOCK_REVISION: DocumentDetail = {
   id: "1",
   documentId: "SOP-QA-001",
   title: "Standard Operating Procedure for Quality Control Testing",
   type: "SOP",
-  version: "1.0",
+  version: "2.0",
   status: "Pending Review",
   effectiveDate: "2026-02-01",
   author: "John Smith",
   department: "Quality Assurance",
   created: "2026-01-05 10:30:00",
-  description:
-    "This SOP outlines the procedures for quality control testing of pharmaceutical products.",
-  documentType: "Revision", // Set as Revision to enable compare
-  previousVersion: "v2.0", // Previous version for comparison
+  description: "Updated testing procedures for new HPLC equipment.",
+  documentType: "Revision",
+  previousVersion: "1.0",
   reviewFlowType: "sequential",
   reviewers: [
     {
@@ -165,11 +163,10 @@ const MOCK_DOCUMENT: DocumentDetail = {
     },
   ],
   currentReviewerIndex: 0,
-  // Extended fields
   validUntil: "2028-02-01",
   openedBy: "Nguyen Van A",
   owner: "John Smith",
-  approvers: ["David Miller", "Jennifer Davis"],
+  approvers: ["David Miller"],
   lastModified: "2026-01-05",
   lastModifiedBy: "John Smith",
   isTemplate: false,
@@ -188,16 +185,16 @@ const MOCK_COMMENTS: Comment[] = [
     role: "QA Manager",
     date: "2026-01-05 14:30:00",
     content:
-      "Please review Section 3.2 regarding temperature control procedures. I believe we need more specific guidelines.",
+      "Added new section 4.5 covering the new chromatograph calibration.",
   },
 ];
 
-export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
+export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
   documentId,
   onBack,
-  currentUserId = "1", // Mocked current user
+  currentUserId = "1",
 }) => {
-  const [document, setDocument] = useState(MOCK_DOCUMENT);
+  const [document, setDocument] = useState(MOCK_REVISION);
   const [comments, setComments] = useState(MOCK_COMMENTS);
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -304,12 +301,12 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
     { label: "Dashboard", onClick: onBack },
     { label: "My Tasks", onClick: onBack },
     { label: "Pending My Review", onClick: onBack },
-    { label: document.documentId, isActive: true },
+    { label: `${document.documentId} (v${document.version})`, isActive: true },
   ];
 
   return (
     <DocumentWorkflowLayout
-      title="Document Review"
+      title={`Review Revision: ${document.documentId}`}
       breadcrumbs={breadcrumbs}
       onBack={onBack}
       documentId={document.documentId}
@@ -324,6 +321,17 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
         <div className="space-y-6">
           {/* PDF Preview Section */}
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+              <span className="font-medium text-slate-700">
+                Preview: {document.title} (v{document.version})
+              </span>
+              {document.previousVersion && (
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Clock className="w-4 h-4" />
+                  Compare with v{document.previousVersion}
+                </Button>
+              )}
+            </div>
             <DocumentTab />
           </div>
 
@@ -380,7 +388,8 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
                       .slice()
                       .sort((a, b) => a.order - b.order)
                       .map((reviewer) => {
-                        const isCurrentUserReviewer = reviewer.id === currentUserId;
+                        const isCurrentUserReviewer =
+                          reviewer.id === currentUserId;
                         const isCurrent =
                           reviewer.status === "pending" &&
                           reviewer.order === document.currentReviewerIndex + 1;
@@ -426,7 +435,9 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
                                   </div>
                                   <div>
                                     <div className="flex items-center gap-2">
-                                      <h4 className="font-medium text-slate-900">{reviewer.name}</h4>
+                                      <h4 className="font-medium text-slate-900">
+                                        {reviewer.name}
+                                      </h4>
                                       {isCurrentUserReviewer && (
                                         <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
                                           You
@@ -442,33 +453,42 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
                                 </div>
 
                                 <div className="flex items-center gap-2">
-                                  {reviewer.reviewDate && (isApproved || isRejected) && (
-                                    <span className="text-xs text-slate-500">
-                                      {formatDate(reviewer.reviewDate)}
-                                    </span>
-                                  )}
+                                  {reviewer.reviewDate &&
+                                    (isApproved || isRejected) && (
+                                      <span className="text-xs text-slate-500">
+                                        {formatDate(reviewer.reviewDate)}
+                                      </span>
+                                    )}
                                   {isApproved && (
                                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full">
                                       <CheckCircle className="h-4 w-4" />
-                                      <span className="text-xs font-medium">Approved</span>
+                                      <span className="text-xs font-medium">
+                                        Approved
+                                      </span>
                                     </span>
                                   )}
                                   {isRejected && (
                                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 rounded-full">
                                       <XCircle className="h-4 w-4" />
-                                      <span className="text-xs font-medium">Rejected</span>
+                                      <span className="text-xs font-medium">
+                                        Rejected
+                                      </span>
                                     </span>
                                   )}
                                   {isCurrent && (
                                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full">
                                       <Clock className="h-4 w-4" />
-                                      <span className="text-xs font-medium">Current Reviewer</span>
+                                      <span className="text-xs font-medium">
+                                        Current Reviewer
+                                      </span>
                                     </span>
                                   )}
                                   {isBlocked && (
                                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-full">
                                       <Clock className="h-4 w-4" />
-                                      <span className="text-xs font-medium">Blocked</span>
+                                      <span className="text-xs font-medium">
+                                        Blocked
+                                      </span>
                                     </span>
                                   )}
                                 </div>
@@ -486,14 +506,16 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
                 <div className="px-6 pb-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                     {document.reviewers.map((reviewer) => {
-                      const isCurrentUserReviewer = reviewer.id === currentUserId;
+                      const isCurrentUserReviewer =
+                        reviewer.id === currentUserId;
                       const isSigned = reviewer.status !== "pending";
                       return (
                         <div
                           key={reviewer.id}
                           className={cn(
                             "p-4 rounded-lg border bg-white",
-                            isCurrentUserReviewer && reviewer.status === "pending"
+                            isCurrentUserReviewer &&
+                              reviewer.status === "pending"
                               ? "ring-1 ring-emerald-200"
                               : "border-slate-200"
                           )}
@@ -505,7 +527,9 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
                               </div>
                               <div>
                                 <div className="flex items-center gap-2">
-                                  <h4 className="font-medium text-slate-900">{reviewer.name}</h4>
+                                  <h4 className="font-medium text-slate-900">
+                                    {reviewer.name}
+                                  </h4>
                                   {isCurrentUserReviewer && (
                                     <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
                                       You
@@ -523,18 +547,24 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
                               {isSigned ? (
                                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full">
                                   <CheckCircle className="h-4 w-4" />
-                                  <span className="text-xs font-medium">Signed</span>
+                                  <span className="text-xs font-medium">
+                                    Signed
+                                  </span>
                                 </span>
                               ) : (
                                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-full">
                                   <Clock className="h-4 w-4" />
-                                  <span className="text-xs font-medium">Pending</span>
+                                  <span className="text-xs font-medium">
+                                    Pending
+                                  </span>
                                 </span>
                               )}
                             </div>
                           </div>
                           {isSigned && reviewer.reviewDate && (
-                            <div className="mt-2 text-xs text-slate-500">Signed on {formatDate(reviewer.reviewDate)}</div>
+                            <div className="mt-2 text-xs text-slate-500">
+                              Signed on {formatDate(reviewer.reviewDate)}
+                            </div>
                           )}
                         </div>
                       );
@@ -554,7 +584,8 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
                     Your Review Action Required
                   </h3>
                   <p className="text-sm text-slate-600">
-                    Please review the document and provide your decision.
+                    Please review the document revision and provide your
+                    decision.
                   </p>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
@@ -658,7 +689,28 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
         </div>
       )}
       {activeTab === "general" && (
-        <GeneralInformationTab document={document} isReadOnly={true} />
+        <GeneralInformationTab
+          document={{
+            documentId: document.documentId,
+            title: document.title,
+            type: document.type,
+            created: document.created,
+            openedBy: document.openedBy,
+            author: document.author,
+            isTemplate: document.isTemplate,
+            businessUnit: document.businessUnit,
+            department: document.department,
+            knowledgeBase: document.knowledgeBase,
+            subType: document.subType,
+            periodicReviewCycle: document.periodicReviewCycle,
+            periodicReviewNotification: document.periodicReviewNotification,
+            effectiveDate: document.effectiveDate,
+            validUntil: document.validUntil,
+            language: document.language,
+            description: document.description,
+          }}
+          isReadOnly={true}
+        />
       )}
       {activeTab === "training" && <TrainingInformationTab />}
       {activeTab === "signatures" && <SignaturesTab />}
@@ -670,7 +722,9 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
         onClose={() => setShowESignModal(false)}
         onConfirm={handleESignConfirm}
         actionTitle={
-          eSignAction === "approve" ? "Approve Document" : "Reject Document"
+          eSignAction === "approve"
+            ? "Approve Revision"
+            : "Reject Revision"
         }
       />
     </DocumentWorkflowLayout>

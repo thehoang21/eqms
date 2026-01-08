@@ -375,7 +375,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
 
             {/* Status Stepper */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100" style={{ marginBottom: '0'}}>
                     <div className="flex items-stretch min-w-full">
                         {statusSteps.map((step, index) => {
                             const isCompleted = index < currentStepIndex;
@@ -431,7 +431,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                     })}
                 </div>
             </div>
-
+        </div>
             {/* Tab Navigation */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="border-b border-slate-200">
@@ -459,13 +459,11 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                         })}
                     </div>
                 </div>
-
                 {/* Tab Content */}
                 <div className="p-6">
                     {children}
                 </div>
             </div>
-        </div>
         </div>
     );
 };

@@ -373,5 +373,6 @@ export const NewTemplateView: React.FC = () => {
                 showCancel={true}
             />
         </div>
+        </div>
     );
 };
