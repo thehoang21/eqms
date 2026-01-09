@@ -13,7 +13,7 @@ import {
   Book,
   Database,
   MonitorCog,
-  ShieldUser,
+  ShieldCheck,
   MonitorSpeaker,
   Boxes,
   TextSearch,
@@ -188,7 +188,7 @@ export const NAV_CONFIG: NavItem[] = [
       {
         id: "roles",
         label: "Roles & Permissions",
-        icon: ShieldUser,
+        icon: ShieldCheck,
         path: "/settings/roles",
       },
       {

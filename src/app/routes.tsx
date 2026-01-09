@@ -10,6 +10,7 @@ import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/
 import { ArchivedDocumentsView } from '@/features/documents/archived-document';
 import { MyTasksView } from '@/features/my-tasks';
 import { ProfileView, UserManagementView, DictionariesView } from '@/features/settings';
+import { RolePermissionView } from '@/features/settings/role-permission';
 import { LoginView } from '@/features/auth';
 import { UIShowcase } from '@/features/ui-showcase/UIShowcase';
 import { UnderConstruction } from './UnderConstruction';
@@ -96,6 +97,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="profile" element={<ProfileView onBack={() => navigate(-1)} />} />
         {/* Settings */}
         <Route path="settings/users" element={<UserManagementView />} />
+        <Route path="settings/roles" element={<RolePermissionView />} />
         <Route path="settings/dictionaries" element={<DictionariesView />} />
         {/* UI Showcase */}
         <Route path="ui-demo" element={<UIShowcase />} />
