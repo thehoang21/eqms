@@ -28,7 +28,7 @@ import {
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 type ReviewFlowType = 'sequential' | 'parallel';
 type ReviewStatus = 'pending' | 'approved' | 'rejected' | 'completed';
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
@@ -156,7 +156,7 @@ const MOCK_DOCUMENT: DocumentDetail = {
     created: "2026-01-05 10:30:00",
     description: "This SOP outlines the procedures for quality control testing of pharmaceutical products.",
     documentType: 'Revision',
-    previousVersion: 'v2.0',
+    previousVersion: '2.0',
     reviewFlowType: "sequential",
     reviewers: [
         {

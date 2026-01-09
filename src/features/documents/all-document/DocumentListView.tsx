@@ -36,7 +36,7 @@ import { NewDocumentModal } from "./new-document/NewDocumentModal";
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 
 interface TableColumn {
   id: string;
@@ -1033,7 +1033,7 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
               {/* Table with Horizontal Scroll */}
               <div className="overflow-x-auto flex-1">
           <table className="w-full">
-            <thead className="bg-slate-50/80 border-b border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
+            <thead className="bg-slate-50/80 border-b-2 border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
               <tr>
                 {visibleColumns.map((column) => (
                   <th

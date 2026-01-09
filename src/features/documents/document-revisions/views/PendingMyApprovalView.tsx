@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ChevronRight,
   MoreVertical,
@@ -18,7 +19,7 @@ import { DocumentFilters } from "../../DocumentFilters";
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 
 interface TableColumn {
   id: string;
@@ -196,6 +197,7 @@ interface PendingMyApprovalViewProps {
 }
 
 export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ onViewDocument }) => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const statusFilter: DocumentStatus = "Pending Approval"; // Fixed to Pending Approval
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
@@ -331,18 +333,18 @@ export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ on
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Document Number</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Created</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Opened By</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Document Name</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">State</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Document Type</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Department</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Author</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Effective Date</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">Valid Until</th>
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]" style={{ width: '60px' }}>Action</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Number</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Created</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Opened By</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Name</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">State</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Type</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Department</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Author</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Effective Date</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Valid Until</th>
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]" style={{ width: '60px' }}>Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
@@ -433,8 +435,14 @@ export const PendingMyApprovalView: React.FC<PendingMyApprovalViewProps> = ({ on
         onClose={() => setOpenDropdownId(null)}
         position={dropdownPosition}
         onAction={(action) => {
-          console.log(`Action ${action} on document ${openDropdownId}`);
-          // Handle actions
+          if (action === 'approve' && openDropdownId) {
+            navigate(`/documents/revisions/approval/${openDropdownId}`);
+          } else if (action === 'view' && openDropdownId) {
+            onViewDocument?.(openDropdownId);
+          } else if (action === 'history') {
+            console.log(`View history for document ${openDropdownId}`);
+          }
+          setOpenDropdownId(null);
         }}
       />
     </div>

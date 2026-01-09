@@ -19,6 +19,7 @@ interface SelectProps {
   className?: string;
   triggerClassName?: string;
   enableSearch?: boolean;
+  disabled?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -31,6 +32,7 @@ export const Select: React.FC<SelectProps> = ({
   className,
   triggerClassName,
   enableSearch = true,
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -90,6 +92,7 @@ export const Select: React.FC<SelectProps> = ({
   }, [isOpen, enableSearch]);
 
   const handleToggle = () => {
+    if (disabled) return;
     if (!isOpen && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       setDropdownStyle({
@@ -113,11 +116,14 @@ export const Select: React.FC<SelectProps> = ({
       <button
         type="button"
         onClick={handleToggle}
+        disabled={disabled}
         className={cn(
           "flex w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200",
           "placeholder:text-slate-400 focus:outline-none",
           "h-11",
-          isOpen
+          disabled
+            ? "bg-slate-50 cursor-not-allowed opacity-60"
+            : isOpen
             ? "ring-2 ring-emerald-500 border-emerald-500"
             : "hover:border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500",
           triggerClassName

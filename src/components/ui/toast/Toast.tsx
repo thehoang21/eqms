@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from "react";
 import { X, CheckCircle2, AlertTriangle, Info, XCircle } from "lucide-react";
 import { cn } from "../utils";
+import { IconAlertTriangle, IconRosetteDiscountCheck } from "@tabler/icons-react";
 
 export type ToastType = "success" | "error" | "warning" | "info";
 
@@ -25,9 +26,9 @@ export const useToast = () => {
 };
 
 const ICONS = {
-  success: CheckCircle2,
+  success: IconRosetteDiscountCheck,
   error: XCircle,
-  warning: AlertTriangle,
+  warning: IconAlertTriangle,
   info: Info,
 };
 
@@ -67,34 +68,67 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ showToast }}>
       {children}
       {/* Toast Container */}
-      <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-3 items-end max-w-xs w-full">
+      <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-3 items-end max-w-xs md:max-w-sm lg:max-w-md w-full">
         {toasts.map((toast) => {
           const Icon = ICONS[toast.type];
+          const duration = toast.duration ?? 3500;
+          
           return (
             <div
               key={toast.id}
               className={cn(
-                "w-full border rounded-lg shadow-lg flex items-start gap-3 px-4 py-3 animate-in fade-in slide-in-from-top-2 duration-200",
+                "w-full border rounded-lg shadow-lg overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200",
                 COLORS[toast.type]
               )}
               role="alert"
             >
-              <Icon className="h-5 w-5 mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                {toast.title && <div className="font-semibold text-sm mb-0.5">{toast.title}</div>}
-                <div className="text-sm leading-relaxed">{toast.message}</div>
+              <div className="flex items-start gap-3 px-4 py-3">
+                <Icon className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  {toast.title && <div className="font-semibold text-sm mb-0.5">{toast.title}</div>}
+                  <div className="text-sm leading-relaxed">{toast.message}</div>
+                </div>
+                <button
+                  className="ml-2 p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+                  aria-label="Close"
+                  onClick={() => removeToast(toast.id)}
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
-              <button
-                className="ml-2 p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
-                aria-label="Close"
-                onClick={() => removeToast(toast.id)}
-              >
-                <X className="h-4 w-4" />
-              </button>
+              
+              {/* Progress Bar */}
+              <div className="h-1 bg-white/30 relative overflow-hidden">
+                <div
+                  className={cn(
+                    "h-full transition-all",
+                    toast.type === "success" && "bg-emerald-600",
+                    toast.type === "error" && "bg-red-600",
+                    toast.type === "warning" && "bg-amber-600",
+                    toast.type === "info" && "bg-blue-600"
+                  )}
+                  style={{
+                    width: '100%',
+                    animation: `shrink ${duration}ms linear forwards`
+                  }}
+                />
+              </div>
             </div>
           );
         })}
       </div>
+      
+      {/* Add keyframe animation for progress bar */}
+      <style>{`
+        @keyframes shrink {
+          from {
+            width: 100%;
+          }
+          to {
+            width: 0%;
+          }
+        }
+      `}</style>
     </ToastContext.Provider>
   );
 };

@@ -2,14 +2,14 @@ import React from 'react';
 import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { DashboardView } from '@/features/dashboard';
 import { DocumentsOwnedByMeView, DetailDocumentView } from '@/features/documents';
-import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingMyReviewView, PendingMyApprovalView, RevisionReviewView } from '@/features/documents/document-revisions';
+import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingMyReviewView, PendingMyApprovalView, RevisionReviewView, RevisionApprovalView } from '@/features/documents/document-revisions';
 import { StandaloneRevisionView } from '@/features/documents/document-revisions/components/StandaloneRevisionView';
 import { DocumentReviewView } from '@/features/documents/all-document/new-document/review-document';
 import { DocumentApprovalView } from '@/features/documents/all-document/new-document/approval-document';
 import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/documents/all-document/new-document';
 import { ArchivedDocumentsView } from '@/features/documents/archived-document';
 import { MyTasksView } from '@/features/my-tasks';
-import { ProfileView, UserManagementView } from '@/features/settings';
+import { ProfileView, UserManagementView, DictionariesView } from '@/features/settings';
 import { LoginView } from '@/features/auth';
 import { UIShowcase } from '@/features/ui-showcase/UIShowcase';
 import { UnderConstruction } from './UnderConstruction';
@@ -45,6 +45,13 @@ const RevisionReviewViewWrapper = () => {
   return <RevisionReviewView documentId={id!} onBack={() => navigate(-1)} currentUserId="1" />;
 };
 
+// Wrapper for Revision Approval View to extract ID from params
+const RevisionApprovalViewWrapper = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  return <RevisionApprovalView revisionId={id!} onBack={() => navigate(-1)} currentUserId="1" />;
+};
+
 export const AppRoutes: React.FC = () => {
   const navigate = useNavigate();
 
@@ -72,6 +79,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="/documents/revisions/workspace" element={<RevisionWorkspaceView />} />
         {/* Revision Review - must be before wildcard route */}
         <Route path="documents/revisions/review/:id" element={<RevisionReviewViewWrapper />} />
+        {/* Revision Approval - must be before wildcard route */}
+        <Route path="documents/revisions/approval/:id" element={<RevisionApprovalViewWrapper />} />
         <Route path="documents/revisions/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/controlled-copies/*" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/templates" element={<TemplateLibraryView onViewTemplate={(id) => navigate(`/documents/templates/${id}`)} onCreateTemplate={() => navigate('/documents/templates/new')} />} />
@@ -87,6 +96,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="profile" element={<ProfileView onBack={() => navigate(-1)} />} />
         {/* Settings */}
         <Route path="settings/users" element={<UserManagementView />} />
+        <Route path="settings/dictionaries" element={<DictionariesView />} />
         {/* UI Showcase */}
         <Route path="ui-demo" element={<UIShowcase />} />
         {/* Fallback for other routes */}

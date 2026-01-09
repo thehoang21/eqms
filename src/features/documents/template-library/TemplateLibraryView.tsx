@@ -519,7 +519,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
         <div className="overflow-x-auto flex-1">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 {columns.sort((a, b) => a.order - b.order).map((column) => {
                   if (!column.visible) return null;
@@ -528,7 +528,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
                     return (
                       <th 
                         key={column.id}
-                        className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]"
+                        className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]"
                         style={{ width: '60px' }}
                       >
                         {column.label}
@@ -539,7 +539,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
                   return (
                     <th
                       key={column.id}
-                      className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left"
+                      className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left"
                     >
                       {column.label}
                     </th>

@@ -59,7 +59,7 @@ export const NewDocumentModal: React.FC<NewDocumentModalProps> = ({
             <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] w-[calc(100%-2rem)] max-w-lg md:max-w-2xl animate-in fade-in zoom-in-95 duration-200">
                 <div className="bg-white rounded-lg md:rounded-xl shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] overflow-y-auto">
                     {/* Header */}
-                    <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-slate-200 bg-gradient-to-r from-emerald-50 to-cyan-50">
+                    <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-slate-200 bg-slate-50">
                         <div className="flex-1 min-w-0 pr-2">
                             <h2 className="text-base md:text-xl font-bold text-slate-900 truncate">
                                 Create New Document

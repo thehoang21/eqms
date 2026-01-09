@@ -1,3 +1,4 @@
 // Export Settings components
-export { ProfileView } from './components/ProfileView';
-export { UserManagementView } from './components/UserManagementView';
+export { ProfileView } from './user-profile/ProfileView';
+export { UserManagementView } from './user-management/UserManagementView';
+export { DictionariesView } from './dictionaries/DictionariesView';

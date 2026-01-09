@@ -64,11 +64,21 @@ export const TaskDetailDrawer: React.FC<{
 
   // Check if task is a document review task
   const isDocumentReviewTask = task.module === "Document" && task.taskId.includes("REV");
+  
+  // Check if task is a revision approval task
+  const isRevisionApprovalTask = task.module === "Document" && task.title.toLowerCase().includes("approve");
 
   const handleStartReview = () => {
     // Extract document ID from taskId (e.g., "SOP-REV-001" -> "1")
     const docId = task.id;
     navigate(`/documents/${docId}/review`);
+    handleClose();
+  };
+
+  const handleStartApproval = () => {
+    // Navigate to revision approval page
+    const revisionId = task.id;
+    navigate(`/documents/revisions/approval/${revisionId}`);
     handleClose();
   };
 
@@ -385,6 +395,14 @@ export const TaskDetailDrawer: React.FC<{
                 >
                   <IconPlayerPlay className="mr-2 h-4 w-4" />
                   Start Review
+                </Button>
+              ) : isRevisionApprovalTask ? (
+                <Button
+                  onClick={handleStartApproval}
+                  className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20"
+                >
+                  <Eye className="mr-2 h-4 w-4" />
+                  Review & Approve
                 </Button>
               ) : (
                 <Button className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">

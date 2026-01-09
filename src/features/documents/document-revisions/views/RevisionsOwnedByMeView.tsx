@@ -22,7 +22,7 @@ import { cn } from '@/components/ui/utils';
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 
 interface TableColumn {
   id: string;
@@ -60,7 +60,7 @@ const mapStatusToType = (status: string): StatusType => {
 const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => ({
   id: `my-${i + 1}`,
   documentNumber: `SOP.${String(i + 1).padStart(4, "0")}.0${(i % 2) + 1}`,
-  revisionNumber: `Rev ${Math.floor(i / 2) + 1}.${i % 2}`,
+  revisionNumber: `${Math.floor(i / 2) + 1}.${i % 2}`,
   created: new Date(Date.now() - Math.random() * 10000000000).toISOString().split("T")[0],
   revisionName: `My Revision ${i + 1}`,
   state: ["Draft", "Pending Review", "Approved"][i % 3] as DocumentStatus,
@@ -472,13 +472,13 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col flex-1">
           <div className="overflow-x-auto flex-1">
             <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="bg-slate-50 border-b-2 border-slate-200">
                 <tr>
                   {visibleColumns.map((column) => (
                     <th
                       key={column.id}
                       className={cn(
-                        "py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap",
+                        "py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
                         column.id === 'action' 
                           ? "sticky right-0 bg-slate-50 text-center z-40 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm"
                           : "text-left"

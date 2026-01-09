@@ -21,7 +21,7 @@ import { IconFileCheck, IconFileTime, IconInfoCircle } from "@tabler/icons-react
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 
 interface TableColumn {
   id: string;
@@ -51,31 +51,99 @@ interface Revision {
 const mapStatusToType = (status: string): StatusType => {
   const mapping: { [key: string]: StatusType } = {
     Draft: "draft",
-    // "Pending Review": "pending",
-    // "Pending Approval": "pending",
+    "Pending Review": "pendingReview",
+    "Pending Approval": "pendingApproval",
     Approved: "approved",
-    // Effective: "active",
+    "Pending Training": "pendingTraining",
+    "Ready for Publishing": "readyForPublishing",
+    Published: "published",
+    Effective: "effective",
     Archive: "archived",
   };
   return mapping[status] || "draft";
 };
 
 // --- Mock Data ---
-const MOCK_REVISIONS: Revision[] = Array.from({ length: 45 }, (_, i) => ({
-  id: `${i + 1}`,
-  documentNumber: `SOP.${String(i + 1).padStart(4, "0")}.0${(i % 3) + 1}`,
-  revisionNumber: `Rev ${Math.floor(i / 3) + 1}.${i % 3}`,
-  created: new Date(Date.now() - Math.random() * 10000000000).toISOString().split("T")[0],
-  openedBy: ["John Smith", "Jane Doe", "Alice Johnson", "Bob Williams"][i % 4],
-  revisionName: `Revision ${i + 1}`,
-  state: ["Draft", "Pending Review", "Approved", "Effective", "Archive"][i % 5] as DocumentStatus,
-  author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Brown", "David Lee"][i % 4],
-  effectiveDate: new Date(Date.now() + Math.random() * 10000000000).toISOString().split("T")[0],
-  validUntil: new Date(Date.now() + Math.random() * 20000000000).toISOString().split("T")[0],
-  documentName: `Standard Operating Procedure ${i + 1}`,
-  type: ["SOP", "Policy", "Form", "Report"][i % 4] as DocumentType,
-  department: ["Quality Assurance", "Production", "R&D", "Regulatory Affairs"][i % 4],
-}));
+const MOCK_REVISIONS: Revision[] = [
+  // Pending Review items (for testing Review workflow)
+  {
+    id: "rev-001",
+    documentNumber: "SOP.0001.01",
+    revisionNumber: "2.0",
+    created: "2026-01-08",
+    openedBy: "John Smith",
+    revisionName: "Quality Control Testing Revision",
+    state: "Pending Review",
+    author: "Dr. Sarah Johnson",
+    effectiveDate: "2026-01-20",
+    validUntil: "2027-01-20",
+    documentName: "Quality Control Testing SOP",
+    type: "SOP",
+    department: "Quality Assurance",
+  },
+  {
+    id: "rev-002",
+    documentNumber: "SOP.0002.01",
+    revisionNumber: "3.1",
+    created: "2026-01-07",
+    openedBy: "Jane Doe",
+    revisionName: "Manufacturing Process Update",
+    state: "Pending Review",
+    author: "Michael Chen",
+    effectiveDate: "2026-01-25",
+    validUntil: "2027-01-25",
+    documentName: "Manufacturing Process SOP",
+    type: "SOP",
+    department: "Production",
+  },
+  // Pending Approval items (for testing Approval workflow)
+  {
+    id: "rev-003",
+    documentNumber: "POL.0001.01",
+    revisionNumber: "1.5",
+    created: "2026-01-06",
+    openedBy: "Alice Johnson",
+    revisionName: "Safety Policy Revision",
+    state: "Pending Approval",
+    author: "Emily Brown",
+    effectiveDate: "2026-02-01",
+    validUntil: "2027-02-01",
+    documentName: "Workplace Safety Policy",
+    type: "Policy",
+    department: "Quality Assurance",
+  },
+  {
+    id: "rev-004",
+    documentNumber: "SOP.0003.01",
+    revisionNumber: "4.0",
+    created: "2026-01-05",
+    openedBy: "Bob Williams",
+    revisionName: "Validation Protocol Update",
+    state: "Pending Approval",
+    author: "David Lee",
+    effectiveDate: "2026-02-05",
+    validUntil: "2027-02-05",
+    documentName: "Equipment Validation Protocol",
+    type: "Protocol",
+    department: "R&D",
+  },
+  // Other statuses for variety
+  ...Array.from({ length: 41 }, (_, i) => ({
+    id: `${i + 5}`,
+    documentNumber: `SOP.${String(i + 5).padStart(4, "0")}.0${(i % 3) + 1}`,
+    revisionNumber: `${Math.floor(i / 3) + 1}.${i % 3}`,
+    created: new Date(Date.now() - Math.random() * 10000000000).toISOString().split("T")[0],
+    openedBy: ["John Smith", "Jane Doe", "Alice Johnson", "Bob Williams"][i % 4],
+    revisionName: `Revision ${i + 5}`,
+    state: ["Draft", "Approved", "Effective", "Archive"][i % 4] as DocumentStatus,
+    author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Brown", "David Lee"][i % 4],
+    effectiveDate: new Date(Date.now() + Math.random() * 10000000000).toISOString().split("T")[0],
+    validUntil: new Date(Date.now() + Math.random() * 20000000000).toISOString().split("T")[0],
+    documentName: `Standard Operating Procedure ${i + 5}`,
+    type: ["SOP", "Policy", "Form", "Report"][i % 4] as DocumentType,
+    department: ["Quality Assurance", "Production", "R&D", "Regulatory Affairs"][i % 4],
+  })),
+];
 
 // Default columns configuration
 const DEFAULT_COLUMNS: TableColumn[] = [
@@ -377,6 +445,9 @@ export const RevisionListView: React.FC = () => {
       case "review":
         navigate(`/documents/revisions/review/${id}`);
         break;
+      case "approve":
+        navigate(`/documents/revisions/approval/${id}`);
+        break;
       case "audit":
         // TODO: Navigate to audit trail view
         console.log(`View audit trail for revision: ${id}`);
@@ -515,7 +586,7 @@ export const RevisionListView: React.FC = () => {
           {/* Table with Horizontal Scroll */}
           <div className="overflow-x-auto flex-1">
             <table className="w-full">
-              <thead className="bg-slate-50/80 border-b border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
+              <thead className="bg-slate-50/80 border-b-2 border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
                 <tr>
                   {visibleColumns.map((column) => (
                     <th
@@ -604,8 +675,12 @@ export const RevisionListView: React.FC = () => {
       </div>
 
       {/* Dropdown Menu (Portal) */}
-      {openDropdownId &&
-        createPortal(
+      {openDropdownId && (() => {
+        const currentRevision = MOCK_REVISIONS.find(r => r.id === openDropdownId);
+        const isPendingReview = currentRevision?.state === "Pending Review";
+        const isPendingApproval = currentRevision?.state === "Pending Approval";
+
+        return createPortal(
           <>
             <div
               className="fixed inset-0 z-40 animate-in fade-in duration-150"
@@ -634,16 +709,30 @@ export const RevisionListView: React.FC = () => {
                   <IconInfoCircle className="h-4 w-4 text-slate-500" />
                   <span>View Details</span>
                 </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleMenuAction("review", openDropdownId);
-                  }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
-                >
-                  <IconFileCheck className="h-4 w-4 text-slate-500" />
-                  <span>Review Revision</span>
-                </button>
+                {isPendingReview && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMenuAction("review", openDropdownId);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
+                  >
+                    <IconFileCheck className="h-4 w-4 text-slate-500" />
+                    <span>Review Revision</span>
+                  </button>
+                )}
+                {isPendingApproval && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleMenuAction("approve", openDropdownId);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
+                  >
+                    <ThumbsUp className="h-4 w-4 text-slate-500" />
+                    <span>Approve Revision</span>
+                  </button>
+                )}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -658,7 +747,8 @@ export const RevisionListView: React.FC = () => {
             </div>
           </>,
           document.body
-        )}
+        );
+      })()}
     </div>
   );
 };

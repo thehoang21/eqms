@@ -8,59 +8,39 @@ import {
   Trash2,
   UserX,
   UserCheck,
-  ChevronLeft,
   ChevronRight,
-  GripVertical,
-  ChevronDown,
-  Shield,
   Mail,
   Phone,
   Home,
+  Key,
+  KeyRound,
 } from "lucide-react";
+import { IconKey, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
-import { Checkbox } from "@/components/ui/checkbox/Checkbox";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
+import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
-
-// --- Types ---
-
-type UserRole = "Admin" | "QA Manager" | "Document Owner" | "Reviewer" | "Approver" | "Viewer";
-type UserStatus = "Active" | "Inactive" | "Pending";
-
-interface TableColumn {
-  id: string;
-  label: string;
-  visible: boolean;
-  order: number;
-  locked?: boolean;
-}
-
-interface User {
-  id: string;
-  employeeId: string;
-  fullName: string;
-  username: string;
-  email: string;
-  phone: string;
-  role: UserRole;
-  department: string;
-  status: UserStatus;
-  lastLogin: string;
-  createdDate: string;
-}
+import { AddUserModal } from "./AddUserModal";
+import { CredentialsModal } from "./CredentialsModal";
+import { EditUserModal } from "./EditUserModal";
+import { ResetPasswordModal } from "./ResetPasswordModal";
+import { User, UserRole, UserStatus, TableColumn, NewUser } from "./types";
+import { BUSINESS_UNIT_DEPARTMENTS, DEFAULT_COLUMNS, getStatusColor, getRoleColor } from "./constants";
+import { removeAccents, generateUsername, generatePassword, getNextEmployeeId } from "./utils";
 
 // --- Mock Data ---
 
 const MOCK_USERS: User[] = [
   {
     id: "1",
-    employeeId: "EMP-2025-001",
+    employeeId: "NTP.0001",
     fullName: "Admin Hệ Thống 1",
     username: "adminhethong",
     email: "admin@zenithquality.com",
     phone: "0911263575",
     role: "Admin",
+    businessUnit: "Corporate",
     department: "IT Department",
     status: "Active",
     lastLogin: "2025-12-31 14:30",
@@ -68,12 +48,13 @@ const MOCK_USERS: User[] = [
   },
   {
     id: "2",
-    employeeId: "EMP-2025-002",
+    employeeId: "NTP.0002",
     fullName: "Dr. Amanda Smith",
     username: "a.smith",
     email: "a.smith@zenithquality.com",
     phone: "+1-555-0123",
     role: "QA Manager",
+    businessUnit: "Quality",
     department: "Quality Assurance",
     status: "Active",
     lastLogin: "2025-12-31 13:15",
@@ -81,12 +62,13 @@ const MOCK_USERS: User[] = [
   },
   {
     id: "3",
-    employeeId: "EMP-2025-003",
+    employeeId: "NTP.0003",
     fullName: "John Doe",
     username: "j.doe",
     email: "j.doe@zenithquality.com",
     phone: "+1-555-0124",
     role: "Document Owner",
+    businessUnit: "Quality",
     department: "Quality Assurance",
     status: "Active",
     lastLogin: "2025-12-30 16:45",
@@ -94,12 +76,13 @@ const MOCK_USERS: User[] = [
   },
   {
     id: "4",
-    employeeId: "EMP-2025-004",
+    employeeId: "NTP.0004",
     fullName: "Jane Wilson",
     username: "j.wilson",
     email: "j.wilson@zenithquality.com",
     phone: "+1-555-0125",
     role: "Reviewer",
+    businessUnit: "Quality",
     department: "Regulatory Affairs",
     status: "Active",
     lastLogin: "2025-12-31 10:20",
@@ -107,12 +90,13 @@ const MOCK_USERS: User[] = [
   },
   {
     id: "5",
-    employeeId: "EMP-2025-005",
+    employeeId: "NTP.0005",
     fullName: "Michael Brown",
     username: "m.brown",
     email: "m.brown@zenithquality.com",
     phone: "+1-555-0126",
     role: "Approver",
+    businessUnit: "Quality",
     department: "Quality Assurance",
     status: "Inactive",
     lastLogin: "2025-12-20 09:30",
@@ -120,12 +104,13 @@ const MOCK_USERS: User[] = [
   },
   {
     id: "6",
-    employeeId: "EMP-2025-006",
+    employeeId: "NTP.0006",
     fullName: "Sarah Johnson",
     username: "s.johnson",
     email: "s.johnson@zenithquality.com",
     phone: "+1-555-0127",
     role: "Viewer",
+    businessUnit: "Operations",
     department: "Production",
     status: "Active",
     lastLogin: "2025-12-31 12:00",
@@ -133,12 +118,13 @@ const MOCK_USERS: User[] = [
   },
   {
     id: "7",
-    employeeId: "EMP-2025-007",
+    employeeId: "NTP.0007",
     fullName: "Robert Taylor",
     username: "r.taylor",
     email: "r.taylor@zenithquality.com",
     phone: "+1-555-0128",
     role: "Document Owner",
+    businessUnit: "Research",
     department: "R&D",
     status: "Pending",
     lastLogin: "Never",
@@ -146,60 +132,15 @@ const MOCK_USERS: User[] = [
   },
 ];
 
-const DEFAULT_COLUMNS: TableColumn[] = [
-  { id: "no", label: "No.", visible: true, order: 0, locked: true },
-  { id: "employeeId", label: "Employee ID", visible: true, order: 1, locked: true },
-  { id: "fullName", label: "Full Name", visible: true, order: 2, locked: true },
-  { id: "username", label: "Username", visible: true, order: 3 },
-  { id: "email", label: "Email", visible: true, order: 4 },
-  { id: "phone", label: "Phone", visible: true, order: 5 },
-  { id: "role", label: "Role", visible: true, order: 6 },
-  { id: "department", label: "Department", visible: true, order: 7 },
-  { id: "status", label: "Status", visible: true, order: 8 },
-  { id: "lastLogin", label: "Last Login", visible: true, order: 9 },
-  { id: "createdDate", label: "Created Date", visible: false, order: 10 },
-];
-
-// --- Helper Functions ---
-
-const getStatusColor = (status: UserStatus) => {
-  switch (status) {
-    case "Active":
-      return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Inactive":
-      return "bg-slate-50 text-slate-700 border-slate-200";
-    case "Pending":
-      return "bg-amber-50 text-amber-700 border-amber-200";
-    default:
-      return "bg-slate-50 text-slate-700 border-slate-200";
-  }
-};
-
-const getRoleColor = (role: UserRole) => {
-  switch (role) {
-    case "Admin":
-      return "bg-red-50 text-red-700 border-red-200";
-    case "QA Manager":
-      return "bg-purple-50 text-purple-700 border-purple-200";
-    case "Document Owner":
-      return "bg-blue-50 text-blue-700 border-blue-200";
-    case "Reviewer":
-      return "bg-cyan-50 text-cyan-700 border-cyan-200";
-    case "Approver":
-      return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Viewer":
-      return "bg-slate-50 text-slate-700 border-slate-200";
-    default:
-      return "bg-slate-50 text-slate-700 border-slate-200";
-  }
-};
-
 // --- Main Component ---
 
 export const UserManagementView: React.FC = () => {
+  const { showToast } = useToast();
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<UserRole | "All">("All");
   const [statusFilter, setStatusFilter] = useState<UserStatus | "All">("All");
+  const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("All");
   const [departmentFilter, setDepartmentFilter] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [columns, setColumns] = useState<TableColumn[]>([...DEFAULT_COLUMNS]);
@@ -208,6 +149,35 @@ export const UserManagementView: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, userId: "", userName: "" });
   const [statusModal, setStatusModal] = useState({ isOpen: false, userId: "", action: "" as "activate" | "deactivate" });
+  const [addUserModal, setAddUserModal] = useState(false);
+  const [credentialsModal, setCredentialsModal] = useState({ isOpen: false, employeeId: "", username: "", password: "" });
+  const [resetPasswordModal, setResetPasswordModal] = useState({ isOpen: false, userId: "", userName: "", password: "" });
+  const [editUserModal, setEditUserModal] = useState(false);
+  const [editUser, setEditUser] = useState<User>({
+    id: "",
+    employeeId: "",
+    fullName: "",
+    username: "",
+    email: "",
+    phone: "",
+    role: "Viewer",
+    businessUnit: "",
+    department: "",
+    status: "Active",
+    lastLogin: "",
+    createdDate: "",
+  });
+  const [newUser, setNewUser] = useState({
+    employeeId: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    role: "Viewer" as UserRole,
+    businessUnit: "",
+    department: "",
+    status: "Active" as UserStatus,
+  });
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   const itemsPerPage = 10;
   const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
@@ -217,6 +187,12 @@ export const UserManagementView: React.FC = () => {
       buttonRefs.current[id] = createRef<HTMLButtonElement>();
     }
     return buttonRefs.current[id];
+  };
+
+  // Handle password regeneration
+  const handleRegeneratePassword = () => {
+    const newPassword = generatePassword();
+    setCredentialsModal({ ...credentialsModal, password: newPassword });
   };
 
   // Filter users
@@ -229,10 +205,11 @@ export const UserManagementView: React.FC = () => {
         user.employeeId.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesRole = roleFilter === "All" || user.role === roleFilter;
       const matchesStatus = statusFilter === "All" || user.status === statusFilter;
+      const matchesBusinessUnit = businessUnitFilter === "All" || user.businessUnit === businessUnitFilter;
       const matchesDepartment = departmentFilter === "All" || user.department === departmentFilter;
-      return matchesSearch && matchesRole && matchesStatus && matchesDepartment;
+      return matchesSearch && matchesRole && matchesStatus && matchesBusinessUnit && matchesDepartment;
     });
-  }, [searchQuery, roleFilter, statusFilter, departmentFilter]);
+  }, [searchQuery, roleFilter, statusFilter, businessUnitFilter, departmentFilter]);
 
   // Pagination
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -246,11 +223,30 @@ export const UserManagementView: React.FC = () => {
     [columns]
   );
 
-  // Unique departments
-  const departments = useMemo(() => {
-    const depts = new Set(MOCK_USERS.map((u) => u.department));
-    return ["All", ...Array.from(depts)];
-  }, []);
+  // Get available departments based on business unit filter
+  const availableDepartments = useMemo(() => {
+    if (businessUnitFilter === "All") {
+      const depts = new Set(MOCK_USERS.map((u) => u.department));
+      return ["All", ...Array.from(depts)];
+    }
+    return ["All", ...(BUSINESS_UNIT_DEPARTMENTS[businessUnitFilter] || [])];
+  }, [businessUnitFilter]);
+
+  // Get available departments for Add User form
+  const formDepartments = useMemo(() => {
+    if (!newUser.businessUnit) {
+      return [];
+    }
+    return BUSINESS_UNIT_DEPARTMENTS[newUser.businessUnit] || [];
+  }, [newUser.businessUnit]);
+
+  // Get available departments for Edit User form
+  const editFormDepartments = useMemo(() => {
+    if (!editUser.businessUnit) {
+      return [];
+    }
+    return BUSINESS_UNIT_DEPARTMENTS[editUser.businessUnit] || [];
+  }, [editUser.businessUnit]);
 
   const handleDropdownToggle = (userId: string, event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -268,9 +264,10 @@ export const UserManagementView: React.FC = () => {
   };
 
   const handleEdit = (user: User) => {
-    console.log("Edit user:", user);
+    setEditUser({ ...user });
+    setFormErrors({});
+    setEditUserModal(true);
     setOpenDropdownId(null);
-    // TODO: Open edit modal
   };
 
   const handleDelete = (user: User) => {
@@ -283,16 +280,192 @@ export const UserManagementView: React.FC = () => {
     setOpenDropdownId(null);
   };
 
+  const handleResetPassword = (user: User) => {
+    const newPassword = generatePassword();
+    setResetPasswordModal({ isOpen: true, userId: user.id, userName: user.fullName, password: newPassword });
+    setOpenDropdownId(null);
+  };
+
+  const handleRegenerateResetPassword = () => {
+    const newPassword = generatePassword();
+    setResetPasswordModal({ ...resetPasswordModal, password: newPassword });
+  };
+
   const confirmDelete = () => {
     console.log("Delete user:", deleteModal.userId);
-    setDeleteModal({ isOpen: false, userId: "", userName: "" });
     // TODO: Call API to delete user
+    // API call would be: await deleteUser(deleteModal.userId);
+    
+    showToast({
+      type: "success",
+      title: "User Deleted",
+      message: `${deleteModal.userName} has been successfully deleted`,
+    });
+    
+    setDeleteModal({ isOpen: false, userId: "", userName: "" });
   };
 
   const confirmStatusChange = () => {
     console.log(`${statusModal.action} user:`, statusModal.userId);
-    setStatusModal({ isOpen: false, userId: "", action: "activate" });
     // TODO: Call API to change status
+    // API call would be: await updateUserStatus(statusModal.userId, statusModal.action);
+    
+    const actionText = statusModal.action === "activate" ? "activated" : "deactivated";
+    const user = MOCK_USERS.find(u => u.id === statusModal.userId);
+    
+    showToast({
+      type: "success",
+      title: `User ${statusModal.action === "activate" ? "Activated" : "Deactivated"}`,
+      message: `${user?.fullName || "User"} has been ${actionText}`,
+    });
+    
+    setStatusModal({ isOpen: false, userId: "", action: "activate" });
+  };
+
+  const handleAddUser = () => {
+    // Auto-generate next employee ID
+    const nextId = getNextEmployeeId(MOCK_USERS);
+    
+    setNewUser({
+      employeeId: nextId,
+      fullName: "",
+      email: "",
+      phone: "",
+      role: "Viewer",
+      businessUnit: "",
+      department: "",
+      status: "Active",
+    });
+    setFormErrors({});
+    setAddUserModal(true);
+  };
+
+  const validateForm = (): boolean => {
+    const errors: { [key: string]: string } = {};
+
+    if (!newUser.employeeId.trim()) {
+      errors.employeeId = "Employee ID is required";
+    } else if (!/^\d{4}$/.test(newUser.employeeId)) {
+      errors.employeeId = "Employee ID must be 4 digits";
+    } else if (MOCK_USERS.some(u => u.employeeId === `NTP.${newUser.employeeId}`)) {
+      errors.employeeId = "Employee ID already exists";
+    }
+
+    if (!newUser.fullName.trim()) {
+      errors.fullName = "Full name is required";
+    }
+
+    if (!newUser.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
+      errors.email = "Invalid email format";
+    } else if (MOCK_USERS.some(u => u.email === newUser.email)) {
+      errors.email = "Email already exists";
+    }
+
+    if (!newUser.businessUnit.trim()) {
+      errors.businessUnit = "Business unit is required";
+    }
+
+    if (!newUser.department.trim()) {
+      errors.department = "Department is required";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const validateEditForm = (): boolean => {
+    const errors: { [key: string]: string } = {};
+
+    if (!editUser.fullName.trim()) {
+      errors.fullName = "Full name is required";
+    }
+
+    if (!editUser.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editUser.email)) {
+      errors.email = "Invalid email format";
+    } else if (MOCK_USERS.some(u => u.email === editUser.email && u.id !== editUser.id)) {
+      errors.email = "Email already exists";
+    }
+
+    if (!editUser.businessUnit.trim()) {
+      errors.businessUnit = "Business unit is required";
+    }
+
+    if (!editUser.department.trim()) {
+      errors.department = "Department is required";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmitNewUser = () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    // Generate username and password
+    const existingUsernames = MOCK_USERS.map(u => u.username);
+    const generatedUsername = generateUsername(newUser.fullName, existingUsernames);
+    const generatedPassword = generatePassword();
+
+    const newUserData: User = {
+      id: `${MOCK_USERS.length + 1}`,
+      ...newUser,
+      employeeId: `NTP.${newUser.employeeId}`,
+      username: generatedUsername,
+      lastLogin: "Never",
+      createdDate: new Date().toISOString().split('T')[0],
+    };
+
+    console.log("Creating new user:", newUserData);
+    console.log("Generated credentials:", { username: generatedUsername, password: generatedPassword });
+    // TODO: Call API to create user with password
+    // MOCK_USERS.push(newUserData); // This would work for local testing
+
+    setAddUserModal(false);
+    setCredentialsModal({ isOpen: true, employeeId: `NTP.${newUser.employeeId}`, username: generatedUsername, password: generatedPassword });
+    
+    // Reset form - keep next ID ready
+    const maxId = MOCK_USERS.reduce((max, user) => {
+      const numPart = parseInt(user.employeeId.split('.')[1] || '0');
+      return Math.max(max, numPart);
+    }, 0);
+    const nextId = (maxId + 1).toString().padStart(4, '0');
+    
+    setNewUser({
+      employeeId: nextId,
+      fullName: "",
+      email: "",
+      phone: "",
+      role: "Viewer",
+      businessUnit: "",
+      department: "",
+      status: "Active",
+    });
+    setFormErrors({});
+  };
+
+  const handleSubmitEditUser = () => {
+    if (!validateEditForm()) {
+      return;
+    }
+
+    console.log("Updating user:", editUser);
+    // TODO: Call API to update user
+    // API call would be: await updateUser(editUser.id, editUser);
+    
+    showToast({
+      type: "success",
+      title: "User Updated",
+      message: `${editUser.fullName}'s information has been updated`,
+    });
+
+    setEditUserModal(false);
+    setFormErrors({});
   };
 
   return (
@@ -314,7 +487,7 @@ export const UserManagementView: React.FC = () => {
         <Button
           size="sm"
           className="flex items-center gap-2"
-          onClick={() => console.log("Add new user")}
+          onClick={handleAddUser}
         >
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">Add User</span>
@@ -325,7 +498,7 @@ export const UserManagementView: React.FC = () => {
       <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-4">
+          <div className="xl:col-span-3">
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -340,7 +513,7 @@ export const UserManagementView: React.FC = () => {
           </div>
 
           {/* Role Filter */}
-          <div className="xl:col-span-3">
+          <div className="xl:col-span-2">
             <Select
               label="Role"
               value={roleFilter}
@@ -372,13 +545,29 @@ export const UserManagementView: React.FC = () => {
             />
           </div>
 
+          {/* Business Unit Filter */}
+          <div className="xl:col-span-2">
+            <Select
+              label="Business Unit"
+              value={businessUnitFilter}
+              onChange={(value) => {
+                setBusinessUnitFilter(value);
+                setDepartmentFilter("All"); // Reset department when business unit changes
+              }}
+              options={[
+                { label: "All Units", value: "All" },
+                ...Object.keys(BUSINESS_UNIT_DEPARTMENTS).map(bu => ({ label: bu, value: bu }))
+              ]}
+            />
+          </div>
+
           {/* Department Filter */}
           <div className="xl:col-span-3">
             <Select
               label="Department"
               value={departmentFilter}
               onChange={setDepartmentFilter}
-              options={departments.map((dept) => ({ label: dept, value: dept }))}
+              options={availableDepartments.map((dept) => ({ label: dept, value: dept }))}
             />
           </div>
         </div>
@@ -388,17 +577,17 @@ export const UserManagementView: React.FC = () => {
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 {visibleColumns.map((col) => (
                   <th
                     key={col.id}
-                    className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left"
+                    className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left"
                   >
                     {col.label}
                   </th>
                 ))}
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>
@@ -431,7 +620,6 @@ export const UserManagementView: React.FC = () => {
                             getRoleColor(user.role)
                           )}
                         >
-                          <Shield className="h-3.5 w-3.5" />
                           {user.role}
                         </span>
                       )}
@@ -451,7 +639,7 @@ export const UserManagementView: React.FC = () => {
                         <span className="font-medium text-slate-900">{user.fullName}</span>
                       )}
                       {col.id === "employeeId" && (
-                        <span className="font-mono text-xs text-slate-600">{user.employeeId}</span>
+                        <span className="font-medium text-emerald-600">{user.employeeId}</span>
                       )}
                       {!["status", "role", "email", "phone", "fullName", "employeeId", "no"].includes(col.id) && (
                         <span className="text-slate-700">{user[col.id as keyof User]}</span>
@@ -555,6 +743,16 @@ export const UserManagementView: React.FC = () => {
                     </>
                   )}
                 </button>
+                <button
+                  onClick={() => {
+                    const user = MOCK_USERS.find((u) => u.id === openDropdownId);
+                    if (user) handleResetPassword(user);
+                  }}
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  <KeyRound className="h-4 w-4 text-slate-500" />
+                  <span>Reset Password</span>
+                </button>
                 <div className="border-t border-slate-100 my-1" />
                 <button
                   onClick={() => {
@@ -563,7 +761,7 @@ export const UserManagementView: React.FC = () => {
                   }}
                   className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <IconTrash className="h-4 w-4" />
                   <span>Delete User</span>
                 </button>
               </div>
@@ -579,7 +777,7 @@ export const UserManagementView: React.FC = () => {
         onConfirm={confirmDelete}
         type="error"
         title="Delete User"
-        message={`Are you sure you want to delete "${deleteModal.userName}"? This action cannot be undone.`}
+        description={`Are you sure you want to delete "${deleteModal.userName}"? This action cannot be undone.`}
       />
 
       {/* Status Change Modal */}
@@ -589,7 +787,55 @@ export const UserManagementView: React.FC = () => {
         onConfirm={confirmStatusChange}
         type="warning"
         title={statusModal.action === "activate" ? "Activate User" : "Deactivate User"}
-        message={`Are you sure you want to ${statusModal.action} this user?`}
+        description={`Are you sure you want to ${statusModal.action} this user?`}
+      />
+
+      {/* Add User Modal */}
+      <AddUserModal
+        isOpen={addUserModal}
+        onClose={() => setAddUserModal(false)}
+        onSubmit={handleSubmitNewUser}
+        newUser={newUser}
+        setNewUser={setNewUser}
+        formErrors={formErrors}
+        setFormErrors={setFormErrors}
+        formDepartments={formDepartments}
+        businessUnitDepartments={BUSINESS_UNIT_DEPARTMENTS}
+      />
+
+      {/* Credentials Modal */}
+      <CredentialsModal
+        isOpen={credentialsModal.isOpen}
+        onClose={() => setCredentialsModal({ isOpen: false, employeeId: "", username: "", password: "" })}
+        employeeId={credentialsModal.employeeId}
+        username={credentialsModal.username}
+        password={credentialsModal.password}
+        onRegeneratePassword={handleRegeneratePassword}
+      />
+
+      {/* Reset Password Modal */}
+      <ResetPasswordModal
+        isOpen={resetPasswordModal.isOpen}
+        onClose={() => setResetPasswordModal({ isOpen: false, userId: "", userName: "", password: "" })}
+        userName={resetPasswordModal.userName}
+        password={resetPasswordModal.password}
+        onRegeneratePassword={handleRegenerateResetPassword}
+      />
+
+      {/* Edit User Modal */}
+      <EditUserModal
+        isOpen={editUserModal}
+        onClose={() => {
+          setEditUserModal(false);
+          setFormErrors({});
+        }}
+        onSubmit={handleSubmitEditUser}
+        editUser={editUser}
+        setEditUser={setEditUser}
+        formErrors={formErrors}
+        setFormErrors={setFormErrors}
+        formDepartments={editFormDepartments}
+        businessUnitDepartments={BUSINESS_UNIT_DEPARTMENTS}
       />
     </div>
   );

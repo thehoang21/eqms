@@ -30,7 +30,7 @@ const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
     {
         id: '1',
         code: 'QMS.0001.01',
-        documentName: 'Quality Management System Procedure v1.0',
+        documentName: 'Quality Management System Procedure 1.0',
         version: '1.0',
         effectiveDate: '2023-01-15',
         archivedDate: '2024-06-20',
@@ -40,7 +40,7 @@ const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
         retentionExpiry: '2027-06-20',
         department: 'Quality Assurance',
         category: 'SOP',
-        reason: 'Replaced by v2.0',
+        reason: 'Replaced by 2.0',
         replacedBy: 'QMS.0001.02',
         fileSize: '2.5 MB'
     },
@@ -226,33 +226,33 @@ export const ArchivedDocumentsView: React.FC = () => {
             <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
                 <div className="overflow-x-auto flex-1">
                     <table className="w-full">
-                        <thead className="bg-slate-50 border-b border-slate-200">
+                        <thead className="bg-slate-50 border-b-2 border-slate-200">
                             <tr>
-                                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider text-center whitespace-nowrap w-16">
+                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center whitespace-nowrap w-16">
                                     No.
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Document Code
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Document Name
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Version
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Archived Date
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Last Approver
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Retention Period
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Retention Status
                                 </th>
-                                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                                     Actions
                                 </th>
                             </tr>

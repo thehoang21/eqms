@@ -1,13 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Download } from 'lucide-react';
+import { X, Download, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { ArchivedDocument } from '../types';
-import { Worker } from "@react-pdf-viewer/core";
-import { Viewer } from "@react-pdf-viewer/default-layout";
-import "@react-pdf-viewer/core/lib/styles/index.css";
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-import samplePdf from '@/assets/sample.pdf';
+import { renderAsync } from "docx-preview";
+import "../../detail-document/tabs/docx-preview.css";
 
 interface PreviewModalProps {
     isOpen: boolean;
@@ -22,6 +19,39 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
     document,
     onDownload
 }) => {
+    const docxContainerRef = useRef<HTMLDivElement>(null);
+    const [mockFile, setMockFile] = useState<File | null>(null);
+
+    // Load sample.docx for preview
+    useEffect(() => {
+        fetch("/src/assets/sample.docx")
+            .then(res => res.blob())
+            .then(blob => {
+                const file = new window.File([blob], "sample.docx", { 
+                    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+                });
+                setMockFile(file);
+            })
+            .catch(err => console.error("Error loading sample.docx:", err));
+    }, []);
+
+    // Render DOCX
+    useEffect(() => {
+        if (mockFile && docxContainerRef.current && isOpen) {
+            docxContainerRef.current.innerHTML = "";
+            renderAsync(mockFile, docxContainerRef.current, undefined, {
+                breakPages: true,
+                inWrapper: true,
+                ignoreWidth: false,
+                ignoreHeight: false,
+                renderHeaders: true,
+                renderFooters: true,
+            }).catch((error) => {
+                console.error("Error rendering docx:", error);
+            });
+        }
+    }, [mockFile, isOpen]);
+
     useEffect(() => {
         if (!isOpen) return;
 
@@ -119,12 +149,13 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
                             ))}
                         </div>
 
-                        {/* PDF Viewer */}
+                        {/* DOCX Viewer */}
                         <div className="h-full overflow-auto p-8">
                             <div className="max-w-4xl mx-auto">
-                                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-                                    <Viewer fileUrl={samplePdf} />
-                                </Worker>
+                                <div
+                                    ref={docxContainerRef}
+                                    className="docx-preview-container bg-white"
+                                />
                             </div>
                         </div>
                     </div>

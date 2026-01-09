@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     User,
     MessageSquare,
@@ -12,14 +13,14 @@ import {
 import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
-import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../DocumentWorkflowLayout";
-import {
-    GeneralInformationTab,
-    TrainingInformationTab,
-    DocumentTab,
-    SignaturesTab,
-    AuditTrailTab,
-} from "@/features/documents/detail-document/tabs";
+import { useToast } from '@/components/ui/toast';
+import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../../all-document/new-document/DocumentWorkflowLayout";
+import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
+import { GeneralTab } from "../revision-tabs/GeneralTab/GeneralTab";
+import { DocumentType as DocType } from "@/types/documentTypes";
+import { TrainingTab } from "../revision-tabs/TrainingTab/TrainingTab";
+import { SignaturesTab } from "../revision-tabs/SignaturesTab/SignaturesTab";
+import { AuditTab } from "../revision-tabs/AuditTab/AuditTab";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -38,7 +39,7 @@ interface Approver {
     comments?: string;
 }
 
-interface DocumentDetail {
+interface RevisionDetail {
     id: string;
     documentId: string;
     title: string;
@@ -77,10 +78,25 @@ interface Comment {
     content: string;
 }
 
-interface DocumentApprovalViewProps {
-    documentId: string;
+interface RevisionApprovalViewProps {
+    revisionId: string;
     onBack: () => void;
     currentUserId: string;
+}
+
+interface FormData {
+    title: string;
+    type: DocType;
+    author: string;
+    businessUnit: string;
+    department: string;
+    knowledgeBase: string;
+    subType: string;
+    periodicReviewCycle: number;
+    periodicReviewNotification: number;
+    language: string;
+    description: string;
+    isTemplate: boolean;
 }
 
 // --- Helper Functions ---
@@ -94,18 +110,18 @@ const formatDate = (dateString: string) => {
 };
 
 // --- Mock Data ---
-const MOCK_DOCUMENT: DocumentDetail = {
+const MOCK_REVISION: RevisionDetail = {
     id: "1",
     documentId: "SOP-QA-001",
-    title: "Standard Operating Procedure for Quality Control Testing",
+    title: "Standard Operating Procedure for Quality Control Testing - Revision 3.0",
     type: "SOP",
-    version: "1.0",
+    version: "3.0",
     status: "Pending Approval",
     effectiveDate: "2026-02-01",
     author: "John Smith",
     department: "Quality Assurance",
     created: "2026-01-05 10:30:00",
-    description: "This SOP outlines the procedures for quality control testing of pharmaceutical products.",
+    description: "This revision updates the quality control testing procedures to comply with new regulatory requirements.",
     documentType: 'Revision',
     previousVersion: '2.0',
     approver: {
@@ -137,24 +153,26 @@ const MOCK_COMMENTS: Comment[] = [
         author: "Reviewer 1",
         role: "QA Specialist",
         date: "2026-01-05 14:30:00",
-        content: "The testing procedures are well documented. Approved.",
+        content: "The revision addresses all regulatory changes. Approved for final approval.",
     },
     {
         id: "2",
         author: "Reviewer 2",
         role: "Lab Manager",
         date: "2026-01-05 16:45:00",
-        content: "All requirements are met. Ready for approval.",
+        content: "All updates are documented clearly. Ready for approval.",
     },
 ];
 
 // --- Main Component ---
-export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
-    documentId,
+export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
+    revisionId,
     onBack,
     currentUserId = "1",
 }) => {
-    const [document, setDocument] = useState(MOCK_DOCUMENT);
+    const navigate = useNavigate();
+    const { showToast } = useToast();
+    const [revision, setRevision] = useState(MOCK_REVISION);
     const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
     const [newComment, setNewComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -162,9 +180,25 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
     const [isWorkflowExpanded, setIsWorkflowExpanded] = useState(true);
     const [showESignModal, setShowESignModal] = useState(false);
     const [eSignAction, setESignAction] = useState<'approve' | 'reject'>('approve');
+    
+    // GeneralTab state
+    const [formData, setFormData] = useState<FormData>({
+        title: revision.title,
+        type: revision.type as DocType,
+        author: revision.author,
+        businessUnit: revision.businessUnit,
+        department: revision.department,
+        knowledgeBase: revision.knowledgeBase,
+        subType: revision.subType,
+        periodicReviewCycle: revision.periodicReviewCycle,
+        periodicReviewNotification: revision.periodicReviewNotification,
+        language: revision.language,
+        description: revision.description,
+        isTemplate: revision.isTemplate,
+    });
 
     // Determine if current user can approve (single approver)
-    const approver = document.approver;
+    const approver = revision.approver;
     const canApprove = approver.id === currentUserId && approver.status === 'pending';
 
     const handleApprove = () => {
@@ -195,13 +229,30 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                 comments: reason
             };
 
-            setDocument({
-                ...document,
+            setRevision({
+                ...revision,
                 approver: updatedApprover,
                 status: eSignAction === 'reject' ? "Pending Review" : "Approved",
             });
 
             setIsSubmitting(false);
+
+            // Show success message and redirect back to list
+            const message = eSignAction === 'approve' 
+                ? `Revision ${revision.documentId} v${revision.version} has been approved successfully.`
+                : `Revision ${revision.documentId} v${revision.version} has been rejected.`;
+            
+            showToast({
+                type: eSignAction === 'approve' ? 'success' : 'warning',
+                title: eSignAction === 'approve' ? 'Approved' : 'Rejected',
+                message: message,
+                duration: 3000
+            });
+
+            // Redirect to Pending My Approval list after 1.5 seconds
+            setTimeout(() => {
+                navigate('/documents/revisions/pending-approval');
+            }, 1500);
         }, 1000);
     };
 
@@ -228,27 +279,43 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
         { label: "Dashboard", onClick: onBack },
         { label: "My Tasks", onClick: onBack },
         { label: "Pending My Approval", onClick: onBack },
-        { label: document.documentId, isActive: true },
+        { label: `${revision.documentId} v${revision.version}`, isActive: true },
     ];
 
     return (
         <DocumentWorkflowLayout
-            title="Document Approval"
+            title="Revision Approval"
             breadcrumbs={breadcrumbs}
             onBack={onBack}
-            documentId={document.documentId}
-            documentStatus={document.status}
+            documentId={`${revision.documentId} v${revision.version}`}
+            documentStatus={revision.status}
             statusSteps={statusSteps}
-            currentStatus={document.status}
+            currentStatus={revision.status}
             tabs={DEFAULT_WORKFLOW_TABS}
             activeTab={activeTab}
             onTabChange={setActiveTab}
         >
             {activeTab === "document" && (
                 <div className="space-y-6">
-                    {/* PDF Preview Section */}
-                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <DocumentTab />
+                    {/* PDF Preview Section - Read Only */}
+                    <DocumentTab mode="view" />
+
+                    {/* Revision Info Banner */}
+                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-200 p-5">
+                        <div className="flex items-start gap-4">
+                            <div className="h-12 w-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-base font-bold text-slate-900 mb-1">Document Revision</h3>
+                                <p className="text-sm text-slate-600">
+                                    This is revision <span className="font-semibold">{revision.version}</span> of the document.
+                                    Previous version: <span className="font-semibold">{revision.previousVersion}</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Approval Workflow Info */}
@@ -337,7 +404,7 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                                             </div>
                                         </div>
                                     );
-                                })()}
+                                })()} You can only approve one revision at a time.
                             </div>
                         </div>
                     </div>
@@ -349,7 +416,7 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                                 <div>
                                     <h3 className="text-lg font-bold text-slate-900 mb-1">Your Approval Action Required</h3>
                                     <p className="text-sm text-slate-600">
-                                        Please review the document and provide your decision.
+                                        Please review the revision and provide your decision.
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-3 shrink-0">
@@ -439,17 +506,22 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                     </div>
                 </div>
             )}
-            {activeTab === "general" && <GeneralInformationTab document={document} isReadOnly={true} />}
-            {activeTab === "training" && <TrainingInformationTab />}
+            {activeTab === "general" && (
+                <GeneralTab
+                    formData={formData}
+                    onFormChange={setFormData}
+                />
+            )}
+            {activeTab === "training" && <TrainingTab />}
             {activeTab === "signatures" && <SignaturesTab />}
-            {activeTab === "audit" && <AuditTrailTab />}
+            {activeTab === "audit" && <AuditTab />}
 
             {/* E-Signature Modal */}
             <ESignatureModal
                 isOpen={showESignModal}
                 onClose={() => setShowESignModal(false)}
                 onConfirm={handleESignConfirm}
-                actionTitle={eSignAction === 'approve' ? 'Approve Document' : 'Reject Document'}
+                actionTitle={eSignAction === 'approve' ? 'Approve Revision' : 'Reject Revision'}
             />
         </DocumentWorkflowLayout>
     );

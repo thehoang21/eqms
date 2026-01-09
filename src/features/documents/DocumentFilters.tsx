@@ -4,7 +4,7 @@ import { Select } from '@/components/ui/select/Select';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 
 interface TableColumn {
     id: string;
@@ -153,6 +153,9 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                             { label: "Pending Review", value: "Pending Review" },
                             { label: "Pending Approval", value: "Pending Approval" },
                             { label: "Approved", value: "Approved" },
+                            { label: "Pending Training", value: "Pending Training" },
+                            { label: "Ready for Publishing", value: "Ready for Publishing" },
+                            { label: "Published", value: "Published" },
                             { label: "Effective", value: "Effective" },
                             { label: "Archive", value: "Archive" },
                         ]}

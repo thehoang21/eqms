@@ -39,7 +39,7 @@ interface SourceDocument {
 const MOCK_SOURCE_DOCUMENT: SourceDocument = {
     code: "SOP.0001.01",
     name: "Standard Operating Procedure for Quality Control Testing",
-    version: "v1.0",
+    version: "1.0",
     type: "SOP",
     effectiveDate: "2025-01-15",
     owner: "Dr. Sarah Johnson"
@@ -51,8 +51,8 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
         code: "FORM.0001.01",
         name: "Quality Control Test Record Form",
         type: "Form",
-        currentVersion: "v1.0",
-        nextVersion: "v2.0",
+        currentVersion: "1.0",
+        nextVersion: "2.0",
         status: "Active"
     },
     {
@@ -60,8 +60,8 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
         code: "ANNEX.0001.01",
         name: "Calibration Certificate Template",
         type: "Annex",
-        currentVersion: "v1.2",
-        nextVersion: "v2.0",
+        currentVersion: "1.2",
+        nextVersion: "2.0",
         status: "Active"
     },
     {
@@ -69,8 +69,8 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
         code: "FORM.0002.01",
         name: "Non-Conformance Report",
         type: "Form",
-        currentVersion: "v1.5",
-        nextVersion: "v2.0",
+        currentVersion: "1.5",
+        nextVersion: "2.0",
         status: "Active"
     },
     {
@@ -78,8 +78,8 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
         code: "ANNEX.0002.01",
         name: "Equipment Maintenance Log",
         type: "Annex",
-        currentVersion: "v1.0",
-        nextVersion: "v2.0",
+        currentVersion: "1.0",
+        nextVersion: "2.0",
         status: "Active"
     },
     {
@@ -87,8 +87,8 @@ const MOCK_LINKED_DOCUMENTS: LinkedDocument[] = [
         code: "REF.0001.01",
         name: "Reference Standards Documentation",
         type: "Reference",
-        currentVersion: "v1.1",
-        nextVersion: "v2.0",
+        currentVersion: "1.1",
+        nextVersion: "2.0",
         status: "Active"
     }
 ];
@@ -266,7 +266,7 @@ export const NewRevisionView: React.FC = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">Next Version</p>
-                                <p className="text-sm font-semibold text-blue-600">v2.0</p>
+                                <p className="text-sm font-semibold text-blue-600">2.0</p>
                             </div>
                         </div>
                     </div>

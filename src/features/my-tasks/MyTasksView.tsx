@@ -45,7 +45,7 @@ const MOCK_TASKS: Task[] = [
   {
     id: "1",
     taskId: "SOP-REV-001",
-    title: "Review SOP: Batch Release Proc v2.0",
+    title: "Review SOP: Batch Release Proc 2.0",
     description:
       "Review the updated sampling plan appendices. Ensure alignment with Annex 16.",
     module: "Document",
@@ -59,6 +59,24 @@ const MOCK_TASKS: Task[] = [
   },
   {
     id: "2",
+    taskId: "SOP-APR-002",
+    title: "Approve Revision: Quality Control Testing SOP v3.0",
+    description:
+      "Please review and approve the updated quality control testing procedures to comply with new regulatory requirements.",
+    module: "Document",
+    priority: "Critical",
+    dueDate: "2026-01-15",
+    status: "Pending",
+    assignee: "Dr. A. Smith",
+    reporter: "John Smith",
+    progress: 0,
+    timeline: [
+      { date: "2026-01-05", action: "Revision Submitted", user: "John Smith" },
+      { date: "2026-01-06", action: "Review Completed", user: "QA Team" },
+    ],
+  },
+  {
+    id: "3",
     taskId: "DEV-2025-001",
     title: "Investigate Temp Excursion: Warehouse",
     description:
@@ -80,7 +98,7 @@ const MOCK_TASKS: Task[] = [
     ],
   },
   {
-    id: "3",
+    id: "4",
     taskId: "TRN-2025-055",
     title: "Complete: GMP Annual Refresher Quiz",
     description: "Annual mandatory training requirement.",
@@ -94,7 +112,7 @@ const MOCK_TASKS: Task[] = [
     timeline: [{ date: "2025-12-01", action: "Assigned", user: "HR Training" }],
   },
   {
-    id: "4",
+    id: "5",
     taskId: "CAPA-2025-012",
     title: "Verify Effectiveness: Labeling Fix",
     description:

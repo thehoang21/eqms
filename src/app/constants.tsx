@@ -34,6 +34,7 @@ import {
   IconSettings2,
   IconShieldCheck,
   IconUsersGroup,
+  IconDatabase,
 } from "@tabler/icons-react";
 
 export const NAV_CONFIG: NavItem[] = [
@@ -193,7 +194,7 @@ export const NAV_CONFIG: NavItem[] = [
       {
         id: "dictionaries",
         label: "Dictionaries",
-        icon: Book,
+        icon: IconDatabase,
         path: "/settings/dictionaries",
       },
       {

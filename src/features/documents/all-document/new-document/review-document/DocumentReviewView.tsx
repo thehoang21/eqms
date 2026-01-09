@@ -133,7 +133,7 @@ const MOCK_DOCUMENT: DocumentDetail = {
   description:
     "This SOP outlines the procedures for quality control testing of pharmaceutical products.",
   documentType: "Revision", // Set as Revision to enable compare
-  previousVersion: "v2.0", // Previous version for comparison
+  previousVersion: "2.0", // Previous version for comparison
   reviewFlowType: "sequential",
   reviewers: [
     {

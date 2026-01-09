@@ -1,10 +1,13 @@
 import React from 'react';
 import { AppRoutes } from './routes';
+import { ToastProvider } from '@/components/ui/toast';
 
 const App: React.FC = () => {
   return (
     <React.StrictMode>
-      <AppRoutes />
+      <ToastProvider>
+        <AppRoutes />
+      </ToastProvider>
     </React.StrictMode>
   );
 };
