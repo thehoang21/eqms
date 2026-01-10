@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { FormModal } from "@/components/ui/modal/FormModal";
+import { MarkAsDestroyedModal } from "./MarkAsDestroyedModal";
 import { ControlledCopy, ControlledCopyStatus, CurrentStage } from "./types";
 
 // Mock data - Replace with API call
@@ -100,6 +101,8 @@ const getStatusColor = (status: ControlledCopyStatus) => {
       return "bg-amber-50 text-amber-700 border-amber-200";
     case "Obsolete":
       return "bg-red-50 text-red-700 border-red-200";
+    case "Destroyed":
+      return "bg-slate-800 text-white border-slate-900";
     default:
       return "bg-slate-50 text-slate-700 border-slate-200";
   }
@@ -201,320 +204,6 @@ const Timeline: React.FC<{ events: TimelineEvent[] }> = ({ events }) => {
   );
 };
 
-// Destruction Modal Component
-const DestructionModal: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (method: "upload" | "esign", data?: File | string) => void;
-  controlledCopy: ControlledCopy;
-}> = ({ isOpen, onClose, onConfirm, controlledCopy }) => {
-  const [method, setMethod] = useState<"upload" | "esign" | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isESignModalOpen, setIsESignModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      // Create preview for images
-      if (file.type.startsWith("image/")) {
-        const url = URL.createObjectURL(file);
-        setPreviewUrl(url);
-      } else {
-        setPreviewUrl(null);
-      }
-    }
-  };
-
-  const handleUploadSubmit = async () => {
-    if (selectedFile) {
-      setIsLoading(true);
-      try {
-        await onConfirm("upload", selectedFile);
-        handleClose();
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
-
-  const handleESignConfirm = async (reason: string) => {
-    setIsLoading(true);
-    try {
-      await onConfirm("esign", reason);
-      setIsESignModalOpen(false);
-      handleClose();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleClose = () => {
-    setMethod(null);
-    setSelectedFile(null);
-    setPreviewUrl(null);
-    onClose();
-  };
-
-  const handleBackToSelection = () => {
-    setMethod(null);
-    setSelectedFile(null);
-    setPreviewUrl(null);
-  };
-
-  // Method selection view
-  if (!method) {
-    return (
-      <>
-        <FormModal
-          isOpen={isOpen}
-          onClose={handleClose}
-          title="Mark Controlled Copy as Destroyed"
-          description={
-            <div className="space-y-2">
-              <p>
-                You are about to mark this controlled copy as destroyed. This action requires confirmation through one of the following methods:
-              </p>
-              <div className="bg-slate-50 rounded-lg p-3 mt-3 border border-slate-200">
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <span className="font-medium text-slate-700">Control #:</span>
-                    <span className="ml-1 text-slate-900">{controlledCopy.controlNumber}</span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-slate-700">Copy:</span>
-                    <span className="ml-1 text-slate-900">
-                      {controlledCopy.copyNumber} of {controlledCopy.totalCopies}
-                    </span>
-                  </div>
-                  <div className="col-span-2">
-                    <span className="font-medium text-slate-700">Location:</span>
-                    <span className="ml-1 text-slate-900">{controlledCopy.location}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
-          size="lg"
-          showCancel={false}
-        >
-          <div className="space-y-3 py-2">
-            {/* Upload Method */}
-            <button
-              onClick={() => setMethod("upload")}
-              className="w-full flex items-start gap-4 p-4 rounded-lg border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all group text-left"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-100 group-hover:bg-emerald-100 transition-colors flex-shrink-0">
-                <Upload className="h-6 w-6 text-slate-600 group-hover:text-emerald-600 transition-colors" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-slate-900 mb-1">
-                  Upload Destruction Document
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Upload a photo or PDF of the signed destruction record form. The document should show evidence of proper disposal according to company procedures.
-                </p>
-              </div>
-            </button>
-
-            {/* E-Signature Method */}
-            <button
-              onClick={() => {
-                setMethod("esign");
-                setIsESignModalOpen(true);
-              }}
-              className="w-full flex items-start gap-4 p-4 rounded-lg border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/30 transition-all group text-left"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-100 group-hover:bg-emerald-100 transition-colors flex-shrink-0">
-                <FileText className="h-6 w-6 text-slate-600 group-hover:text-emerald-600 transition-colors" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-slate-900 mb-1">
-                  E-Signature Confirmation
-                </h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Confirm destruction electronically with your credentials and provide a reason. This method creates a digital audit trail.
-                </p>
-              </div>
-            </button>
-
-            {/* Warning Box */}
-            <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg mt-4">
-              <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-amber-900 font-medium mb-1">
-                  Important Notice
-                </p>
-                <p className="text-xs text-amber-800 leading-relaxed">
-                  Once marked as destroyed, this controlled copy will be permanently removed from active inventory. Ensure the physical document has been properly disposed according to company policy.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-end pt-2">
-            <Button variant="outline" size="sm" onClick={handleClose}>
-              Cancel
-            </Button>
-          </div>
-        </FormModal>
-
-        {/* E-Signature Modal */}
-        <ESignatureModal
-          isOpen={isESignModalOpen}
-          onClose={() => {
-            setIsESignModalOpen(false);
-            setMethod(null);
-          }}
-          onConfirm={handleESignConfirm}
-          actionTitle="Confirm Controlled Copy Destruction"
-        />
-      </>
-    );
-  }
-
-  // Upload form view
-  if (method === "upload") {
-    return (
-      <FormModal
-        isOpen={isOpen}
-        onClose={handleClose}
-        title="Upload Destruction Document"
-        description={
-          <div className="space-y-2">
-            <p>
-              Upload a clear photo or scanned PDF of the signed destruction record form.
-            </p>
-            <div className="bg-slate-50 rounded-lg p-3 mt-2 border border-slate-200">
-              <div className="text-xs">
-                <span className="font-medium text-slate-700">Destroying:</span>
-                <span className="ml-1 text-slate-900">
-                  {controlledCopy.controlNumber} - {controlledCopy.location}
-                </span>
-              </div>
-            </div>
-          </div>
-        }
-        size="lg"
-        showCancel={false}
-      >
-        <div className="space-y-4">
-          {/* File Upload Area */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Destruction Document <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <input
-                type="file"
-                accept="image/*,.pdf"
-                onChange={handleFileChange}
-                className="block w-full text-sm text-slate-500
-                  file:mr-4 file:py-2.5 file:px-4
-                  file:rounded-lg file:border-0
-                  file:text-sm file:font-medium
-                  file:bg-emerald-50 file:text-emerald-700
-                  hover:file:bg-emerald-100
-                  file:transition-colors
-                  cursor-pointer border border-slate-200 rounded-lg
-                  focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-            <p className="mt-2 text-xs text-slate-500">
-              Accepted formats: JPG, PNG, PDF (Max 10MB)
-            </p>
-          </div>
-
-          {/* File Preview */}
-          {selectedFile && (
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0">
-                  {previewUrl ? (
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      className="h-20 w-20 object-cover rounded border border-slate-300"
-                    />
-                  ) : (
-                    <div className="h-20 w-20 flex items-center justify-center bg-slate-200 rounded border border-slate-300">
-                      <FileText className="h-8 w-8 text-slate-500" />
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-900 truncate">
-                    {selectedFile.name}
-                  </p>
-                  <p className="text-xs text-slate-500 mt-1">
-                    {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                    <span className="text-xs text-emerald-700 font-medium">
-                      File selected successfully
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Instructions */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-blue-900 mb-2">
-              Document Requirements:
-            </h4>
-            <ul className="space-y-1 text-xs text-blue-800">
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-0.5">•</span>
-                <span>Clear image showing all document details</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-0.5">•</span>
-                <span>Must include signature of authorized personnel</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-0.5">•</span>
-                <span>Date and time of destruction visible</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-0.5">•</span>
-                <span>Control number matching: {controlledCopy.controlNumber}</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="flex gap-3 justify-end pt-4">
-          <Button variant="outline" size="sm" onClick={handleBackToSelection} disabled={isLoading}>
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Back
-          </Button>
-          <Button
-            size="sm"
-            onClick={handleUploadSubmit}
-            disabled={!selectedFile || isLoading}
-          >
-            {isLoading ? (
-              <>Processing...</>
-            ) : (
-              <>
-                <Upload className="h-4 w-4 mr-1.5" />
-                Upload & Confirm Destruction
-              </>
-            )}
-          </Button>
-        </div>
-      </FormModal>
-    );
-  }
-
-  return null;
-};
-
 // Main Component
 interface ControlledCopyDetailViewProps {
   controlledCopyId: string;
@@ -537,15 +226,15 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
   };
 
   const handleMarkAsDestroyed = (
-    method: "upload" | "esign",
-    data?: File | string
+    formData: any,
+    reason: string
   ) => {
-    console.log("Mark as destroyed:", method, data);
-    // TODO: Call API to mark as destroyed
+    console.log("Mark as destroyed:", formData, reason);
+    // TODO: Call API to mark as destroyed with all form data
+    // Update controlled copy with destruction info
+    // Add timeline event
     alert(
-      `Controlled copy marked as destroyed via ${
-        method === "upload" ? "document upload" : "e-signature"
-      }`
+      `Controlled copy marked as destroyed.\nMethod: ${formData.destructionMethod}\nExecutor: ${formData.destructedBy}\nSupervisor: ${formData.destructionSupervisor}`
     );
   };
 
@@ -783,6 +472,73 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
               </div>
             </div>
           </div>
+
+          {/* Destruction Evidence Card - Only show if destroyed */}
+          {controlledCopy.status === "Destroyed" && controlledCopy.destructionEvidenceUrl && (
+            <div className="rounded-xl border border-slate-800 bg-slate-50 shadow-sm overflow-hidden">
+              <div className="border-b border-slate-300 bg-slate-800 px-6 py-4">
+                <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Destruction Evidence
+                </h2>
+              </div>
+              <div className="p-6 space-y-4">
+                {/* Evidence Photo */}
+                <div>
+                  <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Evidence Photo
+                  </label>
+                  <div className="mt-2 rounded-lg overflow-hidden border border-slate-300">
+                    <img
+                      src={controlledCopy.destructionEvidenceUrl}
+                      alt="Destruction Evidence"
+                      className="w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => window.open(controlledCopy.destructionEvidenceUrl, '_blank')}
+                    />
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Click to view full size
+                  </p>
+                </div>
+
+                {/* Destruction Details */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div>
+                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Destruction Date
+                    </label>
+                    <p className="mt-1 text-sm text-slate-900">
+                      {controlledCopy.destructionDate && formatDate(controlledCopy.destructionDate)}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Method
+                    </label>
+                    <p className="mt-1 text-sm text-slate-900">
+                      {controlledCopy.destructionMethod}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Executor
+                    </label>
+                    <p className="mt-1 text-sm text-slate-900">
+                      {controlledCopy.destructedBy}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      Supervisor
+                    </label>
+                    <p className="mt-1 text-sm text-slate-900">
+                      {controlledCopy.destructionSupervisor}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Column - Timeline */}
@@ -801,7 +557,7 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
       </div>
 
       {/* Destruction Modal */}
-      <DestructionModal
+      <MarkAsDestroyedModal
         isOpen={isDestructionModalOpen}
         onClose={() => setIsDestructionModalOpen(false)}
         onConfirm={handleMarkAsDestroyed}

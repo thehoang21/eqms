@@ -1,4 +1,4 @@
-export type ControlledCopyStatus = "Pending Approval" | "Active" | "Recalled" | "Obsolete";
+export type ControlledCopyStatus = "Pending Approval" | "Active" | "Recalled" | "Obsolete" | "Destroyed";
 
 export type CurrentStage = "Waiting for QM" | "Ready for Print" | "In Use";
 
@@ -28,4 +28,9 @@ export interface ControlledCopy {
   department: string;
   effectiveDate: string;
   recalledDate?: string;
+  destructionDate?: string;
+  destructionMethod?: string;
+  destructedBy?: string;
+  destructionSupervisor?: string;
+  destructionEvidenceUrl?: string;
 }
