@@ -8,6 +8,7 @@ import { DocumentReviewView } from '@/features/documents/all-document/new-docume
 import { DocumentApprovalView } from '@/features/documents/all-document/new-document/approval-document';
 import { NewDocumentView, BatchDocumentView, NewTemplateView } from '@/features/documents/all-document/new-document';
 import { ArchivedDocumentsView } from '@/features/documents/archived-document';
+import { AllControlledCopiesView, ControlledCopyDetailView } from '@/features/documents/controlled-copies';
 import { MyTasksView } from '@/features/my-tasks';
 import { ProfileView, UserManagementView, DictionariesView } from '@/features/settings';
 import { RolePermissionView } from '@/features/settings/role-permission';
@@ -53,6 +54,13 @@ const RevisionApprovalViewWrapper = () => {
   return <RevisionApprovalView revisionId={id!} onBack={() => navigate(-1)} currentUserId="1" />;
 };
 
+// Wrapper for Controlled Copy Detail View to extract ID from params
+const ControlledCopyDetailViewWrapper = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  return <ControlledCopyDetailView controlledCopyId={id!} onBack={() => navigate(-1)} />;
+};
+
 export const AppRoutes: React.FC = () => {
   const navigate = useNavigate();
 
@@ -70,6 +78,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/owned" element={<DocumentsOwnedByMeView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/all" element={<DocumentListView onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/all/new" element={<NewDocumentView />} />
+        <Route path="documents/controlled-copies/all" element={<AllControlledCopiesView />} />
+        <Route path="documents/controlled-copies/:id" element={<ControlledCopyDetailViewWrapper />} />
         <Route path="documents/batch/new" element={<BatchDocumentView />} />
         <Route path="documents/revisions/all" element={<RevisionListView />} />
         <Route path="documents/revisions/owned" element={<RevisionsOwnedByMeView />} />

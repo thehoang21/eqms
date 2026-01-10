@@ -183,7 +183,7 @@ export const RolePermissionView: React.FC = () => {
     return iconMap[moduleId] || Shield;
   };
 
-  const getActionIcon = (action: string) => {
+  const getActionIcon = (action: string): React.ComponentType<any> => {
     const iconMap: { [key: string]: React.ComponentType<any> } = {
       view: Eye,
       create: FilePlus,
@@ -196,19 +196,7 @@ export const RolePermissionView: React.FC = () => {
       assign: UserPlus,
       close: XCircle,
     };
-    return iconMap[action] || Lock;
-  };
-
-  const toggleGroup = (groupId: string) => {
-    setExpandedGroups(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(groupId)) {
-        newSet.delete(groupId);
-      } else {
-        newSet.add(groupId);
-      }
-      return newSet;
-    });
+    return iconMap[action] || Eye;
   };
 
   const ACTIONS = [
@@ -223,7 +211,6 @@ export const RolePermissionView: React.FC = () => {
     "assign",
     "close",
   ];
-
   const toggleActionFilter = (action: string) => {
     setActionFilters(prev => {
       const next = new Set(prev);
@@ -240,6 +227,14 @@ export const RolePermissionView: React.FC = () => {
 
   const expandAll = () => setExpandedGroups(new Set(PERMISSION_GROUPS.map(g => g.id)));
   const collapseAll = () => setExpandedGroups(new Set());
+
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups(prev => {
+      const next = new Set(prev);
+      if (next.has(groupId)) next.delete(groupId); else next.add(groupId);
+      return next;
+    });
+  };
 
   const openCreateModal = () => {
     setCreateName("");
@@ -422,7 +417,9 @@ export const RolePermissionView: React.FC = () => {
                     <div className="flex items-center gap-2 shrink-0">
                       <span className={cn(
                         "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border",
-                        role.color
+                        role.type === "custom"
+                          ? "bg-amber-50 text-amber-700 border-amber-200"
+                          : "bg-slate-50 text-slate-700 border-slate-200"
                       )}>
                         {role.type === "system" ? "System" : "Custom"}
                       </span>
@@ -802,27 +799,25 @@ export const RolePermissionView: React.FC = () => {
         onConfirm={handleCreateRole}
         title="Create New Role"
         confirmText="Create Role"
-        size="2xl"
+        size="xl"
       >
         <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1.5 block">Role name</label>
-              <input
-                value={createName}
-                onChange={(e) => setCreateName(e.target.value)}
-                placeholder="e.g., Document Owner (Dept A)"
-                className="w-full h-11 px-3 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
-              />
-            </div>
-            <div className="flex items-end">
-              <Checkbox
-                id="create-active"
-                checked={createIsActive}
-                onChange={(checked) => setCreateIsActive(!!checked)}
-                label="Active"
-              />
-            </div>
+          <div>
+            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Role name</label>
+            <input
+              value={createName}
+              onChange={(e) => setCreateName(e.target.value)}
+              placeholder="e.g., Document Owner (Dept A)"
+              className="w-full h-11 px-3 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+            />
+          </div>
+          <div className="pt-1">
+            <Checkbox
+              id="create-active"
+              checked={createIsActive}
+              onChange={(checked) => setCreateIsActive(!!checked)}
+              label="Active"
+            />
           </div>
           <div>
             <label className="text-sm font-medium text-slate-700 mb-1.5 block">Description</label>
@@ -840,6 +835,7 @@ export const RolePermissionView: React.FC = () => {
               onChange={(val: string) => setCreateBaseRoleId(val)}
               options={[{ label: "None (start from scratch)", value: "" }, ...roles.map(r => ({ label: r.name, value: r.id }))]}
               placeholder="Select a role"
+              maxVisibleRows={4}
             />
           </div>
           <div className="text-xs text-slate-500">

@@ -20,6 +20,8 @@ interface SelectProps {
   triggerClassName?: string;
   enableSearch?: boolean;
   disabled?: boolean;
+  maxVisibleRows?: number; // Limit visible options before scroll
+  rowHeight?: number; // Approximate option row height in px (default ~44)
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -33,6 +35,8 @@ export const Select: React.FC<SelectProps> = ({
   triggerClassName,
   enableSearch = true,
   disabled = false,
+  maxVisibleRows,
+  rowHeight = 44,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -160,7 +164,10 @@ export const Select: React.FC<SelectProps> = ({
               />
             </div>
           )}
-          <div className="max-h-[300px] overflow-y-auto p-1 custom-scrollbar">
+          <div
+            className="overflow-y-auto p-1 custom-scrollbar"
+            style={{ maxHeight: maxVisibleRows ? maxVisibleRows * rowHeight : 300 }}
+          >
             {filteredOptions.length === 0 ? (
               <div className="py-6 text-center text-sm text-slate-500">
                 No results found.

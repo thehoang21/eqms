@@ -1,0 +1,662 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ChevronRight, Printer, AlertCircle, ArrowLeft, Home, CheckCircle2, X } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
+import { Select } from '@/components/ui/select/Select';
+import { Checkbox } from '@/components/ui/checkbox/Checkbox';
+import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
+import { AlertModal } from '@/components/ui/modal/AlertModal';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card/ResponsiveCard';
+import { useToast } from '@/components/ui/toast/Toast';
+
+// --- Types ---
+interface DistributionLocation {
+  id: string;
+  code: string;
+  name: string;
+  department: string;
+}
+
+interface DocumentToPrint {
+  id: string;
+  documentId: string;
+  title: string;
+  version: string;
+  status: 'Effective' | 'Draft' | 'Pending Review' | 'Pending Approval' | 'Approved' | 'Archive';
+  isParent: boolean;
+}
+
+export interface ControlledCopyRequest {
+  documentId: string;
+  locationId: string;
+  locationName: string;
+  reason: string;
+  quantity: number;
+  signature: string;
+  selectedDocuments: string[];
+}
+
+// --- Mock Data: Distribution Locations ---
+const DISTRIBUTION_LOCATIONS: DistributionLocation[] = [
+  { id: '1', code: 'LOC-QA-01', name: 'Quality Assurance Lab', department: 'Quality Assurance' },
+  { id: '2', code: 'LOC-PROD-01', name: 'Production Floor A', department: 'Production' },
+  { id: '3', code: 'LOC-PROD-02', name: 'Production Floor B', department: 'Production' },
+  { id: '4', code: 'LOC-QC-01', name: 'Quality Control Lab', department: 'Quality Control' },
+  { id: '5', code: 'LOC-WHS-01', name: 'Warehouse - Raw Material', department: 'Warehouse' },
+  { id: '6', code: 'LOC-WHS-02', name: 'Warehouse - Finished Goods', department: 'Warehouse' },
+  { id: '7', code: 'LOC-RD-01', name: 'R&D Laboratory', department: 'Research & Development' },
+  { id: '8', code: 'LOC-ENG-01', name: 'Engineering Office', department: 'Engineering' },
+  { id: '9', code: 'LOC-HSE-01', name: 'Health, Safety & Environment Office', department: 'HSE' },
+  { id: '10', code: 'LOC-REG-01', name: 'Regulatory Affairs Office', department: 'Regulatory Affairs' },
+];
+
+// --- Main Component ---
+export const RequestControlledCopyView: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { showToast } = useToast();
+  
+  // Get document data from navigation state
+  const { documentId, documentTitle, documentVersion, relatedDocuments = [] } = location.state || {};
+
+  // Form state
+  const [selectedLocation, setSelectedLocation] = useState<string>('');
+  const [reason, setReason] = useState('');
+  const [quantity, setQuantity] = useState<number>(1);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
+  // Document selection state (default: Select All)
+  const [selectedDocumentIds, setSelectedDocumentIds] = useState<Set<string>>(
+    new Set(relatedDocuments.map((doc: DocumentToPrint) => doc.id))
+  );
+  
+  // Modal states
+  const [showESignModal, setShowESignModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+
+  // Redirect if no document data
+  useEffect(() => {
+    if (!documentId) {
+      navigate('/documents/all');
+    }
+  }, [documentId, navigate]);
+
+  if (!documentId) {
+    return null;
+  }
+
+  // Determine if we have parent-child relationship
+  const hasRelatedDocs = relatedDocuments.length > 0;
+  const documentsToShow: DocumentToPrint[] = hasRelatedDocs ? relatedDocuments : [];
+
+  // Check for non-Effective documents
+  const hasNonEffectiveDocs = documentsToShow.some((doc: DocumentToPrint) => doc.status !== 'Effective');
+
+  // Check if all documents selected
+  const isAllSelected = selectedDocumentIds.size === documentsToShow.length && documentsToShow.length > 0;
+
+  // Check if form is valid (for Submit button enable/disable)
+  const isFormValid = 
+    selectedLocation !== '' &&
+    (!hasRelatedDocs || selectedDocumentIds.size > 0) &&
+    reason.trim().length >= 10 &&
+    quantity >= 1 && 
+    quantity <= 50;
+
+  // Toggle Select All
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedDocumentIds(new Set(documentsToShow.map((doc: DocumentToPrint) => doc.id)));
+    } else {
+      setSelectedDocumentIds(new Set());
+    }
+  };
+
+  // Toggle individual document
+  const handleToggleDocument = (docId: string, checked: boolean) => {
+    const newSet = new Set(selectedDocumentIds);
+    if (checked) {
+      newSet.add(docId);
+    } else {
+      newSet.delete(docId);
+    }
+    setSelectedDocumentIds(newSet);
+  };
+
+  // Validation
+  const validateForm = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!selectedLocation) {
+      newErrors.location = 'Location is required';
+    }
+
+    if (hasRelatedDocs && selectedDocumentIds.size === 0) {
+      newErrors.documents = 'Please select at least one document to print';
+    }
+
+    if (!reason.trim()) {
+      newErrors.reason = 'Reason is required';
+    } else if (reason.trim().length < 10) {
+      newErrors.reason = 'Reason must be at least 10 characters';
+    }
+
+    if (quantity < 1 || quantity > 50) {
+      newErrors.quantity = 'Quantity must be between 1 and 50';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle cancel button click
+  const handleCancel = () => {
+    // Check if form has any data
+    const hasFormData = 
+      selectedLocation !== '' || 
+      reason.trim() !== '' || 
+      quantity !== 1 ||
+      (hasRelatedDocs && selectedDocumentIds.size !== documentsToShow.length);
+
+    if (hasFormData) {
+      // Show confirmation modal
+      setShowCancelModal(true);
+    } else {
+      // No data, just go back
+      navigate(-1);
+    }
+  };
+
+  // Handle cancel confirmation
+  const handleCancelConfirm = () => {
+    setShowCancelModal(false);
+    navigate(-1);
+  };
+
+  // Handle form submission (open e-signature modal)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (validateForm()) {
+      setShowESignModal(true);
+    }
+  };
+
+  // Handle e-signature confirmation
+  const handleESignConfirm = (signatureReason: string) => {
+    const location = DISTRIBUTION_LOCATIONS.find(loc => loc.id === selectedLocation);
+    
+    const request: ControlledCopyRequest = {
+      documentId,
+      locationId: selectedLocation,
+      locationName: location?.name || '',
+      reason,
+      quantity,
+      signature: signatureReason,
+      selectedDocuments: Array.from(selectedDocumentIds),
+    };
+
+    // TODO: Call API to submit controlled copy request
+    console.log('Controlled Copy Request:', request);
+    
+    showToast({
+      type: 'success',
+      title: 'Request Submitted Successfully',
+      message: 'Your request has been sent to the QA Manager for approval. You can monitor the status on the All Controlled Copies screen.',
+      duration: 5000,
+    });
+    
+    setShowESignModal(false);
+    navigate(-1);
+  };
+
+  // Prepare location options for Select component
+  const locationOptions = DISTRIBUTION_LOCATIONS.map(loc => ({
+    value: loc.id,
+    label: `${loc.code} - ${loc.name}`,
+    description: loc.department,
+  }));
+
+  return (
+    <div className="space-y-6">
+          {/* Header: Title + Breadcrumb + Actions */}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+                  Request Controlled Copy
+                </h1>
+                <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+                  <button
+                    onClick={() => navigate('/dashboard')}
+                    className="hover:text-slate-700 transition-colors hidden sm:inline"
+                  >
+                    Dashboard
+                  </button>
+                  <Home className="h-4 w-4 sm:hidden" />
+                  <ChevronRight className="h-4 w-4 text-slate-400" />
+                  <button
+                    className="transition-colors hidden sm:inline"
+                  >
+                    Document Control
+                  </button>
+                  <span className="sm:hidden">...</span>
+                  <ChevronRight className="h-4 w-4 text-slate-400" />
+                  <button
+                    onClick={() => navigate('/documents/all')}
+                    className="hover:text-slate-700 transition-colors"
+                  >
+                    All Documents
+                  </button>
+                  <ChevronRight className="h-4 w-4 text-slate-400" />
+                  <span className="text-slate-700 font-medium">{documentId}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={() => navigate(-1)}
+                  size="sm"
+                  variant="outline"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-black hover:bg-slate-50 transition-colors shadow-sm"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to List
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCancel}
+                  className="flex items-center gap-1.5 md:gap-2 touch-manipulation"
+                >
+                  <X className="h-4 w-4" />
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="default"
+                  size="sm"
+                  disabled={!isFormValid}
+                  form="controlled-copy-form"
+                  className="flex items-center gap-1.5 md:gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300 touch-manipulation"
+                >
+                  <Printer className="h-4 w-4" />
+                  Submit Request
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <form id="controlled-copy-form" onSubmit={handleSubmit} className="space-y-6">
+            {/* Important Notice Banner */}
+            <div className="bg-amber-50 border border-amber-400 rounded-lg p-4 shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-amber-900 mb-2">Important Notice</h3>
+                  <div className="space-y-1.5 text-sm text-amber-800">
+                    <p>• All printed copies will be individually numbered and must be recalled when a new version is available.</p>
+                    <p>• The issuance of controlled copies must comply with the organization's document management procedures.</p>
+                    <p>• This action will be recorded in the audit trail and requires electronic signature approval.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Document Info - Full Width */}
+            <Card padding="md">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  Document Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1.5">Document ID</label>
+                    <p className="text-sm text-slate-900 font-medium bg-slate-50 rounded-md px-3 py-2.5 border border-slate-200">
+                      {documentId}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1.5">Version</label>
+                    <p className="text-sm text-slate-900 font-medium bg-slate-50 rounded-md px-3 py-2.5 border border-slate-200">
+                      v{documentVersion}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1.5">Status</label>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Effective
+                    </span>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-700 block mb-1.5">Title</label>
+                    <p className="text-sm text-slate-900 bg-slate-50 rounded-md px-3 py-2.5 border border-slate-200 truncate" title={documentTitle}>
+                      {documentTitle}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Two Column Layout: Select Documents + Distribution Details OR Distribution Details + Summary */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              {/* Document Selection - Only show if has related documents */}
+              {hasRelatedDocs && (
+                <Card padding="md">
+                  <CardHeader>
+                    <CardTitle>Select Documents to Print</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {/* Select All */}
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
+                      <Checkbox
+                        id="select-all"
+                        checked={isAllSelected}
+                        onChange={handleSelectAll}
+                        label={`Select All (${selectedDocumentIds.size} of ${documentsToShow.length} selected)`}
+                        className="font-medium text-slate-900"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleSelectAll(!isAllSelected)}
+                        className="text-xs text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+                      >
+                        {isAllSelected ? 'Deselect All' : 'Select All'}
+                      </button>
+                    </div>
+
+                    {/* Document List */}
+                    <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                      {documentsToShow.map((doc: DocumentToPrint) => (
+                        <div
+                          key={doc.id}
+                          className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors"
+                        >
+                          <div className="flex items-start gap-3">
+                            <Checkbox
+                              id={`doc-${doc.id}`}
+                              checked={selectedDocumentIds.has(doc.id)}
+                              onChange={(checked) => handleToggleDocument(doc.id, checked)}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                <span className={`text-sm font-medium ${doc.isParent ? 'text-slate-900' : 'text-slate-700'}`}>
+                                  {doc.documentId}
+                                </span>
+                                <span className="text-xs text-slate-500">v{doc.version}</span>
+                                {doc.isParent && (
+                                  <span className="px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    Parent
+                                  </span>
+                                )}
+                                {doc.status !== 'Effective' && (
+                                  <span className="px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                    {doc.status}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm text-slate-600">{doc.title}</p>
+                              {doc.status !== 'Effective' && (
+                                <div className="flex items-center gap-1 mt-2 text-xs text-amber-600">
+                                  <AlertCircle className="h-3.5 w-3.5" />
+                                  <span>This document is not yet Effective. Printing is not recommended.</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Validation Error for Document Selection */}
+                    {errors.documents && (
+                      <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 rounded-lg mt-3">
+                        <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0" />
+                        <p className="text-sm text-red-600">{errors.documents}</p>
+                      </div>
+                    )}
+
+                    {/* Warning if non-Effective docs selected */}
+                    {hasNonEffectiveDocs && selectedDocumentIds.size > 0 && (
+                      <div className="flex items-center gap-2 px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg mt-3">
+                        <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                        <p className="text-xs text-amber-800">
+                          Note: Some selected documents are not in Effective status. Consider removing them from selection.
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Distribution Details */}
+              <Card padding="md">
+                <CardHeader>
+                  <CardTitle>Distribution Details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Location Dropdown */}
+                    <div>
+                      <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                        Location <span className="text-red-600">*</span>
+                      </label>
+                      <Select
+                        value={selectedLocation}
+                        onChange={(value) => {
+                          setSelectedLocation(value);
+                          if (errors.location) {
+                            setErrors({ ...errors, location: '' });
+                          }
+                        }}
+                        options={locationOptions}
+                        placeholder="Select distribution location"
+                        enableSearch
+                      />
+                      {errors.location && (
+                        <p className="text-sm text-red-600 mt-1.5 flex items-center gap-1">
+                          <AlertCircle className="h-3.5 w-3.5" />
+                          {errors.location}
+                        </p>
+                      )}
+                      <p className="text-xs text-slate-500 mt-1.5">
+                        Choose where the controlled copy will be distributed
+                      </p>
+                    </div>
+
+                    {/* Quantity Input */}
+                    <div>
+                      <label
+                        htmlFor="quantity"
+                        className="text-sm font-medium text-slate-700 mb-1.5 block"
+                      >
+                        Number of Copies <span className="text-red-600">*</span>
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (quantity > 1) {
+                              setQuantity(quantity - 1);
+                              if (errors.quantity) {
+                                setErrors({ ...errors, quantity: '' });
+                              }
+                            }
+                          }}
+                          className="h-11 w-11 rounded-md border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={quantity <= 1}
+                        >
+                          <span className="text-lg font-medium text-slate-700">−</span>
+                        </button>
+                        
+                        <input
+                          type="number"
+                          id="quantity"
+                          value={quantity}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value) || 1;
+                            setQuantity(Math.max(1, Math.min(50, val)));
+                            if (errors.quantity) {
+                              setErrors({ ...errors, quantity: '' });
+                            }
+                          }}
+                          min={1}
+                          max={50}
+                          className={`h-11 w-24 px-3 py-2 border rounded-md text-sm text-center font-medium focus:outline-none focus:ring-2 transition-colors ${
+                            errors.quantity
+                              ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
+                              : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                          }`}
+                        />
+                        
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (quantity < 50) {
+                              setQuantity(quantity + 1);
+                              if (errors.quantity) {
+                                setErrors({ ...errors, quantity: '' });
+                              }
+                            }
+                          }}
+                          className="h-11 w-11 rounded-md border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={quantity >= 50}
+                        >
+                          <span className="text-lg font-medium text-slate-700">+</span>
+                        </button>
+                      </div>
+                      {errors.quantity && (
+                        <p className="text-sm text-red-600 mt-1.5 flex items-center gap-1">
+                          <AlertCircle className="h-3.5 w-3.5" />
+                          {errors.quantity}
+                        </p>
+                      )}
+                      <p className="text-xs text-slate-500 mt-1.5">
+                        Each copy will be assigned a unique control number (max: 50 copies)
+                      </p>
+                    </div>
+
+                    {/* Reason Input - Full Width */}
+                    <div className="lg:col-span-2">
+                      <label
+                        htmlFor="reason"
+                        className="text-sm font-medium text-slate-700 mb-1.5 block"
+                      >
+                        Reason for Printing <span className="text-red-600">*</span>
+                      </label>
+                      <textarea
+                        id="reason"
+                        value={reason}
+                        onChange={(e) => {
+                          setReason(e.target.value);
+                          if (errors.reason) {
+                            setErrors({ ...errors, reason: '' });
+                          }
+                        }}
+                        placeholder="e.g., 'Replace damaged copy', 'New production line setup', 'Additional copy for shift rotation'"
+                        rows={4}
+                        className={`w-full px-3 py-2.5 border rounded-md text-sm focus:outline-none focus:ring-2 transition-colors resize-none ${
+                          errors.reason
+                            ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
+                            : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                        }`}
+                      />
+                      {errors.reason && (
+                        <p className="text-sm text-red-600 mt-1.5 flex items-center gap-1">
+                          <AlertCircle className="h-3.5 w-3.5" />
+                          {errors.reason}
+                        </p>
+                      )}
+                      <p className="text-xs text-slate-500 mt-1.5">
+                        Minimum 10 characters. This will be recorded in the audit trail.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Summary - Show in same row with Distribution Details if no related docs */}
+              {!hasRelatedDocs && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                  <h3 className="text-sm font-semibold text-emerald-900 mb-3">Summary</h3>
+                  <div className="space-y-2 text-sm text-emerald-800">
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                      <span>
+                        <span className="font-medium">{quantity}</span> controlled {quantity === 1 ? 'copy' : 'copies'} will be printed
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                      <span>Each copy will receive a unique control number</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                      <span>All copies must be returned when document is revised or obsolete</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Summary - Show below if has related docs */}
+            {hasRelatedDocs && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                <h3 className="text-sm font-semibold text-emerald-900 mb-3">Summary</h3>
+                <div className="space-y-2 text-sm text-emerald-800">
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                    <span>
+                      <span className="font-medium">{selectedDocumentIds.size}</span> document{selectedDocumentIds.size !== 1 ? 's' : ''} selected
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                    <span>
+                      <span className="font-medium">{quantity}</span> {quantity === 1 ? 'copy' : 'copies'} per document = <span className="font-medium">{selectedDocumentIds.size * quantity}</span> total prints
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                    <span>Each copy will receive a unique control number</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                    <span>All copies must be returned when document is revised or obsolete</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </form>
+
+          {/* E-Signature Modal */}
+          <ESignatureModal
+            isOpen={showESignModal}
+            onClose={() => setShowESignModal(false)}
+            onConfirm={handleESignConfirm}
+            actionTitle="Confirm Controlled Copy Request"
+          />
+
+          {/* Cancel Confirmation Modal */}
+          <AlertModal
+            isOpen={showCancelModal}
+            onClose={() => setShowCancelModal(false)}
+            onConfirm={handleCancelConfirm}
+            type="warning"
+            title="Discard Changes?"
+            description={
+              <div className="space-y-2">
+                <p>You have unsaved changes in this form.</p>
+                <p>Are you sure you want to cancel? All entered data will be lost.</p>
+              </div>
+            }
+            confirmText="Yes, Discard"
+            cancelText="No, Keep Editing"
+            showCancel={true}
+          />
+    </div>
+  );
+};

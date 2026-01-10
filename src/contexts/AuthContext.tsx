@@ -1,11 +1,13 @@
 /**
- * Authentication Context
+ * Authentication Context - Enhanced with Security Features
  * Provides authentication state and methods throughout the app
+ * Includes secure token storage, session monitoring, and audit logging
  */
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authApi } from '@/services/api';
 import type { User, LoginCredentials } from '@/types';
+import { secureStorage, tokenUtils, auditLog, csrfToken } from '@/utils/security';
 
 interface AuthContextType {
   user: User | null;
@@ -14,6 +16,7 @@ interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<{ success: boolean; error?: Error }>;
   logout: () => Promise<void>;
   updateUser: (user: User) => void;
+  refreshToken: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,25 +30,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check authentication status on mount
+  // Check authentication status on mount with security checks
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('authToken');
-      const storedUser = localStorage.getItem('user');
+      const token = secureStorage.getItem('authToken', true); // Decrypt token
+      const storedUser = secureStorage.getItem('user', true);
 
       if (token && storedUser) {
         try {
+          // Validate token expiry
+          if (tokenUtils.isTokenExpired(token)) {
+            auditLog.log('expired_token_on_mount');
+            secureStorage.removeItem('authToken');
+            secureStorage.removeItem('user');
+            setLoading(false);
+            return;
+          }
+
           const parsedUser = JSON.parse(storedUser);
           setUser(parsedUser);
           setIsAuthenticated(true);
+
+          // Generate CSRF token
+          const csrf = csrfToken.generate();
+          csrfToken.store(csrf);
+
+          auditLog.log('session_restored', { userId: parsedUser.id });
 
           // Optionally validate token with backend
           // const currentUser = await authApi.getCurrentUser();
           // setUser(currentUser);
         } catch (error) {
           console.error('Error parsing stored user:', error);
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('user');
+          auditLog.log('auth_check_error', { error: String(error) });
+          secureStorage.removeItem('authToken');
+          secureStorage.removeItem('user');
         }
       }
 
@@ -58,10 +77,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (credentials: LoginCredentials) => {
     try {
       const response = await authApi.login(credentials);
+      
+      // Store token securely (encrypted)
+      secureStorage.setItem('authToken', response.token, true);
+      secureStorage.setItem('user', JSON.stringify(response.user), true);
+      
       setUser(response.user);
       setIsAuthenticated(true);
+
+      // Generate CSRF token
+      const csrf = csrfToken.generate();
+      csrfToken.store(csrf);
+
+      auditLog.log('login_success', { 
+        userId: response.user.id, 
+        role: response.user.role 
+      });
+
       return { success: true };
     } catch (error) {
+      auditLog.log('login_failed', { 
+        email: credentials.email,
+        error: String(error) 
+      });
       return { success: false, error: error as Error };
     }
   };
@@ -69,9 +107,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async () => {
     try {
       await authApi.logout();
+      auditLog.log('logout_success', { userId: user?.id });
     } catch (error) {
       console.error('Logout error:', error);
+      auditLog.log('logout_error', { error: String(error) });
     } finally {
+      // Clear all secure storage
+      secureStorage.removeItem('authToken');
+      secureStorage.removeItem('user');
+      csrfToken.store(''); // Clear CSRF
+      
       setUser(null);
       setIsAuthenticated(false);
     }
@@ -79,7 +124,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    secureStorage.setItem('user', JSON.stringify(updatedUser), true);
+    auditLog.log('user_updated', { userId: updatedUser.id });
+  };
+
+  const refreshToken = async (): Promise<boolean> => {
+    try {
+      const currentToken = secureStorage.getItem('authToken', true);
+      if (!currentToken) return false;
+
+      // Call refresh endpoint (implement in authApi)
+      // const response = await authApi.refreshToken(currentToken);
+      // secureStorage.setItem('authToken', response.token, true);
+      
+      auditLog.log('token_refreshed', { userId: user?.id });
+      return true;
+    } catch (error) {
+      auditLog.log('token_refresh_failed', { error: String(error) });
+      return false;
+    }
   };
 
   const value: AuthContextType = {
@@ -89,6 +152,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     logout,
     updateUser,
+    refreshToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

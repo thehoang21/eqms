@@ -23,6 +23,7 @@ import {
   Home,
   FilePlus2,
   Loader2,
+  Printer,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
@@ -335,6 +336,7 @@ interface DropdownMenuProps {
   position: { top: number; left: number };
   onViewDocument?: (documentId: string, tab?: string) => void;
   navigate: NavigateFunction;
+  onPrintControlledCopy?: (document: Document) => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -344,6 +346,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   position,
   onViewDocument,
   navigate,
+  onPrintControlledCopy,
 }) => {
   const [isNavigating, setIsNavigating] = useState(false);
 
@@ -469,6 +472,15 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
       case "Effective":
         items.push(
+          {
+            icon: Printer,
+            label: "Print Controlled Copy",
+            onClick: () => {
+              onPrintControlledCopy?.(document);
+              onClose();
+            },
+            color: "text-slate-500"
+          },
           {
             icon: FilePlus2,
             label: "New Revision",
@@ -809,6 +821,110 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
       setSelectedDocumentId(documentId);
       setSelectedDocumentTab(tab);
     }
+  };
+
+  // Handle Print Controlled Copy
+  const handlePrintControlledCopy = (document: Document) => {
+    // Generate related documents based on hasRelatedDocuments flag
+    const relatedDocuments = document.hasRelatedDocuments
+      ? (() => {
+          // Generate related documents based on document ID
+          const relatedDocs = [
+            // Parent document
+            {
+              id: document.id,
+              documentId: document.documentId,
+              title: document.title,
+              version: document.version,
+              status: document.status as any,
+              isParent: true,
+            },
+          ];
+
+          // Add children based on document type
+          if (document.documentId.startsWith('SOP.0001')) {
+            // SOP.0001.03 → has 3 children
+            relatedDocs.push(
+              {
+                id: `${document.id}-child-1`,
+                documentId: 'SOP.0001.04',
+                title: 'Appendix A: Testing Equipment Calibration',
+                version: '3.0',
+                status: 'Effective' as any,
+                isParent: false,
+              },
+              {
+                id: `${document.id}-child-2`,
+                documentId: 'SOP.0001.05',
+                title: 'Appendix B: Sample Preparation Guidelines',
+                version: '2.5',
+                status: 'Pending Review' as any,
+                isParent: false,
+              },
+              {
+                id: `${document.id}-child-3`,
+                documentId: 'SOP.0001.06',
+                title: 'Appendix C: Test Result Documentation',
+                version: '3.0',
+                status: 'Effective' as any,
+                isParent: false,
+              }
+            );
+          } else if (document.documentId.startsWith('SOP.0012')) {
+            // SOP.0012.04 → has 2 children
+            relatedDocs.push(
+              {
+                id: `${document.id}-child-1`,
+                documentId: 'SOP.0012.05',
+                title: 'Form: Batch Production Record Template',
+                version: '4.2',
+                status: 'Pending Review' as any,
+                isParent: false,
+              },
+              {
+                id: `${document.id}-child-2`,
+                documentId: 'SOP.0012.06',
+                title: 'Checklist: Batch Record Review',
+                version: '4.0',
+                status: 'Draft' as any,
+                isParent: false,
+              }
+            );
+          } else if (document.documentId.startsWith('SPEC.0045')) {
+            // SPEC.0045.02 → has 2 children
+            relatedDocs.push(
+              {
+                id: `${document.id}-child-1`,
+                documentId: 'SPEC.0045.03',
+                title: 'Certificate of Analysis Template',
+                version: '2.0',
+                status: 'Effective' as any,
+                isParent: false,
+              },
+              {
+                id: `${document.id}-child-2`,
+                documentId: 'SPEC.0045.04',
+                title: 'Sampling Plan and Acceptance Criteria',
+                version: '1.5',
+                status: 'Approved' as any,
+                isParent: false,
+              }
+            );
+          }
+
+          return relatedDocs;
+        })()
+      : [];
+
+    // Navigate to Controlled Copy page with document data
+    navigate('/documents/controlled-copy/request', {
+      state: {
+        documentId: document.documentId,
+        documentTitle: document.title,
+        documentVersion: document.version,
+        relatedDocuments,
+      },
+    });
   };
 
   // Simulate loading data
@@ -1174,6 +1290,7 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
                               position={dropdownPosition}
                               onViewDocument={handleViewDocument}
                               navigate={navigate}
+                              onPrintControlledCopy={handlePrintControlledCopy}
                             />
                           </td>
                         );

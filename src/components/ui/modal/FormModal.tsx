@@ -63,17 +63,15 @@ export const FormModal: React.FC<FormModalProps> = ({
             <button
               onClick={onClose}
               aria-label="Close"
-              className="text-slate-400 hover:text-slate-600 transition-colors -mt-1 -mr-2 p-2 rounded-full hover:bg-slate-100"
+              className="text-slate-400 hover:text-slate-600 transition-colors -mt-1 -mr-2 p-2 rounded-lg hover:bg-slate-100"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
         </div>
-
         <div className="px-6 py-5 bg-white">
           {children}
         </div>
-
         <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3">
           {showCancel && (
             <Button size="sm" variant="outline" onClick={onClose} disabled={isLoading}>

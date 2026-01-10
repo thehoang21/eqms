@@ -1,0 +1,404 @@
+/**
+ * Security Utilities
+ * XSS protection, sanitization, validation, and encryption helpers
+ */
+
+// Optional import - install with: npm install dompurify
+let DOMPurify: any;
+try {
+  DOMPurify = require('dompurify');
+} catch {
+  console.warn('DOMPurify not installed. Install with: npm install dompurify');
+}
+
+/**
+ * XSS Protection - Sanitize HTML content
+ */
+export const sanitizeHtml = (dirty: string): string => {
+  if (!DOMPurify) {
+    // Fallback: basic HTML escaping if DOMPurify not available
+    return dirty
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;');
+  }
+  return DOMPurify.sanitize(dirty, {
+    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li'],
+    ALLOWED_ATTR: ['href', 'title', 'target'],
+  });
+};
+
+/**
+ * Sanitize user input (strip HTML completely)
+ */
+export const sanitizeInput = (input: string): string => {
+  if (!DOMPurify) {
+    return input
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;');
+  }
+  return DOMPurify.sanitize(input, { ALLOWED_TAGS: [] });
+};
+
+/**
+ * Validate email format
+ */
+export const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+/**
+ * Validate password strength
+ * Must contain: 8+ chars, uppercase, lowercase, number, special char
+ */
+export const isStrongPassword = (password: string): boolean => {
+  const minLength = 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  return (
+    password.length >= minLength &&
+    hasUpperCase &&
+    hasLowerCase &&
+    hasNumber &&
+    hasSpecialChar
+  );
+};
+
+/**
+ * Simple encryption for sensitive data in localStorage
+ * Uses base64 + XOR cipher (for basic obfuscation, not cryptographically secure)
+ * For production, use Web Crypto API or backend encryption
+ */
+const ENCRYPTION_KEY = 'EQMS_SECRET_KEY_2026'; // Should be loaded from env
+
+export const encryptData = (data: string): string => {
+  try {
+    const encrypted = Array.from(data)
+      .map((char, i) =>
+        String.fromCharCode(
+          char.charCodeAt(0) ^ ENCRYPTION_KEY.charCodeAt(i % ENCRYPTION_KEY.length)
+        )
+      )
+      .join('');
+    return btoa(encrypted); // Base64 encode
+  } catch (error) {
+    console.error('Encryption error:', error);
+    return data;
+  }
+};
+
+export const decryptData = (encrypted: string): string => {
+  try {
+    const decoded = atob(encrypted); // Base64 decode
+    return Array.from(decoded)
+      .map((char, i) =>
+        String.fromCharCode(
+          char.charCodeAt(0) ^ ENCRYPTION_KEY.charCodeAt(i % ENCRYPTION_KEY.length)
+        )
+      )
+      .join('');
+  } catch (error) {
+    console.error('Decryption error:', error);
+    return encrypted;
+  }
+};
+
+/**
+ * Secure token storage
+ */
+export const secureStorage = {
+  setItem: (key: string, value: string, encrypt = true): void => {
+    try {
+      const stored = encrypt ? encryptData(value) : value;
+      localStorage.setItem(key, stored);
+    } catch (error) {
+      console.error('Storage error:', error);
+    }
+  },
+
+  getItem: (key: string, decrypt = true): string | null => {
+    try {
+      const stored = localStorage.getItem(key);
+      if (!stored) return null;
+      return decrypt ? decryptData(stored) : stored;
+    } catch (error) {
+      console.error('Retrieval error:', error);
+      return null;
+    }
+  },
+
+  removeItem: (key: string): void => {
+    localStorage.removeItem(key);
+  },
+
+  clear: (): void => {
+    localStorage.clear();
+  },
+};
+
+/**
+ * JWT Token utilities
+ */
+export const tokenUtils = {
+  /**
+   * Parse JWT token (client-side only for reading payload, not for validation)
+   */
+  parseToken: (token: string): any => {
+    try {
+      const payload = token.split('.')[1];
+      return JSON.parse(atob(payload));
+    } catch (error) {
+      console.error('Token parse error:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Check if token is expired
+   */
+  isTokenExpired: (token: string): boolean => {
+    const payload = tokenUtils.parseToken(token);
+    if (!payload || !payload.exp) return true;
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp < currentTime;
+  },
+
+  /**
+   * Get token expiry time
+   */
+  getTokenExpiry: (token: string): Date | null => {
+    const payload = tokenUtils.parseToken(token);
+    if (!payload || !payload.exp) return null;
+    return new Date(payload.exp * 1000);
+  },
+
+  /**
+   * Check if token needs refresh (expires in < 5 minutes)
+   */
+  needsRefresh: (token: string): boolean => {
+    const expiry = tokenUtils.getTokenExpiry(token);
+    if (!expiry) return true;
+
+    const fiveMinutes = 5 * 60 * 1000;
+    return expiry.getTime() - Date.now() < fiveMinutes;
+  },
+};
+
+/**
+ * Content Security Policy helper
+ */
+export const cspViolationHandler = (event: SecurityPolicyViolationEvent) => {
+  console.error('CSP Violation:', {
+    blockedURI: event.blockedURI,
+    violatedDirective: event.violatedDirective,
+    originalPolicy: event.originalPolicy,
+  });
+
+  // Log to monitoring service in production
+  if (import.meta.env.PROD) {
+    // Send to analytics/monitoring
+    // analytics.track('csp_violation', { ... });
+  }
+};
+
+/**
+ * Prevent clickjacking
+ */
+export const preventClickjacking = (): void => {
+  if (window.self !== window.top) {
+    // Page is in an iframe
+    console.warn('Clickjacking attempt detected - page loaded in iframe');
+    window.top!.location.href = window.self.location.href;
+  }
+};
+
+/**
+ * CSRF Token management
+ */
+export const csrfToken = {
+  generate: (): string => {
+    return crypto.randomUUID();
+  },
+
+  store: (token: string): void => {
+    sessionStorage.setItem('csrf_token', token);
+  },
+
+  get: (): string | null => {
+    return sessionStorage.getItem('csrf_token');
+  },
+
+  validate: (token: string): boolean => {
+    const stored = csrfToken.get();
+    return stored === token;
+  },
+};
+
+/**
+ * Rate limiting helper (client-side)
+ */
+export class RateLimiter {
+  private attempts: Map<string, number[]> = new Map();
+
+  constructor(
+    private maxAttempts: number = 5,
+    private windowMs: number = 60000 // 1 minute
+  ) {}
+
+  /**
+   * Check if action is allowed
+   */
+  isAllowed(key: string): boolean {
+    const now = Date.now();
+    const timestamps = this.attempts.get(key) || [];
+
+    // Remove old timestamps outside the window
+    const validTimestamps = timestamps.filter((ts) => now - ts < this.windowMs);
+
+    if (validTimestamps.length >= this.maxAttempts) {
+      return false;
+    }
+
+    validTimestamps.push(now);
+    this.attempts.set(key, validTimestamps);
+    return true;
+  }
+
+  /**
+   * Reset attempts for a key
+   */
+  reset(key: string): void {
+    this.attempts.delete(key);
+  }
+}
+
+/**
+ * Input validation helpers
+ */
+export const validators = {
+  /**
+   * Validate file upload
+   */
+  isValidFile: (
+    file: File,
+    allowedTypes: string[],
+    maxSizeMB: number = 10
+  ): { valid: boolean; error?: string } => {
+    // Check file type
+    if (!allowedTypes.includes(file.type)) {
+      return { valid: false, error: 'Invalid file type' };
+    }
+
+    // Check file size
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      return { valid: false, error: `File size exceeds ${maxSizeMB}MB` };
+    }
+
+    return { valid: true };
+  },
+
+  /**
+   * Validate URL
+   */
+  isValidUrl: (url: string, allowedProtocols: string[] = ['https:']): boolean => {
+    try {
+      const parsed = new URL(url);
+      return allowedProtocols.includes(parsed.protocol);
+    } catch {
+      return false;
+    }
+  },
+
+  /**
+   * Sanitize filename
+   */
+  sanitizeFilename: (filename: string): string => {
+    return filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+  },
+};
+
+/**
+ * Session timeout manager
+ */
+export class SessionManager {
+  private timeout: NodeJS.Timeout | null = null;
+  private warningTimeout: NodeJS.Timeout | null = null;
+
+  constructor(
+    private timeoutMinutes: number = 30,
+    private warningMinutes: number = 5,
+    private onTimeout: () => void,
+    private onWarning: () => void
+  ) {}
+
+  start(): void {
+    this.reset();
+    this.setupActivityListeners();
+  }
+
+  reset(): void {
+    // Clear existing timeouts
+    if (this.timeout) clearTimeout(this.timeout);
+    if (this.warningTimeout) clearTimeout(this.warningTimeout);
+
+    // Set warning timeout
+    const warningMs = (this.timeoutMinutes - this.warningMinutes) * 60 * 1000;
+    this.warningTimeout = setTimeout(() => {
+      this.onWarning();
+    }, warningMs);
+
+    // Set session timeout
+    const timeoutMs = this.timeoutMinutes * 60 * 1000;
+    this.timeout = setTimeout(() => {
+      this.onTimeout();
+    }, timeoutMs);
+  }
+
+  private setupActivityListeners(): void {
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+    events.forEach((event) => {
+      document.addEventListener(event, () => this.reset(), { passive: true });
+    });
+  }
+
+  stop(): void {
+    if (this.timeout) clearTimeout(this.timeout);
+    if (this.warningTimeout) clearTimeout(this.warningTimeout);
+  }
+}
+
+/**
+ * Audit log helper
+ */
+export const auditLog = {
+  log: (action: string, details?: Record<string, any>): void => {
+    const entry = {
+      timestamp: new Date().toISOString(),
+      action,
+      details,
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+    };
+
+    // In production, send to backend
+    if (import.meta.env.PROD) {
+      // API call to log audit event
+      console.log('[AUDIT]', entry);
+    } else {
+      console.log('[AUDIT]', entry);
+    }
+  },
+};
