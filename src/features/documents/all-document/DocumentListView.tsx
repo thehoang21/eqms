@@ -24,6 +24,7 @@ import {
   FilePlus2,
   Loader2,
   Printer,
+  Link2,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
@@ -33,7 +34,8 @@ import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 import { DocumentFilters } from "../DocumentFilters";
 import { DetailDocumentView } from "../detail-document/DetailDocumentView";
 import { NewDocumentModal } from "./new-document/NewDocumentModal";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { CreateLinkModal } from "../CreateLinkModal";
+import { IconInfoCircle, IconPointerQuestion } from "@tabler/icons-react";
 
 // --- Types ---
 
@@ -338,6 +340,7 @@ interface DropdownMenuProps {
   onViewDocument?: (documentId: string, tab?: string) => void;
   navigate: NavigateFunction;
   onPrintControlledCopy?: (document: Document) => void;
+  onCreateLink?: (document: Document) => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -348,6 +351,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onViewDocument,
   navigate,
   onPrintControlledCopy,
+  onCreateLink,
 }) => {
   const [isNavigating, setIsNavigating] = useState(false);
 
@@ -474,8 +478,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       case "Effective":
         items.push(
           {
-            icon: Printer,
-            label: "Print Controlled Copy",
+            icon: IconPointerQuestion,
+            label: "Request Controlled Copy",
             onClick: () => {
               onPrintControlledCopy?.(document);
               onClose();
@@ -505,6 +509,19 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         // No specific actions for archived documents
         break;
     }
+
+    // Always available: Create Link
+    items.push(
+      {
+        icon: Link2,
+        label: "Create Link",
+        onClick: () => {
+          onCreateLink?.(document);
+          onClose();
+        },
+        color: "text-slate-500"
+      }
+    );
 
     // Always available: Version History & Audit Trail
     items.push(
@@ -790,6 +807,8 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
   const [selectedDocumentTab, setSelectedDocumentTab] = useState<string>("general");
   const [isLoading, setIsLoading] = useState(true);
   const [isNewDocModalOpen, setIsNewDocModalOpen] = useState(false);
+  const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
+  const [selectedDocumentForLink, setSelectedDocumentForLink] = useState<Document | null>(null);
 
   const itemsPerPage = 10;
 
@@ -822,6 +841,12 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
       setSelectedDocumentId(documentId);
       setSelectedDocumentTab(tab);
     }
+  };
+
+  // Handle Create Link
+  const handleCreateLink = (document: Document) => {
+    setSelectedDocumentForLink(document);
+    setIsCreateLinkModalOpen(true);
   };
 
   // Handle Print Controlled Copy
@@ -1292,6 +1317,7 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
                               onViewDocument={handleViewDocument}
                               navigate={navigate}
                               onPrintControlledCopy={handlePrintControlledCopy}
+                              onCreateLink={handleCreateLink}
                             />
                           </td>
                         );
@@ -1344,6 +1370,19 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
         onSelectSingle={handleSelectSingleDocument}
         onSelectBatch={handleSelectBatchDocument}
       />
+
+      {/* Create Link Modal */}
+      {selectedDocumentForLink && (
+        <CreateLinkModal
+          isOpen={isCreateLinkModalOpen}
+          onClose={() => {
+            setIsCreateLinkModalOpen(false);
+            setSelectedDocumentForLink(null);
+          }}
+          documentId={selectedDocumentForLink.documentId}
+          documentTitle={selectedDocumentForLink.title}
+        />
+      )}
     </div>
   );
 };

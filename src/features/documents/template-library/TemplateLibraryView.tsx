@@ -15,12 +15,14 @@ import {
   Home,
   FileText,
   CheckCircle2,
+  Link2,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { TemplateFilters } from "./TemplateFilters";
 import { IconTemplate } from "@tabler/icons-react";
+import { CreateLinkModal } from "../CreateLinkModal";
 
 // --- Types ---
 
@@ -209,6 +211,17 @@ const DropdownMenu: React.FC<{
           >
             <Copy className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">Duplicate</span>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction('createLink');
+              onClose();
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+          >
+            <Link2 className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">Create Link</span>
           </button>
           <div className="border-t border-slate-100 my-1" />
           <button
@@ -404,6 +417,8 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
+  const [selectedTemplateForLink, setSelectedTemplateForLink] = useState<Template | null>(null);
   const [columns, setColumns] = useState<TableColumn[]>([
     { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
     { id: 'templateId', label: 'Template ID', visible: true, order: 1 },
@@ -472,6 +487,27 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
       buttonRefs.current[templateId] = React.createRef<HTMLButtonElement>();
     }
     return buttonRefs.current[templateId];
+  };
+
+  const handleCreateLink = (template: Template) => {
+    setSelectedTemplateForLink(template);
+    setIsCreateLinkModalOpen(true);
+  };
+
+  const handleDropdownAction = (action: string, templateId: string) => {
+    const template = MOCK_TEMPLATES.find(t => t.id === templateId);
+    if (!template) return;
+
+    switch (action) {
+      case 'view':
+        onViewTemplate?.(templateId);
+        break;
+      case 'createLink':
+        handleCreateLink(template);
+        break;
+      default:
+        console.log(`Action ${action} on template ${templateId}`);
+    }
   };
 
   return (
@@ -657,10 +693,24 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
         onClose={() => setOpenDropdownId(null)}
         position={dropdownPosition}
         onAction={(action) => {
-          console.log(`Action ${action} on template ${openDropdownId}`);
-          // Handle actions
+          if (openDropdownId) {
+            handleDropdownAction(action, openDropdownId);
+          }
         }}
       />
+
+      {/* Create Link Modal */}
+      {selectedTemplateForLink && (
+        <CreateLinkModal
+          isOpen={isCreateLinkModalOpen}
+          onClose={() => {
+            setIsCreateLinkModalOpen(false);
+            setSelectedTemplateForLink(null);
+          }}
+          documentId={selectedTemplateForLink.templateId}
+          documentTitle={selectedTemplateForLink.templateName}
+        />
+      )}
     </div>
   );
 };

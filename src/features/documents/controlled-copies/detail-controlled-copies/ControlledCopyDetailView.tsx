@@ -17,34 +17,58 @@ import {
   Download,
   ChevronLeft,
   AlertTriangle,
+  Check,
+  Info,
+  FileSignature,
+  History,
+  Send,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { FormModal } from "@/components/ui/modal/FormModal";
-import { MarkAsDestroyedModal } from "./MarkAsDestroyedModal";
+import { MarkAsDestroyedModal } from "../components/MarkAsDestroyedModal";
 import { useToast } from "@/components/ui/toast/Toast";
-import { ControlledCopy, ControlledCopyStatus, CurrentStage } from "./types";
-import { IconFileShredder } from "@tabler/icons-react";
+import { ControlledCopy, ControlledCopyStatus, CurrentStage } from "../types";
+import { IconFileShredder, IconShare3 } from "@tabler/icons-react";
+import {
+  DocumentInformationTab,
+  DistributionInformationTab,
+  SignaturesTab,
+  AuditTrailTab,
+} from "./tabs";
 
 // Mock data - Replace with API call
 const MOCK_CONTROLLED_COPY: ControlledCopy = {
   id: "1",
-  controlNumber: "CC-2024-001",
-  documentId: "SOP.0001.03",
-  documentTitle: "Standard Operating Procedure for Quality Control Testing",
+  documentNumber: "CC-2024-001",
+  createdDate: "2024-01-05",
+  createdTime: "09:30:45",
+  openedBy: "John Smith",
+  name: "Standard Operating Procedure for Quality Control Testing",
+  status: "Ready for Distribution",
+  validUntil: "2025-01-05",
+  document: "SOP.0001.03",
+  distributionList: "QA Lab, Production",
   version: "3.0",
   location: "Quality Assurance Lab",
   locationCode: "LOC-QA-01",
+  department: "Quality Assurance",
+  reason: "New production line setup",
+  // Legacy fields for compatibility
+  controlNumber: "CC-2024-001",
+  documentId: "SOP.0001.03",
+  documentTitle: "Standard Operating Procedure for Quality Control Testing",
   copyNumber: 1,
   totalCopies: 3,
   requestDate: "2024-01-05",
   requestedBy: "John Smith",
-  status: "Active",
-  currentStage: "In Use",
-  reason: "New production line setup",
-  department: "Quality Assurance",
+  currentStage: "Ready for Print",
   effectiveDate: "2024-01-05",
+  distributedDate: undefined,
+  distributedBy: undefined,
+  recipientName: "QA Manager",
 };
 
 // Timeline/History mock data
@@ -95,16 +119,14 @@ const MOCK_TIMELINE: TimelineEvent[] = [
 // Helper functions
 const getStatusColor = (status: ControlledCopyStatus) => {
   switch (status) {
-    case "Pending Approval":
+    case "Ready for Distribution":
       return "bg-blue-50 text-blue-700 border-blue-200";
-    case "Active":
+    case "Distributed":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Recalled":
-      return "bg-amber-50 text-amber-700 border-amber-200";
     case "Obsolete":
+      return "bg-amber-50 text-amber-700 border-amber-200";
+    case "Closed - Cancelled":
       return "bg-red-50 text-red-700 border-red-200";
-    case "Destroyed":
-      return "bg-slate-800 text-white border-slate-900";
     default:
       return "bg-slate-50 text-slate-700 border-slate-200";
   }
@@ -206,15 +228,20 @@ const Timeline: React.FC<{ events: TimelineEvent[] }> = ({ events }) => {
   );
 };
 
+// Tab Type
+type TabType = "document" | "distribution" | "signatures" | "audit";
+
 // Main Component
 interface ControlledCopyDetailViewProps {
   controlledCopyId: string;
   onBack: () => void;
+  initialTab?: TabType;
 }
 
 export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> = ({
   controlledCopyId,
   onBack,
+  initialTab = "document",
 }) => {
   const navigate = useNavigate();
 
@@ -222,7 +249,27 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
   const [timeline] = useState<TimelineEvent[]>(MOCK_TIMELINE);
   const [isDestructionModalOpen, setIsDestructionModalOpen] = useState(false);
   const [isESignModalOpen, setIsESignModalOpen] = useState(false);
+  const [isDistributeModalOpen, setIsDistributeModalOpen] = useState(false);
+  const [isReportLostDamagedModalOpen, setIsReportLostDamagedModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const { showToast } = useToast();
+
+  // Status workflow steps
+  const statusSteps: ControlledCopyStatus[] = [
+    "Ready for Distribution",
+    "Distributed",
+    "Obsolete",
+    "Closed - Cancelled",
+  ];
+  // Tabs configuration
+  const tabs = [
+    { id: "document" as TabType, label: "Document Information", icon: FileText },
+    { id: "distribution" as TabType, label: "Distribution Information", icon: Building2 },
+    { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
+    { id: "audit" as TabType, label: "Audit Trail", icon: History },
+  ];
+
+  const currentStepIndex = statusSteps.indexOf(controlledCopy.status);
 
   const handleViewOriginalDocument = () => {
     // Navigate to original document detail view
@@ -267,6 +314,57 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
     setTimeout(() => {
       alert("Downloading controlled copy document...");
     }, 500);
+  };
+
+  const handleDistribute = () => {
+    // Mở modal ký điện tử để xác nhận phân phối
+    setIsDistributeModalOpen(true);
+  };
+
+  const handleDistributeSuccess = (reason: string) => {
+    // Đóng modal
+    setIsDistributeModalOpen(false);
+    
+    // Hiển thị toast thành công
+    showToast({
+      type: "success",
+      title: "Controlled Copy Distributed",
+      message: "The controlled copy has been successfully distributed.",
+      duration: 3500,
+    });
+
+    // Thực hiện distribute
+    console.log("Distribute reason:", reason);
+    console.log("Distribute controlled copy");
+    // TODO: Call API to distribute controlled copy
+    // Update status to "Distributed"
+    // Add audit trail entry
+    // Send notification
+  };
+
+  const handleReportLostDamaged = () => {
+    // Mở modal Report Lost/Damaged
+    setIsReportLostDamagedModalOpen(true);
+  };
+
+  const handleReportLostDamagedConfirm = (formData: any, reason: string) => {
+    // Đóng modal
+    setIsReportLostDamagedModalOpen(false);
+    
+    // Hiển thị toast thành công
+    showToast({
+      type: "success",
+      title: "Report Submitted",
+      message: "Controlled copy has been marked as lost/damaged and cancelled.",
+      duration: 3500,
+    });
+
+    // Thực hiện report lost/damaged
+    console.log("Report lost/damaged:", formData, reason);
+    // TODO: Call API to mark as lost/damaged
+    // Update status to "Closed - Cancelled"
+    // Add audit trail entry
+    // Send notification
   };
 
   return (
@@ -340,244 +438,136 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
               <Download className="h-4 w-4" />
               Download Copy
             </Button>
-            {controlledCopy.status === "Active" && (
+            {/* Distribute button - Only show for Ready for Distribution status */}
+            {controlledCopy.status === "Ready for Distribution" && (
               <Button
-                onClick={() => setIsDestructionModalOpen(true)}
+                onClick={handleDistribute}
+                variant="default"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <IconShare3 className="h-4 w-4" />
+                Distribute
+              </Button>
+            )}
+            {/* Report Lost/Damaged button - Only show for Distributed status */}
+            {controlledCopy.status === "Distributed" && (
+              <Button
+                onClick={handleReportLostDamaged}
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
               >
-                <IconFileShredder className="h-4 w-4" />
-                Mark as Destroyed
+                <AlertCircle className="h-4 w-4" />
+                Report Lost/Damaged
               </Button>
             )}
           </div>
         </div>
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Column - Details */}
-        <div className="space-y-6">
-          {/* Basic Information Card */}
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-              <h2 className="text-lg font-semibold text-slate-900">
-                Basic Information
-              </h2>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Control Number
-                  </label>
-                  <p className="mt-1 text-sm font-semibold text-slate-900">
-                    {controlledCopy.controlNumber}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Copy Number
-                  </label>
-                  <p className="mt-1 text-sm font-semibold text-slate-900">
-                    Copy {controlledCopy.copyNumber} of{" "}
-                    {controlledCopy.totalCopies}
-                  </p>
-                </div>
-              </div>
+      {/* Status Stepper */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+          <div className="flex items-stretch min-w-full">
+            {statusSteps.map((step, index) => {
+              const isCompleted = index < currentStepIndex;
+              const isCurrent = index === currentStepIndex;
+              const isFirst = index === 0;
+              const isLast = index === statusSteps.length - 1;
 
-              <div>
-                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Document ID
-                </label>
-                <p className="mt-1 text-sm font-medium text-emerald-700">
-                  {controlledCopy.documentId}
-                </p>
-              </div>
+              return (
+                <div
+                  key={step}
+                  className="relative flex-1 flex items-center justify-center min-w-[150px]"
+                  style={{ minHeight: "60px" }}
+                >
+                  {/* Arrow Shape Background */}
+                  <div
+                    className={cn(
+                      "absolute inset-0 transition-all",
+                      isCompleted
+                        ? "bg-emerald-100"
+                        : isCurrent
+                        ? "bg-emerald-600"
+                        : "bg-slate-100"
+                    )}
+                    style={{
+                      clipPath: isFirst
+                        ? "polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%)"
+                        : isLast
+                        ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%)"
+                        : "polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, 20px 50%)",
+                    }}
+                  />
 
-              <div>
-                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Document Title
-                </label>
-                <p className="mt-1 text-sm text-slate-900">
-                  {controlledCopy.documentTitle}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Version
-                  </label>
-                  <p className="mt-1 text-sm text-slate-900">
-                    v{controlledCopy.version}
-                  </p>
+                  {/* Content */}
+                  <div className="relative z-10 flex items-center gap-2 px-6">
+                    {isCompleted && (
+                      <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+                    )}
+                    <span
+                      className={cn(
+                        "text-xs md:text-sm font-medium text-center",
+                        isCurrent
+                          ? "text-white"
+                          : isCompleted
+                          ? "text-slate-700"
+                          : "text-slate-400"
+                      )}
+                    >
+                      {step}
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Department
-                  </label>
-                  <p className="mt-1 text-sm text-slate-900">
-                    {controlledCopy.department}
-                  </p>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
+        </div>
+      </div>
 
-          {/* Location Information Card */}
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                Location Information
-              </h2>
-            </div>
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Location Name
-                </label>
-                <p className="mt-1 text-sm text-slate-900">
-                  {controlledCopy.location}
-                </p>
-              </div>
-              <div>
-                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Location Code
-                </label>
-                <p className="mt-1 text-sm font-mono text-slate-700">
-                  {controlledCopy.locationCode}
-                </p>
-              </div>
-            </div>
+      {/* Tab Navigation */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="border-b border-slate-200">
+          <div className="flex overflow-x-auto">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "flex items-center justify-center gap-2 px-4 md:px-6 py-4 text-sm font-medium border-b-2 transition-all whitespace-nowrap",
+                    activeTab === tab.id
+                      ? "border-emerald-600 text-emerald-700"
+                      : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      "h-4 w-4 shrink-0",
+                      activeTab === tab.id
+                        ? "text-emerald-600"
+                        : "text-slate-400"
+                    )}
+                  />
+                  <span className="hidden md:inline">{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
-
-          {/* Request Information Card */}
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                Request Information
-              </h2>
-            </div>
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Requested By
-                </label>
-                <p className="mt-1 text-sm text-slate-900">
-                  {controlledCopy.requestedBy}
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Request Date
-                  </label>
-                  <p className="mt-1 text-sm text-slate-900">
-                    {formatDate(controlledCopy.requestDate)}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Effective Date
-                  </label>
-                  <p className="mt-1 text-sm text-slate-900">
-                    {formatDate(controlledCopy.effectiveDate)}
-                  </p>
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                  Reason
-                </label>
-                <p className="mt-1 text-sm text-slate-900">
-                  {controlledCopy.reason}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Destruction Evidence Card - Only show if destroyed */}
-          {controlledCopy.status === "Destroyed" && controlledCopy.destructionEvidenceUrl && (
-            <div className="rounded-xl border border-slate-800 bg-slate-50 shadow-sm overflow-hidden">
-              <div className="border-b border-slate-300 bg-slate-800 px-6 py-4">
-                <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  Destruction Evidence
-                </h2>
-              </div>
-              <div className="p-6 space-y-4">
-                {/* Evidence Photo */}
-                <div>
-                  <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Evidence Photo
-                  </label>
-                  <div className="mt-2 rounded-lg overflow-hidden border border-slate-300">
-                    <img
-                      src={controlledCopy.destructionEvidenceUrl}
-                      alt="Destruction Evidence"
-                      className="w-full h-auto object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => window.open(controlledCopy.destructionEvidenceUrl, '_blank')}
-                    />
-                  </div>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Click to view full size
-                  </p>
-                </div>
-
-                {/* Destruction Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                  <div>
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Destruction Date
-                    </label>
-                    <p className="mt-1 text-sm text-slate-900">
-                      {controlledCopy.destructionDate && formatDate(controlledCopy.destructionDate)}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Method
-                    </label>
-                    <p className="mt-1 text-sm text-slate-900">
-                      {controlledCopy.destructionMethod}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Executor
-                    </label>
-                    <p className="mt-1 text-sm text-slate-900">
-                      {controlledCopy.destructedBy}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Supervisor
-                    </label>
-                    <p className="mt-1 text-sm text-slate-900">
-                      {controlledCopy.destructionSupervisor}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Right Column - Timeline */}
-        <div className="space-y-6">
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
-              <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                Approval Workflow Timeline
-              </h2>
-            </div>
-            <div className="p-6">
-              <Timeline events={timeline} />
-            </div>
-          </div>
+        {/* Tab Content */}
+        <div className="p-6">
+          {activeTab === "document" && (
+            <DocumentInformationTab controlledCopy={controlledCopy} />
+          )}
+          {activeTab === "distribution" && (
+            <DistributionInformationTab controlledCopy={controlledCopy} />
+          )}
+          {activeTab === "signatures" && <SignaturesTab />}
+          {activeTab === "audit" && <AuditTrailTab />}
         </div>
       </div>
 
@@ -595,6 +585,22 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         onClose={() => setIsESignModalOpen(false)}
         onConfirm={handleESignSuccess}
         actionTitle="Download Controlled Copy"
+      />
+
+      {/* E-Signature Modal for Distribute */}
+      <ESignatureModal
+        isOpen={isDistributeModalOpen}
+        onClose={() => setIsDistributeModalOpen(false)}
+        onConfirm={handleDistributeSuccess}
+        actionTitle="Distribute Controlled Copy"
+      />
+
+      {/* Report Lost/Damaged Modal */}
+      <MarkAsDestroyedModal
+        isOpen={isReportLostDamagedModalOpen}
+        onClose={() => setIsReportLostDamagedModalOpen(false)}
+        onConfirm={handleReportLostDamagedConfirm}
+        controlledCopy={controlledCopy}
       />
     </div>
   );

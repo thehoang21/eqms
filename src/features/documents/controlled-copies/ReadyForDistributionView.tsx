@@ -10,24 +10,18 @@ import {
   Edit,
   FileX,
   Home,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
   Clock,
-  AlertCircle,
   Link2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { cn } from "@/components/ui/utils";
-import { ControlledCopy, ControlledCopyStatus, TableColumn } from "./types";
-import { MarkAsDestroyedModal } from "./components/MarkAsDestroyedModal";
-import { useToast } from "@/components/ui/toast/Toast";
+import { ControlledCopy, TableColumn } from "./types";
 import { CreateLinkModal } from "../CreateLinkModal";
 
-// Mock Data - All Controlled Copies
-const MOCK_ALL_CONTROLLED_COPIES: ControlledCopy[] = [
+// Mock Data - Only Ready for Distribution
+const MOCK_READY_COPIES: ControlledCopy[] = [
   {
     id: "cc-001",
     documentNumber: "CC-2024-001",
@@ -45,53 +39,6 @@ const MOCK_ALL_CONTROLLED_COPIES: ControlledCopy[] = [
     reason: "Annual review and update",
   },
   {
-    id: "cc-002",
-    documentNumber: "CC-2024-002",
-    createdDate: "2024-01-08",
-    createdTime: "14:22:10",
-    openedBy: "Sarah Johnson",
-    name: "Work Instruction for Equipment Maintenance",
-    status: "Distributed",
-    validUntil: "2024-12-31",
-    document: "WI.0028.01",
-    distributionList: "Maintenance, Production",
-    version: "1.0",
-    recipientName: "Mike Maintenance",
-    distributedDate: "2024-01-09",
-    distributedBy: "Document Controller",
-    department: "Maintenance",
-  },
-  {
-    id: "cc-003",
-    documentNumber: "CC-2024-003",
-    createdDate: "2024-01-05",
-    createdTime: "11:15:33",
-    openedBy: "David Wilson",
-    name: "Quality Control Inspection Procedure",
-    status: "Obsolete",
-    validUntil: "2024-01-05",
-    document: "QCP.0112.03",
-    distributionList: "QC Department",
-    version: "3.0",
-    department: "Quality Control",
-    reason: "Superseded by new version",
-  },
-  {
-    id: "cc-004",
-    documentNumber: "CC-2024-004",
-    createdDate: "2024-01-03",
-    createdTime: "08:45:20",
-    openedBy: "Emily Brown",
-    name: "Training Manual for New Operators",
-    status: "Closed - Cancelled",
-    validUntil: "2024-01-03",
-    document: "TM.0045.01",
-    distributionList: "HR, Training Team",
-    version: "1.0",
-    department: "Human Resources",
-    reason: "Cancelled due to policy change",
-  },
-  {
     id: "cc-005",
     documentNumber: "CC-2024-005",
     createdDate: "2024-01-12",
@@ -107,38 +54,6 @@ const MOCK_ALL_CONTROLLED_COPIES: ControlledCopy[] = [
     department: "Validation",
   },
   {
-    id: "cc-006",
-    documentNumber: "CC-2024-006",
-    createdDate: "2024-01-11",
-    createdTime: "10:20:55",
-    openedBy: "Lisa Anderson",
-    name: "Cleaning and Sanitization Procedure",
-    status: "Distributed",
-    validUntil: "2024-12-15",
-    document: "SOP.0156.01",
-    distributionList: "Cleaning Staff, QA",
-    version: "1.0",
-    recipientName: "Cleaning Supervisor",
-    distributedDate: "2024-01-11",
-    distributedBy: "QA Manager",
-    department: "Quality Assurance",
-  },
-  {
-    id: "cc-007",
-    documentNumber: "CC-2023-089",
-    createdDate: "2023-12-20",
-    createdTime: "13:40:18",
-    openedBy: "Michael Chen",
-    name: "Batch Record Template - Legacy",
-    status: "Obsolete",
-    validUntil: "2023-12-31",
-    document: "BRT.0234.05",
-    distributionList: "Production, QC",
-    version: "5.0",
-    department: "Manufacturing",
-    reason: "Replaced by new template",
-  },
-  {
     id: "cc-008",
     documentNumber: "CC-2024-008",
     createdDate: "2024-01-09",
@@ -152,38 +67,6 @@ const MOCK_ALL_CONTROLLED_COPIES: ControlledCopy[] = [
     version: "1.0",
     location: "Calibration Lab",
     department: "Metrology",
-  },
-  {
-    id: "cc-009",
-    documentNumber: "CC-2024-009",
-    createdDate: "2024-01-07",
-    createdTime: "11:25:30",
-    openedBy: "Peter Zhang",
-    name: "Environmental Monitoring Procedure",
-    status: "Distributed",
-    validUntil: "2025-01-07",
-    document: "SOP.0234.01",
-    distributionList: "QA Team, Production",
-    version: "1.0",
-    recipientName: "QA Lead",
-    distributedDate: "2024-01-08",
-    distributedBy: "Quality Manager",
-    department: "Quality Assurance",
-  },
-  {
-    id: "cc-010",
-    documentNumber: "CC-2023-101",
-    createdDate: "2023-11-15",
-    createdTime: "14:10:22",
-    openedBy: "Jessica White",
-    name: "Equipment Qualification Protocol - Old",
-    status: "Closed - Cancelled",
-    validUntil: "2023-11-15",
-    document: "EQP.0156.02",
-    distributionList: "Engineering, Validation",
-    version: "2.0",
-    department: "Engineering",
-    reason: "Project cancelled",
   },
 ];
 
@@ -220,28 +103,6 @@ const formatDate = (dateStr: string) => {
     month: "short",
     day: "numeric",
   }).format(date);
-};
-
-const getStatusConfig = (status: ControlledCopyStatus) => {
-  const configs = {
-    "Ready for Distribution": {
-      color: "bg-blue-50 text-blue-700 border-blue-200",
-      icon: Clock,
-    },
-    "Distributed": {
-      color: "bg-emerald-50 text-emerald-700 border-emerald-200",
-      icon: CheckCircle2,
-    },
-    "Obsolete": {
-      color: "bg-amber-50 text-amber-700 border-amber-200",
-      icon: AlertTriangle,
-    },
-    "Closed - Cancelled": {
-      color: "bg-red-50 text-red-700 border-red-200",
-      icon: XCircle,
-    },
-  };
-  return configs[status] || configs["Ready for Distribution"];
 };
 
 // Pagination Component
@@ -296,10 +157,8 @@ const DropdownMenu: React.FC<{
   onViewDetails: () => void;
   onEdit: () => void;
   onCancel: () => void;
-  onReportLostDamaged?: () => void;
-  isDistributed?: boolean;
   onCreateLink?: () => void;
-}> = ({ isOpen, onClose, position, onViewDetails, onEdit, onCancel, onReportLostDamaged, isDistributed, onCreateLink }) => {
+}> = ({ isOpen, onClose, position, onViewDetails, onEdit, onCancel, onCreateLink }) => {
   if (!isOpen) return null;
 
   return createPortal(
@@ -352,31 +211,17 @@ const DropdownMenu: React.FC<{
               <span className="font-medium">Create Link</span>
             </button>
           )}
-          {isDistributed && onReportLostDamaged ? (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onReportLostDamaged();
-                onClose();
-              }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
-            >
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />
-              <span className="font-medium">Report Lost/Damaged</span>
-            </button>
-          ) : (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onCancel();
-                onClose();
-              }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
-            >
-              <FileX className="h-4 w-4 flex-shrink-0" />
-              <span className="font-medium">Cancel Distribution</span>
-            </button>
-          )}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onCancel();
+              onClose();
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+          >
+            <FileX className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">Cancel Distribution</span>
+          </button>
         </div>
       </div>
     </>,
@@ -385,23 +230,13 @@ const DropdownMenu: React.FC<{
 };
 
 // Main Component
-export const AllControlledCopiesView: React.FC = () => {
+export const ReadyForDistributionView: React.FC = () => {
   const navigate = useNavigate();
-  const { showToast } = useToast();
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<ControlledCopyStatus | "All">("All");
   const [dateFromFilter, setDateFromFilter] = useState("");
   const [dateToFilter, setDateToFilter] = useState("");
-
-  // Modal states
-  const [isReportLostDamagedModalOpen, setIsReportLostDamagedModalOpen] = useState(false);
-  const [selectedCopy, setSelectedCopy] = useState<ControlledCopy | null>(null);
-
-  // Create Link Modal state
-  const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
-  const [selectedCopyForLink, setSelectedCopyForLink] = useState<ControlledCopy | null>(null);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -412,6 +247,10 @@ export const AllControlledCopiesView: React.FC = () => {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
 
+  // Create Link Modal state
+  const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
+  const [selectedCopyForLink, setSelectedCopyForLink] = useState<ControlledCopy | null>(null);
+
   const getButtonRef = (id: string) => {
     if (!buttonRefs.current[id]) {
       buttonRefs.current[id] = createRef<HTMLButtonElement>();
@@ -421,7 +260,7 @@ export const AllControlledCopiesView: React.FC = () => {
 
   // Filtered data
   const filteredData = useMemo(() => {
-    return MOCK_ALL_CONTROLLED_COPIES.filter((copy) => {
+    return MOCK_READY_COPIES.filter((copy) => {
       const matchesSearch =
         searchQuery === "" ||
         copy.documentNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -429,17 +268,15 @@ export const AllControlledCopiesView: React.FC = () => {
         copy.document.toLowerCase().includes(searchQuery.toLowerCase()) ||
         copy.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter === "All" || copy.status === statusFilter;
-
       const matchesDateFrom =
         dateFromFilter === "" || new Date(copy.createdDate) >= new Date(dateFromFilter);
 
       const matchesDateTo =
         dateToFilter === "" || new Date(copy.createdDate) <= new Date(dateToFilter);
 
-      return matchesSearch && matchesStatus && matchesDateFrom && matchesDateTo;
+      return matchesSearch && matchesDateFrom && matchesDateTo;
     });
-  }, [searchQuery, statusFilter, dateFromFilter, dateToFilter]);
+  }, [searchQuery, dateFromFilter, dateToFilter]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = useMemo(() => {
@@ -483,38 +320,9 @@ export const AllControlledCopiesView: React.FC = () => {
     alert(`Cancel controlled copy ${copy.documentNumber}?`);
   };
 
-  const handleReportLostDamaged = (copy: ControlledCopy) => {
-    setSelectedCopy(copy);
-    setIsReportLostDamagedModalOpen(true);
-  };
-
-  const handleReportLostDamagedConfirm = (formData: any, reason: string) => {
-    setIsReportLostDamagedModalOpen(false);
-    
-    showToast({
-      type: "success",
-      title: "Report Submitted",
-      message: "Controlled copy has been marked as lost/damaged and cancelled.",
-      duration: 3500,
-    });
-
-    console.log("Report lost/damaged:", selectedCopy?.documentNumber, formData, reason);
-    // TODO: Call API to mark as lost/damaged
-    // Update status to "Closed - Cancelled"
-    // Refresh data
-  };
-
   const handleViewRow = (copy: ControlledCopy) => {
     handleViewDetails(copy);
   };
-
-  const statusOptions = [
-    { label: "All States", value: "All" },
-    { label: "Ready for Distribution", value: "Ready for Distribution" },
-    { label: "Distributed", value: "Distributed" },
-    { label: "Obsolete", value: "Obsolete" },
-    { label: "Closed - Cancelled", value: "Closed - Cancelled" },
-  ];
 
   return (
     <div className="space-y-6">
@@ -523,7 +331,7 @@ export const AllControlledCopiesView: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              All Controlled Copies
+              Ready for Distribution
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
               <span className="hidden sm:inline">Dashboard</span>
@@ -535,7 +343,7 @@ export const AllControlledCopiesView: React.FC = () => {
               <span className="hidden sm:inline">Controlled Copies</span>
               <span className="sm:hidden">...</span>
               <ChevronRight className="h-4 w-4" />
-              <span className="text-slate-700 font-medium">All Controlled Copies</span>
+              <span className="text-slate-700 font-medium">Ready for Distribution</span>
             </div>
           </div>
         </div>
@@ -560,10 +368,11 @@ export const AllControlledCopiesView: React.FC = () => {
           <div className="xl:col-span-3">
             <label className="text-sm font-medium text-slate-700 mb-1.5 block">State</label>
             <Select
-              value={statusFilter}
-              onChange={(value) => setStatusFilter(value as ControlledCopyStatus | "All")}
-              options={statusOptions}
-              placeholder="Select state"
+              value="Ready for Distribution"
+              onChange={() => {}}
+              options={[{ label: "Ready for Distribution", value: "Ready for Distribution" }]}
+              placeholder="Ready for Distribution"
+              disabled
             />
           </div>
           <div className="xl:col-span-2">
@@ -614,14 +423,12 @@ export const AllControlledCopiesView: React.FC = () => {
                     colSpan={DEFAULT_COLUMNS.filter((c) => c.visible).length + 2}
                     className="py-12 text-center text-slate-500"
                   >
-                    No controlled copies found
+                    No controlled copies ready for distribution
                   </td>
                 </tr>
               ) : (
                 paginatedData.map((copy, index) => {
                   const rowNumber = (currentPage - 1) * itemsPerPage + index + 1;
-                  const statusConfig = getStatusConfig(copy.status);
-                  const StatusIcon = statusConfig.icon;
 
                   return (
                     <tr
@@ -652,10 +459,10 @@ export const AllControlledCopiesView: React.FC = () => {
                         <span
                           className={cn(
                             "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                            statusConfig.color
+                            "bg-blue-50 text-blue-700 border-blue-200"
                           )}
                         >
-                          <StatusIcon className="h-3.5 w-3.5" />
+                          <Clock className="h-3.5 w-3.5" />
                           {copy.status}
                         </span>
                       </td>
@@ -724,21 +531,6 @@ export const AllControlledCopiesView: React.FC = () => {
             const copy = paginatedData.find((c) => c.id === openDropdownId);
             if (copy) handleCancel(copy);
           }}
-          onReportLostDamaged={() => {
-            const copy = paginatedData.find((c) => c.id === openDropdownId);
-            if (copy) handleReportLostDamaged(copy);
-          }}
-          isDistributed={paginatedData.find((c) => c.id === openDropdownId)?.status === "Distributed"}
-        />
-      )}
-
-      {/* Report Lost/Damaged Modal */}
-      {selectedCopy && (
-        <MarkAsDestroyedModal
-          isOpen={isReportLostDamagedModalOpen}
-          onClose={() => setIsReportLostDamagedModalOpen(false)}
-          onConfirm={handleReportLostDamagedConfirm}
-          controlledCopy={selectedCopy}
         />
       )}
 

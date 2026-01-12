@@ -13,12 +13,14 @@ import {
   AlertTriangle,
   GripVertical,
   Home,
+  Link2,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "./DocumentFilters";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { CreateLinkModal } from "./CreateLinkModal";
 
 // --- Types ---
 
@@ -255,6 +257,7 @@ interface DropdownMenuProps {
   onClose: () => void;
   position: { top: number; left: number };
   onViewDocument?: (documentId: string) => void;
+  onCreateLink?: (document: Document) => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -264,6 +267,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onClose,
   position,
   onViewDocument,
+  onCreateLink,
 }) => {
   if (!isOpen) return null;
 
@@ -320,6 +324,17 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           >
             <History className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">Version History</span>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onCreateLink?.(document);
+              onClose();
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+          >
+            <Link2 className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">Create Link</span>
           </button>
         </div>
       </div>
@@ -513,6 +528,8 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
+  const [selectedDocumentForLink, setSelectedDocumentForLink] = useState<Document | null>(null);
   const [columns, setColumns] = useState<TableColumn[]>([
     { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
     { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
@@ -583,6 +600,12 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
       left: rect.right + window.scrollX - 200,
     });
     setOpenDropdownId(docId);
+  };
+
+  const handleCreateLink = (document: Document) => {
+    setSelectedDocumentForLink(document);
+    setIsCreateLinkModalOpen(true);
+    setOpenDropdownId(null);
   };
 
   const getButtonRef = (docId: string) => {
@@ -819,6 +842,7 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
                         onClose={() => setOpenDropdownId(null)}
                         position={dropdownPosition}
                         onViewDocument={onViewDocument}
+                        onCreateLink={handleCreateLink}
                       />
                     </td>
                   </tr>
@@ -838,6 +862,19 @@ export const DocumentsOwnedByMeView: React.FC<DocumentsOwnedByMeViewProps> = ({ 
           totalItems={filteredDocuments.length}
         />
       </div>
+
+      {/* Create Link Modal */}
+      {selectedDocumentForLink && (
+        <CreateLinkModal
+          isOpen={isCreateLinkModalOpen}
+          onClose={() => {
+            setIsCreateLinkModalOpen(false);
+            setSelectedDocumentForLink(null);
+          }}
+          documentId={selectedDocumentForLink.documentId}
+          documentTitle={selectedDocumentForLink.title}
+        />
+      )}
     </div>
   );
 };

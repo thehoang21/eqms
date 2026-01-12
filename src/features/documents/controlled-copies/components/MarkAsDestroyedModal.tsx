@@ -4,7 +4,7 @@ import { FormModal } from "@/components/ui/modal/FormModal";
 import { Button } from "@/components/ui/button/Button";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
-import { ControlledCopy } from "./types";
+import { ControlledCopy } from "../types";
 
 interface DestructionFormData {
   destructionDate: string;
@@ -402,7 +402,6 @@ export const MarkAsDestroyedModal: React.FC<MarkAsDestroyedModalProps> = ({
             disabled={isLoading}
             className="bg-red-600 hover:bg-red-700 text-white border-red-600 hover:border-red-700"
           >
-            <Trash2 className="h-4 w-4 mr-1.5" />
             Submit & Sign
           </Button>
         </div>

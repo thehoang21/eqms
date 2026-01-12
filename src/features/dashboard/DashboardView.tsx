@@ -93,38 +93,6 @@ export const DashboardView: React.FC = () => {
           </h1>
       </div>
 
-      {/* System Notice - Moved to Top */}
-      <div className="rounded-xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/50 shadow-sm p-6 relative overflow-hidden">
-        <div className="relative z-10 flex items-start justify-between gap-4">
-          <div className="flex items-start gap-4">
-            <div className="h-12 w-12 rounded-full bg-blue-600 flex items-center justify-center shrink-0">
-              <Bell className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-blue-900 mb-1">System Maintenance Notice</h3>
-              <p className="text-blue-700 text-sm mb-3">
-                Scheduled maintenance window for system validation upgrade.
-              </p>
-              <div className="flex items-center gap-4 text-sm">
-                <div>
-                  <p className="text-xs text-blue-600 uppercase font-semibold mb-1">Scheduled Date</p>
-                  <p className="font-mono font-medium text-blue-900">Jan 28, 2024 - 02:00 UTC</p>
-                </div>
-                <div className="h-10 w-px bg-blue-300"></div>
-                <div>
-                  <p className="text-xs text-blue-600 uppercase font-semibold mb-1">Duration</p>
-                  <p className="font-mono font-medium text-blue-900">~4 hours</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button className="px-4 py-2 bg-white text-blue-900 rounded-lg text-sm font-medium hover:bg-blue-50 transition-colors shadow-sm border border-blue-200 shrink-0">
-            Learn More
-          </button>
-        </div>
-        <div className="absolute -bottom-10 -right-10 h-40 w-40 bg-blue-200 rounded-full opacity-30 blur-3xl"></div>
-      </div>
-
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
         {[

@@ -167,7 +167,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                             <label className="block text-sm font-medium text-slate-700 mb-2">Permissions</label>
                             <div className="space-y-2.5 p-4 bg-slate-50 rounded-lg border border-slate-200">
                                 {[
-                                    { id: 'perm-print', checked: permissions.printControlledCopy, label: 'Print Controlled Copy', desc: 'Allow printing of controlled document copies' },
+                                    { id: 'perm-print', checked: permissions.printControlledCopy, label: 'Request Controlled Copy', desc: 'Allow printing of controlled document copies' },
                                     { id: 'perm-audit', checked: permissions.viewAuditTrail, label: 'View System Audit Trail', desc: 'Access to full system audit trail and logs' },
                                     { id: 'perm-training', checked: permissions.createTrainingTest, label: 'Create Training Tests', desc: 'Create and manage training tests and assessments' },
                                     { id: 'perm-users', checked: permissions.manageUsers, label: 'Manage Users', desc: 'Create, edit, and manage user accounts and roles' },

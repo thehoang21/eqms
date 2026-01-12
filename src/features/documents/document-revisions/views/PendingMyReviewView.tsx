@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "../../DocumentFilters";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconEyeCheck, IconInfoCircle } from "@tabler/icons-react";
 
 // --- Types ---
 
@@ -177,7 +177,7 @@ const DropdownMenu: React.FC<{
             }}
             className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
-            <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+            <IconEyeCheck className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">Review</span>
           </button>
           <button
@@ -509,7 +509,7 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
         <div className="overflow-x-auto flex-1">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 {columns.sort((a, b) => a.order - b.order).map((column) => {
                   if (!column.visible) return null;
