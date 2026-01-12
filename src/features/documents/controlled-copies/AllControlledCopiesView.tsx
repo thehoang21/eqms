@@ -658,6 +658,134 @@ const DropdownMenu: React.FC<{
   );
 };
 
+// --- Render Helper ---
+const renderCellContent = (
+  col: TableColumn,
+  item: ControlledCopy | BatchGroup,
+  isExpandedChild = false
+) => {
+  const isBatch = isBatchGroup(item);
+
+  switch (col.id) {
+    case "controlNumber":
+      if (isBatch) {
+        return (
+          <div className="flex items-center gap-2">
+            <Layers className="h-4 w-4 text-blue-600" />
+            <span className="inline-flex items-center gap-1 px-1 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
+              {(item as BatchGroup).totalCopies} copies
+            </span>
+          </div>
+        );
+      }
+      return (
+        <div className={isExpandedChild ? "pl-8" : ""}>
+          <span className="font-medium text-slate-900">
+            {(item as ControlledCopy).controlNumber}
+          </span>
+        </div>
+      );
+
+    case "documentId":
+      if (isExpandedChild)
+        return <span className="text-slate-500 text-xs">—</span>;
+      return (
+        <span className="font-medium text-emerald-700">{item.documentId}</span>
+      );
+
+    case "documentTitle":
+      if (isExpandedChild)
+        return <span className="text-slate-500 text-xs">—</span>;
+      return (
+        <div className="max-w-md">
+          <span className="text-slate-900">{item.documentTitle}</span>
+        </div>
+      );
+
+    case "version":
+      if (isExpandedChild)
+        return <span className="text-slate-500 text-xs">—</span>;
+      return <span className="text-slate-700">v{item.version}</span>;
+
+    case "location": {
+      if (isBatch) {
+        return <span className="text-slate-500 text-xs">Multiple locations</span>;
+      }
+      const copy = item as ControlledCopy;
+      return (
+        <div>
+          <div className="text-slate-900">{copy.location}</div>
+          <div className="text-xs text-slate-500">{copy.locationCode}</div>
+        </div>
+      );
+    }
+
+    case "copyNumber": {
+      if (isBatch) return <span className="text-slate-500 text-xs">—</span>;
+      const c = item as ControlledCopy;
+      if (isExpandedChild) {
+        return (
+          <span className="text-slate-700">
+            Copy {c.copyNumber} of {c.totalCopies}
+          </span>
+        );
+      }
+      return <span className="text-slate-700">Copy {c.copyNumber}</span>;
+    }
+
+    case "requestDate":
+      if (isExpandedChild)
+        return <span className="text-slate-500 text-xs">—</span>;
+      return (
+        <span className="text-slate-700">{formatDate(item.requestDate)}</span>
+      );
+
+    case "requestedBy":
+      if (isExpandedChild)
+        return <span className="text-slate-500 text-xs">—</span>;
+      return <span className="text-slate-700">{item.requestedBy}</span>;
+
+    case "status":
+      return (
+        <span
+          className={cn(
+            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+            getStatusColor(item.status)
+          )}
+        >
+          {item.status}
+        </span>
+      );
+
+    case "currentStage":
+      return (
+        <span
+          className={cn(
+            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+            getStageColor(item.currentStage)
+          )}
+        >
+          {item.currentStage}
+        </span>
+      );
+
+    case "department":
+      return <span className="text-slate-700">{item.department}</span>;
+
+    case "effectiveDate":
+      if (isExpandedChild)
+        return <span className="text-slate-500 text-xs">—</span>;
+      return (
+        <span className="text-slate-700">
+          {formatDate(item.effectiveDate)}
+        </span>
+      );
+
+    default:
+      return null;
+  }
+};
+
 // --- Filters Component ---
 const Filters: React.FC<{
   searchQuery: string;
@@ -1128,79 +1256,7 @@ Approved on: ${new Date().toLocaleString()}
                             key={col.id}
                             className="py-3.5 px-4 text-sm whitespace-nowrap"
                           >
-                            {col.id === "controlNumber" && (
-                              <div className="flex items-center gap-2">
-                                <Layers className="h-4 w-4 text-blue-600" />
-                                <span className="inline-flex items-center gap-1 px-1 py-1 rounded-lg text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
-                                  {batch.totalCopies} copies
-                                </span>
-                              </div>
-                            )}
-                            {col.id === "documentId" && (
-                              <span className="font-medium text-emerald-700">
-                                {batch.documentId}
-                              </span>
-                            )}
-                            {col.id === "documentTitle" && (
-                              <div className="max-w-md">
-                                <span className="text-slate-900">
-                                  {batch.documentTitle}
-                                </span>
-                              </div>
-                            )}
-                            {col.id === "version" && (
-                              <span className="text-slate-700">
-                                v{batch.version}
-                              </span>
-                            )}
-                            {col.id === "location" && (
-                              <span className="text-slate-500 text-xs">
-                                Multiple locations
-                              </span>
-                            )}
-                            {col.id === "copyNumber" && (
-                              <span className="text-slate-500 text-xs">—</span>
-                            )}
-                            {col.id === "requestDate" && (
-                              <span className="text-slate-700">
-                                {formatDate(batch.requestDate)}
-                              </span>
-                            )}
-                            {col.id === "requestedBy" && (
-                              <span className="text-slate-700">
-                                {batch.requestedBy}
-                              </span>
-                            )}
-                            {col.id === "status" && (
-                              <span
-                                className={cn(
-                                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                                  getStatusColor(batch.status)
-                                )}
-                              >
-                                {batch.status}
-                              </span>
-                            )}
-                            {col.id === "currentStage" && (
-                              <span
-                                className={cn(
-                                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                                  getStageColor(batch.currentStage)
-                                )}
-                              >
-                                {batch.currentStage}
-                              </span>
-                            )}
-                            {col.id === "department" && (
-                              <span className="text-slate-700">
-                                {batch.department}
-                              </span>
-                            )}
-                            {col.id === "effectiveDate" && (
-                              <span className="text-slate-700">
-                                {formatDate(batch.effectiveDate)}
-                              </span>
-                            )}
+                            {renderCellContent(col, batch)}
                           </td>
                         ))}
                         <td
@@ -1232,83 +1288,7 @@ Approved on: ${new Date().toLocaleString()}
                                 key={col.id}
                                 className="py-3.5 px-4 text-sm whitespace-nowrap"
                               >
-                                {col.id === "controlNumber" && (
-                                  <div className="pl-8">
-                                    <span className="font-medium text-slate-900">
-                                      {copy.controlNumber}
-                                    </span>
-                                  </div>
-                                )}
-                                {col.id === "documentId" && (
-                                  <span className="text-slate-500 text-xs">
-                                    —
-                                  </span>
-                                )}
-                                {col.id === "documentTitle" && (
-                                  <span className="text-slate-500 text-xs">
-                                    —
-                                  </span>
-                                )}
-                                {col.id === "version" && (
-                                  <span className="text-slate-500 text-xs">
-                                    —
-                                  </span>
-                                )}
-                                {col.id === "location" && (
-                                  <div>
-                                    <div className="text-slate-900">
-                                      {copy.location}
-                                    </div>
-                                    <div className="text-xs text-slate-500">
-                                      {copy.locationCode}
-                                    </div>
-                                  </div>
-                                )}
-                                {col.id === "copyNumber" && (
-                                  <span className="text-slate-700">
-                                    Copy {copy.copyNumber} of {copy.totalCopies}
-                                  </span>
-                                )}
-                                {col.id === "requestDate" && (
-                                  <span className="text-slate-500 text-xs">
-                                    —
-                                  </span>
-                                )}
-                                {col.id === "requestedBy" && (
-                                  <span className="text-slate-500 text-xs">
-                                    —
-                                  </span>
-                                )}
-                                {col.id === "status" && (
-                                  <span
-                                    className={cn(
-                                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                                      getStatusColor(copy.status)
-                                    )}
-                                  >
-                                    {copy.status}
-                                  </span>
-                                )}
-                                {col.id === "currentStage" && (
-                                  <span
-                                    className={cn(
-                                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                                      getStageColor(copy.currentStage)
-                                    )}
-                                  >
-                                    {copy.currentStage}
-                                  </span>
-                                )}
-                                {col.id === "department" && (
-                                  <span className="text-slate-700">
-                                    {copy.department}
-                                  </span>
-                                )}
-                                {col.id === "effectiveDate" && (
-                                  <span className="text-slate-500 text-xs">
-                                    —
-                                  </span>
-                                )}
+                                {renderCellContent(col, copy, true)}
                               </td>
                             ))}
                             <td
@@ -1352,83 +1332,7 @@ Approved on: ${new Date().toLocaleString()}
                             key={col.id}
                             className="py-3.5 px-4 text-sm whitespace-nowrap"
                           >
-                            {col.id === "controlNumber" && (
-                              <span className="font-medium text-slate-900">
-                                {copy.controlNumber}
-                              </span>
-                            )}
-                            {col.id === "documentId" && (
-                              <span className="font-medium text-emerald-700">
-                                {copy.documentId}
-                              </span>
-                            )}
-                            {col.id === "documentTitle" && (
-                              <div className="max-w-md">
-                                <span className="text-slate-900">
-                                  {copy.documentTitle}
-                                </span>
-                              </div>
-                            )}
-                            {col.id === "version" && (
-                              <span className="text-slate-700">
-                                v{copy.version}
-                              </span>
-                            )}
-                            {col.id === "location" && (
-                              <div>
-                                <div className="text-slate-900">
-                                  {copy.location}
-                                </div>
-                                <div className="text-xs text-slate-500">
-                                  {copy.locationCode}
-                                </div>
-                              </div>
-                            )}
-                            {col.id === "copyNumber" && (
-                              <span className="text-slate-700">
-                                Copy {copy.copyNumber}
-                              </span>
-                            )}
-                            {col.id === "requestDate" && (
-                              <span className="text-slate-700">
-                                {formatDate(copy.requestDate)}
-                              </span>
-                            )}
-                            {col.id === "requestedBy" && (
-                              <span className="text-slate-700">
-                                {copy.requestedBy}
-                              </span>
-                            )}
-                            {col.id === "status" && (
-                              <span
-                                className={cn(
-                                  "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
-                                  getStatusColor(copy.status)
-                                )}
-                              >
-                                {copy.status}
-                              </span>
-                            )}
-                            {col.id === "currentStage" && (
-                              <span
-                                className={cn(
-                                  "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
-                                  getStageColor(copy.currentStage)
-                                )}
-                              >
-                                {copy.currentStage}
-                              </span>
-                            )}
-                            {col.id === "department" && (
-                              <span className="text-slate-700">
-                                {copy.department}
-                              </span>
-                            )}
-                            {col.id === "effectiveDate" && (
-                              <span className="text-slate-700">
-                                {formatDate(copy.effectiveDate)}
-                              </span>
-                            )}
+                            {renderCellContent(col, copy)}
                           </td>
                         ))}
                         <td

@@ -24,6 +24,7 @@ import {
     logAuditTrail,
     canUserRestore 
 } from './utils';
+import { IconInfoCircle } from '@tabler/icons-react';
 
 // Mock Data
 const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
@@ -385,10 +386,10 @@ export const ArchivedDocumentsView: React.FC = () => {
                                     if (doc) handleView(doc);
                                     setOpenDropdownId(null);
                                 }}
-                                className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                                className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                             >
-                                <Eye className="h-4 w-4 flex-shrink-0" />
-                                <span className="font-medium">Preview</span>
+                                <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
+                                <span className="font-medium">View Detail</span>
                             </button>
                             <button
                                 onClick={(e) => {
@@ -397,7 +398,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                                     if (doc) handleDownload(doc);
                                     setOpenDropdownId(null);
                                 }}
-                                className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                                className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                             >
                                 <Download className="h-4 w-4 flex-shrink-0" />
                                 <span className="font-medium">Download</span>
@@ -412,7 +413,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                                             if (doc) handleRestore(doc);
                                             setOpenDropdownId(null);
                                         }}
-                                        className="flex w-full items-center gap-2 px-3 py-2 text-xs text-amber-700 hover:bg-amber-50 active:bg-amber-100 transition-colors"
+                                        className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                                     >
                                         <RotateCcw className="h-4 w-4 flex-shrink-0" />
                                         <span className="font-medium">Restore Document</span>
