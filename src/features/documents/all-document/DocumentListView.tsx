@@ -33,6 +33,7 @@ import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 import { DocumentFilters } from "../DocumentFilters";
 import { DetailDocumentView } from "../detail-document/DetailDocumentView";
 import { NewDocumentModal } from "./new-document/NewDocumentModal";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 // --- Types ---
 
@@ -394,7 +395,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
     // Always available: View Details
     items.push({
-      icon: Info,
+      icon: IconInfoCircle,
       label: "View Details",
       onClick: () => {
         onViewDocument?.(document.id);

@@ -705,8 +705,9 @@ export const UserManagementView: React.FC = () => {
               onClick={() => setOpenDropdownId(null)}
               aria-hidden="true"
             />
+            {/* Menu */}
             <div
-              className="fixed z-50 min-w-[200px] rounded-lg border border-slate-200 bg-white shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
+              className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
               style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
             >
               <div className="py-1">
@@ -715,10 +716,10 @@ export const UserManagementView: React.FC = () => {
                     const user = MOCK_USERS.find((u) => u.id === openDropdownId);
                     if (user) handleEdit(user);
                   }}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                 >
-                  <Edit className="h-4 w-4 text-slate-500" />
-                  <span>Edit User</span>
+                  <Edit className="h-4 w-4 flex-shrink-0" />
+                  <span className="font-medium">Edit User</span>
                 </button>
                 <button
                   onClick={() => {
@@ -729,17 +730,17 @@ export const UserManagementView: React.FC = () => {
                       handleStatusChange(user, "activate");
                     }
                   }}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                 >
                   {MOCK_USERS.find((u) => u.id === openDropdownId)?.status === "Active" ? (
                     <>
-                      <UserX className="h-4 w-4 text-slate-500" />
-                      <span>Deactivate</span>
+                      <UserX className="h-4 w-4 flex-shrink-0" />
+                      <span className="font-medium">Deactivate</span>
                     </>
                   ) : (
                     <>
-                      <UserCheck className="h-4 w-4 text-slate-500" />
-                      <span>Activate</span>
+                      <UserCheck className="h-4 w-4 flex-shrink-0" />
+                      <span className="font-medium">Activate</span>
                     </>
                   )}
                 </button>
@@ -748,10 +749,10 @@ export const UserManagementView: React.FC = () => {
                     const user = MOCK_USERS.find((u) => u.id === openDropdownId);
                     if (user) handleResetPassword(user);
                   }}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                 >
-                  <KeyRound className="h-4 w-4 text-slate-500" />
-                  <span>Reset Password</span>
+                  <KeyRound className="h-4 w-4 flex-shrink-0" />
+                  <span className="font-medium">Reset Password</span>
                 </button>
                 <div className="border-t border-slate-100 my-1" />
                 <button
@@ -759,10 +760,10 @@ export const UserManagementView: React.FC = () => {
                     const user = MOCK_USERS.find((u) => u.id === openDropdownId);
                     if (user) handleDelete(user);
                   }}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                 >
-                  <IconTrash className="h-4 w-4" />
-                  <span>Delete User</span>
+                  <IconTrash className="h-4 w-4 flex-shrink-0" />
+                  <span className="font-medium">Delete User</span>
                 </button>
               </div>
             </div>

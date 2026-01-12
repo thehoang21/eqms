@@ -573,6 +573,7 @@ const DropdownMenu: React.FC<{
 
   return createPortal(
     <>
+      {/* Backdrop */}
       <div
         className="fixed inset-0 z-40 animate-in fade-in duration-150"
         onClick={(e) => {
@@ -581,6 +582,7 @@ const DropdownMenu: React.FC<{
         }}
         aria-hidden="true"
       />
+      {/* Menu */}
       <div
         className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
         style={{ top: `${position.top}px`, left: `${position.left}px` }}
@@ -594,7 +596,7 @@ const DropdownMenu: React.FC<{
             }}
             className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
-            <Info className="h-4 w-4 flex-shrink-0 text-slate-500" />
+            <Info className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">View Details</span>
           </button>
           {status === "Pending Approval" && (
@@ -607,7 +609,7 @@ const DropdownMenu: React.FC<{
                 }}
                 className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
               >
-                <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-slate-500" />
+                <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
                 <span className="font-medium">Approve & Issue</span>
               </button>
               <button
@@ -616,9 +618,9 @@ const DropdownMenu: React.FC<{
                   onReject();
                   onClose();
                 }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+                className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
               >
-                <XCircle className="h-4 w-4 flex-shrink-0 text-red-600" />
+                <XCircle className="h-4 w-4 flex-shrink-0" />
                 <span className="font-medium">Reject Request</span>
               </button>
             </>
@@ -630,9 +632,9 @@ const DropdownMenu: React.FC<{
                 onPrint();
                 onClose();
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-emerald-600 hover:bg-emerald-50 active:bg-emerald-100 transition-colors"
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
-              <Printer className="h-4 w-4 flex-shrink-0 text-emerald-600" />
+              <Printer className="h-4 w-4 flex-shrink-0" />
               <span className="font-medium">Print Controlled Copy</span>
             </button>
           )}
@@ -645,7 +647,7 @@ const DropdownMenu: React.FC<{
               }}
               className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
-              <FileX className="h-4 w-4 flex-shrink-0 text-slate-500" />
+              <FileX className="h-4 w-4 flex-shrink-0" />
               <span className="font-medium">Recall Copy</span>
             </button>
           )}

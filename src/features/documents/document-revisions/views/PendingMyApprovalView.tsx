@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "../../DocumentFilters";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 // --- Types ---
 
@@ -138,50 +139,55 @@ const DropdownMenu: React.FC<{
 
   return createPortal(
     <>
+      {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40"
+        className="fixed inset-0 z-40 animate-in fade-in duration-150"
         onClick={(e) => {
           e.stopPropagation();
           onClose();
         }}
+        aria-hidden="true"
       />
+      {/* Menu */}
       <div
-        className="fixed z-50 min-w-[160px] bg-white rounded-lg shadow-lg border border-slate-200 py-1 animate-in fade-in zoom-in-95 duration-100"
+        className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
         style={{ top: position.top, left: position.left }}
       >
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAction('view');
-            onClose();
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
-        >
-          <Eye className="h-4 w-4 text-slate-400" />
-          View Details
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAction('approve');
-            onClose();
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
-        >
-          <CheckCircle2 className="h-4 w-4 text-slate-400" />
-          Approve
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onAction('history');
-            onClose();
-          }}
-          className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
-        >
-          <History className="h-4 w-4 text-slate-400" />
-          History
-        </button>
+        <div className="py-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction('view');
+              onClose();
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+          >
+            <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">View Details</span>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction('approve');
+              onClose();
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+          >
+            <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">Approve</span>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onAction('history');
+              onClose();
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+          >
+            <History className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">History</span>
+          </button>
+        </div>
       </div>
     </>,
     document.body

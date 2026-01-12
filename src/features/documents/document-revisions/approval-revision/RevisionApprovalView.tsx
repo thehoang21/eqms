@@ -8,7 +8,6 @@ import {
     Send,
     CheckCircle,
     XCircle,
-    ChevronDown,
 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
@@ -21,6 +20,7 @@ import { DocumentType as DocType } from "@/types/documentTypes";
 import { TrainingTab } from "../revision-tabs/TrainingTab/TrainingTab";
 import { SignaturesTab } from "../revision-tabs/SignaturesTab/SignaturesTab";
 import { AuditTab } from "../revision-tabs/AuditTab/AuditTab";
+import { IconMessage2 } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -177,7 +177,6 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const [newComment, setNewComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [activeTab, setActiveTab] = useState<TabType>("document");
-    const [isWorkflowExpanded, setIsWorkflowExpanded] = useState(true);
     const [showESignModal, setShowESignModal] = useState(false);
     const [eSignAction, setESignAction] = useState<'approve' | 'reject'>('approve');
     
@@ -320,10 +319,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
 
                     {/* Approval Workflow Info */}
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <button
-                            onClick={() => setIsWorkflowExpanded(!isWorkflowExpanded)}
-                            className="w-full flex items-center justify-between p-6 hover:bg-slate-50 transition-colors"
-                        >
+                        <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
                             <div className="flex items-center gap-3">
                                 <h3 className="text-lg font-bold text-slate-900">Approval Workflow</h3>
                                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg">
@@ -331,81 +327,68 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                                     <span className="text-sm font-medium text-blue-700">Single Approver</span>
                                 </div>
                             </div>
-                            <ChevronDown
-                                className={cn(
-                                    "h-5 w-5 text-slate-400 transition-transform duration-300 ease-in-out",
-                                    isWorkflowExpanded && "transform rotate-180"
-                                )}
-                            />
-                        </button>
+                        </div>
 
-                        <div
-                            className={cn(
-                                "transition-all duration-300 ease-in-out overflow-hidden",
-                                isWorkflowExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
-                            )}
-                        >
-                            <div className="px-6 pb-6">
-                                {(() => {
-                                    const isCurrentApprover = approver.id === currentUserId;
-                                    const isApproved = approver.status === 'approved';
-                                    const isRejected = approver.status === 'rejected';
+                        <div className="p-6">
+                            {(() => {
+                                const isCurrentApprover = approver.id === currentUserId;
+                                const isApproved = approver.status === 'approved';
+                                const isRejected = approver.status === 'rejected';
 
-                                    return (
-                                        <div
-                                            className={cn(
-                                                "p-4 rounded-lg border transition-all",
-                                                isCurrentApprover && approver.status === 'pending'
-                                                    ? "bg-emerald-50 border-emerald-200"
-                                                    : "bg-white border-slate-200"
-                                            )}
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="h-10 w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
-                                                        {approver.name.charAt(0)}
-                                                    </div>
-                                                    <div>
-                                                        <div className="flex items-center gap-2">
-                                                            <h4 className="font-medium text-slate-900">{approver.name}</h4>
-                                                            {isCurrentApprover && (
-                                                                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
-                                                                    You
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                        <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                            <span>{approver.role}</span>
-                                                            <span>•</span>
-                                                            <span>{approver.department}</span>
-                                                        </div>
-                                                    </div>
+                                return (
+                                    <div
+                                        className={cn(
+                                            "p-4 rounded-lg border transition-all",
+                                            isCurrentApprover && approver.status === 'pending'
+                                                ? "bg-emerald-50 border-emerald-200"
+                                                : "bg-white border-slate-200"
+                                        )}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-4">
+                                                <div className="h-10 w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                                                    {approver.name.charAt(0)}
                                                 </div>
-
-                                                <div className="flex items-center gap-3">
-                                                    {isApproved && (
-                                                        <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
-                                                            <CheckCircle className="h-4 w-4 text-emerald-600" />
-                                                            <span className="text-sm font-medium text-emerald-700">Approved</span>
-                                                        </div>
-                                                    )}
-                                                    {isRejected && (
-                                                        <div className="flex items-center gap-2 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg">
-                                                            <XCircle className="h-4 w-4 text-red-600" />
-                                                            <span className="text-sm font-medium text-red-700">Rejected</span>
-                                                        </div>
-                                                    )}
-                                                    {approver.status === 'pending' && (
-                                                        <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg">
-                                                            <span className="text-sm font-medium text-amber-700">Pending</span>
-                                                        </div>
-                                                    )}
+                                                <div>
+                                                    <div className="flex items-center gap-2">
+                                                        <h4 className="font-medium text-slate-900">{approver.name}</h4>
+                                                        {isCurrentApprover && (
+                                                            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                                                                You
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                                                        <span>{approver.role}</span>
+                                                        <span>•</span>
+                                                        <span>{approver.department}</span>
+                                                    </div>
                                                 </div>
                                             </div>
+
+                                            <div className="flex items-center gap-3">
+                                                {isApproved && (
+                                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+                                                        <CheckCircle className="h-4 w-4 text-emerald-600" />
+                                                        <span className="text-sm font-medium text-emerald-700">Approved</span>
+                                                    </div>
+                                                )}
+                                                {isRejected && (
+                                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg">
+                                                        <XCircle className="h-4 w-4 text-red-600" />
+                                                        <span className="text-sm font-medium text-red-700">Rejected</span>
+                                                    </div>
+                                                )}
+                                                {approver.status === 'pending' && (
+                                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg">
+                                                        <span className="text-sm font-medium text-amber-700">Pending</span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                    );
-                                })()} You can only approve one revision at a time.
-                            </div>
+                                    </div>
+                                );
+                            })()}
                         </div>
                     </div>
 
@@ -447,7 +430,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                     {/* Comments Section */}
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                         <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                            <MessageSquare className="h-5 w-5 text-slate-600" />
+                            <IconMessage2 className="h-5 w-5 text-slate-600" />
                             Comments & Discussion
                         </h3>
 

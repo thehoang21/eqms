@@ -22,6 +22,7 @@ import {
   AuditTrailTab,
 } from "./tabs";
 import { Button } from "@/components/ui/button/Button";
+import { IconChevronLeft } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType =
@@ -254,7 +255,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
             variant="outline"
             className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-black hover:bg-slate-50 transition-colors shadow-sm"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <IconChevronLeft className="h-4 w-4" />
             Back to List
           </Button>
         </div>

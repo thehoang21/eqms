@@ -7,7 +7,7 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import FilePreviewLib from "reactjs-file-preview";
 import filePlaceholder from "@/assets/images/image-file/file.png";
 import { renderAsync } from "docx-preview";
-import { ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { ZoomIn, ZoomOut, RotateCcw, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import "./docx-preview.css";
 
@@ -82,6 +82,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                 {/* Toolbar */}
                 <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
+                        <FileText className="h-4 w-4 text-slate-600" />
                         <span className="text-sm font-medium text-slate-700">Word Document Preview</span>
                     </div>
                     <div className="flex items-center gap-2">

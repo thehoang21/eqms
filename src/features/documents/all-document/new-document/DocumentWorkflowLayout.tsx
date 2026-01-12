@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Button } from "@/components/ui/button/Button";
+import { IconChevronLeft } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
@@ -367,7 +368,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                         variant="outline"
                         className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 transition-colors shadow-sm"
                     >
-                        <ArrowLeft className="h-4 w-4" />
+                        <IconChevronLeft className="h-4 w-4" />
                         Back to List
                     </Button>
                 </div>

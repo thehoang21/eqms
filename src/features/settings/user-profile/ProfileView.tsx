@@ -150,7 +150,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-xl md:text-2xl font-bold text-slate-900">User Profile</h1>
-                    <p className="text-sm text-slate-500 mt-1">Manage your account information and preferences</p>
                 </div>
             </div>
 

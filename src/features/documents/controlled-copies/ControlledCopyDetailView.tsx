@@ -23,7 +23,9 @@ import { cn } from "@/components/ui/utils";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { FormModal } from "@/components/ui/modal/FormModal";
 import { MarkAsDestroyedModal } from "./MarkAsDestroyedModal";
+import { useToast } from "@/components/ui/toast/Toast";
 import { ControlledCopy, ControlledCopyStatus, CurrentStage } from "./types";
+import { IconFileShredder } from "@tabler/icons-react";
 
 // Mock data - Replace with API call
 const MOCK_CONTROLLED_COPY: ControlledCopy = {
@@ -219,6 +221,8 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
   const [controlledCopy] = useState<ControlledCopy>(MOCK_CONTROLLED_COPY);
   const [timeline] = useState<TimelineEvent[]>(MOCK_TIMELINE);
   const [isDestructionModalOpen, setIsDestructionModalOpen] = useState(false);
+  const [isESignModalOpen, setIsESignModalOpen] = useState(false);
+  const { showToast } = useToast();
 
   const handleViewOriginalDocument = () => {
     // Navigate to original document detail view
@@ -239,9 +243,30 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
   };
 
   const handleDownloadPDF = () => {
+    // Mở modal ký điện tử trước khi download
+    setIsESignModalOpen(true);
+  };
+
+  const handleESignSuccess = (reason: string) => {
+    // Đóng modal
+    setIsESignModalOpen(false);
+    
+    // Hiển thị toast thành công
+    showToast({
+      type: "success",
+      title: "E-Signature Verified",
+      message: "Document download started successfully.",
+      duration: 3500,
+    });
+
+    // Thực hiện download
+    console.log("E-Signature reason:", reason);
     console.log("Download controlled copy PDF");
-    // TODO: Generate and download PDF
-    alert("Downloading controlled copy document...");
+    // TODO: Call API to log e-signature event and download PDF
+    // Generate download file
+    setTimeout(() => {
+      alert("Downloading controlled copy document...");
+    }, 500);
   };
 
   return (
@@ -322,7 +347,7 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
                 size="sm"
                 className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
               >
-                <Trash2 className="h-4 w-4" />
+                <IconFileShredder className="h-4 w-4" />
                 Mark as Destroyed
               </Button>
             )}
@@ -562,6 +587,14 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         onClose={() => setIsDestructionModalOpen(false)}
         onConfirm={handleMarkAsDestroyed}
         controlledCopy={controlledCopy}
+      />
+
+      {/* E-Signature Modal for Download */}
+      <ESignatureModal
+        isOpen={isESignModalOpen}
+        onClose={() => setIsESignModalOpen(false)}
+        onConfirm={handleESignSuccess}
+        actionTitle="Download Controlled Copy"
       />
     </div>
   );

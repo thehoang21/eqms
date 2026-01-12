@@ -20,6 +20,7 @@ import {
     SignaturesTab,
     AuditTrailTab,
 } from "@/features/documents/detail-document/tabs";
+import { IconMessage2 } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -380,7 +381,7 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                     {/* Comments Section */}
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                         <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                            <MessageSquare className="h-5 w-5 text-slate-600" />
+                            <IconMessage2 className="h-5 w-5 text-slate-600" />
                             Comments & Discussion
                         </h3>
 

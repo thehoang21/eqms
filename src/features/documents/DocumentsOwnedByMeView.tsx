@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "./DocumentFilters";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 // --- Types ---
 
@@ -279,7 +280,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       />
       {/* Menu */}
       <div
-        className="fixed z-50 min-w-[200px] rounded-lg border border-slate-200 bg-white shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
+        className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
@@ -293,10 +294,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               onViewDocument?.(document.id);
               onClose();
             }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
-            <Eye className="h-4 w-4 text-slate-500" />
-            <span>View Details</span>
+            <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">View Details</span>
           </button>
           <button
             onClick={(e) => {
@@ -304,10 +305,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               console.log("Download document:", document.id);
               onClose();
             }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
-            <Download className="h-4 w-4 text-slate-500" />
-            <span>Download PDF</span>
+            <Download className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">Download PDF</span>
           </button>
           <button
             onClick={(e) => {
@@ -315,10 +316,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               console.log("View history:", document.id);
               onClose();
             }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
-            <History className="h-4 w-4 text-slate-500" />
-            <span>Version History</span>
+            <History className="h-4 w-4 flex-shrink-0" />
+            <span className="font-medium">Version History</span>
           </button>
         </div>
       </div>

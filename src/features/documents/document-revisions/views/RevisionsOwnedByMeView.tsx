@@ -19,6 +19,7 @@ import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { Select } from '@/components/ui/select/Select';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';  
 import { cn } from '@/components/ui/utils';
+import { IconInfoCircle } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -583,9 +584,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                     e.stopPropagation();
                     handleMenuAction("view", openDropdownId);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                 >
-                  <Eye className="h-4 w-4 flex-shrink-0" />
+                  <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
                   <span className="font-medium">View Details</span>
                 </button>
                 <button
@@ -593,7 +594,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                     e.stopPropagation();
                     handleMenuAction("download", openDropdownId);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                 >
                   <Download className="h-4 w-4 flex-shrink-0" />
                   <span className="font-medium">Download</span>
@@ -603,7 +604,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                     e.stopPropagation();
                     handleMenuAction("history", openDropdownId);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                 >
                   <History className="h-4 w-4 flex-shrink-0" />
                   <span className="font-medium">Version History</span>
