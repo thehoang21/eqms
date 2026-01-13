@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search } from 'lucide-react';
-import { cn } from '../utils';
+import { cn } from '../utils'; // Đảm bảo đường dẫn này đúng trong project của bạn
 
 export interface SelectOption {
   label: string;
@@ -20,8 +20,8 @@ interface SelectProps {
   triggerClassName?: string;
   enableSearch?: boolean;
   disabled?: boolean;
-  maxVisibleRows?: number; // Limit visible options before scroll
-  rowHeight?: number; // Approximate option row height in px (default ~44)
+  maxVisibleRows?: number; // Mặc định sẽ là 4
+  rowHeight?: number;      // Mặc định sẽ là 44px
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -35,8 +35,8 @@ export const Select: React.FC<SelectProps> = ({
   triggerClassName,
   enableSearch = true,
   disabled = false,
-  maxVisibleRows,
-  rowHeight = 44,
+  maxVisibleRows = 4, // 1. Mặc định hiển thị tối đa 4 dòng
+  rowHeight = 44,    // 2. Chiều cao chuẩn mỗi dòng
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -53,6 +53,7 @@ export const Select: React.FC<SelectProps> = ({
 
   const selectedOption = options.find((opt) => opt.value === value);
 
+  // Xử lý click ra ngoài để đóng dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -69,9 +70,9 @@ export const Select: React.FC<SelectProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Xử lý scroll/resize window
   useEffect(() => {
     const handleScrollOrResize = (e: Event) => {
-      // Prevent closing if scrolling inside the dropdown
       if (dropdownRef.current && dropdownRef.current.contains(e.target as Node)) {
         return;
       }
@@ -89,12 +90,14 @@ export const Select: React.FC<SelectProps> = ({
     };
   }, [isOpen]);
 
+  // Auto focus vào ô search khi mở
   useEffect(() => {
     if (isOpen && enableSearch && searchInputRef.current) {
       setTimeout(() => searchInputRef.current?.focus(), 50);
     }
   }, [isOpen, enableSearch]);
 
+  // Tính toán vị trí dropdown
   const handleToggle = () => {
     if (disabled) return;
     if (!isOpen && containerRef.current) {
@@ -117,6 +120,8 @@ export const Select: React.FC<SelectProps> = ({
           {label}
         </label>
       )}
+      
+      {/* Trigger Button */}
       <button
         type="button"
         onClick={handleToggle}
@@ -146,6 +151,8 @@ export const Select: React.FC<SelectProps> = ({
           )}
         />
       </button>
+
+      {/* Dropdown Portal */}
       {isOpen && createPortal(
         <div 
           ref={dropdownRef}
@@ -164,9 +171,13 @@ export const Select: React.FC<SelectProps> = ({
               />
             </div>
           )}
+          
           <div
             className="overflow-y-auto p-1 custom-scrollbar"
-            style={{ maxHeight: maxVisibleRows ? maxVisibleRows * rowHeight : 300 }}
+            style={{ 
+              // 3. Giới hạn chiều cao: Số dòng * Chiều cao 1 dòng
+              maxHeight: `${maxVisibleRows * rowHeight}px` 
+            }}
           >
             {filteredOptions.length === 0 ? (
               <div className="py-6 text-center text-sm text-slate-500">
@@ -181,8 +192,10 @@ export const Select: React.FC<SelectProps> = ({
                     setIsOpen(false);
                     setSearchQuery("");
                   }}
+                  // 4. Gán cứng chiều cao (height) để khớp với rowHeight
+                  style={{ height: rowHeight }} 
                   className={cn(
-                    "relative flex w-full cursor-pointer select-none items-center rounded-sm py-3 px-4 text-sm outline-none transition-colors",
+                    "relative flex w-full cursor-pointer select-none items-center rounded-sm px-4 text-sm outline-none transition-colors",
                     value === option.value
                       ? "bg-emerald-50 text-emerald-700 font-medium"
                       : "text-slate-900 hover:bg-slate-50"
