@@ -41,6 +41,13 @@ interface DocumentFiltersProps {
     showTypeFilter?: boolean;
     showDepartmentFilter?: boolean;
     disableStatusFilter?: boolean;
+    authorFilterDisabled?: boolean;
+    columns?: TableColumn[];
+    onColumnsChange?: (columns: TableColumn[]) => void;
+    ColumnCustomizerComponent?: React.ComponentType<{
+        columns: TableColumn[];
+        onColumnsChange: (columns: TableColumn[]) => void;
+    }>;
 }
 
 export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
@@ -69,14 +76,18 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
     showTypeFilter = true,
     showDepartmentFilter = true,
     disableStatusFilter = false,
+    authorFilterDisabled = false,
+    columns,
+    onColumnsChange,
+    ColumnCustomizerComponent,
 }) => {
     return (
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-                {/* Row 1: Search, Type, Department */}
+                {/* Row 1: Search, Column Customizer, Type, Department */}
 
                 {/* Search */}
-                <div className="xl:col-span-6 w-full">
+                <div className={ColumnCustomizerComponent ? "xl:col-span-4 w-full" : "xl:col-span-6 w-full"}>
                     <label className="text-sm font-medium text-slate-700 mb-1.5 block">
                         Search
                     </label>
@@ -93,6 +104,19 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         />
                     </div>
                 </div>
+
+                {/* Column Customizer */}
+                {ColumnCustomizerComponent && columns && onColumnsChange && (
+                    <div className="xl:col-span-2 w-full">
+                        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                            Columns
+                        </label>
+                        <ColumnCustomizerComponent
+                            columns={columns}
+                            onColumnsChange={onColumnsChange}
+                        />
+                    </div>
+                )}
 
                 {/* Type Filter */}
                 {showTypeFilter && (
@@ -139,7 +163,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                     </div>
                 )}
 
-                {/* Row 2: Status Filter */}
+                {/* Row 2: Status Filter, Author, Created From/To */}
 
                 {/* Status Filter */}
                 <div className="xl:col-span-3 w-full">
@@ -165,14 +189,12 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                     />
                 </div>
 
-                {/* Row 2: Author, Created From/To */}
-
                 {/* Author Filter */}
                 <div className="xl:col-span-3 w-full">
                     <Select
                         label="Author"
                         value={authorFilter}
-                        onChange={(value) => onAuthorChange(value)}
+                        onChange={(value) => !authorFilterDisabled && onAuthorChange(value)}
                         options={[
                             { label: "All", value: "All" },
                             { label: "Dr. Sarah Johnson", value: "Dr. Sarah Johnson" },
@@ -187,6 +209,8 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         ]}
                         placeholder="Select author"
                         searchPlaceholder="Search author..."
+                        disabled={authorFilterDisabled}
+                        className={authorFilterDisabled ? "opacity-60 pointer-events-none" : ""}
                     />
                 </div>
 

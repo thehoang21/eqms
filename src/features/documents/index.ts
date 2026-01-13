@@ -1,5 +1,4 @@
 import { CreateLinkModal } from './CreateLinkModal';
-export { DocumentsOwnedByMeView } from './DocumentsOwnedByMeView';
 export { DetailDocumentView } from './detail-document/DetailDocumentView';
 export { RequestControlledCopyView } from './request-controlled-copy/RequestControlledCopyView';
 export type { ControlledCopyRequest } from './request-controlled-copy/RequestControlledCopyView';

@@ -1,38 +1,26 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import {
-  ChevronDown,
   ChevronRight,
   MoreVertical,
-  Eye,
-  Download,
   History,
   AlertCircle,
   CheckCircle2,
   Clock,
-  AlertTriangle,
-  GripVertical,
   Home,
   FileText,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
-import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "../../DocumentFilters";
-import { IconEyeCheck, IconInfoCircle } from "@tabler/icons-react";
+import { IconChecks, IconEyeCheck, IconInfoCircle } from "@tabler/icons-react";
 
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
-
-interface TableColumn {
-  id: string;
-  label: string;
-  visible: boolean;
-  order: number;
-  locked?: boolean;
-}
+type ViewType = "review" | "approval";
 
 interface Document {
   id: string;
@@ -51,7 +39,7 @@ interface Document {
 }
 
 // --- Mock Data ---
-const MOCK_DOCUMENTS: Document[] = [
+const MOCK_REVIEW_DOCUMENTS: Document[] = [
   {
     id: "1",
     documentId: "SOP.0002.01",
@@ -99,6 +87,54 @@ const MOCK_DOCUMENTS: Document[] = [
   },
 ];
 
+const MOCK_APPROVAL_DOCUMENTS: Document[] = [
+  {
+    id: "1",
+    documentId: "SOP.0003.01",
+    title: "Production Line Setup",
+    type: "SOP",
+    version: "3.0",
+    status: "Pending Approval",
+    effectiveDate: "-",
+    validUntil: "-",
+    author: "Robert Brown",
+    department: "Production",
+    created: "2023-09-15",
+    openedBy: "Production Manager",
+    description: "Procedure for setting up the production line",
+  },
+  {
+    id: "2",
+    documentId: "REP.0002.01",
+    title: "Validation Report for Autoclave",
+    type: "Report",
+    version: "1.0",
+    status: "Pending Approval",
+    effectiveDate: "-",
+    validUntil: "-",
+    author: "Emily Davis",
+    department: "Validation",
+    created: "2023-09-20",
+    openedBy: "Validation Specialist",
+    description: "Validation report for the new autoclave",
+  },
+  {
+    id: "3",
+    documentId: "SPEC-RM-010",
+    title: "Raw Material Specification: Sodium Chloride",
+    type: "Specification",
+    version: "2.1",
+    status: "Pending Approval",
+    effectiveDate: "-",
+    validUntil: "-",
+    author: "David Wilson",
+    department: "Quality Control",
+    created: "2023-09-25",
+    openedBy: "QC Manager",
+    description: "Specification for Sodium Chloride raw material",
+  },
+];
+
 // --- Helper Components ---
 
 const StatusBadge = ({ status }: { status: DocumentStatus }) => {
@@ -121,13 +157,14 @@ const StatusBadge = ({ status }: { status: DocumentStatus }) => {
   };
 
   const Icon = icons[status];
+  const showIcon = status !== "Pending Review" && status !== "Pending Approval";
 
   return (
     <span className={cn(
       "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
       styles[status]
     )}>
-      <Icon className="h-3.5 w-3.5" />
+      {showIcon && <Icon className="h-3.5 w-3.5" />}
       {status}
     </span>
   );
@@ -138,7 +175,8 @@ const DropdownMenu: React.FC<{
   onClose: () => void;
   position: { top: number; left: number };
   onAction: (action: string) => void;
-}> = ({ isOpen, onClose, position, onAction }) => {
+  viewType: ViewType;
+}> = ({ isOpen, onClose, position, onAction, viewType }) => {
   if (!isOpen) return null;
 
   return createPortal(
@@ -169,17 +207,31 @@ const DropdownMenu: React.FC<{
             <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">View Details</span>
           </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAction('review');
-              onClose();
-            }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
-          >
-            <IconEyeCheck className="h-4 w-4 flex-shrink-0" />
-            <span className="font-medium">Review</span>
-          </button>
+          {viewType === "review" ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAction('review');
+                onClose();
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+            >
+              <IconEyeCheck className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium">Review</span>
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAction('approve');
+                onClose();
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+            >
+              <IconChecks className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium">Approve</span>
+            </button>
+          )}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -198,172 +250,16 @@ const DropdownMenu: React.FC<{
   );
 };
 
-const ColumnCustomizer: React.FC<{
-  columns: TableColumn[];
-  onColumnsChange: (columns: TableColumn[]) => void;
-}> = ({ columns, onColumnsChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-
-  // Close when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const reorderableColumns = useMemo(() => 
-    [...columns].sort((a, b) => a.order - b.order)
-  , [columns]);
-
-  const toggleVisibility = (id: string) => {
-    if (columns.find(c => c.id === id)?.locked) return;
-    
-    const newColumns = columns.map(col => 
-      col.id === id ? { ...col, visible: !col.visible } : col
-    );
-    onColumnsChange(newColumns);
-  };
-
-  const handleDragStart = (index: number) => {
-    setDraggedIndex(index);
-  };
-
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index) return;
-
-    const newColumns = [...reorderableColumns];
-    const draggedItem = newColumns[draggedIndex];
-    newColumns.splice(draggedIndex, 1);
-    newColumns.splice(index, 0, draggedItem);
-
-    // Update order
-    const updatedColumns = newColumns.map((col, idx) => ({
-      ...col,
-      order: idx
-    }));
-
-    onColumnsChange(updatedColumns);
-    setDraggedIndex(index);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-  };
-
-  const resetToDefault = () => {
-    const defaultColumns: TableColumn[] = [
-      { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-      { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
-      { id: 'created', label: 'Created', visible: true, order: 2 },
-      { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
-      { id: 'title', label: 'Document Name', visible: true, order: 4 },
-      { id: 'status', label: 'State', visible: true, order: 5 },
-      { id: 'type', label: 'Document Type', visible: true, order: 6 },
-      { id: 'department', label: 'Department', visible: true, order: 7 },
-      { id: 'author', label: 'Author', visible: true, order: 8 },
-      { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
-      { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
-      { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
-    ];
-    onColumnsChange(defaultColumns);
-  };
-
-  return (
-    <div ref={containerRef} className="relative">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "flex items-center justify-between gap-2 w-full px-3 h-11 border rounded-md bg-white text-sm transition-all",
-          isOpen 
-            ? "border-emerald-500 ring-2 ring-emerald-500" 
-            : "border-slate-200 hover:border-slate-300"
-        )}
-      >
-        <span className="text-slate-700 font-medium">Customize Columns</span>
-        <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 left-0 top-full mt-2 z-50 w-full bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
-          <div className="px-4 py-2 border-b border-slate-100">
-            <h3 className="text-sm font-semibold text-slate-700">Customize Columns</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Scroll to View, Drag to reorder</p>
-          </div>
-
-          <div className="p-2 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
-            {reorderableColumns.map((column, index) => (
-              <div
-                key={column.id}
-                draggable
-                onDragStart={() => handleDragStart(index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDragEnd={handleDragEnd}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 mb-1 rounded-md border border-transparent transition-all cursor-move group',
-                  draggedIndex === index
-                    ? 'bg-blue-50 border-blue-200 opacity-50'
-                    : 'hover:bg-slate-50'
-                )}
-              >
-                <Checkbox
-                  id={`column-${column.id}`}
-                  checked={column.visible}
-                  onChange={() => toggleVisibility(column.id)}
-                  className="flex-shrink-0"
-                />
-                
-                <span className={cn(
-                  "text-sm font-medium flex-1",
-                  column.visible ? "text-slate-700" : "text-slate-400"
-                )}>
-                  {column.label}
-                </span>
-
-                <GripVertical className="h-4 w-4 text-slate-400 flex-shrink-0" />
-              </div>
-            ))}
-          </div>
-
-          <div className="px-3 py-2 rounded-b-lg border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={resetToDefault}
-              className="flex-1"
-            >
-              Reset
-            </Button>
-            <Button
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              className="flex-1"
-            >
-              Done
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 // --- Main Component ---
 
-interface PendingMyReviewViewProps {
+interface PendingDocumentsViewProps {
+  viewType: ViewType;
   onViewDocument?: (documentId: string) => void;
 }
 
-export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onViewDocument }) => {
+export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ viewType, onViewDocument }) => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter] = useState<DocumentStatus | "All">("Pending Review"); // Fixed to Pending Review
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
   const [departmentFilter, setDepartmentFilter] = useState<string>("All");
   const [authorFilter, setAuthorFilter] = useState<string>("All");
@@ -376,27 +272,40 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-  const [columns, setColumns] = useState<TableColumn[]>([
-    { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-    { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
-    { id: 'created', label: 'Created', visible: true, order: 2 },
-    { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
-    { id: 'title', label: 'Document Name', visible: true, order: 4 },
-    { id: 'status', label: 'State', visible: true, order: 5 },
-    { id: 'type', label: 'Document Type', visible: true, order: 6 },
-    { id: 'department', label: 'Department', visible: true, order: 7 },
-    { id: 'author', label: 'Author', visible: true, order: 8 },
-    { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 9 },
-    { id: 'validUntil', label: 'Valid Until', visible: true, order: 10 },
-    { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
-  ]);
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
 
   const itemsPerPage = 10;
 
+  // Get config based on viewType
+  const config = useMemo(() => {
+    switch (viewType) {
+      case "review":
+        return {
+          title: "Pending My Review",
+          breadcrumbLast: "Pending My Review",
+          statusFilter: "Pending Review" as DocumentStatus,
+          documents: MOCK_REVIEW_DOCUMENTS,
+        };
+      case "approval":
+        return {
+          title: "Pending My Approval",
+          breadcrumbLast: "Pending My Approval",
+          statusFilter: "Pending Approval" as DocumentStatus,
+          documents: MOCK_APPROVAL_DOCUMENTS,
+        };
+      default:
+        return {
+          title: "Pending Documents",
+          breadcrumbLast: "Pending Documents",
+          statusFilter: "Pending Review" as DocumentStatus,
+          documents: [],
+        };
+    }
+  }, [viewType]);
+
   // Filter documents
   const filteredDocuments = useMemo(() => {
-    return MOCK_DOCUMENTS.filter((doc) => {
+    return config.documents.filter((doc) => {
       const matchesSearch =
         doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.documentId.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -404,7 +313,7 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
         doc.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter === "All" || doc.status === statusFilter;
+      const matchesStatus = doc.status === config.statusFilter;
       const matchesType = typeFilter === "All" || doc.type === typeFilter;
       const matchesDepartment = departmentFilter === "All" || doc.department === departmentFilter;
       const matchesAuthor = authorFilter === "All" || doc.author === authorFilter;
@@ -421,7 +330,7 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
              matchesAuthor && matchesCreatedFrom && matchesCreatedTo && 
              matchesEffectiveFrom && matchesEffectiveTo && matchesValidFrom && matchesValidTo;
     });
-  }, [searchQuery, statusFilter, typeFilter, departmentFilter, authorFilter,
+  }, [searchQuery, config.statusFilter, config.documents, typeFilter, departmentFilter, authorFilter,
       createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, 
       validFromDate, validToDate]);
 
@@ -455,13 +364,33 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
     return buttonRefs.current[docId];
   };
 
+  const handleAction = (action: string) => {
+    if (!openDropdownId) return;
+
+    switch (action) {
+      case 'view':
+        onViewDocument?.(openDropdownId);
+        break;
+      case 'review':
+        navigate(`/documents/revisions/review/${openDropdownId}`);
+        break;
+      case 'approve':
+        navigate(`/documents/revisions/approval/${openDropdownId}`);
+        break;
+      case 'history':
+        console.log(`View history for document ${openDropdownId}`);
+        break;
+    }
+    setOpenDropdownId(null);
+  };
+
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
-      {/* Header: Title + Breadcrumb (No Action Button) */}
+      {/* Header: Title + Breadcrumb */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Pending My Review
+            {config.title}
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
             <span className="hidden sm:inline">Dashboard</span>
@@ -473,7 +402,7 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
             <span className="hidden sm:inline">Document Revisions</span>
             <span className="sm:hidden">...</span>
             <ChevronRight className="h-4 w-4" />
-            <span className="text-slate-700 font-medium">Pending My Review</span>
+            <span className="text-slate-700 font-medium">{config.breadcrumbLast}</span>
           </div>
         </div>
       </div>
@@ -482,7 +411,7 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
       <DocumentFilters
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        statusFilter={statusFilter}
+        statusFilter={config.statusFilter}
         onStatusChange={() => {}} // No-op since disabled
         typeFilter={typeFilter}
         onTypeChange={setTypeFilter}
@@ -511,30 +440,18 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                {columns.sort((a, b) => a.order - b.order).map((column) => {
-                  if (!column.visible) return null;
-                  
-                  if (column.id === 'action') {
-                    return (
-                      <th 
-                        key={column.id}
-                        className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]"
-                        style={{ width: '60px' }}
-                      >
-                        {column.label}
-                      </th>
-                    );
-                  }
-
-                  return (
-                    <th
-                      key={column.id}
-                      className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left"
-                    >
-                      {column.label}
-                    </th>
-                  );
-                })}
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Number</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Created</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Opened By</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Name</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">State</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Type</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Department</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Author</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Effective Date</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Valid Until</th>
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]" style={{ width: '60px' }}>Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
@@ -545,52 +462,38 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
                     onClick={() => onViewDocument?.(doc.id)}
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                   >
-                    {columns.sort((a, b) => a.order - b.order).map((column) => {
-                      if (!column.visible) return null;
-
-                      if (column.id === 'action') {
-                        return (
-                          <td
-                            key={column.id}
-                            onClick={(e) => e.stopPropagation()}
-                            className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
-                          >
-                            <button
-                              ref={getButtonRef(doc.id)}
-                              onClick={(e) => handleDropdownToggle(doc.id, e)}
-                              className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
-                            >
-                              <MoreVertical className="h-4 w-4 text-slate-600" />
-                            </button>
-                          </td>
-                        );
-                      }
-
-                      return (
-                        <td key={column.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
-                          {column.id === 'no' && startIndex + index + 1}
-                          {column.id === 'documentId' && (
-                            <span className="font-medium text-emerald-600">{doc.documentId}</span>
-                          )}
-                          {column.id === 'created' && doc.created}
-                          {column.id === 'openedBy' && doc.openedBy}
-                          {column.id === 'title' && (
-                            <span className="font-medium text-slate-900">{doc.title}</span>
-                          )}
-                          {column.id === 'status' && <StatusBadge status={doc.status} />}
-                          {column.id === 'type' && doc.type}
-                          {column.id === 'department' && doc.department}
-                          {column.id === 'author' && doc.author}
-                          {column.id === 'effectiveDate' && doc.effectiveDate}
-                          {column.id === 'validUntil' && doc.validUntil}
-                        </td>
-                      );
-                    })}
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{startIndex + index + 1}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <span className="font-medium text-emerald-600">{doc.documentId}</span>
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.created}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.openedBy}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <span className="font-medium text-slate-900">{doc.title}</span>
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap"><StatusBadge status={doc.status} /></td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.type}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.department}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.author}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.effectiveDate}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.validUntil}</td>
+                    <td
+                      onClick={(e) => e.stopPropagation()}
+                      className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                    >
+                      <button
+                        ref={getButtonRef(doc.id)}
+                        onClick={(e) => handleDropdownToggle(doc.id, e)}
+                        className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                      >
+                        <MoreVertical className="h-4 w-4 text-slate-600" />
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.filter(c => c.visible).length} className="py-12 text-center">
+                  <td colSpan={12} className="py-12 text-center">
                     <div className="flex flex-col items-center justify-center text-slate-500">
                       <div className="bg-slate-50 p-4 rounded-full mb-3">
                         <FileText className="h-8 w-8 text-slate-400" />
@@ -638,10 +541,8 @@ export const PendingMyReviewView: React.FC<PendingMyReviewViewProps> = ({ onView
         isOpen={!!openDropdownId}
         onClose={() => setOpenDropdownId(null)}
         position={dropdownPosition}
-        onAction={(action) => {
-          console.log(`Action ${action} on document ${openDropdownId}`);
-          // Handle actions
-        }}
+        onAction={handleAction}
+        viewType={viewType}
       />
     </div>
   );

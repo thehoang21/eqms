@@ -1,46 +1,36 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef, createRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
-import { useNavigate, NavigateFunction } from "react-router-dom";
 import {
-  Search,
-  FileText,
-  ChevronLeft,
+  Home,
   ChevronRight,
   MoreVertical,
-  Eye,
+  Download,
   History,
-  Plus,
-  GripVertical,
-  ChevronDown,
-  Edit,
-  Send,
-  CheckCircle,
-  XCircle,
-  Archive,
-  FileCheck,
-  ClipboardList,
-  Info,
-  Home,
-  FilePlus2,
-  Loader2,
-  Printer,
   Link2,
 } from "lucide-react";
-import { Button } from '@/components/ui/button/Button';
-import { Select } from '@/components/ui/select/Select';
-import { Checkbox } from '@/components/ui/checkbox/Checkbox';
-import { cn } from '@/components/ui/utils';
-import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
-import { DocumentFilters } from "../DocumentFilters";
-import { DetailDocumentView } from "../detail-document/DetailDocumentView";
-import { NewDocumentModal } from "./new-document/NewDocumentModal";
-import { CreateLinkModal } from "../CreateLinkModal";
-import { IconInfoCircle, IconPointerQuestion } from "@tabler/icons-react";
+import {
+  IconInfoCircle,
+  IconPencil,
+  IconEyeCheck,
+  IconChecks,
+  IconPrinter,
+  IconFileDownload,
+  IconTrash,
+  IconChartDots,
+} from "@tabler/icons-react";
+import { Button } from "@/components/ui/button/Button";
+import { cn } from "@/components/ui/utils";
+import { DocumentFilters } from "./DocumentFilters";
+import { DetailDocumentView } from "./detail-document/DetailDocumentView";
+import { NewDocumentModal } from "./all-document/new-document/NewDocumentModal";
+import { CreateLinkModal } from "./CreateLinkModal";
 
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type ViewType = "all" | "owned-by-me";
 
 interface TableColumn {
   id: string;
@@ -170,11 +160,11 @@ const MOCK_DOCUMENTS: Document[] = [
     version: "1.0",
     status: "Effective",
     effectiveDate: "2023-06-30",
-      validUntil: "2024-06-30",
-      author: "Amanda Martinez",
+    validUntil: "2024-06-30",
+    author: "Amanda Martinez",
     department: "Quality Assurance",
-      created: "2023-06-20",
-      openedBy: "Audit Team",
+    created: "2023-06-20",
+    openedBy: "Audit Team",
     hasRelatedDocuments: true,
   },
   {
@@ -185,11 +175,11 @@ const MOCK_DOCUMENTS: Document[] = [
     version: "5.0",
     status: "Effective",
     effectiveDate: "2023-08-15",
-      validUntil: "2024-08-15",
-      author: "David Brown",
+    validUntil: "2024-08-15",
+    author: "David Brown",
     department: "Engineering",
-      created: "2023-07-25",
-      openedBy: "Engineering Lead",
+    created: "2023-07-25",
+    openedBy: "Engineering Lead",
     hasRelatedDocuments: false,
   },
   {
@@ -200,11 +190,11 @@ const MOCK_DOCUMENTS: Document[] = [
     version: "2.3",
     status: "Draft",
     effectiveDate: "2023-10-01",
-      validUntil: "2024-10-01",
-      author: "Jessica Lee",
+    validUntil: "2024-10-01",
+    author: "Jessica Lee",
     department: "Human Resources",
-      created: "2023-09-15",
-      openedBy: "HR Manager",
+    created: "2023-09-15",
+    openedBy: "HR Manager",
   },
   {
     id: "10",
@@ -214,11 +204,11 @@ const MOCK_DOCUMENTS: Document[] = [
     version: "1.0",
     status: "Pending Review",
     effectiveDate: "2023-09-01",
-      validUntil: "2024-09-01",
-      author: "Dr. Sarah Johnson",
+    validUntil: "2024-09-01",
+    author: "Dr. Sarah Johnson",
     department: "Quality Management",
-      created: "2023-08-10",
-      openedBy: "QM Director",
+    created: "2023-08-10",
+    openedBy: "QM Director",
   },
   {
     id: "11",
@@ -236,6 +226,13 @@ const MOCK_DOCUMENTS: Document[] = [
     description: "Comprehensive GMP guidelines for pharmaceutical manufacturing",
   },
 ];
+
+// Mock current user
+const CURRENT_USER = {
+  id: "1",
+  name: "Dr. Sarah Johnson",
+  role: "Quality Manager",
+};
 
 // --- Helper Functions ---
 
@@ -305,26 +302,26 @@ const Pagination: React.FC<{
           <span className="font-medium text-slate-900">{totalItems}</span> results
         </span>
       </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </Button>
-            </div>
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 };
@@ -338,7 +335,7 @@ interface DropdownMenuProps {
   onClose: () => void;
   position: { top: number; left: number };
   onViewDocument?: (documentId: string, tab?: string) => void;
-  navigate: NavigateFunction;
+  navigate: ReturnType<typeof useNavigate>;
   onPrintControlledCopy?: (document: Document) => void;
   onCreateLink?: (document: Document) => void;
 }
@@ -359,7 +356,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
   // Check if document has parent-child relationships
   const hasRelationships = (doc: Document): boolean => {
-    // Check based on hasRelatedDocuments property from API
     return doc.hasRelatedDocuments === true;
   };
 
@@ -368,24 +364,18 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     setIsNavigating(true);
     
     try {
-      // Check if document has parent-child relationships
       const hasLinks = hasRelationships(doc);
-      
-      // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 400));
       
       if (hasLinks) {
-        // Has parent-child relationships → Navigate to Impact Analysis
-        navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
+        navigate(`/documents/revisions/new?sourceDocId=${doc.id}&step=impact-analysis`);
       } else {
-        // Standalone document → Navigate to Standalone Revision
-        navigate(`/documents/revisions/standalone?sourceDocId=${doc.id}`);
+        navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
       }
       
       onClose();
     } catch (error) {
       console.error("Error checking relationships:", error);
-      // Fallback: Navigate to Impact Analysis
       navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
       onClose();
     } finally {
@@ -413,73 +403,74 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       case "Draft":
         items.push(
           {
-            icon: Edit,
+            icon: IconPencil,
             label: "Edit Document",
             onClick: () => {
               console.log("Edit document:", document.id);
               onClose();
             },
-            color: "text-slate-500"
+            color: "text-blue-500"
           },
           {
-            icon: Send,
-            label: "Submit for Review",
+            icon: IconTrash,
+            label: "Delete",
             onClick: () => {
-              console.log("Submit for review:", document.id);
+              console.log("Delete document:", document.id);
               onClose();
             },
-            color: "text-slate-500"
+            color: "text-red-500"
           }
         );
         break;
 
       case "Pending Review":
-        items.push(
-          {
-            icon: FileCheck,
-            label: "Review Document",
-            onClick: () => {
-              onViewDocument?.(document.id);
-              onClose();
-            },
-            color: "text-slate-500"
-          }
-        );
+        items.push({
+          icon: IconEyeCheck,
+          label: "Review Document",
+          onClick: () => {
+            navigate(`/documents/${document.id}/review`);
+            onClose();
+          },
+          color: "text-amber-500"
+        });
         break;
 
       case "Pending Approval":
-        items.push(
-          {
-            icon: CheckCircle,
-            label: "Approve Document",
-            onClick: () => {
-              onViewDocument?.(document.id);
-              onClose();
-            },
-            color: "text-slate-500"
-          }
-        );
+        items.push({
+          icon: IconChecks,
+          label: "Approve Document",
+          onClick: () => {
+            navigate(`/documents/${document.id}/approval`);
+            onClose();
+          },
+          color: "text-blue-500"
+        });
         break;
 
       case "Approved":
-        items.push(
-          {
-            icon: Edit,
-            label: "Request Change",
-            onClick: () => {
-              console.log("Request change:", document.id);
-              onClose();
-            },
-            color: "text-slate-500"
-          }
-        );
+        items.push({
+          icon: IconFileDownload,
+          label: "Download PDF",
+          onClick: () => {
+            console.log("Download PDF:", document.id);
+            onClose();
+          },
+          color: "text-slate-500"
+        });
         break;
 
       case "Effective":
         items.push(
           {
-            icon: IconPointerQuestion,
-            label: "Request Controlled Copy",
+            icon: IconChartDots,
+            label: "New Revision",
+            onClick: () => handleNewRevision(document),
+            color: "text-emerald-500",
+            disabled: isNavigating
+          },
+          {
+            icon: IconPrinter,
+            label: "Print Controlled Copy",
             onClick: () => {
               onPrintControlledCopy?.(document);
               onClose();
@@ -487,17 +478,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             color: "text-slate-500"
           },
           {
-            icon: FilePlus2,
-            label: "New Revision",
-            onClick: () => handleNewRevision(document),
-            color: "text-slate-500",
-            isLoading: isNavigating,
-          },
-          {
-            icon: Edit,
-            label: "Request Change",
+            icon: Download,
+            label: "Download PDF",
             onClick: () => {
-              console.log("Request change:", document.id);
+              console.log("Download PDF:", document.id);
               onClose();
             },
             color: "text-slate-500"
@@ -506,35 +490,30 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         break;
 
       case "Archive":
-        // No specific actions for archived documents
         break;
     }
 
     // Always available: Create Link
-    items.push(
-      {
-        icon: Link2,
-        label: "Create Link",
-        onClick: () => {
-          onCreateLink?.(document);
-          onClose();
-        },
-        color: "text-slate-500"
-      }
-    );
+    items.push({
+      icon: Link2,
+      label: "Create Link",
+      onClick: () => {
+        onCreateLink?.(document);
+        onClose();
+      },
+      color: "text-slate-500"
+    });
 
     // Always available: Version History & Audit Trail
-    items.push(
-      {
-        icon: History,
-        label: "View Audit Trail",
-        onClick: () => {
-          onViewDocument?.(document.id, "audit");
-          onClose();
-        },
-        color: "text-slate-500"
-      }
-    );
+    items.push({
+      icon: History,
+      label: "View Audit Trail",
+      onClick: () => {
+        onViewDocument?.(document.id, "audit");
+        onClose();
+      },
+      color: "text-slate-500"
+    });
 
     return items;
   };
@@ -563,30 +542,23 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         <div className="py-1">
           {menuItems.map((item, index) => {
             const Icon = item.icon;
-            const isLoadingItem = 'isLoading' in item && item.isLoading;
             return (
               <button
                 key={index}
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!isNavigating) {
+                  if (!item.disabled) {
                     item.onClick();
                   }
                 }}
-                disabled={isNavigating}
+                disabled={item.disabled}
                 className={cn(
-                  "flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors",
-                  item.color,
-                  isNavigating
-                    ? "opacity-60 cursor-not-allowed"
-                    : "hover:bg-slate-50 active:bg-slate-100"
+                  "flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors",
+                  item.disabled && "opacity-50 cursor-not-allowed",
+                  item.color
                 )}
               >
-                {isLoadingItem ? (
-                  <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin" />
-                ) : (
-                  <Icon className="h-4 w-4 flex-shrink-0" />
-                )}
+                <Icon className="h-4 w-4 flex-shrink-0" />
                 <span className="font-medium">{item.label}</span>
               </button>
             );
@@ -598,179 +570,71 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   );
 };
 
-// --- Column Customizer Component ---
-
-interface DocumentColumnCustomizerProps {
-  columns: TableColumn[];
-  onColumnsChange: (columns: TableColumn[]) => void;
-}
-
-const DocumentColumnCustomizer: React.FC<DocumentColumnCustomizerProps> = ({
-  columns,
-  onColumnsChange,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const reorderableColumns = columns.filter(col => !col.locked);
-  const lockedColumns = columns.filter(col => col.locked);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleDragStart = (index: number) => {
-    setDraggedIndex(index);
-  };
-
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index) return;
-
-    const newColumns = [...reorderableColumns];
-    const draggedColumn = newColumns[draggedIndex];
-    newColumns.splice(draggedIndex, 1);
-    newColumns.splice(index, 0, draggedColumn);
-
-    const updatedReorderable = newColumns.map((col, idx) => ({
-      ...col,
-      order: idx + 1,
-    }));
-
-    const finalColumns = [
-      ...lockedColumns,
-      ...updatedReorderable,
-    ].sort((a, b) => a.order - b.order);
-
-    onColumnsChange(finalColumns);
-    setDraggedIndex(index);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-  };
-
-  const toggleVisibility = (columnId: string) => {
-    const updatedColumns = columns.map(col =>
-      col.id === columnId ? { ...col, visible: !col.visible } : col
-    );
-    onColumnsChange(updatedColumns);
-  };
-
-  const resetToDefault = () => {
-    const defaultColumns: TableColumn[] = [
-      { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-      { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
-      { id: 'created', label: 'Created', visible: true, order: 2 },
-      { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
-      { id: 'title', label: 'Document Name', visible: true, order: 4 },
-      { id: 'status', label: 'State', visible: true, order: 5 },
-      { id: 'type', label: 'Document Type', visible: true, order: 6 },
-      { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
-      { id: 'department', label: 'Department', visible: true, order: 8 },
-      { id: 'author', label: 'Author', visible: true, order: 9 },
-      { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 10 },
-      { id: 'validUntil', label: 'Valid Until', visible: true, order: 11 },
-      { id: 'action', label: 'Action', visible: true, order: 12, locked: true },
-    ];
-    onColumnsChange(defaultColumns);
-  };
-
-  return (
-    <div ref={containerRef} className="relative">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "flex items-center justify-between gap-2 w-full px-3 h-11 border rounded-md bg-white text-sm transition-all",
-          isOpen 
-            ? "border-emerald-500 ring-2 ring-emerald-500" 
-            : "border-slate-200 hover:border-slate-300"
-        )}
-      >
-        <span className="text-slate-700 font-medium">Customize Columns</span>
-        <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 left-0 top-full mt-2 z-50 w-full bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
-          <div className="px-4 py-2 border-b border-slate-100">
-            <h3 className="text-sm font-semibold text-slate-700">Customize Columns</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Scroll to View, Drag to reorder</p>
-          </div>
-
-          <div className="p-2 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
-            {reorderableColumns.map((column, index) => (
-              <div
-                key={column.id}
-                draggable
-                onDragStart={() => handleDragStart(index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDragEnd={handleDragEnd}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 mb-1 rounded-md border border-transparent transition-all cursor-move group',
-                  draggedIndex === index
-                    ? 'bg-blue-50 border-blue-200 opacity-50'
-                    : 'hover:bg-slate-50'
-                )}
-              >
-                <Checkbox
-                  id={`column-${column.id}`}
-                  checked={column.visible}
-                  onChange={() => toggleVisibility(column.id)}
-                  className="flex-shrink-0"
-                />
-                
-                <span className={cn(
-                  "text-sm font-medium flex-1",
-                  column.visible ? "text-slate-700" : "text-slate-400"
-                )}>
-                  {column.label}
-                </span>
-
-                <GripVertical className="h-4 w-4 text-slate-400 flex-shrink-0" />
-              </div>
-            ))}
-          </div>
-
-          <div className="px-3 py-2 rounded-b-lg border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={resetToDefault}
-              className="flex-1"
-            >
-              Reset
-            </Button>
-            <Button
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              className="flex-1"
-            >
-              Done
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 // --- Main Component ---
 
-interface DocumentListViewProps {
+interface DocumentsViewProps {
+  viewType: ViewType;
   onViewDocument?: (documentId: string, tab?: string) => void;
 }
 
-export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocument }) => {
+export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDocument }) => {
   const navigate = useNavigate();
+
+  // Configuration based on viewType
+  const config = useMemo(() => {
+    switch (viewType) {
+      case "all":
+        return {
+          title: "All Documents",
+          breadcrumbLast: "All Documents",
+          showNewDocButton: true,
+          showRelatedDocumentsColumn: true,
+          filterDocuments: (docs: Document[]) => docs,
+          authorFilterDisabled: false,
+          defaultAuthorFilter: "All" as string,
+          defaultColumns: [
+            { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
+            { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
+            { id: 'created', label: 'Created', visible: true, order: 2 },
+            { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
+            { id: 'title', label: 'Document Name', visible: true, order: 4 },
+            { id: 'status', label: 'State', visible: true, order: 5 },
+            { id: 'type', label: 'Document Type', visible: true, order: 6 },
+            { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
+            { id: 'department', label: 'Department', visible: true, order: 8 },
+            { id: 'author', label: 'Author', visible: true, order: 9 },
+            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 10 },
+            { id: 'validUntil', label: 'Valid Until', visible: true, order: 11 },
+            { id: 'action', label: 'Action', visible: true, order: 12, locked: true },
+          ] as TableColumn[],
+        };
+      case "owned-by-me":
+        return {
+          title: "Documents Owned By Me",
+          breadcrumbLast: "Documents Owned By Me",
+          showNewDocButton: false,
+          showRelatedDocumentsColumn: true, // Match "all" configuration
+          filterDocuments: (docs: Document[]) => docs.filter(doc => doc.author === CURRENT_USER.name),
+          authorFilterDisabled: true,
+          defaultAuthorFilter: CURRENT_USER.name,
+          defaultColumns: [
+            { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
+            { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
+            { id: 'created', label: 'Created', visible: true, order: 2 },
+            { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
+            { id: 'title', label: 'Document Name', visible: true, order: 4 },
+            { id: 'status', label: 'State', visible: true, order: 5 },
+            { id: 'type', label: 'Document Type', visible: true, order: 6 },
+            { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
+            { id: 'department', label: 'Department', visible: true, order: 8 },
+            { id: 'author', label: 'Author', visible: true, order: 9 },
+            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 10 },
+            { id: 'validUntil', label: 'Valid Until', visible: true, order: 11 },
+            { id: 'action', label: 'Action', visible: true, order: 12, locked: true },
+          ] as TableColumn[],
+        };
+    }
+  }, [viewType]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<DocumentStatus | "All">("All");
@@ -782,25 +646,11 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
   const [effectiveToDate, setEffectiveToDate] = useState<string>("");
   const [validFromDate, setValidFromDate] = useState<string>("");
   const [validToDate, setValidToDate] = useState<string>("");
-  const [authorFilter, setAuthorFilter] = useState<string>("All");
+  const [authorFilter, setAuthorFilter] = useState<string>(config.defaultAuthorFilter);
   const [versionFilter, setVersionFilter] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [columns, setColumns] = useState<TableColumn[]>([
-    { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-    { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
-    { id: 'created', label: 'Created', visible: true, order: 2 },
-    { id: 'openedBy', label: 'Opened By', visible: true, order: 3 },
-    { id: 'title', label: 'Document Name', visible: true, order: 4 },
-    { id: 'status', label: 'State', visible: true, order: 5 },
-    { id: 'type', label: 'Document Type', visible: true, order: 6 },
-    { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
-    { id: 'department', label: 'Department', visible: true, order: 8 },
-    { id: 'author', label: 'Author', visible: true, order: 9 },
-    { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 10 },
-    { id: 'validUntil', label: 'Valid Until', visible: true, order: 11 },
-    { id: 'action', label: 'Action', visible: true, order: 12, locked: true },
-  ]);
+  const [columns, setColumns] = useState<TableColumn[]>(config.defaultColumns);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
@@ -811,6 +661,16 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
   const [selectedDocumentForLink, setSelectedDocumentForLink] = useState<Document | null>(null);
 
   const itemsPerPage = 10;
+
+  // Update authorFilter when viewType changes
+  useEffect(() => {
+    setAuthorFilter(config.defaultAuthorFilter);
+  }, [viewType, config.defaultAuthorFilter]);
+
+  // Update columns when viewType changes
+  useEffect(() => {
+    setColumns(config.defaultColumns);
+  }, [viewType, config.defaultColumns]);
 
   const handleNewDocument = () => {
     setIsNewDocModalOpen(true);
@@ -825,38 +685,27 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
   };
 
   const handleViewDocument = (documentId: string, tab: string = "general") => {
-    // Find document to check status
     const document = MOCK_DOCUMENTS.find(doc => doc.id === documentId);
     
-    // If document has "Pending Review" status, navigate to Review page
     if (document?.status === "Pending Review") {
       navigate(`/documents/${documentId}/review`);
-    } 
-    // If document has "Pending Approval" status, navigate to Approval page
-    else if (document?.status === "Pending Approval") {
+    } else if (document?.status === "Pending Approval") {
       navigate(`/documents/${documentId}/approval`);
-    } 
-    else {
-      // Otherwise, open Detail view (drawer)
+    } else {
       setSelectedDocumentId(documentId);
       setSelectedDocumentTab(tab);
     }
   };
 
-  // Handle Create Link
   const handleCreateLink = (document: Document) => {
     setSelectedDocumentForLink(document);
     setIsCreateLinkModalOpen(true);
   };
 
-  // Handle Print Controlled Copy
   const handlePrintControlledCopy = (document: Document) => {
-    // Generate related documents based on hasRelatedDocuments flag
     const relatedDocuments = document.hasRelatedDocuments
       ? (() => {
-          // Generate related documents based on document ID
           const relatedDocs = [
-            // Parent document
             {
               id: document.id,
               documentId: document.documentId,
@@ -867,72 +716,44 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
             },
           ];
 
-          // Add children based on document type
           if (document.documentId.startsWith('SOP.0001')) {
-            // SOP.0001.03 → has 3 children
             relatedDocs.push(
               {
-                id: `${document.id}-child-1`,
-                documentId: 'SOP.0001.04',
-                title: 'Appendix A: Testing Equipment Calibration',
-                version: '3.0',
-                status: 'Effective' as any,
+                id: "child-1",
+                documentId: "FORM-QC-001",
+                title: "Quality Control Test Form",
+                version: "2.0",
+                status: "Effective" as any,
                 isParent: false,
               },
               {
-                id: `${document.id}-child-2`,
-                documentId: 'SOP.0001.05',
-                title: 'Appendix B: Sample Preparation Guidelines',
-                version: '2.5',
-                status: 'Pending Review' as any,
-                isParent: false,
-              },
-              {
-                id: `${document.id}-child-3`,
-                documentId: 'SOP.0001.06',
-                title: 'Appendix C: Test Result Documentation',
-                version: '3.0',
-                status: 'Effective' as any,
+                id: "child-2",
+                documentId: "SPEC-QC-002",
+                title: "Test Specification Document",
+                version: "1.5",
+                status: "Effective" as any,
                 isParent: false,
               }
             );
           } else if (document.documentId.startsWith('SOP.0012')) {
-            // SOP.0012.04 → has 2 children
             relatedDocs.push(
               {
-                id: `${document.id}-child-1`,
-                documentId: 'SOP.0012.05',
-                title: 'Form: Batch Production Record Template',
-                version: '4.2',
-                status: 'Pending Review' as any,
-                isParent: false,
-              },
-              {
-                id: `${document.id}-child-2`,
-                documentId: 'SOP.0012.06',
-                title: 'Checklist: Batch Record Review',
-                version: '4.0',
-                status: 'Draft' as any,
+                id: "child-3",
+                documentId: "FORM-PROD-001",
+                title: "Batch Record Template",
+                version: "3.0",
+                status: "Effective" as any,
                 isParent: false,
               }
             );
           } else if (document.documentId.startsWith('SPEC.0045')) {
-            // SPEC.0045.02 → has 2 children
             relatedDocs.push(
               {
-                id: `${document.id}-child-1`,
-                documentId: 'SPEC.0045.03',
-                title: 'Certificate of Analysis Template',
-                version: '2.0',
-                status: 'Effective' as any,
-                isParent: false,
-              },
-              {
-                id: `${document.id}-child-2`,
-                documentId: 'SPEC.0045.04',
-                title: 'Sampling Plan and Acceptance Criteria',
-                version: '1.5',
-                status: 'Approved' as any,
+                id: "child-4",
+                documentId: "SOP-QC-015",
+                title: "Raw Material Testing SOP",
+                version: "2.1",
+                status: "Effective" as any,
                 isParent: false,
               }
             );
@@ -942,7 +763,6 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
         })()
       : [];
 
-    // Navigate to Controlled Copy page with document data
     navigate('/documents/controlled-copy/request', {
       state: {
         documentId: document.documentId,
@@ -953,7 +773,6 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
     });
   };
 
-  // Simulate loading data
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -961,15 +780,19 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
     return () => clearTimeout(timer);
   }, []);
 
-  // Filter documents
+  // Filter documents based on viewType and filters
   const filteredDocuments = useMemo(() => {
-    return MOCK_DOCUMENTS.filter((doc) => {
+    // First apply viewType-specific filtering
+    let docs = config.filterDocuments(MOCK_DOCUMENTS);
+
+    // Then apply user filters
+    return docs.filter((doc) => {
       const matchesSearch =
         doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.documentId.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          doc.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          doc.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
+        doc.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesStatus = statusFilter === "All" || doc.status === statusFilter;
       const matchesType = typeFilter === "All" || doc.type === typeFilter;
@@ -977,7 +800,6 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
       const matchesAuthor = authorFilter === "All" || doc.author === authorFilter;
       const matchesVersion = !versionFilter || doc.version.toLowerCase().includes(versionFilter.toLowerCase());
 
-      // Date filtering
       const docCreatedDate = new Date(doc.created);
       const matchesCreatedFrom = !createdFromDate || docCreatedDate >= new Date(createdFromDate);
       const matchesCreatedTo = !createdToDate || docCreatedDate <= new Date(createdToDate);
@@ -995,21 +817,18 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
              matchesValidFrom && matchesValidTo;
     });
   }, [searchQuery, statusFilter, typeFilter, departmentFilter, authorFilter, versionFilter,
-      createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, validFromDate, validToDate]);
+      createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, validFromDate, validToDate, config]);
 
-  // Visible columns sorted by order
   const visibleColumns = useMemo(() => {
     return columns.filter(col => col.visible).sort((a, b) => a.order - b.order);
   }, [columns]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
   const paginatedDocuments = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return filteredDocuments.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredDocuments, currentPage]);
 
-  // Handle dropdown toggle
   const handleDropdownToggle = (docId: string, event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     
@@ -1025,7 +844,6 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
     }
   };
 
-  // Get or create ref for button
   const getButtonRef = (docId: string) => {
     if (!buttonRefs.current[docId]) {
       buttonRefs.current[docId] = React.createRef<HTMLButtonElement>();
@@ -1033,7 +851,6 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
     return buttonRefs.current[docId];
   };
 
-  // Show DetailDocumentView if document is selected
   if (selectedDocumentId) {
     return (
       <DetailDocumentView
@@ -1053,26 +870,27 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-           All Documents
+            {config.title}
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
             <span className="hidden sm:inline">Dashboard</span>
             <Home className="h-4 w-4 sm:hidden" />
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4 text-slate-400" />
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-slate-700 font-medium">All Documents</span>
+            <ChevronRight className="h-4 w-4 text-slate-400" />
+            <span className="text-slate-700 font-medium">{config.breadcrumbLast}</span>
           </div>
         </div>
-        <Button
-          size="sm"
-          onClick={handleNewDocument}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
-        >
-          <FileText className="mr-2 h-4 w-4" />
-          New Document
-        </Button>
+        {config.showNewDocButton && (
+          <Button
+            onClick={handleNewDocument}
+            size="sm"
+            className="whitespace-nowrap self-start md:self-auto"
+          >
+            New Document
+          </Button>
+        )}
       </div>
 
       {/* Filters Card */}
@@ -1102,6 +920,7 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
           setAuthorFilter(value);
           setCurrentPage(1);
         }}
+        authorFilterDisabled={config.authorFilterDisabled}
         createdFromDate={createdFromDate}
         onCreatedFromDateChange={(dateStr) => {
           setCreatedFromDate(dateStr);
@@ -1132,168 +951,148 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
           setValidToDate(dateStr);
           setCurrentPage(1);
         }}
+        columns={columns}
+        onColumnsChange={setColumns}
       />
 
-      {/* Table Container - Match MyTasksView wrapper */}
-      <div className="flex-1 min-h-0 flex flex-col">
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
-          {isLoading ? (
-            // Loading Skeleton
-            <div className="flex-1">
-              {/* Header Skeleton */}
-              <div className="bg-slate-50/80 border-b border-slate-200 px-4 py-3.5">
-                <div className="flex gap-4">
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <div key={i} className="h-4 bg-slate-200 rounded animate-pulse" style={{ width: `${80 + Math.random() * 40}px` }} />
-                  ))}
-                </div>
-              </div>
-              {/* Rows Skeleton */}
-              {Array.from({ length: 10 }).map((_, rowIndex) => (
-                <div key={rowIndex} className="border-b border-slate-100 px-4 py-3.5">
-                  <div className="flex gap-4 items-center">
-                    <div className="h-4 w-8 bg-slate-200 rounded animate-pulse" />
-                    <div className="h-4 flex-1 bg-slate-200 rounded animate-pulse" style={{ maxWidth: '150px' }} />
-                    <div className="h-4 flex-1 bg-slate-200 rounded animate-pulse" style={{ maxWidth: '200px' }} />
-                    <div className="h-4 flex-1 bg-slate-200 rounded animate-pulse" style={{ maxWidth: '120px' }} />
-                    <div className="h-6 w-20 bg-slate-200 rounded-full animate-pulse" />
-                    <div className="h-4 w-16 bg-slate-200 rounded animate-pulse" />
-                  </div>
-                </div>
-              ))}
-              {/* Pagination Skeleton */}
-              <div className="border-t border-slate-200 px-6 py-4 flex justify-between items-center">
-                <div className="h-4 w-48 bg-slate-200 rounded animate-pulse" />
-                <div className="flex gap-2">
-                  <div className="h-8 w-20 bg-slate-200 rounded animate-pulse" />
-                  <div className="h-8 w-20 bg-slate-200 rounded animate-pulse" />
-                </div>
-              </div>
-            </div>
-          ) : paginatedDocuments.length > 0 ? (
-            <>
-              {/* Table with Horizontal Scroll */}
-              <div className="overflow-x-auto flex-1">
+      {/* Table Container with Pagination */}
+      <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
+        <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50/80 border-b-2 border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
+            <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                {visibleColumns.map((column) => (
+                {visibleColumns.map(col => (
                   <th
-                    key={column.id}
+                    key={col.id}
                     className={cn(
-                      "py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
-                      column.id === 'action' 
-                        ? "sticky right-0 bg-slate-50/80 text-center z-40 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm"
-                        : column.id === 'no'
-                        ? "text-left"
-                        : column.id === 'title'
-                        ? "text-left min-w-[250px]"
-                        : "text-left"
+                      "py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
+                      col.id === 'action' && "sticky right-0 bg-slate-50 text-center z-40 backdrop-blur-sm shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200"
                     )}
                   >
-                    {column.label}
+                    {col.label}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
-              {paginatedDocuments.map((doc, docIndex) => {
-                const renderCell = (columnId: string) => {
-                  const cellContent = (() => {
-                    switch (columnId) {
-                      case 'no':
+            <tbody className="divide-y divide-slate-200 bg-white">
+              {paginatedDocuments.map((doc, index) => {
+                const globalIndex = (currentPage - 1) * itemsPerPage + index + 1;
+                return (
+                  <tr
+                    key={doc.id}
+                    onClick={() => handleViewDocument(doc.id)}
+                    className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+                  >
+                    {visibleColumns.map(col => {
+                      if (col.id === 'no') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-left text-slate-700">
-                            {(currentPage - 1) * itemsPerPage + docIndex + 1}
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                            {globalIndex}
                           </td>
                         );
-                      case 'documentId':
+                      }
+                      if (col.id === 'documentId') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
                             <span className="font-medium text-emerald-600">{doc.documentId}</span>
                           </td>
                         );
-                      case 'created':
+                      }
+                      if (col.id === 'created') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
                             {formatDate(doc.created)}
                           </td>
                         );
-                      case 'openedBy':
+                      }
+                      if (col.id === 'openedBy') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
                             {doc.openedBy}
                           </td>
                         );
-                      case 'title':
+                      }
+                      if (col.id === 'title') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
-                            <span className="font-medium text-slate-900">{doc.title}</span>
+                          <td key={col.id} className="py-3.5 px-4 text-sm max-w-md">
+                            <div className="font-medium text-slate-900 line-clamp-1">
+                              {doc.title}
+                            </div>
                           </td>
                         );
-                      case 'status':
+                      }
+                      if (col.id === 'status') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
                             <span className={cn(
-                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border",
+                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
                               getStatusColor(doc.status)
                             )}>
                               {doc.status}
                             </span>
                           </td>
                         );
-                      case 'type':
+                      }
+                      if (col.id === 'type') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
                             <span className={cn(
-                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border",
+                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
                               getTypeColor(doc.type)
                             )}>
                               {doc.type}
                             </span>
                           </td>
                         );
-                      case 'relatedDocuments':
+                      }
+                      if (col.id === 'relatedDocuments' && config.showRelatedDocumentsColumn) {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap">
-                            <span className={cn(
-                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border",
-                              doc.hasRelatedDocuments 
-                                ? "bg-blue-50 text-blue-700 border-blue-200"
-                                : "bg-slate-50 text-slate-700 border-slate-200"
-                            )}>
-                              {doc.hasRelatedDocuments ? "Yes" : "No"}
-                            </span>
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                            {doc.hasRelatedDocuments ? (
+                              <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                </svg>
+                                Yes
+                              </span>
+                            ) : (
+                              <span className="text-slate-400">—</span>
+                            )}
                           </td>
                         );
-                      case 'department':
+                      }
+                      if (col.id === 'department') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
                             {doc.department}
                           </td>
                         );
-                      case 'author':
+                      }
+                      if (col.id === 'author') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
                             {doc.author}
                           </td>
                         );
-                      case 'effectiveDate':
+                      }
+                      if (col.id === 'effectiveDate') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
                             {formatDate(doc.effectiveDate)}
                           </td>
                         );
-                      case 'validUntil':
+                      }
+                      if (col.id === 'validUntil') {
                         return (
-                          <td key={columnId} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
                             {formatDate(doc.validUntil)}
                           </td>
                         );
-                      case 'action':
+                      }
+                      if (col.id === 'action') {
                         return (
-                          <td 
-                            key={columnId} 
+                          <td
+                            key={col.id}
                             onClick={(e) => e.stopPropagation()}
                             className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                           >
@@ -1304,7 +1103,6 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
                                 handleDropdownToggle(doc.id, e);
                               }}
                               className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
-                              aria-label="More actions"
                             >
                               <MoreVertical className="h-4 w-4 text-slate-600" />
                             </button>
@@ -1321,46 +1119,24 @@ export const DocumentListView: React.FC<DocumentListViewProps> = ({ onViewDocume
                             />
                           </td>
                         );
-                      default:
-                        return null;
-                    }
-                  })();
-                  return cellContent;
-                };
-
-                return (
-                  <tr
-                    key={doc.id}
-                    onClick={() => handleViewDocument(doc.id)}
-                    className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
-                  >
-                    {visibleColumns.map((column) => renderCell(column.id))}
+                      }
+                      return null;
+                    })}
                   </tr>
                 );
               })}
             </tbody>
           </table>
-              </div>
-
-              {/* Pagination Footer */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredDocuments.length}
-                itemsPerPage={itemsPerPage}
-                onPageChange={setCurrentPage}
-              />
-            </>
-          ) : (
-            // Empty State
-            <div className="py-12 text-center">
-              <FileText className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500 text-sm">
-                No documents found matching your filters.
-              </p>
-            </div>
-          )}
         </div>
+
+        {/* Pagination Footer */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filteredDocuments.length}
+          itemsPerPage={itemsPerPage}
+        />
       </div>
 
       {/* New Document Modal */}
