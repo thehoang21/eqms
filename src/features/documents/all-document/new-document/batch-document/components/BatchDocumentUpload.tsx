@@ -352,7 +352,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
     return (
         <div className="space-y-6">
             {/* Combined: Document Hierarchy + Upload Info */}
-            <div className="bg-white border-2 border-emerald-300 rounded-xl p-5 shadow-sm">
+            <div className="bg-white border-2 border-slate-200 rounded-xl p-5 shadow-sm">
                 {/* Header with actions */}
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
@@ -573,8 +573,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                         size="sm"
                         className="bg-emerald-600 hover:bg-emerald-700 text-white"
                     >
-                        <Upload className="h-4 w-4 mr-2" />
-                        Select Files
+                        Browse Files
                     </Button>
                 </div>
             ) : (
@@ -767,7 +766,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
                     >
-                        <p className="text-sm text-slate-600 mb-4">
+                        <p className="text-sm text-slate-500 mb-4">
                             Drop more files here or click to add
                         </p>
                         <input
@@ -783,7 +782,6 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                             onClick={() => fileInputRef.current?.click()}
                             className="touch-manipulation active:scale-95"
                         >
-                            <Upload className="h-4 w-4 mr-2" />
                             Add More Files
                         </Button>
                     </div>

@@ -48,7 +48,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
             />
             <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                    <h3 className="text-lg font-semibold text-slate-900">Select Approver</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">Add Approver</h3>
                     <button 
                         onClick={onClose}
                         className="p-2 text-slate-400 hover:text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
@@ -146,7 +146,7 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({ onCountChange }) => 
                         className="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium shadow-sm"
                     >
                         <Plus className="h-4 w-4" />
-                        Select Approver
+                        Add Approver
                     </button>
                 )}
             </div>

@@ -107,7 +107,6 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                         >
                             <ZoomIn className="h-4 w-4" />
                         </Button>
-                        <div className="w-px h-6 bg-slate-300 mx-1" />
                         <Button
                             variant="outline"
                             size="icon-sm"

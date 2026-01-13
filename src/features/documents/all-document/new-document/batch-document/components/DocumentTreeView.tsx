@@ -74,7 +74,7 @@ export const DocumentTreeView: React.FC<DocumentTreeViewProps> = ({
         }
     };
     
-    const getDocumentTypeLabel = (type: "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol") => {
+    const getDocumentTypeLabel = (type: DocumentType | string) => {
         return type; // Returns the type as-is (SOP, Policy, Form, etc.)
     };
 

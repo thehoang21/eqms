@@ -18,6 +18,7 @@ import {
   Boxes,
   TextSearch,
   Palette,
+  BookText,
 } from "lucide-react";
 import { NavItem } from "@/types";
 import {
@@ -182,7 +183,7 @@ export const NAV_CONFIG: NavItem[] = [
       {
         id: "user-management",
         label: "User Management",
-        icon: IconUsersGroup,
+        icon: Users,
         path: "/settings/users",
       },
       {
@@ -194,7 +195,7 @@ export const NAV_CONFIG: NavItem[] = [
       {
         id: "dictionaries",
         label: "Dictionaries",
-        icon: IconDatabase,
+        icon: BookText,
         path: "/settings/dictionaries",
       },
       {

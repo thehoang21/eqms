@@ -27,11 +27,11 @@ import {
     GeneralTab,
     TrainingTab,
     SignaturesTab,
-    AuditTab,
-    WorkflowTab,
+    AuditTab
 } from "../revision-tabs";
 import { MultiDocumentUpload } from "./MultiDocumentUpload";
 import { DocumentType } from "@/types/documentTypes";
+import { IconChevronRight } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentStatus =
@@ -846,7 +846,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                         className="flex items-center gap-2"
                                     >
                                         Complete & Continue
-                                        <CheckCircle2 className="h-4 w-4" />
+                                        <IconChevronRight className="h-4 w-4" />
                                     </Button>
                                 )}
                             </div>

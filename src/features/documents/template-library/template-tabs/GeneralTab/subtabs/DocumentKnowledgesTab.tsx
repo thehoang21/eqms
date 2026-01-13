@@ -40,7 +40,7 @@ export const DocumentKnowledgesTab: React.FC = () => {
                 {!isAdding && (
                     <Button
                         onClick={() => setIsAdding(true)}
-                        variant="outline"
+                        variant="default"
                         size="sm"
                         className="flex items-center gap-2"
                     >

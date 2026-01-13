@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-do
 import { DashboardView } from '@/features/dashboard';
 import { DetailDocumentView } from '@/features/documents';
 import { RevisionListView, NewRevisionView, RevisionsOwnedByMeView, RevisionWorkspaceView, PendingDocumentsView, RevisionReviewView, RevisionApprovalView } from '@/features/documents/document-revisions';
+import { NewRevisionView as NewRevisionViewComponent } from '@/features/documents/document-revisions/components/BatchRevisionView';
 import { StandaloneRevisionView } from '@/features/documents/document-revisions/components/StandaloneRevisionView';
 import { DocumentReviewView } from '@/features/documents/all-document/new-document/review-document';
 import { DocumentApprovalView } from '@/features/documents/all-document/new-document/approval-document';
@@ -88,7 +89,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="documents/revisions/pending-review" element={<PendingDocumentsView viewType="review" onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/revisions/pending-approval" element={<PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
         <Route path="documents/revisions/new" element={<NewRevisionView />} />
-        <Route path="documents/revisions/standalone" element={<StandaloneRevisionView />} />
+        <Route path="documents/revisions/new-multi" element={<NewRevisionViewComponent />} />
+        <Route path="documents/revisions/new-standalone" element={<StandaloneRevisionView />} />
         <Route path="/documents/revisions/workspace" element={<RevisionWorkspaceView />} />
         {/* Revision Review - must be before wildcard route */}
         <Route path="documents/revisions/review/:id" element={<RevisionReviewViewWrapper />} />

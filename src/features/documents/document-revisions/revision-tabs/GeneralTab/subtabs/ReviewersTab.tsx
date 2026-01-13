@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Users, Plus, Trash2, Search, User, X, ShieldCheck, Check, GripVertical, ArrowRight } from "lucide-react";
 import { createPortal } from "react-dom";
 import { IconListNumbers } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button/Button";
 
 interface Reviewer {
     id: string;
@@ -80,12 +81,14 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
             <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
                     <h3 className="text-lg font-semibold text-slate-900">Select Reviewers</h3>
-                    <button 
+                    <Button 
                         onClick={onClose}
-                        className="p-2 text-slate-400 hover:text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
+                        variant="ghost"
+                        size="icon-sm"
+                        className="rounded-full"
                     >
                         <X className="h-5 w-5" />
-                    </button>
+                    </Button>
                 </div>
                 
                 <div className="p-4 border-b border-slate-100 bg-slate-50/50">
@@ -152,19 +155,20 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                 </div>
 
                 <div className="p-4 border-t border-slate-100 bg-slate-50 rounded-b-xl flex justify-end gap-3">
-                    <button
+                    <Button
                         onClick={onClose}
-                        className="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-lg transition-colors"
+                        variant="outline"
+                        size="sm"
                     >
                         Cancel
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={handleSave}
                         disabled={selectedIds.length === 0}
-                        className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors shadow-sm"
+                        size="sm"
                     >
                         Add Selected ({selectedIds.length})
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>,
@@ -247,13 +251,14 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
                     <h3 className="text-sm font-semibold text-slate-900">Document Reviewers</h3>
                     <p className="text-xs text-slate-500 mt-0.5">Select reviewers for this document</p>
                 </div>
-                <button
+                <Button
                     onClick={() => setIsModalOpen(true)}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium shadow-sm"
+                    size="sm"
+                    className="flex items-center gap-2"
                 >
                     <Plus className="h-4 w-4" />
                     Add Reviewer
-                </button>
+                </Button>
             </div>
 
             {reviewers.length > 0 && (
@@ -261,32 +266,28 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
                     <div>
                         <label className="text-sm font-medium text-slate-700 block mb-2">Review Flow Type</label>
                         <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
-                            <button
+                            <Button
                                 onClick={() => onReviewFlowTypeChange('parallel')}
-                                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
-                                    reviewFlowType === 'parallel'
-                                        ? 'bg-emerald-600 text-white shadow-sm'
-                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                                }`}
+                                variant={reviewFlowType === 'parallel' ? 'default' : 'ghost'}
+                                size="sm"
+                                className="rounded-md"
                             >
                                 <div className="flex items-center gap-2">
                                     <Users className="h-4 w-4" />
                                     <span>Parallel</span>
                                 </div>
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => onReviewFlowTypeChange('sequential')}
-                                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
-                                    reviewFlowType === 'sequential'
-                                        ? 'bg-emerald-600 text-white shadow-sm'
-                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                                }`}
+                                variant={reviewFlowType === 'sequential' ? 'default' : 'ghost'}
+                                size="sm"
+                                className="rounded-md"
                             >
                                 <div className="flex items-center gap-2">
                                     <IconListNumbers className="h-4 w-4" />
                                     <span>Sequential</span>
                                 </div>
-                            </button>
+                            </Button>
                         </div>
                     </div>
                     

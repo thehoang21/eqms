@@ -226,7 +226,7 @@ const DropdownMenu: React.FC<{
               className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <Link2 className="h-4 w-4 flex-shrink-0" />
-              <span className="font-medium">Create Link</span>
+              <span className="font-medium">Create Shareable Link</span>
             </button>
           )}
           <button
@@ -261,7 +261,7 @@ export const DistributedCopiesView: React.FC = () => {
   const [isReportLostDamagedModalOpen, setIsReportLostDamagedModalOpen] = useState(false);
   const [selectedCopy, setSelectedCopy] = useState<ControlledCopy | null>(null);
 
-  // Create Link Modal state
+  // Create Shareable Link Modal state
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedCopyForLink, setSelectedCopyForLink] = useState<ControlledCopy | null>(null);
 
@@ -579,7 +579,7 @@ export const DistributedCopiesView: React.FC = () => {
         />
       )}
 
-      {/* Create Link Modal */}
+      {/* Create Shareable Link Modal */}
       {selectedCopyForLink && (
         <CreateLinkModal
           isOpen={isCreateLinkModalOpen}

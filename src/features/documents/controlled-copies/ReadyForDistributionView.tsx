@@ -208,7 +208,7 @@ const DropdownMenu: React.FC<{
               className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <Link2 className="h-4 w-4 flex-shrink-0" />
-              <span className="font-medium">Create Link</span>
+              <span className="font-medium">Create Shareable Link</span>
             </button>
           )}
           <button
@@ -247,7 +247,7 @@ export const ReadyForDistributionView: React.FC = () => {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
 
-  // Create Link Modal state
+  // Create Shareable Link Modal state
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedCopyForLink, setSelectedCopyForLink] = useState<ControlledCopy | null>(null);
 
@@ -534,7 +534,7 @@ export const ReadyForDistributionView: React.FC = () => {
         />
       )}
 
-      {/* Create Link Modal */}
+      {/* Create Shareable Link Modal */}
       {selectedCopyForLink && (
         <CreateLinkModal
           isOpen={isCreateLinkModalOpen}

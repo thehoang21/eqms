@@ -28,7 +28,7 @@ import {
 } from "@/features/documents/all-document/new-document/new-tabs";
 import { BatchDocumentUpload } from "./components/BatchDocumentUpload";
 import { DocumentTreeView } from "./components/DocumentTreeView";
-import { IconStar } from "@tabler/icons-react";
+import { IconChevronRight, IconStar } from "@tabler/icons-react";
 import { DocumentType } from "@/types/documentTypes";
 
 // --- Types ---
@@ -150,11 +150,11 @@ export const BatchDocumentView: React.FC = () => {
     return missing;
   }, [currentDocument]);
 
-  const handleBack = () => {
+  const handleCancel = () => {
     setShowCancelModal(true);
   };
 
-  const handleConfirmCancel = () => {
+  const handleCancelConfirm = () => {
     setShowCancelModal(false);
     navigate("/documents/all");
   };
@@ -167,16 +167,16 @@ export const BatchDocumentView: React.FC = () => {
     );
   };
 
-  const handleSave = () => {
+  const handleSaveDraft = () => {
     setShowSaveModal(true);
   };
 
   const handleConfirmSave = async () => {
     setIsSaving(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      console.log("Batch documents saved:", documents);
+      console.log("Batch documents saved as draft:", documents);
 
       setIsSaving(false);
       setShowSaveModal(false);
@@ -187,14 +187,30 @@ export const BatchDocumentView: React.FC = () => {
     }
   };
 
-  const handleSubmitForReview = () => {
+  const handleSubmitForActive = () => {
     if (!allDocumentsValid) {
+      const invalidDocs = documents.filter((doc) => {
+        const formData = doc.formData;
+        return !(
+          formData.title.trim() &&
+          String(formData.type || "").trim() &&
+          formData.author.trim() &&
+          formData.businessUnit.trim() &&
+          Number.isFinite(formData.periodicReviewCycle) &&
+          formData.periodicReviewCycle > 0 &&
+          Number.isFinite(formData.periodicReviewNotification) &&
+          formData.periodicReviewNotification > 0
+        );
+      });
+
       setValidationModalMessage(
         <div className="space-y-2">
-          <p>
-            Please complete all required fields for all documents before
-            submitting.
-          </p>
+          <p>Please complete all required fields for all documents before submitting:</p>
+          <ul className="list-disc pl-5 space-y-1 text-sm">
+            {invalidDocs.map((doc) => (
+              <li key={doc.id}>{doc.formData.title || doc.fileName}</li>
+            ))}
+          </ul>
         </div>
       );
       setIsValidationModalOpen(true);
@@ -345,7 +361,7 @@ export const BatchDocumentView: React.FC = () => {
           {/* Action Buttons */}
           <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             <Button
-              onClick={handleBack}
+              onClick={handleCancel}
               variant="outline"
               size="sm"
               className="flex items-center gap-1.5 md:gap-2 touch-manipulation"
@@ -354,7 +370,7 @@ export const BatchDocumentView: React.FC = () => {
               <span className="text-xs md:text-sm">Cancel</span>
             </Button>
             <Button
-              onClick={handleSave}
+              onClick={handleSaveDraft}
               disabled={isSaving || isSubmitting || documents.length === 0}
               size="sm"
               className="flex items-center gap-1.5 md:gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300 touch-manipulation"
@@ -365,7 +381,7 @@ export const BatchDocumentView: React.FC = () => {
               </span>
             </Button>
             <Button
-              onClick={handleSubmitForReview}
+              onClick={handleSubmitForActive}
               disabled={
                 isSaving ||
                 isSubmitting ||
@@ -650,7 +666,7 @@ export const BatchDocumentView: React.FC = () => {
                       className="flex items-center justify-center gap-2 w-full md:w-auto touch-manipulation"
                     >
                       <span className="text-sm">Complete & Continue</span>
-                      <CheckCircle2 className="h-4 w-4" />
+                      <IconChevronRight className="h-4 w-4" />
                     </Button>
                   )}
                 </div>
@@ -687,7 +703,7 @@ export const BatchDocumentView: React.FC = () => {
       <AlertModal
         isOpen={showCancelModal}
         onClose={() => setShowCancelModal(false)}
-        onConfirm={handleConfirmCancel}
+        onConfirm={handleCancelConfirm}
         type="warning"
         title="Cancel Creation?"
         description={
@@ -715,7 +731,7 @@ export const BatchDocumentView: React.FC = () => {
         onClose={() => setShowSaveModal(false)}
         onConfirm={handleConfirmSave}
         type="confirm"
-        title="Save All Documents?"
+        title="Save Documents as Draft?"
         description={
           <div className="space-y-3">
             <p>Are you sure you want to save all documents as drafts?</p>
@@ -744,7 +760,7 @@ export const BatchDocumentView: React.FC = () => {
             </div>
           </div>
         }
-        confirmText="Save All"
+        confirmText="Save Draft"
         cancelText="Cancel"
         isLoading={isSaving}
         showCancel={true}

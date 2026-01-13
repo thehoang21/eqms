@@ -36,6 +36,8 @@ export const ROUTES = {
       PENDING_REVIEW: '/documents/revisions/pending-review',
       PENDING_APPROVAL: '/documents/revisions/pending-approval',
       NEW: '/documents/revisions/new',
+      NEW_MULTI: (sourceDocId: string) => `/documents/revisions/new-multi?sourceDocId=${sourceDocId}`,
+      NEW_STANDALONE: (sourceDocId: string) => `/documents/revisions/new-standalone?sourceDocId=${sourceDocId}`,
       STANDALONE: '/documents/revisions/standalone',
       WORKSPACE: '/documents/revisions/workspace',
       REVIEW: (id: string) => `/documents/revisions/review/${id}`,
@@ -106,3 +108,6 @@ export const getRoute = (
   }
   return routeFn as string;
 };
+
+export const ROUTE_NEW_REVISION_MULTI = '/documents/revisions/new-multi';
+export const ROUTE_NEW_REVISION_STANDALONE = '/documents/revisions/new-standalone';

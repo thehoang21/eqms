@@ -13,6 +13,7 @@ import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
 import { Role, PermissionGroup } from "./types";
 import { MOCK_ROLES, PERMISSION_GROUPS, getActionColor, isALCOAPlusRequired } from "./constants";
+import { IconX } from "@tabler/icons-react";
 
 export const RolePermissionView: React.FC = () => {
   const { showToast } = useToast();
@@ -399,11 +400,12 @@ export const RolePermissionView: React.FC = () => {
             {/* Role List */}
             <div className="overflow-y-auto max-h-[600px]">
               {filteredRoles.map((role) => (
-                <button
+                <Button
                   key={role.id}
                   onClick={() => handleRoleSelect(role.id)}
+                  variant="ghost"
                   className={cn(
-                    "w-full text-left p-4 border-b border-slate-100 transition-all hover:bg-slate-50 group",
+                    "w-full text-left p-4 border-b border-slate-100 transition-all hover:bg-slate-50 group rounded-none justify-start",
                     selectedRoleId === role.id && "bg-emerald-50 border-l-4 border-l-emerald-600"
                   )}
                 >
@@ -456,7 +458,7 @@ export const RolePermissionView: React.FC = () => {
                       <span>{role.permissions.length} permissions</span>
                     </div>
                   </div>
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -541,7 +543,7 @@ export const RolePermissionView: React.FC = () => {
                       disabled={!permissionSearch && actionFilters.size === 0 && !showAuditOnly}
                       className="flex items-center gap-2"
                     >
-                      <XCircle className="h-4 w-4" /> Clear
+                      <IconX className="h-4 w-4" /> Clear
                     </Button>
                   </div>
                 </div>
@@ -585,9 +587,10 @@ export const RolePermissionView: React.FC = () => {
                 return (
                   <div key={group.id} className="border-2 border-slate-200 rounded-xl overflow-hidden transition-all hover:border-slate-300">
                     {/* Group Header - Clickable */}
-                    <button
+                    <Button
                       onClick={() => toggleGroup(group.id)}
-                      className="w-full bg-gradient-to-r from-slate-50 to-slate-100 px-5 py-4 border-b border-slate-200 hover:from-slate-100 hover:to-slate-50 transition-all"
+                      variant="ghost"
+                      className="w-full bg-gradient-to-r from-slate-50 to-slate-100 px-5 py-4 border-b border-slate-200 hover:from-slate-100 hover:to-slate-50 transition-all rounded-none justify-start"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -641,7 +644,7 @@ export const RolePermissionView: React.FC = () => {
                           )}
                         </div>
                       </div>
-                    </button>
+                    </Button>
 
                     {/* Group Permissions - Collapsible */}
                     {isExpanded && (

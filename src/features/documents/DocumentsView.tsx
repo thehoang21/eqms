@@ -8,6 +8,9 @@ import {
   Download,
   History,
   Link2,
+  FilePlusCorner,
+  FileStack,
+  SquarePen,
 } from "lucide-react";
 import {
   IconInfoCircle,
@@ -18,6 +21,7 @@ import {
   IconFileDownload,
   IconTrash,
   IconChartDots,
+  IconPlus,
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
@@ -362,17 +366,18 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   // Handle New Revision with relationship check
   const handleNewRevision = async (doc: Document) => {
     setIsNavigating(true);
-    
     try {
-      const hasLinks = hasRelationships(doc);
       await new Promise(resolve => setTimeout(resolve, 400));
-      
-      if (hasLinks) {
-        navigate(`/documents/revisions/new?sourceDocId=${doc.id}&step=impact-analysis`);
+      if (doc.status === "Effective" && doc.hasRelatedDocuments) {
+        // Navigate to NewRevisionView (multi-document with related documents)
+        navigate(`/documents/revisions/new-multi?sourceDocId=${doc.id}`);
+      } else if (doc.status === "Effective") {
+        // Navigate to StandaloneRevisionView (single document)
+        navigate(`/documents/revisions/new-standalone?sourceDocId=${doc.id}`);
       } else {
+        // Fallback for non-Effective documents
         navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
       }
-      
       onClose();
     } catch (error) {
       console.error("Error checking relationships:", error);
@@ -403,22 +408,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       case "Draft":
         items.push(
           {
-            icon: IconPencil,
+            icon: SquarePen,
             label: "Edit Document",
             onClick: () => {
               console.log("Edit document:", document.id);
               onClose();
             },
-            color: "text-blue-500"
-          },
-          {
-            icon: IconTrash,
-            label: "Delete",
-            onClick: () => {
-              console.log("Delete document:", document.id);
-              onClose();
-            },
-            color: "text-red-500"
+            color: "text-slate-500"
           }
         );
         break;
@@ -431,7 +427,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             navigate(`/documents/${document.id}/review`);
             onClose();
           },
-          color: "text-amber-500"
+          color: "text-slate-500"
         });
         break;
 
@@ -443,7 +439,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             navigate(`/documents/${document.id}/approval`);
             onClose();
           },
-          color: "text-blue-500"
+          color: "text-slate-500"
         });
         break;
 
@@ -462,15 +458,15 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       case "Effective":
         items.push(
           {
-            icon: IconChartDots,
+            icon: FilePlusCorner,
             label: "New Revision",
             onClick: () => handleNewRevision(document),
-            color: "text-emerald-500",
+            color: "text-slate-500",
             disabled: isNavigating
           },
           {
-            icon: IconPrinter,
-            label: "Print Controlled Copy",
+            icon: FileStack,
+            label: "Request Controlled Copy",
             onClick: () => {
               onPrintControlledCopy?.(document);
               onClose();
@@ -493,10 +489,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         break;
     }
 
-    // Always available: Create Link
+    // Always available: Create Shareable Link
     items.push({
       icon: Link2,
-      label: "Create Link",
+      label: "Create Shareable Link",
       onClick: () => {
         onCreateLink?.(document);
         onClose();
@@ -886,8 +882,9 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           <Button
             onClick={handleNewDocument}
             size="sm"
-            className="whitespace-nowrap self-start md:self-auto"
+            className="whitespace-nowrap self-start md:self-auto gap-2"
           >
+            <IconPlus className="h-4 w-4" />
             New Document
           </Button>
         )}
@@ -957,7 +954,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
 
       {/* Table Container with Pagination */}
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100 hover:scrollbar-thumb-slate-400 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
@@ -1014,8 +1011,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       }
                       if (col.id === 'title') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm max-w-md">
-                            <div className="font-medium text-slate-900 line-clamp-1">
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                            <div className="font-medium text-slate-900">
                               {doc.title}
                             </div>
                           </td>
@@ -1050,13 +1047,10 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                           <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
                             {doc.hasRelatedDocuments ? (
                               <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
-                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                </svg>
                                 Yes
                               </span>
                             ) : (
-                              <span className="text-slate-400">—</span>
+                              <span className="text-slate-600 font-medium">No</span>
                             )}
                           </td>
                         );
@@ -1147,7 +1141,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
         onSelectBatch={handleSelectBatchDocument}
       />
 
-      {/* Create Link Modal */}
+      {/* Create Shareable Link Modal */}
       {selectedDocumentForLink && (
         <CreateLinkModal
           isOpen={isCreateLinkModalOpen}

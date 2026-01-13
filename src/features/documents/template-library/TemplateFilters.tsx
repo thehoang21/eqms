@@ -87,7 +87,7 @@ export const TemplateFilters: React.FC<TemplateFiltersProps> = ({
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
                 {/* Search Input */}
-                <div className="xl:col-span-5">
+                <div className="xl:col-span-3">
                     <label className="text-sm font-medium text-slate-700 mb-1.5 block">
                         Search
                     </label>
@@ -104,7 +104,7 @@ export const TemplateFilters: React.FC<TemplateFiltersProps> = ({
                 </div>
 
                 {/* Status Filter */}
-                <div className="xl:col-span-2">
+                <div className="xl:col-span-3">
                     <Select
                         label="Status"
                         value={statusFilter}
@@ -115,7 +115,7 @@ export const TemplateFilters: React.FC<TemplateFiltersProps> = ({
                 </div>
 
                 {/* Type Filter */}
-                <div className="xl:col-span-2">
+                <div className="xl:col-span-3">
                     <Select
                         label="Document Type"
                         value={typeFilter}
@@ -137,7 +137,7 @@ export const TemplateFilters: React.FC<TemplateFiltersProps> = ({
                 </div>
 
                 {/* Author Filter */}
-                <div className="xl:col-span-3">
+                <div className="xl:col-span-4">
                     <Select
                         label="Author"
                         value={authorFilter}
@@ -148,7 +148,7 @@ export const TemplateFilters: React.FC<TemplateFiltersProps> = ({
                 </div>
 
                 {/* Created From Date */}
-                <div className="xl:col-span-3">
+                <div className="xl:col-span-4">
                     <DateTimePicker
                         label="Created From"
                         value={createdFromDate}
@@ -158,7 +158,7 @@ export const TemplateFilters: React.FC<TemplateFiltersProps> = ({
                 </div>
 
                 {/* Created To Date */}
-                <div className="xl:col-span-3">
+                <div className="xl:col-span-4">
                     <DateTimePicker
                         label="Created To"
                         value={createdToDate}

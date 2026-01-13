@@ -16,12 +16,13 @@ import {
   FileText,
   CheckCircle2,
   Link2,
+  SquarePen,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { TemplateFilters } from "./TemplateFilters";
-import { IconTemplate } from "@tabler/icons-react";
+import { IconPlus, IconTemplate } from "@tabler/icons-react";
 import { CreateLinkModal } from "../CreateLinkModal";
 
 // --- Types ---
@@ -135,20 +136,11 @@ const StatusBadge = ({ status }: { status: TemplateStatus }) => {
     Archived: "bg-red-50 text-red-700 border-red-200",
   };
 
-  const icons = {
-    Draft: History,
-    Active: CheckCircle2,
-    Archived: History,
-  };
-
-  const Icon = icons[status];
-
   return (
     <span className={cn(
       "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
       styles[status]
     )}>
-      <Icon className="h-3.5 w-3.5" />
       {status}
     </span>
   );
@@ -198,19 +190,8 @@ const DropdownMenu: React.FC<{
             }}
             className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
-            <Edit className="h-4 w-4 flex-shrink-0" />
+            <SquarePen className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">Edit Template</span>
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAction('duplicate');
-              onClose();
-            }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
-          >
-            <Copy className="h-4 w-4 flex-shrink-0" />
-            <span className="font-medium">Duplicate</span>
           </button>
           <button
             onClick={(e) => {
@@ -221,19 +202,7 @@ const DropdownMenu: React.FC<{
             className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
             <Link2 className="h-4 w-4 flex-shrink-0" />
-            <span className="font-medium">Create Link</span>
-          </button>
-          <div className="border-t border-slate-100 my-1" />
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onAction('delete');
-              onClose();
-            }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
-          >
-            <Trash2 className="h-4 w-4 flex-shrink-0" />
-            <span className="font-medium">Delete</span>
+            <span className="font-medium">Create Shareable Link</span>
           </button>
         </div>
       </div>
@@ -533,7 +502,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
           onClick={onCreateTemplate}
           className="flex items-center gap-2 shadow-sm"
         >
-          <IconTemplate className="h-4 w-4" />
+          <IconPlus className="h-4 w-4" />
           New Template
         </Button>
       </div>
@@ -699,7 +668,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
         }}
       />
 
-      {/* Create Link Modal */}
+      {/* Create Shareable Link Modal */}
       {selectedTemplateForLink && (
         <CreateLinkModal
           isOpen={isCreateLinkModalOpen}

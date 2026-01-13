@@ -185,7 +185,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         ]}
                         placeholder="Select status"
                         searchPlaceholder="Search status..."
-                        className={disableStatusFilter ? "opacity-60 pointer-events-none" : ""}
+                        disabled={disableStatusFilter}
                     />
                 </div>
 
@@ -210,7 +210,6 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         placeholder="Select author"
                         searchPlaceholder="Search author..."
                         disabled={authorFilterDisabled}
-                        className={authorFilterDisabled ? "opacity-60 pointer-events-none" : ""}
                     />
                 </div>
 

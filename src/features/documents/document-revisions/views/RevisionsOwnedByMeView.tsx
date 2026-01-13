@@ -408,14 +408,6 @@ export const RevisionsOwnedByMeView: React.FC = () => {
               <span className="text-slate-700 font-medium">Revisions Owned By Me</span>
             </div>
           </div>
-          <Button
-            onClick={() => navigate("/documents/revisions/new")}
-            size="sm"
-            className="flex items-center gap-2 shadow-sm"
-          >
-            <FileText className="h-4 w-4" />
-            New Revision
-          </Button>
         </div>
       </div>
 

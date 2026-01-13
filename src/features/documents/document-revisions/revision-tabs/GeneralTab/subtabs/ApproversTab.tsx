@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CheckCircle, Plus, Trash2, Search, User, X, ShieldCheck } from "lucide-react";
 import { createPortal } from "react-dom";
+import { Button } from "@/components/ui/button/Button";
 
 interface Approver {
     id: string;
@@ -48,13 +49,15 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
             />
             <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                    <h3 className="text-lg font-semibold text-slate-900">Select Approver</h3>
-                    <button 
+                    <h3 className="text-lg font-semibold text-slate-900">Add Approver</h3>
+                    <Button 
                         onClick={onClose}
-                        className="p-2 text-slate-400 hover:text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
+                        variant="ghost"
+                        size="icon-sm"
+                        className="rounded-full"
                     >
                         <X className="h-5 w-5" />
-                    </button>
+                    </Button>
                 </div>
                 
                 <div className="p-4 border-b border-slate-100 bg-slate-50/50">
@@ -75,13 +78,14 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                     {filteredUsers.length > 0 ? (
                         <div className="space-y-1">
                             {filteredUsers.map((user) => (
-                                <button
+                                <Button
                                     key={user.id}
                                     onClick={() => {
                                         onSelect(user);
                                         onClose();
                                     }}
-                                    className="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-lg transition-colors group text-left"
+                                    variant="ghost"
+                                    className="w-full flex items-center gap-4 p-3 h-auto justify-start group"
                                 >
                                     <div className="h-10 w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
                                         {user.name.charAt(0)}
@@ -93,7 +97,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                                     <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                         <span className="px-2.5 py-1 bg-emerald-600 text-white text-xs font-medium rounded-md shadow-sm">Select</span>
                                     </div>
-                                </button>
+                                </Button>
                             ))}
                         </div>
                     ) : (
@@ -141,13 +145,14 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({ onCountChange }) => 
                     <p className="text-xs text-slate-500 mt-0.5">Select the final approver for this document</p>
                 </div>
                 {approvers.length === 0 && (
-                    <button
+                    <Button
                         onClick={() => setIsModalOpen(true)}
-                        className="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium shadow-sm"
+                        size="sm"
+                        className="flex items-center gap-2"
                     >
                         <Plus className="h-4 w-4" />
-                        Select Approver
-                    </button>
+                        Add Approver
+                    </Button>
                 )}
             </div>
 
@@ -175,19 +180,23 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({ onCountChange }) => 
                             <div className="text-xs text-slate-400 mt-1">{approvers[0].email}</div>
                         </div>
                         <div className="flex items-center gap-2">
-                            <button
+                            <Button
                                 onClick={() => setIsModalOpen(true)}
-                                className="px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                                variant="ghost"
+                                size="sm"
+                                className="text-slate-600 hover:text-emerald-600 hover:bg-emerald-50"
                             >
                                 Change
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={removeApprover}
-                                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                variant="ghost"
+                                size="icon-sm"
+                                className="text-slate-400 hover:text-red-500 hover:bg-red-50"
                                 title="Remove approver"
                             >
                                 <Trash2 className="h-4 w-4" />
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>

@@ -66,12 +66,14 @@ export const EditUserModal: React.FC<EditUserModalProps> = ({
               <h2 className="text-lg font-bold text-slate-900">Edit User</h2>
               <p className="text-sm text-slate-600 mt-0.5">Update user information</p>
             </div>
-            <button
+            <Button
               onClick={onClose}
+              variant="ghost"
+              size="icon-sm"
               className="p-2 hover:bg-slate-200 rounded-lg transition-colors"
             >
               <X className="h-5 w-5 text-slate-500" />
-            </button>
+            </Button>
           </div>
 
           {/* Modal Body */}

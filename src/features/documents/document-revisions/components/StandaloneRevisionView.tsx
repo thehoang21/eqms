@@ -281,7 +281,7 @@ export const StandaloneRevisionView: React.FC = () => {
                             disabled={!reasonForChange.trim() || reasonForChange.length < 50}
                             className="shadow-sm"
                         >
-                            Continue to Next Step
+                            Continue
                             <ArrowRight className="h-4 w-4 ml-2" />
                         </Button>
                     </div>

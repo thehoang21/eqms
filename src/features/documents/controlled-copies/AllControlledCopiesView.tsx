@@ -349,7 +349,7 @@ const DropdownMenu: React.FC<{
               className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <Link2 className="h-4 w-4 flex-shrink-0" />
-              <span className="font-medium">Create Link</span>
+              <span className="font-medium">Create Shareable Link</span>
             </button>
           )}
           {isDistributed && onReportLostDamaged ? (
@@ -399,7 +399,7 @@ export const AllControlledCopiesView: React.FC = () => {
   const [isReportLostDamagedModalOpen, setIsReportLostDamagedModalOpen] = useState(false);
   const [selectedCopy, setSelectedCopy] = useState<ControlledCopy | null>(null);
 
-  // Create Link Modal state
+  // Create Shareable Link Modal state
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedCopyForLink, setSelectedCopyForLink] = useState<ControlledCopy | null>(null);
 
@@ -544,7 +544,7 @@ export const AllControlledCopiesView: React.FC = () => {
       {/* Filters */}
       <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-          <div className="xl:col-span-4">
+          <div className="xl:col-span-3">
             <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -566,7 +566,7 @@ export const AllControlledCopiesView: React.FC = () => {
               placeholder="Select state"
             />
           </div>
-          <div className="xl:col-span-2">
+          <div className="xl:col-span-3">
             <DateTimePicker
               label="From Date"
               value={dateFromFilter}
@@ -621,7 +621,6 @@ export const AllControlledCopiesView: React.FC = () => {
                 paginatedData.map((copy, index) => {
                   const rowNumber = (currentPage - 1) * itemsPerPage + index + 1;
                   const statusConfig = getStatusConfig(copy.status);
-                  const StatusIcon = statusConfig.icon;
 
                   return (
                     <tr
@@ -655,7 +654,6 @@ export const AllControlledCopiesView: React.FC = () => {
                             statusConfig.color
                           )}
                         >
-                          <StatusIcon className="h-3.5 w-3.5" />
                           {copy.status}
                         </span>
                       </td>
@@ -742,7 +740,7 @@ export const AllControlledCopiesView: React.FC = () => {
         />
       )}
 
-      {/* Create Link Modal */}
+      {/* Create Shareable Link Modal */}
       {selectedCopyForLink && (
         <CreateLinkModal
           isOpen={isCreateLinkModalOpen}

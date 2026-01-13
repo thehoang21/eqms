@@ -42,6 +42,7 @@ export const SingleDocumentView: React.FC = () => {
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
     const [validationModalMessage, setValidationModalMessage] = useState<React.ReactNode>(null);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+    const [showSaveModal, setShowSaveModal] = useState(false);
 
     // File state
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -115,25 +116,32 @@ export const SingleDocumentView: React.FC = () => {
         return false;
     };
 
-    const handleBack = () => {
+    const handleCancel = () => {
         setIsCancelModalOpen(true);
     };
 
     const handleCancelConfirm = () => {
+        setIsCancelModalOpen(false);
         navigate("/documents/all");
     };
 
-    const handleSave = async () => {
+    const handleSaveDraft = () => {
+        setShowSaveModal(true);
+    };
+
+    const handleConfirmSave = async () => {
         setIsSaving(true);
         try {
-            if (!validateOrWarn()) return;
-
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
             // TODO: Integrate with API service
-            console.log("Document created:", formData);
+            console.log("Document saved as draft:", formData);
+            
+            setIsSaving(false);
+            setShowSaveModal(false);
             navigate("/documents/all");
         } catch (error) {
-            console.error("Error creating document:", error);
-        } finally {
+            console.error("Error saving document:", error);
             setIsSaving(false);
         }
     };
@@ -206,7 +214,7 @@ export const SingleDocumentView: React.FC = () => {
                     {/* Action Buttons */}
                     <div className="flex items-center gap-3">
                         <Button
-                            onClick={handleBack}
+                            onClick={handleCancel}
                             variant="outline"
                             size="sm"
                             className="flex items-center gap-2"
@@ -215,19 +223,19 @@ export const SingleDocumentView: React.FC = () => {
                             Cancel
                         </Button>
                         <Button
-                            onClick={handleSave}
-                            disabled={isSaving || isSubmitting}
+                            onClick={handleSaveDraft}
+                            disabled={isSaving || isSubmitting || uploadedFiles.length === 0}
                             size="sm"
-                            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+                            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
                         >
                             <Save className="h-4 w-4" />
                             {isSaving ? "Saving..." : "Save Draft"}
                         </Button>
                         <Button
                             onClick={handleSubmitForActive}
-                            disabled={isSaving || isSubmitting}
+                            disabled={isSaving || isSubmitting || uploadedFiles.length === 0 || missingRequiredFields.length > 0}
                             size="sm"
-                            className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white"
+                            className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300"
                         >
                             <Send className="h-4 w-4" />
                             {isSubmitting ? "Submitting..." : "Submit"}
@@ -385,9 +393,40 @@ export const SingleDocumentView: React.FC = () => {
                 onConfirm={handleCancelConfirm}
                 type="warning"
                 title="Cancel Creation?"
-                description="Are you sure you want to cancel? All unsaved changes will be lost."
+                description={
+                    <div className="space-y-3">
+                        <p>Are you sure you want to cancel document creation?</p>
+                        <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
+                            <p className="text-amber-800">
+                                ⚠️ <span className="font-semibold">Warning:</span> All unsaved changes will be lost.
+                            </p>
+                        </div>
+                    </div>
+                }
                 confirmText="Yes, Cancel"
                 cancelText="No, Stay"
+                showCancel={true}
+            />
+
+            <AlertModal
+                isOpen={showSaveModal}
+                onClose={() => setShowSaveModal(false)}
+                onConfirm={handleConfirmSave}
+                type="confirm"
+                title="Save Document as Draft?"
+                description={
+                    <div className="space-y-3">
+                        <p>Are you sure you want to save this document as a draft?</p>
+                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
+                            <p><span className="font-semibold">Document Name:</span> {formData.title || "(Not set)"}</p>
+                            <p><span className="font-semibold">Type:</span> {formData.type}</p>
+                            <p><span className="font-semibold">Author:</span> {formData.author || "(Not set)"}</p>
+                        </div>
+                    </div>
+                }
+                confirmText="Save Draft"
+                cancelText="Cancel"
+                isLoading={isSaving}
                 showCancel={true}
             />
         </div>

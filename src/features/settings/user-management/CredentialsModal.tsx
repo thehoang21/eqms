@@ -47,12 +47,14 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                 <p className="text-sm text-slate-600">Account credentials generated</p>
               </div>
             </div>
-            <button
+            <Button
               onClick={onClose}
+              variant="ghost"
+              size="icon-sm"
               className="p-2 hover:bg-emerald-100 rounded-lg transition-colors"
             >
               <X className="h-5 w-5 text-slate-500" />
-            </button>
+            </Button>
           </div>
 
           {/* Modal Body */}
@@ -110,20 +112,22 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   readOnly
                   className="flex-1 h-11 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
-                <button
+                <Button
                   onClick={onRegeneratePassword}
+                  variant="outline"
+                  size="icon"
                   className="flex items-center justify-center h-11 w-11 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-emerald-300 hover:text-emerald-600 transition-all duration-200"
                   title="Regenerate Password"
                 >
                   <RefreshCw className="h-4 w-4" />
-                </button>
+                </Button>
                 <CopyButton text={password} label="Password" showToast={showToast} />
               </div>
               <p className="text-xs text-slate-500 mt-1.5">Click refresh icon to generate a new password</p>
             </div>
 
             {/* Copy All Button */}
-            <button
+            <Button
               onClick={async () => {
                 const credentials = `Employee ID: ${employeeId}\nUsername: ${username}\nPassword: ${password}`;
                 try {
@@ -165,7 +169,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
             >
               <Copy className="h-4 w-4" />
               Copy All Credentials
-            </button>
+            </Button>
           </div>
 
           {/* Modal Footer */}

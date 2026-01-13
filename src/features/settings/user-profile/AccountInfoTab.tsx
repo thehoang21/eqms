@@ -1,5 +1,6 @@
 import React, { useRef, ChangeEvent } from 'react';
 import { Camera, Edit2, User as UserIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 
 interface AccountInfoTabProps {
@@ -80,13 +81,14 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                             )}
                         </div>
                         {/* Camera Button */}
-                        <button
+                        <Button
                             onClick={handleAvatarClick}
-                            className="absolute bottom-2 right-2 h-11 w-11 rounded-full bg-white border border-slate-300 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200"
+                            variant="outline"
+                            className="absolute bottom-2 right-2 h-11 w-11 rounded-full bg-white border border-slate-300 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200 p-0"
                             title="Change avatar"
                         >
                             <Camera className="h-5 w-5 text-slate-600 hover:text-emerald-600" />
-                        </button>
+                        </Button>
                         <input
                             ref={fileInputRef}
                             type="file"
@@ -204,9 +206,9 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
                                         placeholder="Enter email"
                                     />
-                                    <button className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit email">
+                                    <Button variant="ghost" size="icon-sm" className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit email">
                                         <Edit2 className="h-4 w-4" />
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                             <div>
@@ -221,9 +223,9 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
                                         placeholder="Enter phone number"
                                     />
-                                    <button className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit phone">
+                                    <Button variant="ghost" size="icon-sm" className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit phone">
                                         <Edit2 className="h-4 w-4" />
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
