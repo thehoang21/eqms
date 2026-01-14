@@ -56,18 +56,18 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
             className="text-slate-500 hover:bg-slate-100 relative overflow-hidden"
             title={isMobileMenuOpen ? "Close Menu" : (isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar")}
         >
-            {/* Desktop: Expand Icon - Show when sidebar is collapsed */}
+            {/* Tablet/Desktop: Expand Icon - Show when sidebar is collapsed */}
             <IconLayoutSidebarLeftExpand className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out hidden lg:block origin-center",
+              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out hidden md:block origin-center",
               isSidebarCollapsed 
                 ? "opacity-100 rotate-0 scale-100" 
                 : "opacity-0 rotate-180 scale-90"
             )} 
               style={{ willChange: 'transform, opacity' }}
             />
-            {/* Desktop: Collapse Icon - Show when sidebar is expanded */}
+            {/* Tablet/Desktop: Collapse Icon - Show when sidebar is expanded */}
             <IconLayoutSidebarLeftCollapse className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out hidden lg:block origin-center",
+              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out hidden md:block origin-center",
               isSidebarCollapsed 
                 ? "opacity-0 -rotate-180 scale-90" 
                 : "opacity-100 rotate-0 scale-100"
@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
             />
             {/* Mobile: Menu Icon - Show when mobile menu is closed */}
             <IconLayoutSidebarLeftCollapse className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out lg:hidden origin-center",
+              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out md:hidden origin-center",
               isMobileMenuOpen 
                 ? "opacity-0 rotate-180 scale-90" 
                 : "opacity-100 rotate-0 scale-100"
@@ -85,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
             />
             {/* Mobile: X Icon - Show when mobile menu is open */}
             <X className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out lg:hidden origin-center",
+              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out md:hidden origin-center",
               isMobileMenuOpen 
                 ? "opacity-100 rotate-0 scale-100" 
                 : "opacity-0 -rotate-180 scale-90"

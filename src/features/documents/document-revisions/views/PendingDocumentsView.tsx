@@ -10,11 +10,12 @@ import {
   Clock,
   Home,
   FileText,
+  Download,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "../../DocumentFilters";
-import { IconChecks, IconEyeCheck, IconInfoCircle } from "@tabler/icons-react";
+import { IconChecks, IconEyeCheck, IconInfoCircle, IconFileExport } from "@tabler/icons-react";
 
 // --- Types ---
 
@@ -405,6 +406,18 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
             <span className="text-slate-700 font-medium">{config.breadcrumbLast}</span>
           </div>
         </div>
+        <Button
+          onClick={() => {
+            console.log("Export triggered");
+            // TODO: Implement export functionality
+          }}
+          variant="outline"
+          size="sm"
+          className="whitespace-nowrap gap-2 self-start md:self-auto"
+        >
+          <Download className="h-4 w-4" />
+          Export
+        </Button>
       </div>
 
       {/* Filters */}

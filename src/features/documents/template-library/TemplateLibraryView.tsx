@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { TemplateFilters } from "./TemplateFilters";
-import { IconPlus, IconTemplate } from "@tabler/icons-react";
+import { IconPlus, IconTemplate, IconFileExport } from "@tabler/icons-react";
 import { CreateLinkModal } from "../CreateLinkModal";
 
 // --- Types ---
@@ -497,14 +497,28 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
             <span className="text-slate-700 font-medium">Template Library</span>
           </div>
         </div>
-        <Button
-          size="sm"
-          onClick={onCreateTemplate}
-          className="flex items-center gap-2 shadow-sm"
-        >
-          <IconPlus className="h-4 w-4" />
-          New Template
-        </Button>
+        <div className="flex items-center gap-2 self-start md:self-auto">
+          <Button
+            onClick={() => {
+              console.log("Export triggered");
+              // TODO: Implement export functionality
+            }}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+          <Button
+            size="sm"
+            onClick={onCreateTemplate}
+            className="flex items-center gap-2 shadow-sm"
+          >
+            <IconPlus className="h-4 w-4" />
+            New Template
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}

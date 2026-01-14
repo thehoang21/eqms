@@ -12,6 +12,8 @@ import {
   Home,
   Clock,
   Link2,
+  FileOutput,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -19,6 +21,7 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { cn } from "@/components/ui/utils";
 import { ControlledCopy, TableColumn } from "./types";
 import { CreateLinkModal } from "../CreateLinkModal";
+import { IconFileExport } from "@tabler/icons-react";
 
 // Mock Data - Only Ready for Distribution
 const MOCK_READY_COPIES: ControlledCopy[] = [
@@ -346,6 +349,18 @@ export const ReadyForDistributionView: React.FC = () => {
               <span className="text-slate-700 font-medium">Ready for Distribution</span>
             </div>
           </div>
+          <Button
+            onClick={() => {
+              console.log("Export triggered");
+              // TODO: Implement export functionality
+            }}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2 self-start md:self-auto"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
         </div>
       </div>
 

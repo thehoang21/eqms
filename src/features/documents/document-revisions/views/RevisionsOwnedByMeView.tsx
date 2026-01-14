@@ -19,7 +19,7 @@ import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { Select } from '@/components/ui/select/Select';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';  
 import { cn } from '@/components/ui/utils';
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconInfoCircle, IconFileExport } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -408,6 +408,18 @@ export const RevisionsOwnedByMeView: React.FC = () => {
               <span className="text-slate-700 font-medium">Revisions Owned By Me</span>
             </div>
           </div>
+          <Button
+            onClick={() => {
+              console.log("Export triggered");
+              // TODO: Implement export functionality
+            }}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2 self-start md:self-auto"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
         </div>
       </div>
 

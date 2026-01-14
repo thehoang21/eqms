@@ -19,6 +19,7 @@ import {
   TextSearch,
   Palette,
   BookText,
+  ListTodo,
 } from "lucide-react";
 import { NavItem } from "@/types";
 import {
@@ -48,7 +49,7 @@ export const NAV_CONFIG: NavItem[] = [
   {
     id: "my-tasks",
     label: "My Tasks",
-    icon: IconChecklist,
+    icon: ListTodo,
     path: "/my-tasks",
   },
   {

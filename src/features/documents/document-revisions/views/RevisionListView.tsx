@@ -11,13 +11,14 @@ import {
   Plus,
   Home,
   ThumbsUp,
+  Download,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge';
 import { DocumentFilters } from "../../DocumentFilters";
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
-import { IconFileCheck, IconFileTime, IconInfoCircle } from "@tabler/icons-react";
+import { IconFileCheck, IconFileTime, IconInfoCircle, IconFileExport } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -495,7 +496,7 @@ export const RevisionListView: React.FC = () => {
   return (
     <div className="space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             All Revisions
@@ -517,6 +518,18 @@ export const RevisionListView: React.FC = () => {
             <span className="text-slate-700 font-medium">All Revisions</span>
           </div>
         </div>
+        <Button
+          onClick={() => {
+            console.log("Export triggered");
+            // TODO: Implement export functionality
+          }}
+          variant="outline"
+          size="sm"
+          className="whitespace-nowrap gap-2 self-start md:self-auto"
+        >
+          <Download className="h-4 w-4" />
+          Export
+        </Button>
       </div>
 
       {/* Filters */}

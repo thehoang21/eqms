@@ -13,6 +13,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Link2,
+  FileOutput,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -22,6 +24,7 @@ import { ControlledCopy, TableColumn } from "./types";
 import { MarkAsDestroyedModal } from "./components/MarkAsDestroyedModal";
 import { useToast } from "@/components/ui/toast/Toast";
 import { CreateLinkModal } from "../CreateLinkModal";
+import { IconFileExport } from "@tabler/icons-react";
 
 // Mock Data - Only Distributed
 const MOCK_DISTRIBUTED_COPIES: ControlledCopy[] = [
@@ -381,6 +384,18 @@ export const DistributedCopiesView: React.FC = () => {
               <span className="text-slate-700 font-medium">Distributed</span>
             </div>
           </div>
+          <Button
+            onClick={() => {
+              console.log("Export triggered");
+              // TODO: Implement export functionality
+            }}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2 self-start md:self-auto"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
         </div>
       </div>
 

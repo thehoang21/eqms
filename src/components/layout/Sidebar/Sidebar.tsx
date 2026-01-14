@@ -1,17 +1,19 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ChevronRight, X } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import { NavItem } from '@/types';
 import { NAV_CONFIG } from '@/app/constants';
 import { cn } from '@/components/ui/utils';
 import logoFull from '@/assets/images/logo_nobg.png';
 import logoCollapsed from '@/assets/images/LOGO.png';
-import { IconChevronLeft } from '@tabler/icons-react';
 
 // Constants
-const ANIMATION_EASING = 'cubic-bezier(0.4,0,0.2,1)';
-const BOUNCE_EASING = 'cubic-bezier(0.68,-0.55,0.265,1.55)';
 const BASE_PADDING = 12;
 const LEVEL_PADDING = 16;
+const MENU_WIDTH = 280;
+const MENU_GAP = 8;
+const SAFE_PADDING = 16;
+const MAX_MENU_HEIGHT = 600;
 
 // Helper function to find parent IDs of active item
 const findParentIds = (items: NavItem[], targetId: string, path: string[] = []): string[] => {
@@ -33,6 +35,14 @@ interface SidebarProps {
   onNavigate: (id: string) => void;
   isMobileOpen: boolean;
   onClose: () => void;
+  onToggleSidebar: () => void; // Add toggle function
+}
+
+interface HoverMenuState {
+  isOpen: boolean;
+  item: NavItem | null;
+  position: { top: number; left: number };
+  expandedSubItems: string[];
 }
 
 export const Sidebar: React.FC<SidebarProps> = React.memo(({
@@ -41,8 +51,15 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
   onNavigate,
   isMobileOpen,
   onClose,
+  onToggleSidebar,
 }) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [hoverMenu, setHoverMenu] = useState<HoverMenuState>({
+    isOpen: false,
+    item: null,
+    position: { top: 0, left: 0 },
+    expandedSubItems: []
+  });
 
   // Auto-expand parent items when activeId changes
   useEffect(() => {
@@ -51,6 +68,55 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
       setExpandedItems((prev) => Array.from(new Set([...prev, ...parentIds])));
     }
   }, [activeId]);
+
+  // Calculate menu position to prevent viewport overflow
+  const calculateMenuPosition = useCallback((rect: DOMRect) => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    let left = rect.right + MENU_GAP;
+    
+    // Horizontal positioning
+    if (left + MENU_WIDTH > viewportWidth) {
+      const leftSide = rect.left - MENU_WIDTH - MENU_GAP;
+      left = leftSide >= 0 ? leftSide : viewportWidth - MENU_WIDTH - SAFE_PADDING;
+    }
+    
+    // Vertical positioning
+    const estimatedHeight = Math.min(viewportHeight - 120, MAX_MENU_HEIGHT);
+    let top = rect.top;
+    
+    if (top + estimatedHeight > viewportHeight) {
+      top = Math.max(SAFE_PADDING, viewportHeight - estimatedHeight - SAFE_PADDING);
+    }
+    if (top < SAFE_PADDING) {
+      top = SAFE_PADDING;
+    }
+    
+    return { top, left };
+  }, []);
+
+  // Handle click on menu item (collapsed mode)
+  const handleMenuItemClick = useCallback((item: NavItem, event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isCollapsed || !item.children?.length) return;
+
+    event.stopPropagation();
+    const rect = event.currentTarget.getBoundingClientRect();
+    const position = calculateMenuPosition(rect);
+    
+    setHoverMenu(prev => {
+      // Toggle: close if same item, open if different
+      if (prev.isOpen && prev.item?.id === item.id) {
+        return { ...prev, isOpen: false };
+      }
+      return {
+        isOpen: true,
+        item,
+        position,
+        expandedSubItems: []
+      };
+    });
+  }, [isCollapsed, calculateMenuPosition]);
 
   // Memoized toggle handler
   const toggleExpand = useCallback((id: string, event: React.MouseEvent) => {
@@ -80,8 +146,6 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
     const Icon = item.icon;
 
     const paddingLeft = isCollapsed ? 0 : (level === 0 ? BASE_PADDING : (level * LEVEL_PADDING + BASE_PADDING));
-    const activeClass = level === 0 ? "text-primary font-medium bg-slate-50" : "text-primary font-bold";
-    const inactiveClass = "text-slate-600 hover:bg-slate-50 hover:text-slate-900";
 
     return (
       <div key={item.id} className="w-full relative">
@@ -93,105 +157,96 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         )}
 
         <button
-          onClick={(e) => isCollapsed && hasChildren ? toggleExpand(item.id, e) : handleItemClick(item)}
+          onClick={(e) => {
+            if (isCollapsed && hasChildren) {
+              handleMenuItemClick(item, e);
+            } else {
+              handleItemClick(item);
+            }
+          }}
           className={cn(
-            "w-full flex items-center group relative overflow-visible z-10 outline-none focus-visible:ring-2 focus-visible:ring-primary/20",
-            `transition-all duration-300 ease-[${ANIMATION_EASING}]`,
-            "py-2.5 md:py-3",
-            isActive ? activeClass : inactiveClass,
+            "w-full flex items-center group relative overflow-visible z-10 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/20",
+            `transition-all duration-200 ease-in-out`,
+            "h-11",
             isCollapsed ? "justify-center px-0" : "justify-start pr-3",
-            (!isCollapsed && level === 0 && isActive) && "rounded-r-md ml-0.5"
+            isActive && level === 0
+              ? "text-slate-900 bg-slate-100"
+              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+            (!isCollapsed && level === 0 && isActive) && "rounded-lg mx-2"
           )}
           style={{ paddingLeft: isCollapsed ? 0 : `${paddingLeft}px` }}
         >
-          {level === 0 && isActive && (
+          {/* Active indicator */}
+          {level === 0 && isActive && !isCollapsed && (
             <div 
-              className={`absolute left-0 top-0 bottom-0 w-1 bg-primary transition-all duration-300 ease-[${ANIMATION_EASING}]`}
-              style={{ animation: `scaleIn 0.3s ${ANIMATION_EASING}` }}
+              className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-full bg-emerald-600"
             />
           )}
 
+          {/* Icon */}
           <div 
             className={cn(
-              "flex items-center justify-center relative",
-              `transition-all duration-300 ease-[${ANIMATION_EASING}]`,
-              isCollapsed ? "w-full" : "w-auto"
+              "flex items-center justify-center relative shrink-0",
+              isCollapsed ? "w-full" : "w-5"
             )}
-            style={{ willChange: 'transform' }}
           >
             {Icon && (
               <Icon 
                 className={cn(
-                  "shrink-0 h-5 w-5",
-                  `transition-all duration-300 ease-[${ANIMATION_EASING}]`,
-                  "group-hover:scale-110",
-                  isActive ? "text-primary" : "text-slate-500 group-hover:text-slate-900"
+                  "h-5 w-5 transition-colors duration-200",
+                  isActive ? "text-slate-900" : "text-slate-500 group-hover:text-slate-900"
                 )} 
               />
             )}
             {!Icon && level > 0 && !isCollapsed && (
-              <div className={cn("h-1.5 w-1.5 rounded-full", isActive ? "bg-primary" : "bg-slate-300")} />
-            )}
-            {isCollapsed && (
-              <div 
-                className="absolute left-full ml-2 px-3 py-1.5 bg-slate-800 text-white text-xs md:text-sm rounded pointer-events-none whitespace-nowrap z-50 shadow-lg font-medium group-hover:opacity-100 group-hover:translate-x-0"
-                style={{
-                  opacity: 0,
-                  transform: 'translateX(-8px)',
-                  transition: `opacity 0.2s ${ANIMATION_EASING} 0.1s, transform 0.2s ${ANIMATION_EASING} 0.1s`,
-                }}
-              >
-                {item.label}
-                <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-r-[4px] border-r-slate-800" />
-              </div>
+              <div className={cn("h-1.5 w-1.5 rounded-full", isActive ? "bg-emerald-600" : "bg-slate-300")} />
             )}
           </div>
 
+          {/* Label */}
           <div 
             className={cn(
-              "overflow-hidden whitespace-nowrap",
-              `transition-all duration-300 ease-[${ANIMATION_EASING}]`,
+              "overflow-hidden whitespace-nowrap transition-all duration-200",
               isCollapsed ? "max-w-0 opacity-0 ml-0" : "max-w-[200px] opacity-100 ml-3"
             )}
-            style={{ willChange: 'max-width, opacity, margin' }}
           >
-            <span className={cn("truncate block text-sm", isActive && level === 0 && "font-semibold")}>
+            <span className={cn(
+              "truncate block text-sm",
+              isActive && level === 0 ? "font-semibold text-slate-900" : "font-medium"
+            )}>
               {item.label}
             </span>
           </div>
 
-          {hasChildren && (
+          {/* Chevron for expandable items */}
+          {hasChildren && !isCollapsed && (
             <div
-              onClick={(e) => !isCollapsed && toggleExpand(item.id, e)}
+              onClick={(e) => toggleExpand(item.id, e)}
               className={cn(
-                "rounded-md hover:bg-slate-200 ml-auto flex items-center justify-center h-6 w-6",
-                `transition-all duration-300 ease-[${ANIMATION_EASING}]`,
-                isCollapsed ? "max-w-0 opacity-0 -translate-x-2 overflow-hidden" : "max-w-6 opacity-100 translate-x-0"
+                "rounded-md ml-auto flex items-center justify-center h-6 w-6 transition-all duration-200"
               )}
-              style={{ willChange: 'transform, opacity' }}
             >
               <ChevronRight 
                 className={cn(
-                  "h-4 w-4 text-slate-400",
-                  `transition-transform duration-300 ease-[${BOUNCE_EASING}]`,
-                  isExpanded ? "rotate-90" : "rotate-0"
-                )} 
+                  "h-4 w-4 text-slate-400 transition-transform duration-300 ease-out",
+                  isExpanded && "rotate-90"
+                )}
+                style={{ willChange: 'transform' }}
               />
             </div>
           )}
         </button>
 
-        {hasChildren && (
+        {/* Expanded children (only in expanded sidebar) */}
+        {hasChildren && !isCollapsed && (
           <div 
             className={cn(
-              "grid",
-              `transition-all duration-300 ease-[${ANIMATION_EASING}]`,
-              (!isCollapsed && isExpanded) ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+              "grid transition-all duration-200 ease-in-out",
+              isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
             )}
-            style={{ willChange: 'grid-template-rows, opacity' }}
           >
             <div className="overflow-hidden">
-              <div className="relative pb-1">
+              <div className="relative pt-1">
                 {item.children?.map((child) => renderMenuItem(child, level + 1))}
               </div>
             </div>
@@ -199,15 +254,136 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         )}
       </div>
     );
-  }, [expandedItems, activeId, isCollapsed, toggleExpand, handleItemClick]);
+  }, [expandedItems, activeId, isCollapsed, toggleExpand, handleItemClick , handleMenuItemClick, hoverMenu.isOpen, hoverMenu.item, setHoverMenu, onNavigate, onClose]);
+
+  // Handle hover menu sub-item click
+  const handleSubItemClick = useCallback((item: NavItem, hasChildren: boolean) => {
+    if (hasChildren) {
+      setHoverMenu(prev => ({
+        ...prev,
+        expandedSubItems: prev.expandedSubItems.includes(item.id)
+          ? prev.expandedSubItems.filter(id => id !== item.id)
+          : [...prev.expandedSubItems, item.id]
+      }));
+    } else {
+      onNavigate(item.id);
+      setHoverMenu(prev => ({ ...prev, isOpen: false }));
+      onClose();
+    }
+  }, [onNavigate, onClose]);
+
+  // Render hover menu sub-item
+  const renderHoverSubItem = useCallback((item: NavItem, level: number = 1) => {
+    const hasChildren = Boolean(item.children?.length);
+    const isExpanded = hoverMenu.expandedSubItems.includes(item.id);
+    const isActive = activeId === item.id;
+
+    return (
+      <div key={item.id} className="w-full">
+        <button
+          onClick={() => handleSubItemClick(item, hasChildren)}
+          className={cn(
+            "w-full flex items-center gap-2 px-4 py-2.5 text-sm transition-colors",
+            isActive
+              ? "text-slate-900 bg-slate-100 font-medium"
+              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+          )}
+        >
+          {level >= 2 && (
+            <div className={cn(
+              "h-1.5 w-1.5 rounded-full shrink-0",
+              isActive ? "bg-emerald-600" : "bg-slate-300"
+            )} />
+          )}
+          <span className={cn(
+            "flex-1 text-left",
+            level >= 2 ? "ml-0" : "ml-3"
+          )}>{item.label}</span>
+          {hasChildren && (
+            <div className="rounded-md flex items-center justify-center h-6 w-6 transition-all duration-200 shrink-0">
+              <ChevronRight 
+                className={cn(
+                  "h-4 w-4 text-slate-400 transition-transform duration-300 ease-out",
+                  isExpanded && "rotate-90"
+                )}
+                style={{ 
+                  willChange: 'transform'
+                }}
+              />
+            </div>
+          )}
+        </button>
+
+        {hasChildren && (
+          <div
+            className={cn(
+              "grid transition-all duration-200 ease-in-out bg-slate-50/50",
+              isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            )}
+          >
+            <div className="overflow-hidden">
+              <div className="pl-3 py-1">
+                {item.children?.map((child) => renderHoverSubItem(child, level + 1))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }, [hoverMenu.expandedSubItems, activeId, handleSubItemClick]);
+
+  // Hover menu portal component
+  const HoverMenuPortal = () => {
+    if (!hoverMenu.isOpen || !hoverMenu.item || !isCollapsed) return null;
+
+    return createPortal(
+      <>
+        {/* Invisible backdrop to detect outside clicks */}
+        <div
+          className="fixed inset-0 z-[59]"
+          onClick={() => setHoverMenu(prev => ({ ...prev, isOpen: false }))}
+          aria-hidden="true"
+        />
+        
+        {/* Menu content */}
+        <div
+          className="fixed z-[60] min-w-[240px] max-w-[280px] bg-white rounded-xl border border-slate-200 shadow-xl animate-in fade-in slide-in-from-left-2 duration-200"
+          style={{
+            top: `${hoverMenu.position.top}px`,
+            left: `${hoverMenu.position.left}px`,
+          }}
+        >
+          {/* Menu header */}
+          <div className="px-4 py-3 border-b border-slate-100">
+            <div className="flex items-center gap-3">
+              {hoverMenu.item.icon && (
+                <hoverMenu.item.icon className="h-5 w-5 text-slate-600" />
+              )}
+              <span className="font-semibold text-sm text-slate-900">
+                {hoverMenu.item.label}
+              </span>
+            </div>
+          </div>
+
+          {/* Menu items */}
+          <div className="py-1 max-h-[calc(100vh-120px)] overflow-y-auto custom-scrollbar">
+            {hoverMenu.item.children?.map((child) => renderHoverSubItem(child))}
+          </div>
+        </div>
+      </>,
+      document.body
+    );
+  };
 
   return (
     <>
-      {/* Mobile Overlay Backdrop */}
+      {/* Hover Menu Portal */}
+      <HoverMenuPortal />
+
+      {/* Mobile Overlay Backdrop - Only show on mobile (<768px) */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden"
-          style={{ animation: `fadeIn 0.25s ${ANIMATION_EASING}` }}
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-200"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -216,35 +392,31 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
       {/* Sidebar */}
       <aside
         className={cn(
-          "bg-white border-r border-slate-200 h-screen flex flex-col shadow-lg",
-          "fixed top-0 left-0 z-50 lg:sticky lg:z-30",
+          "bg-white border-r border-slate-200 h-screen flex flex-col shadow-sm",
+          "fixed top-0 left-0 z-50 md:sticky md:z-30",
           isCollapsed ? "w-20" : "w-[280px]",
-          "transition-all",
-          `duration-300 ease-[${ANIMATION_EASING}]`,
-          `lg:duration-350 lg:ease-[${ANIMATION_EASING}]`,
-          "lg:translate-x-0",
-          isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          "lg:shadow-sm",
-          !isCollapsed && "hover:shadow-md"
+          "transition-all duration-300 ease-in-out",
+          "md:translate-x-0",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
-        style={{ willChange: 'transform, width' }}
       >
         {/* Header / Logo Area */}
         <div 
           className={cn(
-            "h-16 md:h-18 flex items-center border-b border-slate-100 bg-white relative",
-            `transition-all duration-300 ease-[${ANIMATION_EASING}]`,
-            isCollapsed ? "justify-center px-0" : "justify-start px-4"
+            "h-16 flex items-center border-b border-slate-100 bg-white relative",
+            "transition-all duration-300 ease-in-out",
+            isCollapsed ? "justify-center px-0" : "justify-between px-5"
           )}
         >
-          <div className="flex items-center overflow-hidden w-full justify-center">
-            <div 
-              className={cn(
-                "flex items-center justify-center shrink-0 z-10",
-                `transition-all duration-300 ease-[${ANIMATION_EASING}]`,
-                isCollapsed ? "h-10 w-10" : "h-12 w-auto"
-              )}
-            >
+          {/* Logo */}
+          <div className={cn(
+            "flex items-center justify-center overflow-hidden transition-all duration-300",
+            isCollapsed ? "w-full" : "flex-1"
+          )}>
+            <div className={cn(
+              "flex items-center justify-center shrink-0",
+              isCollapsed ? "h-10 w-10" : "h-12 w-auto"
+            )}>
               <img
                 src={isCollapsed ? logoCollapsed : logoFull}
                 alt="Logo"
@@ -257,8 +429,10 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             </div>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 custom-scrollbar">
-          <nav className="space-y-1 px-2">
+
+        {/* Navigation Menu */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-3 custom-scrollbar">
+          <nav className="space-y-0.5">
             {NAV_CONFIG.map((item) => renderMenuItem(item))}
           </nav>
         </div>

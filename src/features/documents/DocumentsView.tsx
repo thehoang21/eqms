@@ -22,6 +22,7 @@ import {
   IconTrash,
   IconChartDots,
   IconPlus,
+  IconFileExport,
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
@@ -878,16 +879,30 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
             <span className="text-slate-700 font-medium">{config.breadcrumbLast}</span>
           </div>
         </div>
-        {config.showNewDocButton && (
+        <div className="flex items-center gap-2 self-start md:self-auto">
           <Button
-            onClick={handleNewDocument}
+            onClick={() => {
+              console.log("Export triggered");
+              // TODO: Implement export functionality
+            }}
+            variant="outline"
             size="sm"
-            className="whitespace-nowrap self-start md:self-auto gap-2"
+            className="whitespace-nowrap gap-2"
           >
-            <IconPlus className="h-4 w-4" />
-            New Document
+            <Download className="h-4 w-4" />
+            Export
           </Button>
-        )}
+          {config.showNewDocButton && (
+            <Button
+              onClick={handleNewDocument}
+              size="sm"
+              className="whitespace-nowrap gap-2"
+            >
+              <IconPlus className="h-4 w-4" />
+              New Document
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Filters Card */}

@@ -32,6 +32,7 @@ export const MainLayout: React.FC = () => {
         onNavigate={handleNavigate}
         isMobileOpen={isMobileMenuOpen}
         onClose={closeMobileMenu}
+        onToggleSidebar={toggleSidebar}
       />
 
       {/* Main Content Wrapper */}

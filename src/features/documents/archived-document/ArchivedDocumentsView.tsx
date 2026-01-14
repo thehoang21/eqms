@@ -8,7 +8,8 @@ import {
     AlertTriangle,
     Clock,
     MoreVertical,
-    Home
+    Home,
+    FileOutput
 } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button/Button';
@@ -24,7 +25,7 @@ import {
     logAuditTrail,
     canUserRestore 
 } from './utils';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { IconFileExport, IconInfoCircle } from '@tabler/icons-react';
 
 // Mock Data
 const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
@@ -207,6 +208,18 @@ export const ArchivedDocumentsView: React.FC = () => {
                         <span className="text-slate-700 font-medium">Archived Documents</span>
                     </div>
                 </div>
+                <Button
+                    onClick={() => {
+                        console.log("Export triggered");
+                        // TODO: Implement export functionality
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="whitespace-nowrap gap-2 self-start md:self-auto"
+                >
+                    <Download className="h-4 w-4" />
+                    Export
+                </Button>
             </div>
 
             {/* Filters */}

@@ -27,6 +27,7 @@ import {
   List,
   BarChart3,
   GitBranch,
+  FileOutput,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';

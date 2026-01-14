@@ -398,67 +398,89 @@ export const RolePermissionView: React.FC = () => {
             </div>
 
             {/* Role List */}
-            <div className="overflow-y-auto max-h-[600px]">
+            <div className="overflow-y-auto max-h-[600px] custom-scrollbar">
               {filteredRoles.map((role) => (
-                <Button
+                <div
                   key={role.id}
                   onClick={() => handleRoleSelect(role.id)}
-                  variant="ghost"
                   className={cn(
-                    "w-full text-left p-4 border-b border-slate-100 transition-all hover:bg-slate-50 group rounded-none justify-start",
-                    selectedRoleId === role.id && "bg-emerald-50 border-l-4 border-l-emerald-600"
+                    "w-full p-4 border-b border-slate-100 transition-all cursor-pointer group",
+                    "hover:bg-slate-50 active:bg-slate-100",
+                    selectedRoleId === role.id
+                      ? "bg-emerald-50/80 border-l-4 border-l-emerald-600"
+                      : "border-l-4 border-l-transparent"
                   )}
                 >
-                  <div className="flex items-start justify-between gap-2 mb-2">
+                  {/* Header Row */}
+                  <div className="flex items-start justify-between gap-3 mb-2.5">
                     <h3 className={cn(
-                      "font-semibold text-sm",
+                      "font-semibold text-sm leading-tight flex-1",
                       selectedRoleId === role.id ? "text-emerald-900" : "text-slate-900"
                     )}>
                       {role.name}
                     </h3>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       <span className={cn(
-                        "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border",
+                        "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border",
                         role.type === "custom"
                           ? "bg-amber-50 text-amber-700 border-amber-200"
                           : "bg-slate-50 text-slate-700 border-slate-200"
                       )}>
                         {role.type === "system" ? "System" : "Custom"}
                       </span>
-                      <div onClick={(e) => e.stopPropagation()} className="flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          aria-label="Edit role"
-                          onClick={() => openEditModal(role.id)}
-                        >
-                          <Edit3 className="h-4 w-4 text-slate-600" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          aria-label="Delete role"
-                          disabled={role.type === "system"}
-                          onClick={() => openDeleteModal(role.id)}
-                          title={role.type === "system" ? "System role cannot be deleted" : undefined}
-                        >
-                          <Trash2 className={cn("h-4 w-4", role.type === "system" ? "text-slate-300" : "text-red-600")} />
-                        </Button>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-xs text-slate-600 mb-3 line-clamp-2 leading-relaxed">
+                    {role.description}
+                  </p>
+
+                  {/* Stats & Actions Row */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-3 text-xs text-slate-500">
+                      <div className="flex items-center gap-1.5">
+                        <Users className="h-3.5 w-3.5" />
+                        <span className="font-medium">{role.userCount}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Lock className="h-3.5 w-3.5" />
+                        <span className="font-medium">{role.permissions.length}</span>
                       </div>
                     </div>
-                  </div>
-                  <p className="text-xs text-slate-600 mb-2 line-clamp-2">{role.description}</p>
-                  <div className="flex items-center gap-3 text-xs text-slate-500">
-                    <div className="flex items-center gap-1">
-                      <Users className="h-3.5 w-3.5" />
-                      <span>{role.userCount} users</span>
+
+                    {/* Action Buttons */}
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <button
+                        onClick={() => openEditModal(role.id)}
+                        className="inline-flex items-center justify-center h-7 w-7 rounded-md hover:bg-slate-200 transition-colors"
+                        aria-label="Edit role"
+                      >
+                        <Edit3 className="h-3.5 w-3.5 text-slate-600" />
+                      </button>
+                      <button
+                        onClick={() => openDeleteModal(role.id)}
+                        disabled={role.type === "system"}
+                        className={cn(
+                          "inline-flex items-center justify-center h-7 w-7 rounded-md transition-colors",
+                          role.type === "system"
+                            ? "cursor-not-allowed opacity-30"
+                            : "hover:bg-red-50"
+                        )}
+                        aria-label="Delete role"
+                        title={role.type === "system" ? "System role cannot be deleted" : "Delete role"}
+                      >
+                        <Trash2 className={cn(
+                          "h-3.5 w-3.5",
+                          role.type === "system" ? "text-slate-300" : "text-red-600"
+                        )} />
+                      </button>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Lock className="h-3.5 w-3.5" />
-                      <span>{role.permissions.length} permissions</span>
-                    </div>
                   </div>
-                </Button>
+                </div>
               ))}
             </div>
           </div>
@@ -587,12 +609,11 @@ export const RolePermissionView: React.FC = () => {
                 return (
                   <div key={group.id} className="border-2 border-slate-200 rounded-xl overflow-hidden transition-all hover:border-slate-300">
                     {/* Group Header - Clickable */}
-                    <Button
+                    <div
                       onClick={() => toggleGroup(group.id)}
-                      variant="ghost"
-                      className="w-full bg-gradient-to-r from-slate-50 to-slate-100 px-5 py-4 border-b border-slate-200 hover:from-slate-100 hover:to-slate-50 transition-all rounded-none justify-start"
+                      className="w-full bg-gradient-to-r from-slate-50 to-slate-100 px-5 py-4 border-b border-slate-200 hover:from-slate-100 hover:to-slate-50 transition-all cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between w-full">
                         <div className="flex items-center gap-4">
                           {/* Module Icon */}
                           <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-white border-2 border-emerald-200 text-emerald-600 shrink-0">
@@ -644,7 +665,7 @@ export const RolePermissionView: React.FC = () => {
                           )}
                         </div>
                       </div>
-                    </Button>
+                    </div>
 
                     {/* Group Permissions - Collapsible */}
                     {isExpanded && (
