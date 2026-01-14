@@ -6,14 +6,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
-import { Select } from "@/components/ui/select/Select";
-import { FormModal } from "@/components/ui/modal/FormModal";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
 import { Role, PermissionGroup } from "./types";
 import { MOCK_ROLES, PERMISSION_GROUPS, getActionColor, isALCOAPlusRequired } from "./constants";
 import { IconX } from "@tabler/icons-react";
+import { RoleFormModal } from "./RoleFormModal";
 
 export const RolePermissionView: React.FC = () => {
   const { showToast } = useToast();
@@ -27,16 +26,14 @@ export const RolePermissionView: React.FC = () => {
   const [permissionSearch, setPermissionSearch] = useState("");
   const [actionFilters, setActionFilters] = useState<Set<string>>(new Set());
   const [showAuditOnly, setShowAuditOnly] = useState(false);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [createName, setCreateName] = useState("");
-  const [createDescription, setCreateDescription] = useState("");
-  const [createBaseRoleId, setCreateBaseRoleId] = useState<string | "">("");
-  const [createIsActive, setCreateIsActive] = useState(true);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editRoleId, setEditRoleId] = useState<string>("");
-  const [editName, setEditName] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editIsActive, setEditIsActive] = useState(true);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [formMode, setFormMode] = useState<"create" | "edit">("create");
+  const [formRoleId, setFormRoleId] = useState<string>("");
+  const [formName, setFormName] = useState("");
+  const [formDescription, setFormDescription] = useState("");
+  const [formBaseRoleId, setFormBaseRoleId] = useState<string | "">("");
+  const [formIsActive, setFormIsActive] = useState(true);
+  const [formErrors, setFormErrors] = useState({ name: "" });
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteRoleId, setDeleteRoleId] = useState<string>("");
 
@@ -238,11 +235,39 @@ export const RolePermissionView: React.FC = () => {
   };
 
   const openCreateModal = () => {
-    setCreateName("");
-    setCreateDescription("");
-    setCreateBaseRoleId("");
-    setCreateIsActive(true);
-    setIsCreateOpen(true);
+    setFormMode("create");
+    setFormRoleId("");
+    setFormName("");
+    setFormDescription("");
+    setFormBaseRoleId("");
+    setFormIsActive(true);
+    setFormErrors({ name: "" });
+    setIsFormModalOpen(true);
+  };
+
+  const validateFormName = (value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return "Role name is required";
+    }
+    if (trimmed.length < 3) {
+      return "Role name must be at least 3 characters";
+    }
+    // Skip duplicate check for edit mode with same name
+    const isDuplicate = roles.some(r => {
+      if (formMode === "edit" && r.id === formRoleId) return false;
+      return r.name.toLowerCase() === trimmed.toLowerCase();
+    });
+    if (isDuplicate) {
+      return "A role with this name already exists";
+    }
+    return "";
+  };
+
+  const handleFormNameChange = (value: string) => {
+    setFormName(value);
+    const error = validateFormName(value);
+    setFormErrors({ name: error });
   };
 
   const createRoleColorPalette = [
@@ -255,74 +280,71 @@ export const RolePermissionView: React.FC = () => {
     "bg-red-50 text-red-700 border-red-200",
   ];
 
-  const handleCreateRole = () => {
-    const trimmed = createName.trim();
-    if (trimmed.length < 3) {
-      showToast({ type: "error", title: "Invalid name", message: "Role name must be at least 3 characters" });
-      return;
-    }
-    if (roles.some(r => r.name.toLowerCase() === trimmed.toLowerCase())) {
-      showToast({ type: "error", title: "Duplicate name", message: "A role with this name already exists" });
+  const handleFormSubmit = () => {
+    const nameError = validateFormName(formName);
+    
+    if (nameError) {
+      setFormErrors({ name: nameError });
       return;
     }
 
-    const newId = String(Date.now());
+    const trimmed = formName.trim();
     const date = new Date().toISOString().slice(0, 10);
-    const baseRole = roles.find(r => r.id === createBaseRoleId);
-    const permissions = baseRole ? [...baseRole.permissions] : [];
-    const color = createRoleColorPalette[roles.length % createRoleColorPalette.length];
 
-    const newRole: Role = {
-      id: newId,
-      name: trimmed,
-      description: createDescription.trim(),
-      type: "custom",
-      isActive: createIsActive,
-      userCount: 0,
-      color,
-      createdDate: date,
-      modifiedDate: date,
-      permissions,
-    };
+    if (formMode === "create") {
+      const newId = String(Date.now());
+      const baseRole = roles.find(r => r.id === formBaseRoleId);
+      const permissions = baseRole ? [...baseRole.permissions] : [];
+      const color = createRoleColorPalette[roles.length % createRoleColorPalette.length];
 
-    setRoles(prev => [newRole, ...prev]);
-    setSelectedRoleId(newId);
-    setIsCreateOpen(false);
-    showToast({ type: "success", title: "Role created", message: `${trimmed} has been added` });
+      const newRole: Role = {
+        id: newId,
+        name: trimmed,
+        description: formDescription.trim(),
+        type: "custom",
+        isActive: formIsActive,
+        userCount: 0,
+        color,
+        createdDate: date,
+        modifiedDate: date,
+        permissions,
+      };
+
+      setRoles(prev => [newRole, ...prev]);
+      setSelectedRoleId(newId);
+      setIsFormModalOpen(false);
+      showToast({ type: "success", title: "Role created", message: `${trimmed} has been added` });
+    } else {
+      // Edit mode
+      const baseRole = roles.find(r => r.id === formBaseRoleId);
+      const currentRole = roles.find(r => r.id === formRoleId);
+      
+      setRoles(prev => prev.map(r => r.id === formRoleId ? {
+        ...r,
+        name: trimmed,
+        description: formDescription.trim(),
+        isActive: formIsActive,
+        modifiedDate: date,
+        // Update permissions if base role changed
+        permissions: formBaseRoleId && baseRole ? [...baseRole.permissions] : r.permissions,
+      } : r));
+
+      setIsFormModalOpen(false);
+      showToast({ type: "success", title: "Role updated", message: `${trimmed} has been saved` });
+    }
   };
 
   const openEditModal = (roleId: string) => {
     const role = roles.find(r => r.id === roleId);
     if (!role) return;
-    setEditRoleId(role.id);
-    setEditName(role.name);
-    setEditDescription(role.description);
-    setEditIsActive(role.isActive);
-    setIsEditOpen(true);
-  };
-
-  const handleUpdateRole = () => {
-    const trimmed = editName.trim();
-    if (trimmed.length < 3) {
-      showToast({ type: "error", title: "Invalid name", message: "Role name must be at least 3 characters" });
-      return;
-    }
-    if (roles.some(r => r.id !== editRoleId && r.name.toLowerCase() === trimmed.toLowerCase())) {
-      showToast({ type: "error", title: "Duplicate name", message: "A role with this name already exists" });
-      return;
-    }
-
-    const date = new Date().toISOString().slice(0, 10);
-    setRoles(prev => prev.map(r => r.id === editRoleId ? {
-      ...r,
-      name: trimmed,
-      description: editDescription.trim(),
-      isActive: editIsActive,
-      modifiedDate: date,
-    } : r));
-
-    setIsEditOpen(false);
-    showToast({ type: "success", title: "Role updated", message: `${trimmed} has been saved` });
+    setFormMode("edit");
+    setFormRoleId(role.id);
+    setFormName(role.name);
+    setFormDescription(role.description);
+    setFormBaseRoleId("");
+    setFormIsActive(role.isActive);
+    setFormErrors({ name: "" });
+    setIsFormModalOpen(true);
   };
 
   const openDeleteModal = (roleId: string) => {
@@ -370,6 +392,10 @@ export const RolePermissionView: React.FC = () => {
             <span className="text-slate-700 font-medium">Role & Permissions</span>
           </div>
         </div>
+        <Button size="sm" className="flex items-center gap-2" onClick={openCreateModal}>
+          <Plus className="h-4 w-4" />
+          <span className="hidden sm:inline">New Role</span>
+        </Button>
       </div>
 
       {/* Main Content */}
@@ -379,21 +405,15 @@ export const RolePermissionView: React.FC = () => {
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
             {/* Search */}
             <div className="p-4 border-b border-slate-200 bg-slate-50">
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1 min-w-0">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search roles..."
-                    className="w-full h-10 pl-10 pr-4 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  />
-                </div>
-                <Button size="sm" className="flex items-center gap-2" onClick={openCreateModal}>
-                  <Plus className="h-4 w-4" />
-                  <span className="hidden xl:inline">New Role</span>
-                </Button>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search roles..."
+                  className="w-full h-10 pl-10 pr-4 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                />
               </div>
             </div>
 
@@ -816,98 +836,23 @@ export const RolePermissionView: React.FC = () => {
         </div>
       </div>
 
-      {/* Create Role Modal (wide, reusable) */}
-      <FormModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        onConfirm={handleCreateRole}
-        title="Create New Role"
-        confirmText="Create Role"
-        size="xl"
-      >
-        <div className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Role name</label>
-            <input
-              value={createName}
-              onChange={(e) => setCreateName(e.target.value)}
-              placeholder="e.g., Document Owner (Dept A)"
-              className="w-full h-11 px-3 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
-            />
-          </div>
-          <div className="pt-1">
-            <Checkbox
-              id="create-active"
-              checked={createIsActive}
-              onChange={(checked) => setCreateIsActive(!!checked)}
-              label="Active"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Description</label>
-            <textarea
-              value={createDescription}
-              onChange={(e) => setCreateDescription(e.target.value)}
-              placeholder="Short description of this role"
-              className="w-full min-h-[96px] px-3 py-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
-            />
-          </div>
-          <div>
-            <Select
-              label="Copy permissions from"
-              value={createBaseRoleId}
-              onChange={(val: string) => setCreateBaseRoleId(val)}
-              options={[{ label: "None (start from scratch)", value: "" }, ...roles.map(r => ({ label: r.name, value: r.id }))]}
-              placeholder="Select a role"
-              maxVisibleRows={4}
-            />
-          </div>
-          <div className="text-xs text-slate-500">
-            Note: New roles are created as <span className="font-medium text-slate-700">custom</span>. You can adjust permissions after creation.
-          </div>
-        </div>
-      </FormModal>
-
-      {/* Edit Role Modal */}
-      <FormModal
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-        onConfirm={handleUpdateRole}
-        title="Edit Role"
-        confirmText="Save Changes"
-        size="2xl"
-      >
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1.5 block">Role name</label>
-              <input
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                placeholder="Role name"
-                className="w-full h-11 px-3 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
-              />
-            </div>
-            <div className="flex items-end">
-              <Checkbox
-                id="edit-active"
-                checked={editIsActive}
-                onChange={(checked) => setEditIsActive(!!checked)}
-                label="Active"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Description</label>
-            <textarea
-              value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
-              placeholder="Short description of this role"
-              className="w-full min-h-[96px] px-3 py-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
-            />
-          </div>
-        </div>
-      </FormModal>
+      {/* Role Form Modal (Create/Edit) */}
+      <RoleFormModal
+        mode={formMode}
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        onConfirm={handleFormSubmit}
+        roles={roles}
+        name={formName}
+        description={formDescription}
+        baseRoleId={formBaseRoleId}
+        isActive={formIsActive}
+        errors={formErrors}
+        onNameChange={handleFormNameChange}
+        onDescriptionChange={setFormDescription}
+        onBaseRoleIdChange={setFormBaseRoleId}
+        onIsActiveChange={setFormIsActive}
+      />
 
       {/* Delete Role Confirm */}
       <AlertModal
