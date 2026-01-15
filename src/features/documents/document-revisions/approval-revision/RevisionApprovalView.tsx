@@ -276,9 +276,9 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     // Breadcrumbs
     const breadcrumbs = [
         { label: "Dashboard", onClick: onBack },
-        { label: "My Tasks", onClick: onBack },
-        { label: "Pending My Approval", onClick: onBack },
-        { label: `${revision.documentId} v${revision.version}`, isActive: true },
+        { label: "Document Control", onClick: onBack },
+        { label: "Document Revisions", onClick: onBack },
+        { label: "Revision Approval", isActive: true },
     ];
 
     return (

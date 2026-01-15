@@ -170,17 +170,17 @@ export const NewTemplateView: React.FC = () => {
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
                             <span className="hidden sm:inline">Dashboard</span>
                             <Home className="h-4 w-4 sm:hidden" />
-                            <ChevronRight className="h-4 w-4" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <span className="hidden sm:inline">Document Control</span>
                             <span className="sm:hidden">...</span>
-                            <ChevronRight className="h-4 w-4" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <button
                                 onClick={() => navigate("/documents/templates")}
                                 className="hover:text-slate-700 transition-colors"
                             >
                                 Template Library
                             </button>
-                            <ChevronRight className="h-4 w-4" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <span className="text-slate-700 font-medium">New Template</span>
                         </div>
                     </div>

@@ -149,7 +149,7 @@ const StatusBadge = ({ status }: { status: TemplateStatus }) => {
 const DropdownMenu: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  position: { top: number; left: number };
+  position: { top: number; left: number; showAbove?: boolean };
   onAction: (action: string) => void;
 }> = ({ isOpen, onClose, position, onAction }) => {
   if (!isOpen) return null;
@@ -167,8 +167,12 @@ const DropdownMenu: React.FC<{
       />
       {/* Menu */}
       <div
-        className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-        style={{ top: position.top, left: position.left }}
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        style={{ 
+          top: `${position.top}px`, 
+          left: `${position.left}px`,
+          transform: position.showAbove ? 'translateY(-100%)' : 'none'
+        }}
       >
         <div className="py-1">
           <button
@@ -385,7 +389,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
   const [createdToDate, setCreatedToDate] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedTemplateForLink, setSelectedTemplateForLink] = useState<Template | null>(null);
   const [columns, setColumns] = useState<TableColumn[]>([
@@ -444,10 +448,42 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
 
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-    setDropdownPosition({
-      top: rect.bottom + window.scrollY + 4,
-      left: rect.right + window.scrollX - 200,
-    });
+    
+    // Menu dimensions (3 items * ~40px per item + padding)
+    const menuHeight = 130;
+    const menuWidth = 200;
+    const safeMargin = 8;
+    
+    // Check available space
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    
+    // Show above if not enough space below AND there's more space above
+    const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+    
+    // Calculate vertical position
+    let top: number;
+    if (shouldShowAbove) {
+      top = rect.top + window.scrollY - 4;
+    } else {
+      top = rect.bottom + window.scrollY + 4;
+    }
+    
+    // Calculate horizontal position with safe margins
+    const viewportWidth = window.innerWidth;
+    let left = rect.right + window.scrollX - menuWidth;
+    
+    // Ensure menu doesn't overflow right edge
+    if (left + menuWidth > viewportWidth - safeMargin) {
+      left = viewportWidth - menuWidth - safeMargin + window.scrollX;
+    }
+    
+    // Ensure menu doesn't overflow left edge
+    if (left < safeMargin + window.scrollX) {
+      left = safeMargin + window.scrollX;
+    }
+    
+    setDropdownPosition({ top, left, showAbove: shouldShowAbove });
     setOpenDropdownId(templateId);
   };
 
@@ -490,10 +526,10 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
           <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
             <span className="hidden sm:inline">Dashboard</span>
             <Home className="h-4 w-4 sm:hidden" />
-            <ChevronRight className="h-4 w-4" />
+            <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>
-            <ChevronRight className="h-4 w-4" />
+            <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">Template Library</span>
           </div>
         </div>

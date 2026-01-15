@@ -81,14 +81,14 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                             )}
                         </div>
                         {/* Camera Button */}
-                        <Button
+                        <button
                             onClick={handleAvatarClick}
-                            variant="outline"
-                            className="absolute bottom-2 right-2 h-11 w-11 rounded-full bg-white border border-slate-300 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200 p-0"
+                            type="button"
+                            className="absolute bottom-2 right-2 h-11 w-11 rounded-full bg-white border-2 border-slate-300 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200 cursor-pointer"
                             title="Change avatar"
                         >
-                            <Camera className="h-5 w-5 text-slate-600 hover:text-emerald-600" />
-                        </Button>
+                            <Camera className="h-5 w-5 text-slate-700 group-hover:text-emerald-600" strokeWidth={2} />
+                        </button>
                         <input
                             ref={fileInputRef}
                             type="file"

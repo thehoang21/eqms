@@ -209,14 +209,14 @@ export const NewRevisionView: React.FC = () => {
                         <div className="flex items-center gap-1.5 text-slate-500 text-sm">
                             <button className="hover:text-slate-700 transition-colors hidden sm:inline">Dashboard</button>
                             <Home className="h-4 w-4 sm:hidden" />
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <button
                                 className="hover:text-slate-700 transition-colors hidden sm:inline"
                             >
                                 Document Control
                             </button>
                             <span className="sm:hidden">...</span>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <button
                                 onClick={() => navigate("/documents/all")}
                                 className="hover:text-slate-700 transition-colors hidden sm:inline"
@@ -224,7 +224,7 @@ export const NewRevisionView: React.FC = () => {
                                 All Documents
                             </button>
                             <span className="sm:hidden">...</span>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <span className="text-slate-700 font-medium">Impact Analysis</span>
                         </div>
                     </div>

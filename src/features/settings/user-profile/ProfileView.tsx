@@ -12,6 +12,7 @@ interface ProfileViewProps {
 export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
     const [activeTab, setActiveTab] = useState('account');
     const [avatarPreview, setAvatarPreview] = useState<string>('');
+    const [hasAvatarChanged, setHasAvatarChanged] = useState(false);
 
     // Password state
     const [passwordData, setPasswordData] = useState({
@@ -44,12 +45,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
 
     const [formData, setFormData] = useState(originalFormData);
 
-    // Check if there are any changes (email, phone, or password)
+    // Check if there are any changes (email, phone, password, or avatar)
     const hasChanges = 
         formData.email !== originalFormData.email || 
         formData.phone !== originalFormData.phone ||
         passwordData.newPassword !== '' || 
-        passwordData.confirmPassword !== '';
+        passwordData.confirmPassword !== '' ||
+        hasAvatarChanged;
 
     // Permissions state
     const [permissions] = useState({
@@ -68,6 +70,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
         const reader = new FileReader();
         reader.onloadend = () => {
             setAvatarPreview(reader.result as string);
+            setHasAvatarChanged(true);
         };
         reader.readAsDataURL(file);
     };
@@ -128,6 +131,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
             if (passwordData.newPassword) {
                 console.log('Changing password, Logout all sessions:', logoutAllSessions);
             }
+            if (hasAvatarChanged) {
+                console.log('Updating avatar');
+            }
             alert('Changes saved successfully!');
             if (passwordData.newPassword) {
                 setPasswordData({
@@ -135,6 +141,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
                     confirmPassword: '',
                 });
             }
+            setHasAvatarChanged(false);
         }
     };
 

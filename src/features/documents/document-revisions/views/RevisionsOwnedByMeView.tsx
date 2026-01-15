@@ -398,13 +398,13 @@ export const RevisionsOwnedByMeView: React.FC = () => {
             <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
               <span className="hidden sm:inline">Dashboard</span>
               <Home className="h-4 w-4 sm:hidden" />
-              <ChevronRight className="h-4 w-4" />
+              <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">Document Control</span>
               <span className="sm:hidden">...</span>
-              <ChevronRight className="h-4 w-4" />
+              <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">Document Revisions</span>
               <span className="sm:hidden">...</span>
-              <ChevronRight className="h-4 w-4" />
+              <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">Revisions Owned By Me</span>
             </div>
           </div>

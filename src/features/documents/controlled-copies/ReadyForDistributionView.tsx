@@ -3,16 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import {
   Search,
-  ChevronLeft,
-  ChevronRight,
   MoreVertical,
   Info,
   Edit,
   FileX,
   Home,
-  Clock,
   Link2,
-  FileOutput,
   Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
@@ -156,7 +152,7 @@ const Pagination: React.FC<{
 const DropdownMenu: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  position: { top: number; left: number };
+  position: { top: number; left: number; showAbove?: boolean };
   onViewDetails: () => void;
   onEdit: () => void;
   onCancel: () => void;
@@ -175,8 +171,12 @@ const DropdownMenu: React.FC<{
         aria-hidden="true"
       />
       <div
-        className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-        style={{ top: `${position.top}px`, left: `${position.left}px` }}
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        style={{ 
+          top: `${position.top}px`, 
+          left: `${position.left}px`,
+          transform: position.showAbove ? 'translateY(-100%)' : 'none'
+        }}
       >
         <div className="py-1">
           <button
@@ -247,7 +247,7 @@ export const ReadyForDistributionView: React.FC = () => {
 
   // Dropdown state
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
   const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
 
   // Create Shareable Link Modal state
@@ -295,10 +295,44 @@ export const ReadyForDistributionView: React.FC = () => {
     }
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-    setDropdownPosition({
-      top: rect.bottom + window.scrollY + 4,
-      left: rect.right + window.scrollX - 200,
-    });
+    
+    // Menu dimensions (approximate - 4 items * ~40px per item + padding)
+    const menuHeight = 170; // More accurate estimate
+    const menuWidth = 200;
+    
+    // Check available space
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    
+    // Show above if not enough space below AND there's more space above
+    const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+    
+    // Calculate vertical position
+    let top: number;
+    if (shouldShowAbove) {
+      // Position menu right above the button
+      top = rect.top + window.scrollY - 4;
+    } else {
+      // Position menu below the button
+      top = rect.bottom + window.scrollY + 4;
+    }
+    
+    // Calculate horizontal position with safe margins
+    const safeMargin = 8; // Minimum margin from viewport edge
+    const viewportWidth = window.innerWidth;
+    let left = rect.right + window.scrollX - menuWidth;
+    
+    // Ensure menu doesn't overflow right edge
+    if (left + menuWidth > viewportWidth - safeMargin) {
+      left = viewportWidth - menuWidth - safeMargin + window.scrollX;
+    }
+    
+    // Ensure menu doesn't overflow left edge
+    if (left < safeMargin + window.scrollX) {
+      left = safeMargin + window.scrollX;
+    }
+    
+    setDropdownPosition({ top, left, showAbove: shouldShowAbove });
     setOpenDropdownId(id);
   };
 
@@ -339,13 +373,13 @@ export const ReadyForDistributionView: React.FC = () => {
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
               <span className="hidden sm:inline">Dashboard</span>
               <Home className="h-4 w-4 sm:hidden" />
-              <ChevronRight className="h-4 w-4" />
+              <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">Document Control</span>
               <span className="sm:hidden">...</span>
-              <ChevronRight className="h-4 w-4" />
+              <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">Controlled Copies</span>
               <span className="sm:hidden">...</span>
-              <ChevronRight className="h-4 w-4" />
+              <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">Ready for Distribution</span>
             </div>
           </div>
@@ -465,10 +499,8 @@ export const ReadyForDistributionView: React.FC = () => {
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                         <span className="text-slate-700">{copy.openedBy}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm">
-                        <div className="max-w-md">
-                          <span className="text-slate-900">{copy.name}</span>
-                        </div>
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                        <span className="text-slate-900">{copy.name}</span>
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                         <span
@@ -477,7 +509,6 @@ export const ReadyForDistributionView: React.FC = () => {
                             "bg-blue-50 text-blue-700 border-blue-200"
                           )}
                         >
-                          <Clock className="h-3.5 w-3.5" />
                           {copy.status}
                         </span>
                       </td>

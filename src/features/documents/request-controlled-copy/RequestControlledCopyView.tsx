@@ -235,21 +235,21 @@ export const RequestControlledCopyView: React.FC = () => {
                     Dashboard
                   </button>
                   <Home className="h-4 w-4 sm:hidden" />
-                  <ChevronRight className="h-4 w-4 text-slate-400" />
+                  <span className="text-slate-400 mx-1">/</span>
                   <button
                     className="transition-colors hidden sm:inline"
                   >
                     Document Control
                   </button>
                   <span className="sm:hidden">...</span>
-                  <ChevronRight className="h-4 w-4 text-slate-400" />
+                  <span className="text-slate-400 mx-1">/</span>
                   <button
                     onClick={() => navigate('/documents/all')}
                     className="hover:text-slate-700 transition-colors"
                   >
                     All Documents
                   </button>
-                  <ChevronRight className="h-4 w-4 text-slate-400" />
+                  <span className="text-slate-400 mx-1">/</span>
                   <span className="text-slate-700 font-medium">{documentId}</span>
                 </div>
               </div>

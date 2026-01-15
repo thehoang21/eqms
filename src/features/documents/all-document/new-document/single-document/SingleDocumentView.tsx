@@ -193,20 +193,20 @@ export const SingleDocumentView: React.FC = () => {
                             >
                                 Dashboard
                             </button>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <button
                                 className="hover:text-slate-700 transition-colors"
                             >
                                 Document Control
                             </button>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <button
                                 onClick={() => navigate("/documents/all")}
                                 className="hover:text-slate-700 transition-colors"
                             >
                                 All Documents
                             </button>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <span className="text-slate-700 font-medium">Single Document Creation</span>
                         </div>
                     </div>

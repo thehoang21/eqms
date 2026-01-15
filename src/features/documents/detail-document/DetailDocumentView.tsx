@@ -228,7 +228,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                 Dashboard
               </button>
               <Home className="h-4 w-4 sm:hidden" />
-              <ChevronRight className="h-4 w-4 text-slate-400" />
+              <span className="text-slate-400 mx-1">/</span>
               <button
                 onClick={onBack}
                 className="hover:text-slate-700 transition-colors hidden sm:inline"
@@ -236,7 +236,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                 Document Control
               </button>
               <span className="sm:hidden">...</span>
-              <ChevronRight className="h-4 w-4 text-slate-400" />
+              <span className="text-slate-400 mx-1">/</span>
               <button
                 onClick={onBack}
                 className="hover:text-slate-700 transition-colors"

@@ -358,14 +358,14 @@ interface FiltersProps {
 - Dropdown style: `absolute right-0 left-0 top-full mt-2 z-50`
 
 ## 7. Navigation & Breadcrumbs
-- **Breadcrumb separator:** Sử dụng `<ChevronRight className="h-4 w-4 text-slate-400" />`
+- **Breadcrumb separator:** Sử dụng dấu `/` text: `<span className="text-slate-400 mx-1">/</span>`
 - **Breadcrumb structure:**
 ```tsx
 <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
   <span>Dashboard</span>
-  <ChevronRight className="h-4 w-4 text-slate-400" />
+  <span className="text-slate-400 mx-1">/</span>
   <span>Module Name</span>
-  <ChevronRight className="h-4 w-4 text-slate-400" />
+  <span className="text-slate-400 mx-1">/</span>
   <span className="text-slate-700 font-medium">Current Page</span>
 </div>
 ```
@@ -615,7 +615,7 @@ Khi có interactive elements bên trong clickable table rows:
 - [ ] Filters có responsive grid layout
 - [ ] Column customizer có drag-and-drop
 - [ ] useMemo cho filtered data
-- [ ] Breadcrumbs đúng format với ChevronRight
+- [ ] Breadcrumbs đúng format với dấu "/" separator
 - [ ] Animation classes cho smooth transitions
 
 ---

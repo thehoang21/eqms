@@ -333,7 +333,7 @@ interface DropdownMenuProps {
   triggerRef: React.RefObject<HTMLButtonElement>;
   isOpen: boolean;
   onClose: () => void;
-  position: { top: number; left: number };
+  position: { top: number; left: number; showAbove?: boolean };
   onViewDocument?: (documentId: string, tab?: string) => void;
   navigate: ReturnType<typeof useNavigate>;
   onPrintControlledCopy?: (document: Document) => void;
@@ -525,10 +525,11 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       />
       {/* Menu */}
       <div
-        className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
+          transform: position.showAbove ? 'translateY(-100%)' : 'none'
         }}
       >
         <div className="py-1">
@@ -643,7 +644,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [columns, setColumns] = useState<TableColumn[]>(config.defaultColumns);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [selectedDocumentTab, setSelectedDocumentTab] = useState<string>("general");
@@ -828,10 +829,42 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
       setOpenDropdownId(null);
     } else {
       const rect = event.currentTarget.getBoundingClientRect();
-      setDropdownPosition({
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX - 200 + rect.width,
-      });
+      
+      // Menu dimensions (varies by status, estimate max)
+      const menuHeight = 200;
+      const menuWidth = 200;
+      const safeMargin = 8;
+      
+      // Check available space
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      
+      // Show above if not enough space below AND there's more space above
+      const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+      
+      // Calculate vertical position
+      let top: number;
+      if (shouldShowAbove) {
+        top = rect.top + window.scrollY - 4;
+      } else {
+        top = rect.bottom + window.scrollY + 4;
+      }
+      
+      // Calculate horizontal position with safe margins
+      const viewportWidth = window.innerWidth;
+      let left = rect.right + window.scrollX - menuWidth;
+      
+      // Ensure menu doesn't overflow right edge
+      if (left + menuWidth > viewportWidth - safeMargin) {
+        left = viewportWidth - menuWidth - safeMargin + window.scrollX;
+      }
+      
+      // Ensure menu doesn't overflow left edge
+      if (left < safeMargin + window.scrollX) {
+        left = safeMargin + window.scrollX;
+      }
+      
+      setDropdownPosition({ top, left, showAbove: shouldShowAbove });
       setOpenDropdownId(docId);
     }
   };
@@ -867,10 +900,10 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
             <span className="hidden sm:inline">Dashboard</span>
             <Home className="h-4 w-4 sm:hidden" />
-            <ChevronRight className="h-4 w-4 text-slate-400" />
+            <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>
-            <ChevronRight className="h-4 w-4 text-slate-400" />
+            <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">{config.breadcrumbLast}</span>
           </div>
         </div>

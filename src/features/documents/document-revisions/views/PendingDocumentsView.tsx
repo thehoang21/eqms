@@ -23,116 +23,192 @@ type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Pr
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 type ViewType = "review" | "approval";
 
-interface Document {
+interface ReviewerApprover {
+  userId: string;
+  userName: string;
+  status: "Pending" | "Approved" | "Rejected";
+}
+
+interface Revision {
   id: string;
-  documentId: string;
-  title: string;
-  type: DocumentType;
-  version: string;
-  status: DocumentStatus;
-  effectiveDate: string;
-  validUntil: string;
-  author: string;
-  department: string;
+  documentNumber: string;
+  revisionNumber: string;
   created: string;
   openedBy: string;
-  description?: string;
+  revisionName: string;
+  state: DocumentStatus;
+  author: string;
+  effectiveDate: string;
+  validUntil: string;
+  documentName: string;
+  type: DocumentType;
+  department: string;
+  reviewers?: ReviewerApprover[];
+  approvers?: ReviewerApprover[];
 }
 
 // --- Mock Data ---
-const MOCK_REVIEW_DOCUMENTS: Document[] = [
+// Current logged-in user (simulated)
+const CURRENT_USER = {
+  id: "user-001",
+  name: "Dr. Sarah Johnson",
+  email: "sarah.johnson@company.com",
+  department: "Quality Assurance",
+};
+
+const MOCK_REVIEW_REVISIONS: Revision[] = [
   {
-    id: "1",
-    documentId: "SOP.0002.01",
-    title: "Batch Record Review Procedure",
-    type: "SOP",
-    version: "1.0",
-    status: "Pending Review",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "John Doe",
-    department: "Quality Assurance",
-    created: "2023-10-01",
+    id: "rev-001",
+    documentNumber: "SOP.0002.01",
+    revisionNumber: "2.0",
+    created: "2026-01-10",
     openedBy: "QA Admin",
-    description: "Procedure for reviewing batch records",
+    revisionName: "Batch Record Review Procedure Update",
+    state: "Pending Review",
+    author: "John Doe",
+    effectiveDate: "2026-01-20",
+    validUntil: "2027-01-20",
+    documentName: "Batch Record Review Procedure",
+    type: "SOP",
+    department: "Quality Assurance",
+    reviewers: [
+      { userId: "user-001", userName: "Dr. Sarah Johnson", status: "Pending" },
+      { userId: "user-002", userName: "Michael Chen", status: "Pending" },
+    ],
   },
   {
-    id: "2",
-    documentId: "POL.0001.01",
-    title: "Information Security Policy",
-    type: "Policy",
-    version: "2.0",
-    status: "Pending Review",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "Jane Smith",
-    department: "IT",
-    created: "2023-10-05",
+    id: "rev-002",
+    documentNumber: "POL.0001.01",
+    revisionNumber: "3.0",
+    created: "2026-01-12",
     openedBy: "IT Manager",
-    description: "Policy for information security",
+    revisionName: "Information Security Policy Revision",
+    state: "Pending Review",
+    author: "Jane Smith",
+    effectiveDate: "2026-02-01",
+    validUntil: "2027-02-01",
+    documentName: "Information Security Policy",
+    type: "Policy",
+    department: "IT",
+    reviewers: [
+      { userId: "user-001", userName: "Dr. Sarah Johnson", status: "Pending" },
+    ],
   },
   {
-    id: "3",
-    documentId: "FORM.0005.01",
-    title: "Lab Equipment Calibration Log",
-    type: "Form",
-    version: "1.2",
-    status: "Pending Review",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "Mike Johnson",
-    department: "Quality Control",
-    created: "2023-10-10",
+    id: "rev-003",
+    documentNumber: "FORM.0005.01",
+    revisionNumber: "1.5",
+    created: "2026-01-14",
     openedBy: "QC Supervisor",
-    description: "Log for equipment calibration",
+    revisionName: "Lab Equipment Calibration Log Update",
+    state: "Pending Review",
+    author: "Mike Johnson",
+    effectiveDate: "2026-01-25",
+    validUntil: "2027-01-25",
+    documentName: "Lab Equipment Calibration Log",
+    type: "Form",
+    department: "Quality Control",
+    reviewers: [
+      { userId: "user-001", userName: "Dr. Sarah Johnson", status: "Pending" },
+      { userId: "user-003", userName: "Emma Williams", status: "Pending" },
+    ],
+  },
+  // Revision not assigned to current user (should be filtered out)
+  {
+    id: "rev-007",
+    documentNumber: "SOP.0010.01",
+    revisionNumber: "1.0",
+    created: "2026-01-13",
+    openedBy: "Admin",
+    revisionName: "Other Department Procedure",
+    state: "Pending Review",
+    author: "Other Author",
+    effectiveDate: "2026-02-15",
+    validUntil: "2027-02-15",
+    documentName: "Other Department Document",
+    type: "SOP",
+    department: "Production",
+    reviewers: [
+      { userId: "user-999", userName: "Other Reviewer", status: "Pending" },
+    ],
   },
 ];
 
-const MOCK_APPROVAL_DOCUMENTS: Document[] = [
+const MOCK_APPROVAL_REVISIONS: Revision[] = [
   {
-    id: "1",
-    documentId: "SOP.0003.01",
-    title: "Production Line Setup",
-    type: "SOP",
-    version: "3.0",
-    status: "Pending Approval",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "Robert Brown",
-    department: "Production",
-    created: "2023-09-15",
+    id: "rev-004",
+    documentNumber: "SOP.0003.01",
+    revisionNumber: "4.0",
+    created: "2026-01-08",
     openedBy: "Production Manager",
-    description: "Procedure for setting up the production line",
+    revisionName: "Production Line Setup Revision",
+    state: "Pending Approval",
+    author: "Robert Brown",
+    effectiveDate: "2026-02-01",
+    validUntil: "2027-02-01",
+    documentName: "Production Line Setup",
+    type: "SOP",
+    department: "Production",
+    approvers: [
+      { userId: "user-001", userName: "Dr. Sarah Johnson", status: "Pending" },
+      { userId: "user-004", userName: "John Davis", status: "Pending" },
+    ],
   },
   {
-    id: "2",
-    documentId: "REP.0002.01",
-    title: "Validation Report for Autoclave",
-    type: "Report",
-    version: "1.0",
-    status: "Pending Approval",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "Emily Davis",
-    department: "Validation",
-    created: "2023-09-20",
+    id: "rev-005",
+    documentNumber: "REP.0002.01",
+    revisionNumber: "1.0",
+    created: "2026-01-09",
     openedBy: "Validation Specialist",
-    description: "Validation report for the new autoclave",
+    revisionName: "Autoclave Validation Report",
+    state: "Pending Approval",
+    author: "Emily Davis",
+    effectiveDate: "2026-02-05",
+    validUntil: "2027-02-05",
+    documentName: "Validation Report for Autoclave",
+    type: "Report",
+    department: "Validation",
+    approvers: [
+      { userId: "user-001", userName: "Dr. Sarah Johnson", status: "Pending" },
+    ],
   },
   {
-    id: "3",
-    documentId: "SPEC-RM-010",
-    title: "Raw Material Specification: Sodium Chloride",
-    type: "Specification",
-    version: "2.1",
-    status: "Pending Approval",
-    effectiveDate: "-",
-    validUntil: "-",
-    author: "David Wilson",
-    department: "Quality Control",
-    created: "2023-09-25",
+    id: "rev-006",
+    documentNumber: "SPEC.0001.01",
+    revisionNumber: "2.5",
+    created: "2026-01-11",
     openedBy: "QC Manager",
-    description: "Specification for Sodium Chloride raw material",
+    revisionName: "Sodium Chloride Specification Update",
+    state: "Pending Approval",
+    author: "David Wilson",
+    effectiveDate: "2026-02-10",
+    validUntil: "2027-02-10",
+    documentName: "Raw Material Specification: Sodium Chloride",
+    type: "Specification",
+    department: "Quality Control",
+    approvers: [
+      { userId: "user-001", userName: "Dr. Sarah Johnson", status: "Pending" },
+      { userId: "user-005", userName: "Dr. Lisa Park", status: "Pending" },
+    ],
+  },
+  // Revision not assigned to current user (should be filtered out)
+  {
+    id: "rev-008",
+    documentNumber: "POL.0020.01",
+    revisionNumber: "2.0",
+    created: "2026-01-12",
+    openedBy: "Admin",
+    revisionName: "Other Policy Revision",
+    state: "Pending Approval",
+    author: "Other Author",
+    effectiveDate: "2026-03-01",
+    validUntil: "2027-03-01",
+    documentName: "Other Policy Document",
+    type: "Policy",
+    department: "HR",
+    approvers: [
+      { userId: "user-888", userName: "Other Approver", status: "Pending" },
+    ],
   },
 ];
 
@@ -174,7 +250,7 @@ const StatusBadge = ({ status }: { status: DocumentStatus }) => {
 const DropdownMenu: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  position: { top: number; left: number };
+  position: { top: number; left: number; showAbove?: boolean };
   onAction: (action: string) => void;
   viewType: ViewType;
 }> = ({ isOpen, onClose, position, onAction, viewType }) => {
@@ -193,8 +269,12 @@ const DropdownMenu: React.FC<{
       />
       {/* Menu */}
       <div
-        className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-        style={{ top: position.top, left: position.left }}
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        style={{ 
+          top: `${position.top}px`, 
+          left: `${position.left}px`,
+          transform: position.showAbove ? 'translateY(-100%)' : 'none'
+        }}
       >
         <div className="py-1">
           <button
@@ -263,7 +343,8 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
   const [departmentFilter, setDepartmentFilter] = useState<string>("All");
-  const [authorFilter, setAuthorFilter] = useState<string>("All");
+  // Author filter is always set to current user for pending views
+  const [authorFilter, setAuthorFilter] = useState<string>(CURRENT_USER.name);
   const [createdFromDate, setCreatedFromDate] = useState<string>("");
   const [createdToDate, setCreatedToDate] = useState<string>("");
   const [effectiveFromDate, setEffectiveFromDate] = useState<string>("");
@@ -272,7 +353,7 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
   const [validToDate, setValidToDate] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
 
   const itemsPerPage = 10;
@@ -285,60 +366,67 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
           title: "Pending My Review",
           breadcrumbLast: "Pending My Review",
           statusFilter: "Pending Review" as DocumentStatus,
-          documents: MOCK_REVIEW_DOCUMENTS,
+          revisions: MOCK_REVIEW_REVISIONS,
         };
       case "approval":
         return {
           title: "Pending My Approval",
           breadcrumbLast: "Pending My Approval",
           statusFilter: "Pending Approval" as DocumentStatus,
-          documents: MOCK_APPROVAL_DOCUMENTS,
+          revisions: MOCK_APPROVAL_REVISIONS,
         };
       default:
         return {
           title: "Pending Documents",
           breadcrumbLast: "Pending Documents",
           statusFilter: "Pending Review" as DocumentStatus,
-          documents: [],
+          revisions: [],
         };
     }
   }, [viewType]);
 
-  // Filter documents
-  const filteredDocuments = useMemo(() => {
-    return config.documents.filter((doc) => {
-      const matchesSearch =
-        doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.documentId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
+  // Filter revisions - only show revisions assigned to current user
+  const filteredRevisions = useMemo(() => {
+    return config.revisions.filter((rev) => {
+      // First check if current user is assigned as reviewer/approver
+      const isAssignedToCurrentUser = viewType === "review"
+        ? rev.reviewers?.some(r => r.userId === CURRENT_USER.id && r.status === "Pending")
+        : rev.approvers?.some(a => a.userId === CURRENT_USER.id && a.status === "Pending");
+      
+      if (!isAssignedToCurrentUser) return false;
 
-      const matchesStatus = doc.status === config.statusFilter;
-      const matchesType = typeFilter === "All" || doc.type === typeFilter;
-      const matchesDepartment = departmentFilter === "All" || doc.department === departmentFilter;
-      const matchesAuthor = authorFilter === "All" || doc.author === authorFilter;
+      const matchesSearch =
+        rev.documentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rev.revisionName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rev.documentNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rev.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rev.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rev.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesStatus = rev.state === config.statusFilter;
+      const matchesType = typeFilter === "All" || rev.type === typeFilter;
+      const matchesDepartment = departmentFilter === "All" || rev.department === departmentFilter;
 
       // Date filtering
-      const matchesCreatedFrom = !createdFromDate || new Date(doc.created) >= new Date(createdFromDate);
-      const matchesCreatedTo = !createdToDate || new Date(doc.created) <= new Date(createdToDate);
-      const matchesEffectiveFrom = !effectiveFromDate || new Date(doc.effectiveDate) >= new Date(effectiveFromDate);
-      const matchesEffectiveTo = !effectiveToDate || new Date(doc.effectiveDate) <= new Date(effectiveToDate);
-      const matchesValidFrom = !validFromDate || new Date(doc.validUntil) >= new Date(validFromDate);
-      const matchesValidTo = !validToDate || new Date(doc.validUntil) <= new Date(validToDate);
+      const matchesCreatedFrom = !createdFromDate || new Date(rev.created) >= new Date(createdFromDate);
+      const matchesCreatedTo = !createdToDate || new Date(rev.created) <= new Date(createdToDate);
+      const matchesEffectiveFrom = !effectiveFromDate || new Date(rev.effectiveDate) >= new Date(effectiveFromDate);
+      const matchesEffectiveTo = !effectiveToDate || new Date(rev.effectiveDate) <= new Date(effectiveToDate);
+      const matchesValidFrom = !validFromDate || new Date(rev.validUntil) >= new Date(validFromDate);
+      const matchesValidTo = !validToDate || new Date(rev.validUntil) <= new Date(validToDate);
 
       return matchesSearch && matchesStatus && matchesType && matchesDepartment && 
-             matchesAuthor && matchesCreatedFrom && matchesCreatedTo && 
+             matchesCreatedFrom && matchesCreatedTo && 
              matchesEffectiveFrom && matchesEffectiveTo && matchesValidFrom && matchesValidTo;
     });
-  }, [searchQuery, config.statusFilter, config.documents, typeFilter, departmentFilter, authorFilter,
+  }, [searchQuery, config.statusFilter, config.revisions, typeFilter, departmentFilter, viewType,
       createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, 
       validFromDate, validToDate]);
 
-  const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredRevisions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentDocuments = filteredDocuments.slice(startIndex, endIndex);
+  const currentRevisions = filteredRevisions.slice(startIndex, endIndex);
 
   const handleDropdownToggle = (
     docId: string,
@@ -351,10 +439,42 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
 
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-    setDropdownPosition({
-      top: rect.bottom + window.scrollY + 4,
-      left: rect.right + window.scrollX - 200,
-    });
+    
+    // Menu dimensions (2 items * ~40px per item + padding)
+    const menuHeight = 90;
+    const menuWidth = 200;
+    const safeMargin = 8;
+    
+    // Check available space
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    
+    // Show above if not enough space below AND there's more space above
+    const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+    
+    // Calculate vertical position
+    let top: number;
+    if (shouldShowAbove) {
+      top = rect.top + window.scrollY - 4;
+    } else {
+      top = rect.bottom + window.scrollY + 4;
+    }
+    
+    // Calculate horizontal position with safe margins
+    const viewportWidth = window.innerWidth;
+    let left = rect.right + window.scrollX - menuWidth;
+    
+    // Ensure menu doesn't overflow right edge
+    if (left + menuWidth > viewportWidth - safeMargin) {
+      left = viewportWidth - menuWidth - safeMargin + window.scrollX;
+    }
+    
+    // Ensure menu doesn't overflow left edge
+    if (left < safeMargin + window.scrollX) {
+      left = safeMargin + window.scrollX;
+    }
+    
+    setDropdownPosition({ top, left, showAbove: shouldShowAbove });
     setOpenDropdownId(docId);
   };
 
@@ -396,13 +516,13 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
           <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
             <span className="hidden sm:inline">Dashboard</span>
             <Home className="h-4 w-4 sm:hidden" />
-            <ChevronRight className="h-4 w-4" />
+            <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>
-            <ChevronRight className="h-4 w-4" />
+            <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Document Revisions</span>
             <span className="sm:hidden">...</span>
-            <ChevronRight className="h-4 w-4" />
+            <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">{config.breadcrumbLast}</span>
           </div>
         </div>
@@ -445,6 +565,7 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
         validToDate={validToDate}
         onValidToDateChange={setValidToDate}
         disableStatusFilter={true}
+        authorFilterDisabled={true}
       />
 
       {/* Table */}
@@ -455,10 +576,12 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
               <tr>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Number</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Revision Number</th>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Created</th>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Opened By</th>
-                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Name</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Revision Name</th>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">State</th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Name</th>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Type</th>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Department</th>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Author</th>
@@ -468,35 +591,41 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
-              {currentDocuments.length > 0 ? (
-                currentDocuments.map((doc, index) => (
+              {currentRevisions.length > 0 ? (
+                currentRevisions.map((rev, index) => (
                   <tr
-                    key={doc.id}
-                    onClick={() => onViewDocument?.(doc.id)}
+                    key={rev.id}
+                    onClick={() => onViewDocument?.(rev.id)}
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                   >
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">{startIndex + index + 1}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                      <span className="font-medium text-emerald-600">{doc.documentId}</span>
+                      <span className="font-medium text-emerald-600">{rev.documentNumber}</span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.created}</td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.openedBy}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                      <span className="font-medium text-slate-900">{doc.title}</span>
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                        v{rev.revisionNumber}
+                      </span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap"><StatusBadge status={doc.status} /></td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.type}</td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.department}</td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.author}</td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.effectiveDate}</td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{doc.validUntil}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{rev.created}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{rev.openedBy}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <span className="font-medium text-slate-900">{rev.revisionName}</span>
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap"><StatusBadge status={rev.state} /></td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">{rev.documentName}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{rev.type}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{rev.department}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{rev.author}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{rev.effectiveDate}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">{rev.validUntil}</td>
                     <td
                       onClick={(e) => e.stopPropagation()}
                       className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                     >
                       <button
-                        ref={getButtonRef(doc.id)}
-                        onClick={(e) => handleDropdownToggle(doc.id, e)}
+                        ref={getButtonRef(rev.id)}
+                        onClick={(e) => handleDropdownToggle(rev.id, e)}
                         className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
                       >
                         <MoreVertical className="h-4 w-4 text-slate-600" />
@@ -506,12 +635,12 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
                 ))
               ) : (
                 <tr>
-                  <td colSpan={12} className="py-12 text-center">
+                  <td colSpan={13} className="py-12 text-center">
                     <div className="flex flex-col items-center justify-center text-slate-500">
                       <div className="bg-slate-50 p-4 rounded-full mb-3">
                         <FileText className="h-8 w-8 text-slate-400" />
                       </div>
-                      <p className="text-base font-medium text-slate-900">No documents found</p>
+                      <p className="text-base font-medium text-slate-900">No revisions found</p>
                       <p className="text-sm mt-1">Try adjusting your search or filters</p>
                     </div>
                   </td>
@@ -525,8 +654,8 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
         <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-white">
           <div className="text-sm text-slate-600">
             Showing <span className="font-medium text-slate-900">{startIndex + 1}</span> to{" "}
-            <span className="font-medium text-slate-900">{Math.min(endIndex, filteredDocuments.length)}</span> of{" "}
-            <span className="font-medium text-slate-900">{filteredDocuments.length}</span> results
+            <span className="font-medium text-slate-900">{Math.min(endIndex, filteredRevisions.length)}</span> of{" "}
+            <span className="font-medium text-slate-900">{filteredRevisions.length}</span> results
           </div>
           <div className="flex items-center gap-2">
             <Button
