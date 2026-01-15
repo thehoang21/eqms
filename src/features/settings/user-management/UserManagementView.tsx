@@ -5,14 +5,9 @@ import {
   Plus,
   MoreVertical,
   Edit,
-  Trash2,
   UserX,
   UserCheck,
-  ChevronRight,
-  Mail,
-  Phone,
   Home,
-  Key,
   KeyRound,
 } from "lucide-react";
 import { IconKey, IconTrash } from "@tabler/icons-react";
@@ -469,14 +464,14 @@ export const UserManagementView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-4 sm:space-y-5 lg:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">User Management</h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">User Management</h1>
+          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs sm:text-sm">
             <span className="hidden sm:inline">Dashboard</span>
-            <Home className="h-4 w-4 sm:hidden" />
+            <Home className="h-3.5 w-3.5 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Setting</span>
             <span className="sm:hidden">...</span>
@@ -486,20 +481,20 @@ export const UserManagementView: React.FC = () => {
         </div>
         <Button
           size="sm"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 whitespace-nowrap"
           onClick={handleAddUser}
         >
           <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">Add User</span>
+          <span>Add User</span>
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+      <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 sm:gap-4 items-end">
           {/* Search */}
           <div className="xl:col-span-3">
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Search</label>
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
@@ -507,7 +502,7 @@ export const UserManagementView: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by name, username, email..."
-                className="w-full h-11 pl-10 pr-4 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -625,13 +620,11 @@ export const UserManagementView: React.FC = () => {
                       )}
                       {col.id === "email" && (
                         <div className="flex items-center gap-2 text-slate-700">
-                          <Mail className="h-3.5 w-3.5 text-slate-400" />
                           {user.email}
                         </div>
                       )}
                       {col.id === "phone" && (
                         <div className="flex items-center gap-2 text-slate-700">
-                          <Phone className="h-3.5 w-3.5 text-slate-400" />
                           {user.phone}
                         </div>
                       )}
@@ -648,7 +641,7 @@ export const UserManagementView: React.FC = () => {
                   ))}
                   <td
                     onClick={(e) => e.stopPropagation()}
-                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50/80"
                   >
                     <button
                       ref={getButtonRef(user.id)}

@@ -366,10 +366,10 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                         onClick={onBack}
                         size="sm"
                         variant="outline"
-                        className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 transition-colors shadow-sm"
+                        className="gap-1.5 md:gap-2 px-3 sm:px-4 whitespace-nowrap self-start md:self-auto"
                     >
-                        <IconChevronLeft className="h-4 w-4" />
-                        Back to List
+                        <IconChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                        <span className="text-xs sm:text-sm">Back to List</span>
                     </Button>
                 </div>
             </div>

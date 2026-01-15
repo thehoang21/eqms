@@ -65,7 +65,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                 <div className="flex flex-col items-center">
                     {/* Avatar */}
                     <div className="relative group">
-                        <div className="h-48 w-48 rounded-full bg-slate-100 overflow-hidden border-2 border-slate-200 flex items-center justify-center">
+                        <div className="h-32 w-32 sm:h-40 sm:w-40 lg:h-48 lg:w-48 rounded-full bg-slate-100 overflow-hidden border-2 border-slate-200 flex items-center justify-center">
                             {avatarPreview ? (
                                 <img
                                     src={avatarPreview}
@@ -73,21 +73,21 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                     className="h-full w-full object-cover"
                                     onError={(e) => {
                                         e.currentTarget.style.display = 'none';
-                                        e.currentTarget.parentElement!.innerHTML = '<div class="h-full w-full flex items-center justify-center bg-emerald-50"><svg class="h-24 w-24 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></div>';
+                                        e.currentTarget.parentElement!.innerHTML = '<div class="h-full w-full flex items-center justify-center bg-emerald-50"><svg class="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></div>';
                                     }}
                                 />
                             ) : (
-                                <UserIcon className="h-24 w-24 text-emerald-600" strokeWidth={1.5} />
+                                <UserIcon className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 text-emerald-600" strokeWidth={1.5} />
                             )}
                         </div>
                         {/* Camera Button */}
                         <button
                             onClick={handleAvatarClick}
                             type="button"
-                            className="absolute bottom-2 right-2 h-11 w-11 rounded-full bg-white border-2 border-slate-300 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200 cursor-pointer"
+                            className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 rounded-full bg-white border-2 border-slate-300 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200 cursor-pointer"
                             title="Change avatar"
                         >
-                            <Camera className="h-5 w-5 text-slate-700 group-hover:text-emerald-600" strokeWidth={2} />
+                            <Camera className="h-4 w-4 sm:h-4.5 sm:w-4.5 lg:h-5 lg:w-5 text-slate-700" strokeWidth={2} />
                         </button>
                         <input
                             ref={fileInputRef}
@@ -99,7 +99,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                     </div>
 
                     {/* Upload Info */}
-                    <div className="mt-4 text-center">
+                    <div className="mt-3 sm:mt-4 text-center">
                         <p className="text-xs text-slate-500 leading-relaxed">
                             Allowed: <span className="font-medium text-slate-700">.png, .jpg</span>
                         </p>
@@ -109,7 +109,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                     </div>
 
                     {/* Privacy Link */}
-                    <div className="mt-6 pt-6 border-t border-slate-200 w-full">
+                    <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-200 w-full">
                         <a
                             href="#"
                             className="text-xs text-emerald-600 hover:text-emerald-700 hover:underline inline-flex items-center gap-1"

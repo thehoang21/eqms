@@ -125,11 +125,11 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
             />
             {/* Password Expiry Warning */}
             {showExpiryWarning && (
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                        <h4 className="text-sm font-semibold text-amber-900">Password Expiration Warning</h4>
-                        <p className="text-sm text-amber-700 mt-1">
+                <div className="p-3 sm:p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2 sm:gap-3">
+                    <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                        <h4 className="text-xs sm:text-sm font-semibold text-amber-900">Password Expiration Warning</h4>
+                        <p className="text-xs sm:text-sm text-amber-700 mt-1">
                             Your password will expire in <strong>{daysUntilExpiry} days</strong> (on {PASSWORD_EXPIRY_DATE}). 
                             Please change your password soon to avoid account access issues.
                         </p>
@@ -138,18 +138,18 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
             )}
 
             {/* Last Password Change Info */}
-            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3">
-                <Calendar className="h-5 w-5 text-slate-600" />
-                <div className="flex-1">
-                    <h4 className="text-sm font-medium text-slate-900">Last Password Change</h4>
-                    <p className="text-sm text-slate-600 mt-0.5">{LAST_PASSWORD_CHANGE}</p>
+            <div className="p-3 sm:p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2 sm:gap-3">
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-slate-600 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                    <h4 className="text-xs sm:text-sm font-medium text-slate-900">Last Password Change</h4>
+                    <p className="text-xs sm:text-sm text-slate-600 mt-0.5 truncate">{LAST_PASSWORD_CHANGE}</p>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
                 {/* Left Column - Change Password Form */}
-                <div className="lg:col-span-7">
-                    <div className="space-y-6">
+                <div className="xl:col-span-7">
+                    <div className="space-y-5 sm:space-y-6">
                         {/* Change Password Section */}
                         <div>
                             <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">Change Password</h3>
@@ -287,36 +287,38 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
 
                         {/* Active Sessions Management */}
                         <div>
-                            <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">Active Sessions</h3>
-                            <div className="space-y-3">
+                            <h3 className="text-sm font-semibold text-slate-900 mb-3 sm:mb-4 pb-2 border-b border-slate-200">Active Sessions</h3>
+                            <div className="space-y-2 sm:space-y-3">
                                 {ACTIVE_SESSIONS.map((session) => (
-                                    <div key={session.id} className="p-4 bg-slate-50 rounded-lg border border-slate-200 flex items-start gap-3">
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <h4 className="text-sm font-semibold text-slate-900">{session.device}</h4>
-                                                {session.current && (
-                                                    <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded">
-                                                        Current
-                                                    </span>
-                                                )}
+                                    <div key={session.id} className="p-3 sm:p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                        <div className="flex items-start gap-2 sm:gap-3">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
+                                                    <h4 className="text-xs sm:text-sm font-semibold text-slate-900">{session.device}</h4>
+                                                    {session.current && (
+                                                        <span className="px-1.5 sm:px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-medium rounded whitespace-nowrap">
+                                                            Current
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-[11px] sm:text-xs text-slate-600 truncate">
+                                                    {session.location} • IP: {session.ip}
+                                                </p>
+                                                <p className="text-[11px] sm:text-xs text-slate-500 mt-1">
+                                                    Last active: {session.lastActive}
+                                                </p>
                                             </div>
-                                            <p className="text-xs text-slate-600">
-                                                {session.location} • IP: {session.ip}
-                                            </p>
-                                            <p className="text-xs text-slate-500 mt-1">
-                                                Last active: {session.lastActive}
-                                            </p>
+                                            {!session.current && (
+                                                <Button
+                                                    size="xs"
+                                                    variant="outline"
+                                                    onClick={() => handleLogoutSession(session.id)}
+                                                    className="text-red-600 border-red-300 hover:bg-red-50 text-[11px] sm:text-xs px-2 sm:px-3 whitespace-nowrap flex-shrink-0"
+                                                >
+                                                    Log Out
+                                                </Button>
+                                            )}
                                         </div>
-                                        {!session.current && (
-                                            <Button
-                                                size="xs"
-                                                variant="outline"
-                                                onClick={() => handleLogoutSession(session.id)}
-                                                className="text-red-600 border-red-300 hover:bg-red-50"
-                                            >
-                                                Log Out
-                                            </Button>
-                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -325,19 +327,19 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
                 </div>
 
                 {/* Right Column - Password Requirements Info */}
-                <div className="lg:col-span-5">
-                    <div className="sticky top-4">
-                        <div className="p-5 bg-emerald-50 rounded-xl border border-emerald-200">
-                            <h4 className="text-sm font-semibold text-emerald-900 mb-3 flex items-center gap-2">
-                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="xl:col-span-5">
+                    <div className="xl:sticky xl:top-4">
+                        <div className="p-4 sm:p-5 bg-emerald-50 rounded-xl border border-emerald-200">
+                            <h4 className="text-sm font-semibold text-emerald-900 mb-2 sm:mb-3 flex items-center gap-2">
+                                <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
-                                Password Requirements
+                                <span className="text-xs sm:text-sm">Password Requirements</span>
                             </h4>
-                            <p className="text-xs text-emerald-700 mb-4">
+                            <p className="text-[11px] sm:text-xs text-emerald-700 mb-3 sm:mb-4">
                                 Your password must meet the following criteria for security:
                             </p>
-                            <div className="space-y-2.5">
+                            <div className="space-y-2">
                                 {[
                                     'Minimum <strong>8 characters</strong> in length',
                                     'At least one <strong>uppercase letter</strong> (A-Z)',
@@ -345,14 +347,14 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
                                     'At least one <strong>number</strong> (0-9)',
                                     'At least one <strong>special character</strong> (!@#$%^&*)',
                                 ].map((text, idx) => (
-                                    <div key={idx} className="flex items-start gap-2.5 text-sm text-slate-700">
+                                    <div key={idx} className="flex items-start gap-2 sm:gap-2.5">
                                         <div className="mt-0.5 h-1.5 w-1.5 rounded-full bg-emerald-600 flex-shrink-0"></div>
-                                        <span className="text-xs" dangerouslySetInnerHTML={{ __html: text }}></span>
+                                        <span className="text-[11px] sm:text-xs text-slate-700" dangerouslySetInnerHTML={{ __html: text }}></span>
                                     </div>
                                 ))}
                             </div>
-                            <div className="mt-4 pt-4 border-t border-emerald-200">
-                                <p className="text-[11px] text-emerald-700 leading-relaxed">
+                            <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-emerald-200">
+                                <p className="text-[10px] sm:text-[11px] text-emerald-700 leading-relaxed">
                                     <strong>Tip:</strong> Use a combination of letters, numbers, and symbols to create a strong password. Avoid using personal information or common words.
                                 </p>
                             </div>

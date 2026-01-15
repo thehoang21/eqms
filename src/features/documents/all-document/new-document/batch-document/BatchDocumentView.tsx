@@ -342,14 +342,16 @@ export const BatchDocumentView: React.FC = () => {
               <Home className="h-3.5 w-3.5 md:h-4 md:w-4 sm:hidden" />
               <span className="text-slate-400 mx-1">/</span>
               <button className="hover:text-slate-700 transition-colors">
-                Document Control
+                <span className="hidden md:inline">Document Control</span>
+                <span className="md:hidden">...</span>
               </button>
               <span className="text-slate-400 mx-1">/</span>
               <button
                 onClick={() => navigate("/documents/all")}
                 className="hover:text-slate-700 transition-colors"
               >
-                All Documents
+                <span className="hidden md:inline">All Documents</span>
+                <span className="md:hidden">...</span>
               </button>
               <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">

@@ -392,9 +392,9 @@ export const RolePermissionView: React.FC = () => {
             <span className="text-slate-700 font-medium">Role & Permissions</span>
           </div>
         </div>
-        <Button size="sm" className="flex items-center gap-2" onClick={openCreateModal}>
+        <Button size="sm" className="whitespace-nowrap gap-2" onClick={openCreateModal}>
           <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">New Role</span>
+          New Role
         </Button>
       </div>
 

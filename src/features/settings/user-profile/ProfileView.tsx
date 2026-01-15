@@ -167,27 +167,28 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
                     <div className="flex">
                         <button
                             className={cn(
-                                "px-4 py-3.5 text-sm font-medium transition-colors relative flex items-center gap-2",
+                                "flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-3.5 text-xs sm:text-sm font-medium transition-colors relative flex items-center justify-center sm:justify-start gap-2",
                                 activeTab === 'account'
                                     ? "text-emerald-600 border-b-2 border-emerald-600 bg-white"
                                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                             )}
                             onClick={() => setActiveTab('account')}
                         >
-                            <User className="h-4 w-4" />
-                            Account Information
+                            <User className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                            <span className="hidden xs:inline">Account</span>
+                            <span className="xs:hidden">Account</span>
                         </button>
                         <button
                             className={cn(
-                                "px-4 py-3.5 text-sm font-medium transition-colors relative flex items-center gap-2",
+                                "flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-3.5 text-xs sm:text-sm font-medium transition-colors relative flex items-center justify-center sm:justify-start gap-2",
                                 activeTab === 'password'
                                     ? "text-emerald-600 border-b-2 border-emerald-600 bg-white"
                                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                             )}
                             onClick={() => setActiveTab('password')}
                         >
-                            <KeyRound className="h-4 w-4" />
-                            Password
+                            <KeyRound className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                            <span>Password</span>
                         </button>
                     </div>
                 </div>
@@ -217,12 +218,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
                     )}
                 </div>
                 {/* Action Buttons Footer */}
-                <div className="flex items-center justify-end gap-3 px-6 md:px-8 py-4 bg-slate-50 border-t border-slate-200">
+                <div className="flex flex-row items-center justify-end gap-2 md:gap-3 px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-slate-50 border-t border-slate-200">
                     <Button
                         size='sm'
                         variant="outline"
                         onClick={handleCancel}
-                        className="px-5 py-2 text-sm"
+                        className="px-3 sm:px-4 md:px-5 py-2 text-xs sm:text-sm whitespace-nowrap"
                     >
                         Cancel
                     </Button>
@@ -230,7 +231,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
                         size='sm'
                         onClick={handleSubmit}
                         disabled={!hasChanges}
-                        className="px-5 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3 sm:px-4 md:px-5 py-2 text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                     >
                         Save Changes
                     </Button>

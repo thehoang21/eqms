@@ -85,16 +85,16 @@ export const DashboardView: React.FC = () => {
   const totalDocStatus = MOCK_CHART_DATA.documentStatus.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="space-y-4 sm:space-y-5 lg:space-y-6 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
             Dashboard
           </h1>
       </div>
 
       {/* Key Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
         {[
           {
             title: 'Total Documents',
@@ -153,20 +153,20 @@ export const DashboardView: React.FC = () => {
         ].map((card, idx) => (
           <div
             key={idx}
-            className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow cursor-default"
+            className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 lg:p-6 shadow-sm hover:shadow-md transition-shadow cursor-default"
           >
             <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className={cn('h-10 w-10 rounded-lg flex items-center justify-center shrink-0', card.bg)}>
-                    <card.icon className={cn('h-5 w-5', card.color)} />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                  <div className={cn('h-9 w-9 sm:h-10 sm:w-10 rounded-lg flex items-center justify-center shrink-0', card.bg)}>
+                    <card.icon className={cn('h-4 w-4 sm:h-5 sm:w-5', card.color)} />
                   </div>
-                  <p className="text-sm font-medium text-slate-600">{card.title}</p>
+                  <p className="text-xs sm:text-sm font-medium text-slate-600 truncate">{card.title}</p>
                 </div>
-                <div className="flex items-end justify-between">
-                  <h3 className="text-3xl font-bold text-slate-900">{card.value}</h3>
+                <div className="flex items-end justify-between gap-2">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 truncate">{card.value}</h3>
                   <div className={cn(
-                    'flex items-center gap-1 text-sm font-medium px-2 py-1 rounded-full',
+                    'flex items-center gap-1 text-xs sm:text-sm font-medium px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full whitespace-nowrap',
                     card.trendUp ? 'text-emerald-700 bg-emerald-50' : 'text-red-700 bg-red-50'
                   )}>
                     {card.trendUp ? (
@@ -184,19 +184,19 @@ export const DashboardView: React.FC = () => {
       </div>
 
       {/* Document Status & Tasks Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
         {/* Document Status Chart */}
-        <div className="xl:col-span-2 rounded-xl border border-slate-200 bg-white shadow-sm p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <h3 className="text-lg font-bold text-slate-900">Document Status</h3>
-            <p className="text-sm text-slate-500 mt-1">Distribution and trends</p>
+        <div className="xl:col-span-2 rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 lg:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div className="min-w-0">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900">Document Status</h3>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">Distribution and trends</p>
           </div>
-          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
+          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm overflow-x-auto">
             <button
               onClick={() => setChartType('bar')}
               className={cn(
-                'px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap rounded-md',
+                'px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1 sm:gap-2 whitespace-nowrap rounded-md',
                 chartType === 'bar'
                   ? 'bg-emerald-600 text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -519,7 +519,7 @@ export const DashboardView: React.FC = () => {
           )}
 
           {/* Legend */}
-          <div className="pt-4 border-t border-slate-100 grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="pt-3 sm:pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
             {MOCK_CHART_DATA.documentStatus.map((item, idx) => (
               <div key={idx} className="flex items-center gap-2">
                 <div className={cn('h-3 w-3 rounded-full', item.color)}></div>
@@ -534,13 +534,13 @@ export const DashboardView: React.FC = () => {
         </div>
 
         {/* Tasks by Module */}
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">Tasks by Module</h3>
-              <p className="text-sm text-slate-500 mt-1">Active workload</p>
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">Tasks by Module</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">Active workload</p>
             </div>
-            <FolderOpen className="h-5 w-5 text-slate-400" />
+            <FolderOpen className="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 flex-shrink-0" />
           </div>
           <div className="space-y-4">
             {MOCK_CHART_DATA.tasksByModule.map((item, idx) => (
@@ -562,22 +562,22 @@ export const DashboardView: React.FC = () => {
       </div>
 
       {/* Activities & Deadlines Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
         {/* Recent Activities */}
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">Recent Activities</h3>
-              <p className="text-sm text-slate-500 mt-1">Latest system events</p>
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">Recent Activities</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">Latest system events</p>
             </div>
-            <Activity className="h-5 w-5 text-slate-400" />
+            <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 flex-shrink-0" />
           </div>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {MOCK_ACTIVITIES.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-4 group hover:bg-slate-50 p-3 rounded-lg transition-colors">
+              <div key={activity.id} className="flex items-start gap-3 sm:gap-4 group hover:bg-slate-50 p-2 sm:p-3 rounded-lg transition-colors">
                 <div
                   className={cn(
-                    'h-10 w-10 rounded-full flex items-center justify-center shrink-0',
+                    'h-9 w-9 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shrink-0',
                     activity.status === 'success' && 'bg-emerald-50 text-emerald-600',
                     activity.status === 'warning' && 'bg-amber-50 text-amber-600',
                     activity.status === 'info' && 'bg-blue-50 text-blue-600'
@@ -597,21 +597,21 @@ export const DashboardView: React.FC = () => {
         </div>
 
         {/* Upcoming Deadlines */}
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900">Upcoming Deadlines</h3>
-              <p className="text-sm text-slate-500 mt-1">Tasks requiring attention</p>
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">Upcoming Deadlines</h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1">Tasks requiring attention</p>
             </div>
-            <Calendar className="h-5 w-5 text-slate-400" />
+            <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 flex-shrink-0" />
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {MOCK_DEADLINES.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-4 rounded-lg border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all cursor-pointer group"
+                className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all cursor-pointer group"
               >
-                <div className="flex items-center gap-4 flex-1">
+                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
                   <div
                     className={cn(
                       'h-2 w-2 rounded-full shrink-0',

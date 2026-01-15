@@ -386,9 +386,9 @@ const Pagination: React.FC<{
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-white">
-      <div className="flex items-center gap-2 text-sm text-slate-600">
-        <span>
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 border-t border-slate-200 bg-white">
+      <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-600">
+        <span className="truncate">
           Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
           <span className="font-medium text-slate-900">{endItem}</span> of{" "}
           <span className="font-medium text-slate-900">{totalItems}</span> results
@@ -398,7 +398,7 @@ const Pagination: React.FC<{
         <Button
           variant="outline"
           size="sm"
-          className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none"
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
         >
@@ -407,7 +407,7 @@ const Pagination: React.FC<{
         <Button
           variant="outline"
           size="sm"
-          className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none"
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
         >
@@ -533,23 +533,23 @@ const TaskFilters: React.FC<{
     },
   ];
   return (
-    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+    <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 sm:gap-4 items-end">
         {/* Row 1: Search, Module, Priority */}
         <div className="xl:col-span-6 w-full">
-          <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+          <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
             Search
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-              <Search className="h-4.5 w-4.5 text-slate-400" />
+            <div className="absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-slate-400" />
             </div>
             <input
               type="text"
               placeholder="Search by ID, name or description..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="block w-full pl-10 pr-3 h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
+              className="block w-full pl-9 sm:pl-10 pr-3 h-10 sm:h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm transition-all placeholder:text-slate-400"
             />
           </div>
         </div>
@@ -755,63 +755,63 @@ export const MyTasksView: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6 w-full flex-1 flex flex-col">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+    <div className="space-y-4 sm:space-y-5 lg:space-y-6 w-full flex-1 flex flex-col">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 shrink-0">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
             My Tasks
           </h1>
         </div>
 
         {/* View Mode Toggle */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg w-full sm:w-auto overflow-x-auto">
           <button
             onClick={() => setViewMode("list")}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
               viewMode === "list"
                 ? "bg-white text-emerald-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             )}
           >
-            <List className="h-4 w-4" />
-            <span className="hidden sm:inline">List</span>
+            <List className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span>List</span>
           </button>
           <button
             onClick={() => setViewMode("board")}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
               viewMode === "board"
                 ? "bg-white text-emerald-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             )}
           >
-            <LayoutGrid className="h-4 w-4" />
-            <span className="hidden sm:inline">Board</span>
+            <LayoutGrid className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span>Board</span>
           </button>
           <button
             onClick={() => setViewMode("calendar")}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
               viewMode === "calendar"
                 ? "bg-white text-emerald-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             )}
           >
-            <Calendar className="h-4 w-4" />
-            <span className="hidden sm:inline">Calendar</span>
+            <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span>Calendar</span>
           </button>
           <button
             onClick={() => setViewMode("gantt")}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all",
+              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
               viewMode === "gantt"
                 ? "bg-white text-emerald-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             )}
           >
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">Gantt</span>
+            <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span>Gantt</span>
           </button>
         </div>
       </div>
