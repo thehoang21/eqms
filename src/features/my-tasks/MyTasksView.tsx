@@ -1,43 +1,23 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import {
   Search,
-  Filter,
   Calendar,
-  AlertCircle,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  FileText,
-  AlertTriangle,
-  ShieldAlert,
-  GraduationCap,
   Users,
-  CalendarDays,
   ChevronDown,
   User,
   Check,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Activity,
-  Paperclip,
-  History,
-  MoreVertical,
   LayoutGrid,
   List,
   BarChart3,
-  GitBranch,
-  FileOutput,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { Task, ModuleType, ViewMode } from "./types";
+import { Task, ViewMode } from "./types";
 import { TaskTable } from "./components/TaskTable";
 import { TaskBoardView } from "./components/TaskBoardView";
 import { TaskCalendarView } from "./components/TaskCalendarView";
 import { TaskGanttView } from "./components/TaskGanttView";
 import { TaskDetailDrawer } from "./components/TaskDetailDrawer";
-import { ColumnCustomizer } from "./components/ColumnCustomizer";
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 import { TableColumn } from "./types";
 

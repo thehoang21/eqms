@@ -117,6 +117,7 @@ const MOCK_DEPARTMENTS: DepartmentItem[] = [
 export const DepartmentsTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<"All" | BusinessUnit>("All");
+  const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Inactive">("All");
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [showAddModal, setShowAddModal] = useState(false);
@@ -142,9 +143,13 @@ export const DepartmentsTab: React.FC = () => {
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
       const matchesBusinessUnit = businessUnitFilter === "All" || item.businessUnit === businessUnitFilter;
-      return matchesSearch && matchesBusinessUnit;
+      const matchesStatus =
+        statusFilter === "All" ||
+        (statusFilter === "Active" && item.isActive) ||
+        (statusFilter === "Inactive" && !item.isActive);
+      return matchesSearch && matchesBusinessUnit && matchesStatus;
     });
-  }, [mockData, searchQuery, businessUnitFilter]);
+  }, [mockData, searchQuery, businessUnitFilter, statusFilter]);
 
   const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -199,7 +204,7 @@ export const DepartmentsTab: React.FC = () => {
       <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search Input */}
-          <div className="xl:col-span-6">
+          <div className="xl:col-span-4">
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               Search
             </label>
@@ -213,7 +218,7 @@ export const DepartmentsTab: React.FC = () => {
           </div>
 
           {/* Business Unit Filter */}
-          <div className="xl:col-span-4">
+          <div className="xl:col-span-3">
             <Select
               label="Business Unit"
               value={businessUnitFilter}
@@ -227,6 +232,21 @@ export const DepartmentsTab: React.FC = () => {
             />
           </div>
 
+          {/* Status Filter */}
+          <div className="xl:col-span-3">
+            <Select
+              label="Status"
+              value={statusFilter}
+              onChange={(value) => setStatusFilter(value as "All" | "Active" | "Inactive")}
+              options={[
+                { label: "All Status", value: "All" },
+                { label: "Active", value: "Active" },
+                { label: "Inactive", value: "Inactive" },
+              ]}
+              placeholder="Filter by status"
+            />
+          </div>
+
           {/* Add Button */}
           <div className="xl:col-span-2">
             <Button
@@ -234,7 +254,7 @@ export const DepartmentsTab: React.FC = () => {
               size="sm"
               className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700"
             >
-            <Plus className="h-4 w-4" />
+              <Plus className="h-4 w-4" />
               Add New
             </Button>
           </div>
@@ -626,7 +646,6 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
                 className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700"
                 disabled={isSaving}
               >
-                <Save className="h-4 w-4" />
                 {isSaving ? "Saving..." : "Save"}
               </Button>
             </div>

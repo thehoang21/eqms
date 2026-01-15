@@ -1,12 +1,11 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
-import { Calendar, Clock, User, ChevronRight, ChevronDown, AlertCircle, ZoomIn, ZoomOut, BarChart3 } from "lucide-react";
+import { ChevronRight, ChevronDown, AlertCircle, ZoomIn, ZoomOut, BarChart3 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Task } from "../types";
 import {
   getModuleBadgeStyle,
   getModuleIcon,
   isOverdue,
-  getPriorityColor,
   getStatusBadgeStyle,
 } from "../utils";
 

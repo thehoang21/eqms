@@ -12,6 +12,7 @@ import {
   Save,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
+import { Select } from "@/components/ui/select/Select";
 import { cn } from "@/components/ui/utils";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
@@ -71,6 +72,7 @@ const MOCK_RETENTION_POLICIES: RetentionPolicyItem[] = [
 
 export const RetentionPoliciesTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Inactive">("All");
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [showAddModal, setShowAddModal] = useState(false);
@@ -95,9 +97,13 @@ export const RetentionPoliciesTab: React.FC = () => {
       const matchesSearch =
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
-      return matchesSearch;
+      const matchesStatus =
+        statusFilter === "All" ||
+        (statusFilter === "Active" && item.isActive) ||
+        (statusFilter === "Inactive" && !item.isActive);
+      return matchesSearch && matchesStatus;
     });
-  }, [mockData, searchQuery]);
+  }, [mockData, searchQuery, statusFilter]);
 
   const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -147,11 +153,15 @@ export const RetentionPoliciesTab: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-w-0 overflow-hidden">
-      {/* Toolbar */}
-      <div className="flex items-center justify-between gap-4 p-6 border-b border-slate-200">
-        <div className="flex-1 max-w-md">
-          <div className="relative">
+    <div className="flex-1 flex flex-col gap-6 min-h-0">
+      {/* Filter Card */}
+      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+          {/* Search Input */}
+          <div className="xl:col-span-6">
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Search
+            </label>
             <input
               type="text"
               placeholder="Search retention policies..."
@@ -160,19 +170,39 @@ export const RetentionPoliciesTab: React.FC = () => {
               className="w-full pl-4 pr-10 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
+
+          {/* Status Filter */}
+          <div className="xl:col-span-4">
+            <Select
+              label="Status"
+              value={statusFilter}
+              onChange={(value) => setStatusFilter(value as "All" | "Active" | "Inactive")}
+              options={[
+                { label: "All Status", value: "All" },
+                { label: "Active", value: "Active" },
+                { label: "Inactive", value: "Inactive" },
+              ]}
+              placeholder="Filter by status"
+            />
+          </div>
+
+          {/* Add Button */}
+          <div className="xl:col-span-2">
+            <Button
+              onClick={() => setShowAddModal(true)}
+              size="sm"
+              className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700"
+            >
+              <Plus className="h-4 w-4" />
+              Add New
+            </Button>
+          </div>
         </div>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          size="sm"
-          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700"
-        >
-          <Plus className="h-4 w-4" />
-          Add New
-        </Button>
       </div>
 
-      {/* Table */}
-      <div className="flex-1 overflow-x-auto">
+      {/* Table Container */}
+      <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-w-0 overflow-hidden">
+        <div className="flex-1 overflow-x-auto">
         <table className="w-full">
           <thead className="bg-slate-50 border-b-2 border-slate-200 sticky top-0 z-10">
             <tr>
@@ -251,9 +281,10 @@ export const RetentionPoliciesTab: React.FC = () => {
           </tbody>
         </table>
       </div>
+    </div>
 
-      {/* Dropdown Menu */}
-      {openDropdownId &&
+    {/* Dropdown Menu */}
+    {openDropdownId &&
         createPortal(
           <>
             <div

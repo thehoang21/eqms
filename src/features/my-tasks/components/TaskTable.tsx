@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Calendar, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Calendar, CheckCircle2 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import { Task, TableColumn } from "../types";
