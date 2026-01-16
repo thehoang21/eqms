@@ -41,7 +41,7 @@ interface SidebarProps {
 interface HoverMenuState {
   isOpen: boolean;
   item: NavItem | null;
-  position: { top: number; left: number };
+  position: { top: number; left: number; showAbove: boolean };
   expandedSubItems: string[];
 }
 
@@ -57,7 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
   const [hoverMenu, setHoverMenu] = useState<HoverMenuState>({
     isOpen: false,
     item: null,
-    position: { top: 0, left: 0 },
+    position: { top: 0, left: 0, showAbove: false },
     expandedSubItems: []
   });
 
@@ -69,31 +69,113 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
     }
   }, [activeId]);
 
+  // Lock body scroll when mobile sidebar is open
+  useEffect(() => {
+    if (isMobileOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+    };
+  }, [isMobileOpen]);
+
   // Calculate menu position to prevent viewport overflow
   const calculateMenuPosition = useCallback((rect: DOMRect) => {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     
-    let left = rect.right + MENU_GAP;
+    // Menu dimensions
+    const menuWidth = 280;
+    const menuMaxHeight = 400; // Max height estimate
+    const safeMargin = 8;
     
-    // Horizontal positioning
-    if (left + MENU_WIDTH > viewportWidth) {
-      const leftSide = rect.left - MENU_WIDTH - MENU_GAP;
-      left = leftSide >= 0 ? leftSide : viewportWidth - MENU_WIDTH - SAFE_PADDING;
+    // Check available space around the button
+    const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const spaceRight = viewportWidth - rect.right;
+    const spaceLeft = rect.left;
+    
+    // Determine if menu should show above based on available space
+    const shouldShowAbove = spaceBelow < menuMaxHeight && spaceAbove > spaceBelow;
+    
+    // Horizontal positioning - always to the right of sidebar with gap
+    let left: number;
+    if (spaceRight >= menuWidth + MENU_GAP) {
+      // Show on right side (default)
+      left = rect.right + MENU_GAP + window.scrollX;
+    } else if (spaceLeft >= menuWidth + MENU_GAP) {
+      // Show on left side if no space on right
+      left = rect.left - menuWidth - MENU_GAP + window.scrollX;
+    } else {
+      // Center in viewport if no space on either side
+      left = Math.max(safeMargin + window.scrollX, (viewportWidth - menuWidth) / 2 + window.scrollX);
     }
     
-    // Vertical positioning
-    const estimatedHeight = Math.min(viewportHeight - 120, MAX_MENU_HEIGHT);
-    let top = rect.top;
-    
-    if (top + estimatedHeight > viewportHeight) {
-      top = Math.max(SAFE_PADDING, viewportHeight - estimatedHeight - SAFE_PADDING);
+    // Ensure menu doesn't overflow horizontally
+    if (left + menuWidth > viewportWidth + window.scrollX - safeMargin) {
+      left = viewportWidth - menuWidth - safeMargin + window.scrollX;
     }
-    if (top < SAFE_PADDING) {
-      top = SAFE_PADDING;
+    if (left < safeMargin + window.scrollX) {
+      left = safeMargin + window.scrollX;
     }
     
-    return { top, left };
+    // Vertical positioning - align with button center, adjust if needed
+    let top: number;
+    
+    if (shouldShowAbove) {
+      // When showing above, position so bottom of menu aligns near bottom of button
+      top = rect.bottom + window.scrollY + safeMargin;
+    } else {
+      // When showing below, align menu top with button top
+      top = rect.top + window.scrollY;
+    }
+    
+    // Ensure menu stays within viewport bounds
+    const menuEstimatedHeight = Math.min(menuMaxHeight, viewportHeight - 2 * safeMargin);
+    
+    if (shouldShowAbove) {
+      // For showAbove mode, ensure there's enough space above
+      const menuBottom = top;
+      const menuTop = menuBottom - menuEstimatedHeight;
+      
+      if (menuTop < window.scrollY + safeMargin) {
+        // Not enough space above, adjust to fit
+        top = window.scrollY + safeMargin + menuEstimatedHeight;
+      }
+    } else {
+      // For normal mode, ensure menu doesn't overflow bottom
+      const menuBottom = top + menuEstimatedHeight;
+      
+      if (menuBottom > viewportHeight + window.scrollY - safeMargin) {
+        // Adjust to fit within viewport
+        top = Math.max(
+          window.scrollY + safeMargin,
+          viewportHeight + window.scrollY - menuEstimatedHeight - safeMargin
+        );
+      }
+    }
+    
+    return { top, left, showAbove: shouldShowAbove };
   }, []);
 
   // Handle click on menu item (collapsed mode)
@@ -347,26 +429,33 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         
         {/* Menu content */}
         <div
-          className="fixed z-[60] min-w-[240px] max-w-[280px] bg-white rounded-xl border border-slate-200 shadow-xl animate-in fade-in slide-in-from-left-2 duration-200"
+          className={cn(
+            "fixed z-[60] min-w-[240px] max-w-[280px] bg-white rounded-xl border border-slate-200 shadow-xl",
+            hoverMenu.position.showAbove
+              ? "animate-in fade-in slide-in-from-bottom-2 duration-200"
+              : "animate-in fade-in slide-in-from-left-2 duration-200"
+          )}
           style={{
             top: `${hoverMenu.position.top}px`,
             left: `${hoverMenu.position.left}px`,
+            transform: hoverMenu.position.showAbove ? 'translateY(-100%)' : 'none',
+            maxHeight: 'calc(100vh - 32px)',
           }}
         >
           {/* Menu header */}
-          <div className="px-4 py-3 border-b border-slate-100">
+          <div className="px-4 py-3 border-b border-slate-100 shrink-0">
             <div className="flex items-center gap-3">
               {hoverMenu.item.icon && (
                 <hoverMenu.item.icon className="h-5 w-5 text-slate-600" />
               )}
-              <span className="font-semibold text-sm text-slate-900">
+              <span className="font-semibold text-sm text-slate-900 truncate">
                 {hoverMenu.item.label}
               </span>
             </div>
           </div>
 
           {/* Menu items */}
-          <div className="py-1 max-h-[calc(100vh-120px)] overflow-y-auto custom-scrollbar">
+          <div className="py-1 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 120px)' }}>
             {hoverMenu.item.children?.map((child) => renderHoverSubItem(child))}
           </div>
         </div>

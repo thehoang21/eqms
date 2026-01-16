@@ -140,7 +140,7 @@ export const UserManagementView: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [columns, setColumns] = useState<TableColumn[]>([...DEFAULT_COLUMNS]);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, userId: "", userName: "" });
   const [statusModal, setStatusModal] = useState({ isOpen: false, userId: "", action: "" as "activate" | "deactivate" });
@@ -245,17 +245,49 @@ export const UserManagementView: React.FC = () => {
 
   const handleDropdownToggle = (userId: string, event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    
     if (openDropdownId === userId) {
       setOpenDropdownId(null);
-      return;
+    } else {
+      const rect = event.currentTarget.getBoundingClientRect();
+      
+      // Menu dimensions
+      const menuHeight = 200;
+      const menuWidth = 180;
+      const safeMargin = 8;
+      
+      // Check available space
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      
+      // Show above if not enough space below AND there's more space above
+      const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+      
+      // Calculate vertical position
+      let top: number;
+      if (shouldShowAbove) {
+        top = rect.top + window.scrollY - 4;
+      } else {
+        top = rect.bottom + window.scrollY + 4;
+      }
+      
+      // Calculate horizontal position with safe margins
+      const viewportWidth = window.innerWidth;
+      let left = rect.right + window.scrollX - menuWidth;
+      
+      // Ensure menu doesn't overflow right edge
+      if (left + menuWidth > viewportWidth - safeMargin) {
+        left = viewportWidth - menuWidth - safeMargin + window.scrollX;
+      }
+      
+      // Ensure menu doesn't overflow left edge
+      if (left < safeMargin + window.scrollX) {
+        left = safeMargin + window.scrollX;
+      }
+      
+      setDropdownPosition({ top, left, showAbove: shouldShowAbove });
+      setOpenDropdownId(userId);
     }
-    const button = event.currentTarget;
-    const rect = button.getBoundingClientRect();
-    setDropdownPosition({
-      top: rect.bottom + window.scrollY + 4,
-      left: rect.right + window.scrollX - 200,
-    });
-    setOpenDropdownId(userId);
   };
 
   const handleEdit = (user: User) => {
@@ -582,7 +614,7 @@ export const UserManagementView: React.FC = () => {
                     {col.label}
                   </th>
                 ))}
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-20 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>
@@ -641,7 +673,7 @@ export const UserManagementView: React.FC = () => {
                   ))}
                   <td
                     onClick={(e) => e.stopPropagation()}
-                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50/80"
+                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-10 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50/80"
                   >
                     <button
                       ref={getButtonRef(user.id)}
@@ -700,8 +732,19 @@ export const UserManagementView: React.FC = () => {
             />
             {/* Menu */}
             <div
-              className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-              style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
+              className={cn(
+                "fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl",
+                dropdownPosition.showAbove
+                  ? "animate-in fade-in slide-in-from-bottom-2 duration-200"
+                  : "animate-in fade-in slide-in-from-top-2 duration-200"
+              )}
+              style={{
+                top: dropdownPosition.showAbove
+                  ? `${dropdownPosition.top}px`
+                  : `${dropdownPosition.top}px`,
+                left: `${dropdownPosition.left}px`,
+                transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none',
+              }}
             >
               <div className="py-1">
                 <button

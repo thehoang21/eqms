@@ -293,13 +293,10 @@ body {
 @keyframes spin {
   from {
     transform: rotate(0deg);
-  }0%,
-    var(--color-slate-100) 20%,
-    var(--color-slate-200) 40%,
-    var(--color-slate-200) 100%
-  );
-  background-size: 200% 100%;
-  animation: loading 1.5s ease-in-out infinite;
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes loading {
@@ -476,6 +473,24 @@ body {
   100% {
     background-position: -200% 0;
   }
+}
+
+/* Animated Gradient Background */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 15s ease infinite;
 }
 
 /* Custom Classes for QMS */
