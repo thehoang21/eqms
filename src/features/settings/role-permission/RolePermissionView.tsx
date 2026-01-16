@@ -2,7 +2,8 @@ import React, { useState, useMemo } from "react";
 import { 
   ChevronRight, Home, Plus, Save, Search, Shield, AlertCircle, Users, Lock, CheckCircle2,
   FileText, GraduationCap, AlertTriangle, GitPullRequest, Repeat, History, Settings, Eye,
-  FilePlus, Edit3, Trash2, CheckCircle, Archive, Download, UserPlus, XCircle, ChevronDown, ChevronUp, Filter
+  FilePlus, Edit3, Trash2, CheckCircle, Archive, Download, UserPlus, XCircle, ChevronDown, ChevronUp, Filter,
+  ShieldAlert, Truck, Wrench
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
@@ -25,7 +26,6 @@ export const RolePermissionView: React.FC = () => {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(PERMISSION_GROUPS.map(g => g.id)));
   const [permissionSearch, setPermissionSearch] = useState("");
   const [actionFilters, setActionFilters] = useState<Set<string>>(new Set());
-  const [showAuditOnly, setShowAuditOnly] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [formMode, setFormMode] = useState<"create" | "edit">("create");
   const [formRoleId, setFormRoleId] = useState<string>("");
@@ -36,6 +36,10 @@ export const RolePermissionView: React.FC = () => {
   const [formErrors, setFormErrors] = useState({ name: "" });
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteRoleId, setDeleteRoleId] = useState<string>("");
+  const [isDiscardConfirmOpen, setIsDiscardConfirmOpen] = useState(false);
+  const [isSaveConfirmOpen, setIsSaveConfirmOpen] = useState(false);
+  const [isRoleSwitchConfirmOpen, setIsRoleSwitchConfirmOpen] = useState(false);
+  const [pendingRoleId, setPendingRoleId] = useState<string>("");
 
   const selectedRole = useMemo(
     () => roles.find((r) => r.id === selectedRoleId),
@@ -51,14 +55,22 @@ export const RolePermissionView: React.FC = () => {
 
   const handleRoleSelect = (roleId: string) => {
     if (hasUnsavedChanges) {
-      if (!confirm("You have unsaved changes. Do you want to discard them?")) {
-        return;
-      }
-      setHasUnsavedChanges(false);
+      setPendingRoleId(roleId);
+      setIsRoleSwitchConfirmOpen(true);
+      return;
     }
     setSelectedRoleId(roleId);
     const role = roles.find(r => r.id === roleId);
     setOriginalPermissions(role?.permissions || []);
+  };
+
+  const confirmRoleSwitch = () => {
+    setHasUnsavedChanges(false);
+    setSelectedRoleId(pendingRoleId);
+    const role = roles.find(r => r.id === pendingRoleId);
+    setOriginalPermissions(role?.permissions || []);
+    setIsRoleSwitchConfirmOpen(false);
+    setPendingRoleId("");
   };
 
   const handlePermissionToggle = (permissionId: string) => {
@@ -177,6 +189,9 @@ export const RolePermissionView: React.FC = () => {
       audit_trail: History,
       user_management: Users,
       settings: Settings,
+      risk_management: ShieldAlert,
+      supplier_quality: Truck,
+      equipment: Wrench,
     };
     return iconMap[moduleId] || Shield;
   };
@@ -220,11 +235,11 @@ export const RolePermissionView: React.FC = () => {
   const clearPermissionFilters = () => {
     setPermissionSearch("");
     setActionFilters(new Set());
-    setShowAuditOnly(false);
   };
 
   const expandAll = () => setExpandedGroups(new Set(PERMISSION_GROUPS.map(g => g.id)));
   const collapseAll = () => setExpandedGroups(new Set());
+  const areAllExpanded = expandedGroups.size === PERMISSION_GROUPS.length;
 
   const toggleGroup = (groupId: string) => {
     setExpandedGroups(prev => {
@@ -506,331 +521,167 @@ export const RolePermissionView: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Panel - Permission Matrix */}
-        <div className="lg:col-span-8 xl:col-span-9">
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                {/* Right Panel - Permission Matrix */}
+        <div className="lg:col-span-8 xl:col-span-9 flex flex-col h-full">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[calc(100vh-140px)]">
             {/* Header */}
-            <div className="p-5 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h2 className="text-lg font-bold text-slate-900 mb-1">
-                    {selectedRole?.name}
-                  </h2>
-                  <p className="text-sm text-slate-600">{selectedRole?.description}</p>
-                </div>
-                {hasUnsavedChanges && (
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-100 border border-amber-200">
-                    <AlertCircle className="h-4 w-4 text-amber-700" />
-                    <span className="text-sm font-medium text-amber-700">Unsaved Changes</span>
-                  </div>
-                )}
+            <div className="px-6 py-4 border-b border-slate-200 bg-white shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="flex-1">
+                <h2 className="text-lg font-bold text-slate-900">
+                  {selectedRole?.name}
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">{selectedRole?.description || "Manage permissions and access levels for this role"}</p>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-slate-700">
-                      <span className="font-semibold text-emerald-700">{permissionCount.selected}</span> of{" "}
-                      <span className="font-semibold text-slate-900">{permissionCount.total}</span> permissions enabled
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDiscardChanges}
-                    disabled={!hasUnsavedChanges}
-                  >
-                    Discard
-                  </Button>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={handleSaveChanges}
-                    disabled={!hasUnsavedChanges}
-                    className="flex items-center gap-2"
-                  >
-                    <Save className="h-4 w-4" />
-                    Save Changes
-                  </Button>
-                </div>
+              <div className="flex items-center gap-3 md:shrink-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsDiscardConfirmOpen(true)}
+                  disabled={!hasUnsavedChanges}
+                  className="text-slate-600 hover:text-slate-900 flex-1 md:flex-none"
+                >
+                  Discard
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => setIsSaveConfirmOpen(true)}
+                  disabled={!hasUnsavedChanges}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[100px] gap-2 flex-1 md:flex-none"
+                >
+                  <Save className="h-4 w-4" />
+                  Save Changes
+                </Button>
               </div>
             </div>
 
-            {/* Filters Bar */}
-            <div className="px-5 py-3 border-b border-slate-200 bg-white">
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="relative w-full md:w-72">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                    <input
-                      type="text"
-                      value={permissionSearch}
-                      onChange={(e) => setPermissionSearch(e.target.value)}
-                      placeholder="Search permissions..."
-                      className="w-full h-10 pl-10 pr-10 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    />
-                  </div>
-                  <div className="hidden md:flex items-center gap-2 ml-auto">
-                    <Button variant="outline" size="sm" onClick={expandAll}>
-                      <ChevronDown className="h-4 w-4 mr-1 rotate-180" /> Expand all
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={collapseAll}>
-                      <ChevronDown className="h-4 w-4 mr-1" /> Collapse all
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={clearPermissionFilters}
-                      disabled={!permissionSearch && actionFilters.size === 0 && !showAuditOnly}
-                      className="flex items-center gap-2"
-                    >
-                      <IconX className="h-4 w-4" /> Clear
-                    </Button>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                  {ACTIONS.map((a) => {
-                    const active = actionFilters.has(a);
-                    return (
-                      <Button
-                        key={a}
-                        size="xs"
-                        variant={active ? "default" : "outline"}
-                        onClick={() => toggleActionFilter(a)}
-                        className="capitalize"
+            {/* Toolbar */}
+            <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center gap-4 shrink-0">
+               <div className="relative flex-1 max-w-sm">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    type="text"
+                    value={permissionSearch}
+                    onChange={(e) => setPermissionSearch(e.target.value)}
+                    placeholder="Search permissions..."
+                    className="w-full h-9 pl-9 pr-4 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  />
+               </div>
+               <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={areAllExpanded ? collapseAll : expandAll} 
+                  className="h-9 px-3 text-xs md:text-sm bg-white min-w-[115px]"
+               >
+                  {areAllExpanded ? (
+                     <>
+                        <ChevronUp className="h-3.5 w-3.5 mr-1.5" /> Collapse All
+                     </>
+                  ) : (
+                     <>
+                        <ChevronDown className="h-3.5 w-3.5 mr-1.5" /> Expand All
+                     </>
+                  )}
+               </Button>
+            </div>
+
+            {/* Content List */}
+            <div className="flex-1 overflow-y-auto bg-white custom-scrollbar">
+              <div className="min-h-full">
+                {PERMISSION_GROUPS.map((group) => {
+                  const visiblePermissions = group.permissions.filter((permission) => {
+                        const matchesSearch =
+                          !permissionSearch ||
+                          permission.label.toLowerCase().includes(permissionSearch.toLowerCase()) ||
+                          permission.description.toLowerCase().includes(permissionSearch.toLowerCase());
+                        const matchesAction = actionFilters.size === 0 || actionFilters.has(permission.action);
+                        return matchesSearch && matchesAction;
+                  });
+
+                  if (visiblePermissions.length === 0) return null;
+
+                  const groupCount = getGroupPermissionCount(group);
+                  const isAllSelected = groupCount.selected === groupCount.total;
+                  const isExpanded = expandedGroups.has(group.id);
+                  const ModuleIcon = getModuleIcon(group.id);
+
+                  return (
+                    <div key={group.id} className="border-b border-slate-100 last:border-0 border-l-[3px] border-l-transparent hover:border-l-emerald-500 transition-all">
+                      {/* Group Header */}
+                      <div 
+                         onClick={() => toggleGroup(group.id)}
+                         className="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-50 transition-colors select-none group/header"
                       >
-                        {a}
-                      </Button>
-                    );
-                  })}
-                  <div className="ml-auto flex items-center">
-                    <Checkbox
-                      id="audit-only"
-                      checked={showAuditOnly}
-                      onChange={(checked) => setShowAuditOnly(!!checked)}
-                      label="Audit required only"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Permission Groups */}
-            <div className="max-h-[600px] overflow-y-auto">
-              <div className="p-5 space-y-4">
-              {PERMISSION_GROUPS.map((group) => {
-                const groupCount = getGroupPermissionCount(group);
-                const allSelected = groupCount.selected === groupCount.total;
-                const someSelected = groupCount.selected > 0 && groupCount.selected < groupCount.total;
-                const isExpanded = expandedGroups.has(group.id);
-                const ModuleIcon = getModuleIcon(group.id);
-
-                return (
-                  <div key={group.id} className="border-2 border-slate-200 rounded-xl overflow-hidden transition-all hover:border-slate-300">
-                    {/* Group Header - Clickable */}
-                    <div
-                      onClick={() => toggleGroup(group.id)}
-                      className="w-full bg-gradient-to-r from-slate-50 to-slate-100 px-5 py-4 border-b border-slate-200 hover:from-slate-100 hover:to-slate-50 transition-all cursor-pointer"
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <div className="flex items-center gap-4">
-                          {/* Module Icon */}
-                          <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-white border-2 border-emerald-200 text-emerald-600 shrink-0">
-                            <ModuleIcon className="h-5 w-5" />
-                          </div>
-                          
-                          {/* Checkbox */}
-                          <div onClick={(e) => e.stopPropagation()}>
-                            <Checkbox
-                              id={`group-${group.id}`}
-                              checked={allSelected}
-                              onChange={(checked) => handleSelectAll(group, checked)}
-                              label=""
-                              className="scale-110"
-                            />
-                          </div>
-                          
-                          {/* Group Info */}
-                          <div className="text-left">
-                            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                              {group.name}
-                              {allSelected && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
-                                  <CheckCircle className="h-3 w-3" />
-                                  All Enabled
-                                </span>
-                              )}
-                            </h3>
-                            <p className="text-xs text-slate-600 mt-1">{group.description}</p>
-                          </div>
-                        </div>
-                        
-                        {/* Right Side - Counter & Expand Icon */}
-                        <div className="flex items-center gap-3">
-                          <span className={cn(
-                            "text-sm font-bold px-3 py-1.5 rounded-lg border-2",
-                            allSelected 
-                              ? "bg-emerald-50 text-emerald-700 border-emerald-300" 
-                              : someSelected 
-                              ? "bg-blue-50 text-blue-700 border-blue-300" 
-                              : "bg-slate-100 text-slate-600 border-slate-300"
-                          )}>
-                            {groupCount.selected} / {groupCount.total}
-                          </span>
-                          {isExpanded ? (
-                            <ChevronUp className="h-5 w-5 text-slate-500" />
-                          ) : (
-                            <ChevronDown className="h-5 w-5 text-slate-500" />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Group Permissions - Collapsible */}
-                    {isExpanded && (
-                      <div className="p-5 bg-white">
-                        <div className="space-y-3">
-                          {group.permissions
-                            .filter((permission) => {
-                              const matchesSearch =
-                                !permissionSearch ||
-                                permission.label.toLowerCase().includes(permissionSearch.toLowerCase()) ||
-                                permission.description.toLowerCase().includes(permissionSearch.toLowerCase());
-                              const matchesAction = actionFilters.size === 0 || actionFilters.has(permission.action);
-                              const matchesAudit = !showAuditOnly || isALCOAPlusRequired(permission.id);
-                              return matchesSearch && matchesAction && matchesAudit;
-                            })
-                            .map((permission) => {
-                            const isChecked = selectedRole?.permissions.includes(permission.id) || false;
-                            const requiresAudit = isALCOAPlusRequired(permission.id);
-                            const ActionIcon = getActionIcon(permission.action);
-
-                            return (
-                              <div
-                                key={permission.id}
-                                className={cn(
-                                  "flex items-start gap-4 p-4 rounded-xl border-2 transition-all group",
-                                  isChecked 
-                                    ? "bg-gradient-to-r from-emerald-50 to-emerald-100/50 border-emerald-300 shadow-md" 
-                                    : "bg-white border-slate-200 hover:border-emerald-200 hover:shadow-sm"
-                                )}
-                              >
-                                {/* Checkbox */}
-                                <div className="pt-1">
-                                  <Checkbox
-                                    id={permission.id}
-                                    checked={isChecked}
-                                    onChange={(checked) => handlePermissionToggle(permission.id)}
-                                    label=""
-                                    className="scale-125"
-                                  />
-                                </div>
-                                
-                                {/* Action Icon */}
-                                <div className={cn(
-                                  "flex items-center justify-center h-10 w-10 rounded-lg shrink-0 transition-all",
-                                  isChecked 
-                                    ? "bg-white border-2 border-emerald-400 shadow-sm" 
-                                    : "bg-slate-50 border-2 border-slate-200 group-hover:border-slate-300"
-                                )}>
-                                  <ActionIcon className={cn(
-                                    "h-5 w-5",
-                                    isChecked ? getActionColor(permission.action) : "text-slate-400"
-                                  )} />
-                                </div>
-
-                                {/* Permission Details */}
-                                <div className="flex-1 min-w-0">
-                                  {/* Title Row */}
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <label
-                                      htmlFor={permission.id}
-                                      className={cn(
-                                        "font-semibold text-sm cursor-pointer",
-                                        isChecked ? "text-slate-900" : "text-slate-700"
-                                      )}
-                                    >
-                                      {permission.label}
-                                    </label>
-                                    {requiresAudit && (
-                                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300 shrink-0">
-                                        <Lock className="h-3 w-3" />
-                                        Audit Required
-                                      </span>
-                                    )}
-                                  </div>
-                                  
-                                  {/* Description */}
-                                  <p className="text-xs text-slate-600 mb-2 leading-relaxed">{permission.description}</p>
-                                  
-                                  {/* Action Badge */}
-                                  <div className="flex items-center gap-2">
-                                    <span className={cn(
-                                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border-2",
-                                      isChecked 
-                                        ? cn(
-                                            "bg-white",
-                                            permission.action === "view" && "border-slate-300 text-slate-700",
-                                            permission.action === "create" && "border-emerald-300 text-emerald-700",
-                                            permission.action === "edit" && "border-blue-300 text-blue-700",
-                                            permission.action === "delete" && "border-red-300 text-red-700",
-                                            permission.action === "approve" && "border-purple-300 text-purple-700",
-                                            permission.action === "review" && "border-cyan-300 text-cyan-700",
-                                            permission.action === "archive" && "border-amber-300 text-amber-700",
-                                            permission.action === "export" && "border-indigo-300 text-indigo-700",
-                                            permission.action === "assign" && "border-teal-300 text-teal-700",
-                                            permission.action === "close" && "border-orange-300 text-orange-700"
-                                          )
-                                        : "bg-slate-50 border-slate-200 text-slate-500"
-                                    )}>
-                                      {permission.action}
-                                    </span>
-                                    {isChecked && (
-                                      <span className="text-xs text-emerald-700 font-medium flex items-center gap-1">
-                                        <CheckCircle className="h-3.5 w-3.5" />
-                                        Enabled
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                          {group.permissions.filter((permission) => {
-                            const matchesSearch =
-                              !permissionSearch ||
-                              permission.label.toLowerCase().includes(permissionSearch.toLowerCase()) ||
-                              permission.description.toLowerCase().includes(permissionSearch.toLowerCase());
-                            const matchesAction = actionFilters.size === 0 || actionFilters.has(permission.action);
-                            const matchesAudit = !showAuditOnly || isALCOAPlusRequired(permission.id);
-                            return matchesSearch && matchesAction && matchesAudit;
-                          }).length === 0 && (
-                            <div className="flex items-center justify-center p-6 text-sm text-slate-600 bg-slate-50 border border-dashed border-slate-200 rounded-lg">
-                              No permissions match current filters
+                         <div className="flex items-center gap-4">
+                            <div className={cn(
+                                "flex items-center justify-center h-10 w-10 rounded-lg transition-colors border",
+                                isAllSelected 
+                                  ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
+                                  : "bg-white text-slate-500 border-slate-200 group-hover/header:border-emerald-200 group-hover/header:text-emerald-600"
+                            )}>
+                               <ModuleIcon className="h-5 w-5" />
                             </div>
-                          )}
-                        </div>
+                            <div>
+                               <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                                  {group.name}
+                                  {isAllSelected && !isExpanded && (
+                                     <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                                       All Enabled
+                                     </span>
+                                  )}
+                               </h3>
+                               <p className="text-xs text-slate-500 mt-0.5">{group.permissions.length} permissions available</p>
+                            </div>
+                         </div>
+                         <div className="flex items-center gap-6">
+                            <div className="flex items-center gap-3 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors" onClick={(e) => e.stopPropagation()}>
+                               <span className="text-xs font-medium text-slate-600">Enable All</span>
+                               <Checkbox
+                                  id={`group-${group.id}`}
+                                  checked={isAllSelected}
+                                  onChange={(checked) => handleSelectAll(group, checked)}
+                                />
+                            </div>
+                            {isExpanded ? <ChevronUp className="h-5 w-5 text-slate-400" /> : <ChevronDown className="h-5 w-5 text-slate-400" />}
+                         </div>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+
+                      {/* Permissions List */}
+                      {isExpanded && (
+                        <div className="bg-slate-50/50">
+                           {visiblePermissions.map((permission) => {
+                              const isChecked = selectedRole?.permissions.includes(permission.id) || false;
+                              return (
+                                <div key={permission.id} className="flex items-center justify-between px-6 py-3 pl-[4.5rem] hover:bg-slate-50 transition-colors border-t border-slate-100 first:border-0 group/item">
+                                   <div className="flex-1 pr-6 cursor-pointer select-none" onClick={() => handlePermissionToggle(permission.id)}>
+                                      <div className="flex items-center gap-2">
+                                          <span className={cn("text-sm font-medium transition-colors", isChecked ? "text-slate-900" : "text-slate-600 group-hover/item:text-slate-900")}>
+                                             {permission.label}
+                                          </span>
+                                          {isALCOAPlusRequired(permission.id) && (
+                                             <div title="Audit Trail Required" className="flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
+                                                 <Lock className="h-3 w-3" />
+                                                 <span>Audit</span>
+                                             </div>
+                                          )}
+                                      </div>
+                                   </div>
+                                   <div className="flex items-center">
+                                      <Checkbox 
+                                         id={permission.id}
+                                         checked={isChecked}
+                                         onChange={() => handlePermissionToggle(permission.id)}
+                                      />
+                                   </div>
+                                </div>
+                              );
+                           })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-              {hasUnsavedChanges && (
-                <div className="sticky bottom-0 z-20 border-t border-emerald-200 bg-emerald-50/90 backdrop-blur-sm px-5 py-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-emerald-800 text-sm">
-                    <AlertCircle className="h-4 w-4" />
-                    You have unsaved permission changes
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={handleDiscardChanges}>Discard</Button>
-                    <Button variant="default" size="sm" onClick={handleSaveChanges} className="flex items-center gap-2">
-                      <Save className="h-4 w-4" /> Save Changes
-                    </Button>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -866,6 +717,63 @@ export const RolePermissionView: React.FC = () => {
         description={(
           <div className="text-sm text-slate-600">
             Are you sure you want to delete this role? This action cannot be undone.
+          </div>
+        )}
+      />
+
+      {/* Discard Changes Confirm */}
+      <AlertModal
+        isOpen={isDiscardConfirmOpen}
+        onClose={() => setIsDiscardConfirmOpen(false)}
+        onConfirm={() => {
+          handleDiscardChanges();
+          setIsDiscardConfirmOpen(false);
+        }}
+        type="warning"
+        title="Discard Changes"
+        confirmText="Discard"
+        showCancel
+        description={(
+          <div className="text-sm text-slate-600">
+            Are you sure you want to discard all pending changes? This action cannot be undone.
+          </div>
+        )}
+      />
+
+      {/* Save Changes Confirm */}
+      <AlertModal
+        isOpen={isSaveConfirmOpen}
+        onClose={() => setIsSaveConfirmOpen(false)}
+        onConfirm={() => {
+          handleSaveChanges();
+          setIsSaveConfirmOpen(false);
+        }}
+        type="info"
+        title="Save Changes"
+        confirmText="Save Changes"
+        showCancel
+        description={(
+          <div className="text-sm text-slate-600">
+            Are you sure you want to save the changes made to <strong>{selectedRole?.name}</strong>?
+          </div>
+        )}
+      />
+
+      {/* Role Switch with Unsaved Changes Confirm */}
+      <AlertModal
+        isOpen={isRoleSwitchConfirmOpen}
+        onClose={() => {
+          setIsRoleSwitchConfirmOpen(false);
+          setPendingRoleId("");
+        }}
+        onConfirm={confirmRoleSwitch}
+        type="warning"
+        title="Unsaved Changes"
+        confirmText="Switch Role"
+        showCancel
+        description={(
+          <div className="text-sm text-slate-600">
+            You have unsaved changes. Switching to another role will discard all pending changes. Are you sure you want to continue?
           </div>
         )}
       />

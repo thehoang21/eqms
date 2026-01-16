@@ -13,7 +13,7 @@ import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { useToast } from '@/components/ui/toast';
-import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../../all-document/new-document/DocumentWorkflowLayout";
+import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../../DocumentWorkflowLayout";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
 import { GeneralTab } from "../revision-tabs/GeneralTab/GeneralTab";
 import { DocumentType as DocType } from "@/types/documentTypes";

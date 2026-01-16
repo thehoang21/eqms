@@ -327,36 +327,21 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                                 <React.Fragment key={index}>
                                     {index === 0 ? (
                                         <>
-                                            <button
-                                                onClick={item.onClick || onBack}
-                                                className="hover:text-slate-700 transition-colors hidden sm:inline"
-                                            >
+                                            <span className="hidden sm:inline">
                                                 {item.label}
-                                            </button>
+                                            </span>
                                             <Home className="h-4 w-4 sm:hidden" />
                                         </>
                                     ) : item.isActive ? (
                                         <span className="text-slate-700 font-medium">{item.label}</span>
-                                    ) : index === breadcrumbs.length - 2 && breadcrumbs.length > 3 ? (
-                                        <>
-                                            <span className="sm:hidden">...</span>
-                                            <button
-                                                onClick={item.onClick || onBack}
-                                                className="hover:text-slate-700 transition-colors hidden sm:inline"
-                                            >
-                                                {item.label}
-                                            </button>
-                                        </>
                                     ) : (
-                                        <button
-                                            onClick={item.onClick || onBack}
-                                            className="hover:text-slate-700 transition-colors"
-                                        >
-                                            {item.label}
-                                        </button>
+                                        <span>
+                                            <span className="hidden md:inline">{item.label}</span>
+                                            <span className="md:hidden">...</span>
+                                        </span>
                                     )}
                                     {index < breadcrumbs.length - 1 && (
-                                        <ChevronRight className="h-4 w-4 text-slate-400" />
+                                        <span className="text-slate-400 mx-1">/</span>
                                     )}
                                 </React.Fragment>
                             ))}

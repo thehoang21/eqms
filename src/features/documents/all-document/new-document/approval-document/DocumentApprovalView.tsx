@@ -12,7 +12,7 @@ import {
 import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
-import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../DocumentWorkflowLayout";
+import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../../../DocumentWorkflowLayout";
 import {
     GeneralInformationTab,
     TrainingInformationTab,
