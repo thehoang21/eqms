@@ -104,7 +104,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-between h-full p-10 xl:p-14 text-white">
             {/* Top Content */}
-            <div className="space-y-8 pt-10">
+            <div className="space-y-3">
               {/* Dark backdrop for text readability */}
               <div className="absolute top-0 left-0 right-0 h-2/3 bg-gradient-to-b from-slate-900/75 via-slate-900/20 to-transparent -mx-10 xl:-mx-14 -mt-10 z-[-1]" />
               <div className="space-y-4 relative z-10">
@@ -112,10 +112,16 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   Enter the Future of
                   <span className="block mt-2 text-6xl xl:text-7xl">Quality Assurance</span>
                 </h1>
-                <p className="text-lg text-white leading-relaxed max-w-lg font-base">
+                <p className="text-lg text-white leading-relaxed max-w-auto font-base">
                   Experience the next generation of pharmaceutical quality management. Intelligent, compliant, and secure.
                 </p>
               </div>
+            </div>
+            {/* Footer */}
+            <div className="relative">
+              <p className="text-sm text-white/90">
+                A product of NTP Dev Team - Ngoc Thien Trading and Pharmaceutical JSC.
+              </p>
             </div>
           </div>
         </div>
