@@ -47,7 +47,7 @@ export const MainLayout: React.FC = () => {
         />
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 animate-gradient-shift">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
           {/* Main Content: Responsive padding */}
           <main className="w-full p-4 md:p-6 lg:p-8 pb-6">
             <div className="w-full max-w-[1920px] mx-auto space-y-4 md:space-y-6">
