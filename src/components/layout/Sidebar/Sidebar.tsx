@@ -504,7 +504,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           )}>
             <div className={cn(
               "flex items-center justify-center shrink-0",
-              isCollapsed ? "h-10 w-10" : "h-12 w-auto"
+              isCollapsed ? "h-10 w-10" : "h-11 w-auto"
             )}>
               <img
                 src={isCollapsed ? logoCollapsed : logoFull}

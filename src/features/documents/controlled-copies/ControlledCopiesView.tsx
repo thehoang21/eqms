@@ -1,35 +1,29 @@
-import React, { useState, useMemo, useRef, createRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useMemo, createRef, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
+  Home,
+  Download,
   Search,
-  ChevronLeft,
-  ChevronRight,
   MoreVertical,
   Info,
   Edit,
   FileX,
-  Home,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Clock,
-  AlertCircle,
   Link2,
-  FileOutput,
-  Download,
+  Shredder,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
-import { cn } from "@/components/ui/utils";
-import { ControlledCopy, ControlledCopyStatus, TableColumn } from "./types";
-import { MarkAsDestroyedModal } from "./components/MarkAsDestroyedModal";
+import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
+import { CreateLinkModal } from "../views/CreateLinkModal";
+import { CancelDistributionModal } from "./components/CancelDistributionModal";
 import { useToast } from "@/components/ui/toast/Toast";
-import { CreateLinkModal } from "../CreateLinkModal";
-import { IconFileExport } from "@tabler/icons-react";
+import type { ControlledCopy, ControlledCopyStatus, TableColumn } from "./types";
+import { IconShare3 } from "@tabler/icons-react";
 
-// Mock Data - All Controlled Copies
+// ==================== MOCK DATA ====================
+
 const MOCK_ALL_CONTROLLED_COPIES: ControlledCopy[] = [
   {
     id: "cc-001",
@@ -202,7 +196,11 @@ const DEFAULT_COLUMNS: TableColumn[] = [
   { id: "distributionList", label: "Distribution List", visible: true, order: 8 },
 ];
 
-// Helper Functions
+// View types
+type ViewType = "all" | "ready" | "distributed";
+
+// ==================== HELPER FUNCTIONS ====================
+
 const formatDateTime = (date: string, time: string) => {
   const dateObj = new Date(`${date}T${time}`);
   return new Intl.DateTimeFormat("en-US", {
@@ -229,25 +227,22 @@ const getStatusConfig = (status: ControlledCopyStatus) => {
   const configs = {
     "Ready for Distribution": {
       color: "bg-blue-50 text-blue-700 border-blue-200",
-      icon: Clock,
     },
     "Distributed": {
       color: "bg-emerald-50 text-emerald-700 border-emerald-200",
-      icon: CheckCircle2,
     },
     "Obsolete": {
       color: "bg-amber-50 text-amber-700 border-amber-200",
-      icon: AlertTriangle,
     },
     "Closed - Cancelled": {
       color: "bg-red-50 text-red-700 border-red-200",
-      icon: XCircle,
     },
   };
   return configs[status] || configs["Ready for Distribution"];
 };
 
-// Pagination Component
+// ==================== PAGINATION COMPONENT ====================
+
 const Pagination: React.FC<{
   currentPage: number;
   totalPages: number;
@@ -291,18 +286,31 @@ const Pagination: React.FC<{
   );
 };
 
-// Dropdown Menu Component
+// ==================== DROPDOWN MENU COMPONENT ====================
+
 const DropdownMenu: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   position: { top: number; left: number; showAbove?: boolean };
   onViewDetails: () => void;
   onEdit: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;
+  onDistribute?: () => void;
   onReportLostDamaged?: () => void;
-  isDistributed?: boolean;
   onCreateLink?: () => void;
-}> = ({ isOpen, onClose, position, onViewDetails, onEdit, onCancel, onReportLostDamaged, isDistributed, onCreateLink }) => {
+  viewType: ViewType;
+}> = ({
+  isOpen,
+  onClose,
+  position,
+  onViewDetails,
+  onEdit,
+  onCancel,
+  onDistribute,
+  onReportLostDamaged,
+  onCreateLink,
+  viewType,
+}) => {
   if (!isOpen) return null;
 
   return createPortal(
@@ -317,10 +325,10 @@ const DropdownMenu: React.FC<{
       />
       <div
         className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-        style={{ 
-          top: `${position.top}px`, 
+        style={{
+          top: `${position.top}px`,
           left: `${position.left}px`,
-          transform: position.showAbove ? 'translateY(-100%)' : 'none'
+          transform: position.showAbove ? "translateY(-100%)" : "none",
         }}
       >
         <div className="py-1">
@@ -346,6 +354,19 @@ const DropdownMenu: React.FC<{
             <Edit className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">Edit</span>
           </button>
+          {onDistribute && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDistribute();
+                onClose();
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+            >
+              <IconShare3 className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium">Distribute</span>
+            </button>
+          )}
           {onCreateLink && (
             <button
               onClick={(e) => {
@@ -359,19 +380,7 @@ const DropdownMenu: React.FC<{
               <span className="font-medium">Create Shareable Link</span>
             </button>
           )}
-          {isDistributed && onReportLostDamaged ? (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onReportLostDamaged();
-                onClose();
-              }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
-            >
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />
-              <span className="font-medium">Report Lost/Damaged</span>
-            </button>
-          ) : (
+          {viewType === "ready" && onCancel && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -384,6 +393,45 @@ const DropdownMenu: React.FC<{
               <span className="font-medium">Cancel Distribution</span>
             </button>
           )}
+          {viewType === "distributed" && onReportLostDamaged && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onReportLostDamaged();
+                onClose();
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+            >
+              <Shredder className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium">Report Lost/Damaged</span>
+            </button>
+          )}
+          {viewType === "all" && onCancel && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onCancel();
+                onClose();
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+            >
+              <FileX className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium">Cancel Distribution</span>
+            </button>
+          )}
+          {viewType === "all" && onReportLostDamaged && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onReportLostDamaged();
+                onClose();
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+            >
+              <Shredder className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium">Report Lost/Damaged</span>
+            </button>
+          )}
         </div>
       </div>
     </>,
@@ -391,10 +439,15 @@ const DropdownMenu: React.FC<{
   );
 };
 
-// Main Component
-export const AllControlledCopiesView: React.FC = () => {
+// ==================== MAIN COMPONENT ====================
+
+export const ControlledCopiesView: React.FC = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Get view type from URL params, default to "all"
+  const viewType = (searchParams.get("view") as ViewType) || "all";
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -403,12 +456,18 @@ export const AllControlledCopiesView: React.FC = () => {
   const [dateToFilter, setDateToFilter] = useState("");
 
   // Modal states
-  const [isReportLostDamagedModalOpen, setIsReportLostDamagedModalOpen] = useState(false);
-  const [selectedCopy, setSelectedCopy] = useState<ControlledCopy | null>(null);
-
-  // Create Shareable Link Modal state
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedCopyForLink, setSelectedCopyForLink] = useState<ControlledCopy | null>(null);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [selectedCopyForCancel, setSelectedCopyForCancel] = useState<ControlledCopy | null>(null);
+  const [cancelFormData, setCancelFormData] = useState({
+    cancellationReason: "",
+    returnToStage: "Draft" as "Draft" | "Cancelled"
+  });
+  const [cancelFormErrors, setCancelFormErrors] = useState<{ cancellationReason?: string }>({});
+  const [isESignModalOpen, setIsESignModalOpen] = useState(false);
+  const [isDistributeESignModalOpen, setIsDistributeESignModalOpen] = useState(false);
+  const [selectedCopyForDistribute, setSelectedCopyForDistribute] = useState<ControlledCopy | null>(null);
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -426,9 +485,29 @@ export const AllControlledCopiesView: React.FC = () => {
     return buttonRefs.current[id];
   };
 
-  // Filtered data
+  // Change view type handler
+  const handleViewChange = (view: ViewType) => {
+    setSearchParams({ view });
+    setCurrentPage(1);
+    setStatusFilter("All");
+  };
+
+  // Get filtered data based on view type
+  const baseData = useMemo(() => {
+    switch (viewType) {
+      case "ready":
+        return MOCK_ALL_CONTROLLED_COPIES.filter((copy) => copy.status === "Ready for Distribution");
+      case "distributed":
+        return MOCK_ALL_CONTROLLED_COPIES.filter((copy) => copy.status === "Distributed");
+      case "all":
+      default:
+        return MOCK_ALL_CONTROLLED_COPIES;
+    }
+  }, [viewType]);
+
+  // Apply filters
   const filteredData = useMemo(() => {
-    return MOCK_ALL_CONTROLLED_COPIES.filter((copy) => {
+    return baseData.filter((copy) => {
       const matchesSearch =
         searchQuery === "" ||
         copy.documentNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -436,7 +515,7 @@ export const AllControlledCopiesView: React.FC = () => {
         copy.document.toLowerCase().includes(searchQuery.toLowerCase()) ||
         copy.openedBy.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter === "All" || copy.status === statusFilter;
+      const matchesStatus = viewType !== "all" || statusFilter === "All" || copy.status === statusFilter;
 
       const matchesDateFrom =
         dateFromFilter === "" || new Date(copy.createdDate) >= new Date(dateFromFilter);
@@ -446,7 +525,7 @@ export const AllControlledCopiesView: React.FC = () => {
 
       return matchesSearch && matchesStatus && matchesDateFrom && matchesDateTo;
     });
-  }, [searchQuery, statusFilter, dateFromFilter, dateToFilter]);
+  }, [baseData, searchQuery, statusFilter, dateFromFilter, dateToFilter, viewType]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = useMemo(() => {
@@ -454,6 +533,7 @@ export const AllControlledCopiesView: React.FC = () => {
     return filteredData.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredData, currentPage, itemsPerPage]);
 
+  // Event handlers
   const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (openDropdownId === id) {
@@ -462,43 +542,34 @@ export const AllControlledCopiesView: React.FC = () => {
     }
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-    
-    // Menu dimensions (approximate - varies by status: 3-4 items * ~40px + padding)
-    const menuHeight = 180; // More accurate estimate
+
+    const menuHeight = 180;
     const menuWidth = 200;
-    
-    // Check available space
+    const safeMargin = 8;
+
     const spaceBelow = window.innerHeight - rect.bottom;
     const spaceAbove = rect.top;
-    
-    // Show above if not enough space below AND there's more space above
+
     const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
-    
-    // Calculate vertical position
+
     let top: number;
     if (shouldShowAbove) {
-      // Position menu right above the button
       top = rect.top + window.scrollY - 4;
     } else {
-      // Position menu below the button
       top = rect.bottom + window.scrollY + 4;
     }
-    
-    // Calculate horizontal position with safe margins
-    const safeMargin = 8; // Minimum margin from viewport edge
+
     const viewportWidth = window.innerWidth;
     let left = rect.right + window.scrollX - menuWidth;
-    
-    // Ensure menu doesn't overflow right edge
+
     if (left + menuWidth > viewportWidth - safeMargin) {
       left = viewportWidth - menuWidth - safeMargin + window.scrollX;
     }
-    
-    // Ensure menu doesn't overflow left edge
+
     if (left < safeMargin + window.scrollX) {
       left = safeMargin + window.scrollX;
     }
-    
+
     setDropdownPosition({ top, left, showAbove: shouldShowAbove });
     setOpenDropdownId(id);
   };
@@ -519,30 +590,85 @@ export const AllControlledCopiesView: React.FC = () => {
   };
 
   const handleCancel = (copy: ControlledCopy) => {
-    console.log("Cancel Distribution:", copy);
-    // TODO: Show confirmation modal
-    alert(`Cancel controlled copy ${copy.documentNumber}?`);
+    setSelectedCopyForCancel(copy);
+    setIsCancelModalOpen(true);
+    setCancelFormData({ cancellationReason: "", returnToStage: "Draft" });
+    setCancelFormErrors({});
+    setOpenDropdownId(null);
   };
 
-  const handleReportLostDamaged = (copy: ControlledCopy) => {
-    setSelectedCopy(copy);
-    setIsReportLostDamagedModalOpen(true);
+  const handleCancelFormSubmit = () => {
+    // Validate form
+    const errors: { cancellationReason?: string } = {};
+    if (!cancelFormData.cancellationReason.trim()) {
+      errors.cancellationReason = "Cancellation reason is required";
+    } else if (cancelFormData.cancellationReason.trim().length < 10) {
+      errors.cancellationReason = "Cancellation reason must be at least 10 characters";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setCancelFormErrors(errors);
+      return;
+    }
+
+    // Open ESignature modal
+    setIsCancelModalOpen(false);
+    setIsESignModalOpen(true);
   };
 
-  const handleReportLostDamagedConfirm = (formData: any, reason: string) => {
-    setIsReportLostDamagedModalOpen(false);
+  const handleESignConfirm = (reason: string) => {
+    // Process cancellation
+    console.log("Cancellation confirmed:", {
+      copy: selectedCopyForCancel,
+      ...cancelFormData,
+      eSignReason: reason
+    });
+
+    setIsESignModalOpen(false);
+    setSelectedCopyForCancel(null);
+    setCancelFormData({ cancellationReason: "", returnToStage: "Draft" });
     
     showToast({
       type: "success",
-      title: "Report Submitted",
-      message: "Controlled copy has been marked as lost/damaged and cancelled.",
+      message: `Controlled copy ${selectedCopyForCancel?.documentNumber} has been cancelled and returned to ${cancelFormData.returnToStage} status.`
+    });
+  };
+
+  const handleCancelModalClose = () => {
+    setIsCancelModalOpen(false);
+    setSelectedCopyForCancel(null);
+    setCancelFormData({ cancellationReason: "", returnToStage: "Draft" });
+    setCancelFormErrors({});
+  };
+
+  const handleReportLostDamaged = (copy: ControlledCopy) => {
+    navigate(`/documents/controlled-copies/${copy.id}/destroy`);
+  };
+
+  const handleDistribute = (copy: ControlledCopy) => {
+    setSelectedCopyForDistribute(copy);
+    setIsDistributeESignModalOpen(true);
+    setOpenDropdownId(null);
+  };
+
+  const handleDistributeESignConfirm = (reason: string) => {
+    setIsDistributeESignModalOpen(false);
+    
+    showToast({
+      type: "success",
+      title: "Controlled Copy Distributed",
+      message: "The controlled copy has been successfully distributed.",
       duration: 3500,
     });
 
-    console.log("Report lost/damaged:", selectedCopy?.documentNumber, formData, reason);
-    // TODO: Call API to mark as lost/damaged
-    // Update status to "Closed - Cancelled"
-    // Refresh data
+    console.log("Distribute reason:", reason);
+    console.log("Distribute controlled copy:", selectedCopyForDistribute);
+    // TODO: Call API to distribute controlled copy
+    // Update status to "Distributed"
+    // Add audit trail entry
+    // Send notification
+    
+    setSelectedCopyForDistribute(null);
   };
 
   const handleViewRow = (copy: ControlledCopy) => {
@@ -557,15 +683,26 @@ export const AllControlledCopiesView: React.FC = () => {
     { label: "Closed - Cancelled", value: "Closed - Cancelled" },
   ];
 
+  // Get page title and breadcrumb based on view type
+  const getPageTitle = () => {
+    switch (viewType) {
+      case "ready":
+        return "Ready for Distribution";
+      case "distributed":
+        return "Distributed Copies";
+      case "all":
+      default:
+        return "All Controlled Copies";
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-              All Controlled Copies
-            </h1>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">{getPageTitle()}</h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
               <span className="hidden sm:inline">Dashboard</span>
               <Home className="h-4 w-4 sm:hidden" />
@@ -576,7 +713,7 @@ export const AllControlledCopiesView: React.FC = () => {
               <span className="hidden sm:inline">Controlled Copies</span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <span className="text-slate-700 font-medium">All Controlled Copies</span>
+              <span className="text-slate-700 font-medium">{getPageTitle()}</span>
             </div>
           </div>
           <Button
@@ -594,46 +731,98 @@ export const AllControlledCopiesView: React.FC = () => {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-          <div className="xl:col-span-3">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Document #, Name, Document ID..."
-                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+      {/* Filters & Tabs Combined */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* Tab Navigation */}
+        <div className="flex gap-2 border-b border-slate-200">
+          <button
+            onClick={() => handleViewChange("all")}
+            className={`px-4 py-2.5 text-sm font-medium transition-colors relative ${
+              viewType === "all"
+                ? "text-emerald-600 border-b-2 border-emerald-600"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            All Controlled Copies
+          </button>
+          <button
+            onClick={() => handleViewChange("ready")}
+            className={`px-4 py-2.5 text-sm font-medium transition-colors relative ${
+              viewType === "ready"
+                ? "text-emerald-600 border-b-2 border-emerald-600"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Ready for Distribution
+          </button>
+          <button
+            onClick={() => handleViewChange("distributed")}
+            className={`px-4 py-2.5 text-sm font-medium transition-colors relative ${
+              viewType === "distributed"
+                ? "text-emerald-600 border-b-2 border-emerald-600"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Distributed
+          </button>
+        </div>
+
+        {/* Filters Section */}
+        <div className="p-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+            <div className="xl:col-span-4">
+              <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Document #, Name, Document ID..."
+                  className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                />
+              </div>
+            </div>
+            <div className="xl:col-span-3">
+              <label className="text-sm font-medium text-slate-700 mb-1.5 block">State</label>
+              {viewType === "all" ? (
+                <Select
+                  value={statusFilter}
+                  onChange={(value) => setStatusFilter(value as ControlledCopyStatus | "All")}
+                  options={statusOptions}
+                  placeholder="All States"
+                />
+              ) : (
+                <Select
+                  value={viewType === "ready" ? "Ready for Distribution" : "Distributed"}
+                  onChange={() => {}}
+                  options={[
+                    {
+                      label: viewType === "ready" ? "Ready for Distribution" : "Distributed",
+                      value: viewType === "ready" ? "Ready for Distribution" : "Distributed",
+                    },
+                  ]}
+                  placeholder={viewType === "ready" ? "Ready for Distribution" : "Distributed"}
+                  disabled
+                />
+              )}
+            </div>
+            <div className="xl:col-span-2">
+              <DateTimePicker
+                label="From Date"
+                value={dateFromFilter}
+                onChange={setDateFromFilter}
+                placeholder="Select date"
               />
             </div>
-          </div>
-          <div className="xl:col-span-3">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">State</label>
-            <Select
-              value={statusFilter}
-              onChange={(value) => setStatusFilter(value as ControlledCopyStatus | "All")}
-              options={statusOptions}
-              placeholder="Select state"
-            />
-          </div>
-          <div className="xl:col-span-3">
-            <DateTimePicker
-              label="From Date"
-              value={dateFromFilter}
-              onChange={setDateFromFilter}
-              placeholder="Select date"
-            />
-          </div>
-          <div className="xl:col-span-3">
-            <DateTimePicker
-              label="To Date"
-              value={dateToFilter}
-              onChange={setDateToFilter}
-              placeholder="Select date"
-            />
+            <div className="xl:col-span-3">
+              <DateTimePicker
+                label="To Date"
+                value={dateToFilter}
+                onChange={setDateToFilter}
+                placeholder="Select date"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -655,7 +844,7 @@ export const AllControlledCopiesView: React.FC = () => {
                     {col.label}
                   </th>
                 ))}
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>
@@ -681,53 +870,45 @@ export const AllControlledCopiesView: React.FC = () => {
                       onClick={() => handleViewRow(copy)}
                       className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                     >
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600 font-medium">
+                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
                         {rowNumber}
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span className="font-medium text-emerald-700">{copy.documentNumber}</span>
+                        <span className="font-medium text-emerald-600">{copy.documentNumber}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <div className="text-slate-700">
-                          {formatDateTime(copy.createdDate, copy.createdTime)}
-                        </div>
+                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                        {formatDateTime(copy.createdDate, copy.createdTime)}
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span className="text-slate-700">{copy.openedBy}</span>
+                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                        {copy.openedBy}
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span className="text-slate-900">{copy.name}</span>
+                      <td className="py-3.5 px-4 text-sm text-slate-900 max-w-xs truncate">
+                        {copy.name}
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                         <span
-                          className={cn(
-                            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                            statusConfig.color
-                          )}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${statusConfig.color}`}
                         >
                           {copy.status}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span className="text-slate-700">{formatDate(copy.validUntil)}</span>
+                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                        {formatDate(copy.validUntil)}
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                         <span className="font-medium text-slate-900">{copy.document}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm">
-                        <div className="max-w-xs">
-                          <span className="text-slate-700">{copy.distributionList || "—"}</span>
-                        </div>
+                      <td className="py-3.5 px-4 text-sm text-slate-600 max-w-xs truncate">
+                        {copy.distributionList}
                       </td>
                       <td
                         onClick={(e) => e.stopPropagation()}
-                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                       >
                         <button
                           ref={getButtonRef(copy.id)}
                           onClick={(e) => handleDropdownToggle(copy.id, e)}
                           className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
-                          aria-label="Actions"
                         >
                           <MoreVertical className="h-4 w-4 text-slate-600" />
                         </button>
@@ -752,44 +933,45 @@ export const AllControlledCopiesView: React.FC = () => {
       </div>
 
       {/* Dropdown Menu */}
-      {openDropdownId && (
-        <DropdownMenu
-          isOpen={openDropdownId !== null}
-          onClose={() => setOpenDropdownId(null)}
-          position={dropdownPosition}
-          onViewDetails={() => {
-            const copy = paginatedData.find((c) => c.id === openDropdownId);
-            if (copy) handleViewDetails(copy);
-          }}
-          onEdit={() => {
-            const copy = paginatedData.find((c) => c.id === openDropdownId);
-            if (copy) handleEdit(copy);
-          }}
-          onCreateLink={() => {
-            const copy = paginatedData.find((c) => c.id === openDropdownId);
-            if (copy) handleCreateLink(copy);
-          }}
-          onCancel={() => {
-            const copy = paginatedData.find((c) => c.id === openDropdownId);
-            if (copy) handleCancel(copy);
-          }}
-          onReportLostDamaged={() => {
-            const copy = paginatedData.find((c) => c.id === openDropdownId);
-            if (copy) handleReportLostDamaged(copy);
-          }}
-          isDistributed={paginatedData.find((c) => c.id === openDropdownId)?.status === "Distributed"}
-        />
-      )}
-
-      {/* Report Lost/Damaged Modal */}
-      {selectedCopy && (
-        <MarkAsDestroyedModal
-          isOpen={isReportLostDamagedModalOpen}
-          onClose={() => setIsReportLostDamagedModalOpen(false)}
-          onConfirm={handleReportLostDamagedConfirm}
-          controlledCopy={selectedCopy}
-        />
-      )}
+      {openDropdownId && (() => {
+        const selectedCopy = paginatedData.find((c) => c.id === openDropdownId);
+        return (
+          <DropdownMenu
+            isOpen={openDropdownId !== null}
+            onClose={() => setOpenDropdownId(null)}
+            position={dropdownPosition}
+            viewType={viewType}
+            onViewDetails={() => {
+              if (selectedCopy) handleViewDetails(selectedCopy);
+            }}
+            onEdit={() => {
+              if (selectedCopy) handleEdit(selectedCopy);
+            }}
+            onCreateLink={() => {
+              if (selectedCopy) handleCreateLink(selectedCopy);
+            }}
+            onDistribute={
+              selectedCopy && selectedCopy.status === "Ready for Distribution"
+                ? () => handleDistribute(selectedCopy)
+                : undefined
+            }
+            onCancel={
+              viewType === "ready" || viewType === "all"
+                ? () => {
+                    if (selectedCopy) handleCancel(selectedCopy);
+                  }
+                : undefined
+            }
+            onReportLostDamaged={
+              viewType === "distributed" || viewType === "all"
+                ? () => {
+                    if (selectedCopy) handleReportLostDamaged(selectedCopy);
+                  }
+                : undefined
+            }
+          />
+        );
+      })()}
 
       {/* Create Shareable Link Modal */}
       {selectedCopyForLink && (
@@ -803,6 +985,38 @@ export const AllControlledCopiesView: React.FC = () => {
           documentTitle={selectedCopyForLink.name}
         />
       )}
+
+      {/* Cancel Distribution Modal */}
+      {selectedCopyForCancel && (
+        <CancelDistributionModal
+          isOpen={isCancelModalOpen}
+          onClose={handleCancelModalClose}
+          onConfirm={handleCancelFormSubmit}
+          formData={cancelFormData}
+          onFormDataChange={setCancelFormData}
+          errors={cancelFormErrors}
+          onErrorChange={setCancelFormErrors}
+        />
+      )}
+
+      {/* ESignature Modal - Cancel Distribution */}
+      <ESignatureModal
+        isOpen={isESignModalOpen}
+        onClose={() => setIsESignModalOpen(false)}
+        onConfirm={handleESignConfirm}
+        actionTitle="Cancel Distribution"
+      />
+
+      {/* ESignature Modal - Distribute */}
+      <ESignatureModal
+        isOpen={isDistributeESignModalOpen}
+        onClose={() => {
+          setIsDistributeESignModalOpen(false);
+          setSelectedCopyForDistribute(null);
+        }}
+        onConfirm={handleDistributeESignConfirm}
+        actionTitle="Confirm Distribution of Controlled Copy"
+      />
     </div>
   );
 };

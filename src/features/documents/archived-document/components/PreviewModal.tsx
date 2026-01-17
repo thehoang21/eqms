@@ -16,7 +16,7 @@ interface PreviewModalProps {
 export const PreviewModal: React.FC<PreviewModalProps> = ({
     isOpen,
     onClose,
-    document,
+    document: doc,
     onDownload
 }) => {
     const docxContainerRef = useRef<HTMLDivElement>(null);
@@ -68,7 +68,7 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
         };
     }, [isOpen, onClose]);
 
-    if (!isOpen || !document) return null;
+    if (!isOpen || !doc) return null;
 
     return createPortal(
         <>
@@ -84,11 +84,11 @@ export const PreviewModal: React.FC<PreviewModalProps> = ({
                     {/* Header */}
                     <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 flex-shrink-0">
                         <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-slate-900 truncate">{document.documentName}</h3>
+                            <h3 className="font-semibold text-slate-900 truncate">{doc.documentName}</h3>
                             <div className="flex items-center gap-3 mt-1">
-                                <span className="text-xs text-slate-500">{document.code}</span>
+                                <span className="text-xs text-slate-500">{doc.code}</span>
                                 <span className="text-xs text-slate-400">•</span>
-                                <span className="text-xs text-slate-500">Version {document.version}</span>
+                                <span className="text-xs text-slate-500">Version {doc.version}</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 ml-4">

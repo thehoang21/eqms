@@ -288,9 +288,9 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
       />
 
       {/* Modal Content */}
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-white rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200">
+      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] bg-white rounded-xl shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div>
               <h2 className="text-lg font-semibold text-slate-900">Create Shareable Link</h2>
@@ -306,7 +306,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
         </div>
 
         {/* Body */}
-        <div className="px-6 py-5 space-y-5 overflow-y-auto">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 overflow-y-auto flex-1">
           {/* Document Info */}
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
             <div className="flex items-start gap-3">
@@ -633,7 +633,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50 rounded-b-xl">
+        <div className="flex items-center justify-end gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 border-t border-slate-200 bg-slate-50 rounded-b-xl flex-shrink-0">
           <Button
             onClick={handleClose}
             variant="outline"

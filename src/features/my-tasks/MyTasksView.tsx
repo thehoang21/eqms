@@ -6,7 +6,6 @@ import {
   ChevronDown,
   User,
   Check,
-  LayoutGrid,
   List,
   BarChart3,
 } from "lucide-react";
@@ -14,7 +13,6 @@ import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import { Task, ViewMode } from "./types";
 import { TaskTable } from "./components/TaskTable";
-import { TaskBoardView } from "./components/TaskBoardView";
 import { TaskCalendarView } from "./components/TaskCalendarView";
 import { TaskGanttView } from "./components/TaskGanttView";
 import { TaskDetailDrawer } from "./components/TaskDetailDrawer";
@@ -778,18 +776,6 @@ export const MyTasksView: React.FC = () => {
             <span>List</span>
           </button>
           <button
-            onClick={() => setViewMode("board")}
-            className={cn(
-              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
-              viewMode === "board"
-                ? "bg-white text-emerald-700 shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
-            )}
-          >
-            <LayoutGrid className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span>Board</span>
-          </button>
-          <button
             onClick={() => setViewMode("calendar")}
             className={cn(
               "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap",
@@ -864,23 +850,6 @@ export const MyTasksView: React.FC = () => {
                 )}
               </div>
             )}
-
-            {/* Board View */}
-            {viewMode === "board" && (
-              <>
-                {filteredData.length > 0 ? (
-                  <TaskBoardView
-                    tasks={filteredData}
-                    onTaskClick={setSelectedTask}
-                  />
-                ) : (
-                  <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                    <EmptyState />
-                  </div>
-                )}
-              </>
-            )}
-
             {/* Calendar View */}
             {viewMode === "calendar" && (
               <>

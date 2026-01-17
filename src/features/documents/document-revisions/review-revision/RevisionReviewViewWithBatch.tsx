@@ -16,7 +16,7 @@ import { IconListNumbers, IconMessage2 } from '@tabler/icons-react';
 import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
-import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/DocumentWorkflowLayout";
+import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/views/DocumentWorkflowLayout";
 import { useBatchNavigation, BatchDocument } from "@/features/documents/all-document/new-document/useBatchNavigation";
 import {
     GeneralInformationTab,

@@ -219,6 +219,30 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
     };
   }, [timelineView]);
 
+  // Auto-scroll to TODAY position on mount and view change
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || todayPosition === null) return;
+
+    // Small delay to ensure DOM is fully rendered
+    const timer = setTimeout(() => {
+      if (timelineView === "month") {
+        // For month view (percentage based), calculate pixel position
+        const containerWidth = container.scrollWidth;
+        const todayPercent = parseFloat(todayPosition);
+        const scrollPosition = (todayPercent / 100) * containerWidth - container.clientWidth / 2;
+        container.scrollLeft = Math.max(0, scrollPosition);
+      } else {
+        // For day view (pixel based)
+        const todayPx = parseFloat(todayPosition);
+        const scrollPosition = todayPx - container.clientWidth / 2;
+        container.scrollLeft = Math.max(0, scrollPosition);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [todayPosition, timelineView]);
+
   return (
     <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col h-[calc(100vh-12rem)]">
       {/* Header */}

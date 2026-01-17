@@ -46,9 +46,10 @@ export const ROUTES = {
 
     // Controlled Copies
     CONTROLLED_COPIES: {
-      ALL: '/documents/controlled-copies/all',
-      READY: '/documents/controlled-copies/ready',
-      DISTRIBUTED: '/documents/controlled-copies/distributed',
+      ALL: '/documents/controlled-copies?view=all',
+      READY: '/documents/controlled-copies?view=ready',
+      DISTRIBUTED: '/documents/controlled-copies?view=distributed',
+      DESTROY: (id: string) => `/documents/controlled-copies/${id}/destroy`,
     },
   },
 

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronRight, Printer, AlertCircle, ArrowLeft, Home, CheckCircle2, X } from 'lucide-react';
+import { ChevronRight, Printer, AlertCircle, ArrowLeft, Home, CheckCircle2, X, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card/ResponsiveCard';
 import { useToast } from '@/components/ui/toast/Toast';
 import { IconChevronLeft } from '@tabler/icons-react';
 
@@ -261,7 +260,7 @@ export const RequestControlledCopyView: React.FC = () => {
                   className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-black hover:bg-slate-50 transition-colors shadow-sm"
                 >
                   <IconChevronLeft className="h-4 w-4" />
-                  Back to List
+                  Back
                 </Button>
                 <Button
                   type="button"
@@ -281,7 +280,7 @@ export const RequestControlledCopyView: React.FC = () => {
                   form="controlled-copy-form"
                   className="flex items-center gap-1.5 md:gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300 touch-manipulation"
                 >
-                  <Printer className="h-4 w-4" />
+                  <Send className="h-4 w-4" />
                   Submit Request
                 </Button>
               </div>
@@ -305,52 +304,56 @@ export const RequestControlledCopyView: React.FC = () => {
             </div>
 
             {/* Document Info - Full Width */}
-            <Card padding="md">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  Document Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-slate-700 block mb-1.5">Document ID</label>
-                    <p className="text-sm text-slate-900 font-medium bg-slate-50 rounded-md px-3 py-2.5 border border-slate-200">
-                      {documentId}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-700 block mb-1.5">Version</label>
-                    <p className="text-sm text-slate-900 font-medium bg-slate-50 rounded-md px-3 py-2.5 border border-slate-200">
-                      v{documentVersion}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-700 block mb-1.5">Status</label>
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                Document Information
+              </h2>
+              <div className="space-y-4">
+                {/* Document ID */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 pb-4 border-b border-slate-200">
+                  <label className="text-sm font-medium text-slate-700 w-full sm:w-40 flex-shrink-0">Document ID</label>
+                  <p className="text-sm text-slate-900 font-medium flex-1">
+                    {documentId}
+                  </p>
+                </div>
+
+                {/* Title */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 pb-4 border-b border-slate-200">
+                  <label className="text-sm font-medium text-slate-700 w-full sm:w-40 flex-shrink-0">Title</label>
+                  <p className="text-sm text-slate-900 flex-1" title={documentTitle}>
+                    {documentTitle}
+                  </p>
+                </div>
+
+                {/* Version */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 pb-4 border-b border-slate-200">
+                  <label className="text-sm font-medium text-slate-700 w-full sm:w-40 flex-shrink-0">Version</label>
+                  <p className="text-sm text-slate-900 font-medium flex-1">
+                    v{documentVersion}
+                  </p>
+                </div>
+
+                {/* Status */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                  <label className="text-sm font-medium text-slate-700 w-full sm:w-40 flex-shrink-0">Status</label>
+                  <div className="flex-1">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
-                      <CheckCircle2 className="h-3.5 w-3.5" />
                       Effective
                     </span>
                   </div>
-                  <div>
-                    <label className="text-sm font-medium text-slate-700 block mb-1.5">Title</label>
-                    <p className="text-sm text-slate-900 bg-slate-50 rounded-md px-3 py-2.5 border border-slate-200 truncate" title={documentTitle}>
-                      {documentTitle}
-                    </p>
-                  </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Two Column Layout: Select Documents + Distribution Details OR Distribution Details + Summary */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {/* Document Selection - Only show if has related documents */}
               {hasRelatedDocs && (
-                <Card padding="md">
-                  <CardHeader>
-                    <CardTitle>Select Documents to Print</CardTitle>
-                  </CardHeader>
-                  <CardContent>
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                    Select Documents to Print
+                  </h2>
+                  <div>
                     {/* Select All */}
                     <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
                       <Checkbox
@@ -429,16 +432,16 @@ export const RequestControlledCopyView: React.FC = () => {
                         </p>
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               )}
 
               {/* Distribution Details */}
-              <Card padding="md">
-                <CardHeader>
-                  <CardTitle>Distribution Details</CardTitle>
-                </CardHeader>
-                <CardContent>
+              <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                  Distribution Details
+                </h2>
+                <div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Location Dropdown */}
                     <div>
@@ -576,8 +579,8 @@ export const RequestControlledCopyView: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
               {/* Summary - Show in same row with Distribution Details if no related docs */}
               {!hasRelatedDocs && (

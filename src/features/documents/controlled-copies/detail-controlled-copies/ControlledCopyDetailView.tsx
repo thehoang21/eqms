@@ -27,8 +27,6 @@ import {
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
-import { FormModal } from "@/components/ui/modal/FormModal";
-import { MarkAsDestroyedModal } from "../components/MarkAsDestroyedModal";
 import { useToast } from "@/components/ui/toast/Toast";
 import { ControlledCopy, ControlledCopyStatus, CurrentStage } from "../types";
 import { IconFileShredder, IconShare3 } from "@tabler/icons-react";
@@ -371,54 +369,32 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Controlled Copy Details
-          </h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
-            <span className="hidden sm:inline">Dashboard</span>
-            <Home className="h-4 w-4 sm:hidden" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Document Control</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Controlled Copies</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">
-              {controlledCopy.controlNumber}
-            </span>
-          </div>
-        </div>
-
-        {/* Status Badges & Action Buttons */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          {/* Status Badges */}
-          <div className="flex flex-wrap items-center gap-3">
-            <span
-              className={cn(
-                "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border-2",
-                getStatusColor(controlledCopy.status)
-              )}
-            >
-              {controlledCopy.status}
-            </span>
-            <span
-              className={cn(
-                "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border-2",
-                getStageColor(controlledCopy.currentStage)
-              )}
-            >
-              {controlledCopy.currentStage}
-            </span>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Controlled Copy Details
+            </h1>
+            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+              <span className="hidden sm:inline">Dashboard</span>
+              <Home className="h-4 w-4 sm:hidden" />
+              <span className="text-slate-400 mx-1">/</span>
+              <span className="hidden sm:inline">Document Control</span>
+              <span className="sm:hidden">...</span>
+              <span className="text-slate-400 mx-1">/</span>
+              <span className="hidden sm:inline">Controlled Copies</span>
+              <span className="sm:hidden">...</span>
+              <span className="text-slate-400 mx-1">/</span>
+              <span className="text-slate-700 font-medium">
+                {controlledCopy.controlNumber}
+              </span>
+            </div>
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-3">
-            {/* button Back to All Controlled Copies */}
+          <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
             <Button onClick={onBack} variant="outline" size="sm" className="flex items-center gap-2">
               <ChevronLeft className="h-4 w-4" />
-              Back to List
+              Back
             </Button>
             <Button
               onClick={handleViewOriginalDocument}
@@ -438,7 +414,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
               <Download className="h-4 w-4" />
               Download Copy
             </Button>
-            {/* Distribute button - Only show for Ready for Distribution status */}
             {controlledCopy.status === "Ready for Distribution" && (
               <Button
                 onClick={handleDistribute}
@@ -450,7 +425,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
                 Distribute
               </Button>
             )}
-            {/* Report Lost/Damaged button - Only show for Distributed status */}
             {controlledCopy.status === "Distributed" && (
               <Button
                 onClick={handleReportLostDamaged}
@@ -571,14 +545,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         </div>
       </div>
 
-      {/* Destruction Modal */}
-      <MarkAsDestroyedModal
-        isOpen={isDestructionModalOpen}
-        onClose={() => setIsDestructionModalOpen(false)}
-        onConfirm={handleMarkAsDestroyed}
-        controlledCopy={controlledCopy}
-      />
-
       {/* E-Signature Modal for Download */}
       <ESignatureModal
         isOpen={isESignModalOpen}
@@ -593,14 +559,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         onClose={() => setIsDistributeModalOpen(false)}
         onConfirm={handleDistributeSuccess}
         actionTitle="Distribute Controlled Copy"
-      />
-
-      {/* Report Lost/Damaged Modal */}
-      <MarkAsDestroyedModal
-        isOpen={isReportLostDamagedModalOpen}
-        onClose={() => setIsReportLostDamagedModalOpen(false)}
-        onConfirm={handleReportLostDamagedConfirm}
-        controlledCopy={controlledCopy}
       />
     </div>
   );

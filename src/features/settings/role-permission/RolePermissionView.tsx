@@ -394,7 +394,7 @@ export const RolePermissionView: React.FC = () => {
   return (
     <div className="space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Role & Permissions</h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
@@ -407,7 +407,7 @@ export const RolePermissionView: React.FC = () => {
             <span className="text-slate-700 font-medium">Role & Permissions</span>
           </div>
         </div>
-        <Button size="sm" className="whitespace-nowrap gap-2" onClick={openCreateModal}>
+        <Button size="sm" className="whitespace-nowrap gap-2 self-start md:self-auto" onClick={openCreateModal}>
           <Plus className="h-4 w-4" />
           New Role
         </Button>
@@ -487,7 +487,7 @@ export const RolePermissionView: React.FC = () => {
                     {/* Action Buttons */}
                     <div
                       onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="flex items-center gap-1"
                     >
                       <button
                         onClick={() => openEditModal(role.id)}

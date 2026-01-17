@@ -9,7 +9,6 @@ import {
   GraduationCap,
   FileSignature,
   History,
-  GitBranch,
   Check,
   Send,
   CheckCircle2,
@@ -47,8 +46,7 @@ type TabType =
   | "training"
   | "document"
   | "signatures"
-  | "audit"
-  | "workflow";
+  | "audit";
 type ChildDocumentType = "Form" | "Annex" | "Attachment";
 
 interface BatchDocument {
@@ -305,7 +303,6 @@ export const BatchDocumentView: React.FC = () => {
     { id: "training" as TabType, label: "Training", icon: GraduationCap },
     { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
     { id: "audit" as TabType, label: "Audit Trail", icon: History },
-    { id: "workflow" as TabType, label: "Workflow Diagram", icon: GitBranch },
   ];
 
   if (documents.length === 0 && activeTab !== "document") {

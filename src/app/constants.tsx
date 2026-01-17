@@ -97,23 +97,7 @@ export const NAV_CONFIG: NavItem[] = [
       {
         id: "controlled-copies",
         label: "Controlled Copies",
-        children: [
-          {
-            id: "cc-all",
-            label: "All Controlled Copies",
-            path: "/documents/controlled-copies/all",
-          },
-          {
-            id: "cc-ready",
-            label: "Ready for Distribution",
-            path: "/documents/controlled-copies/ready",
-          },
-          {
-            id: "cc-distributed",
-            label: "Distributed Copies",
-            path: "/documents/controlled-copies/distributed",
-          },
-        ],
+        path: "/documents/controlled-copies",
       },
       {
         id: "archive-documents",

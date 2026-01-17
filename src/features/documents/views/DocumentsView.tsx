@@ -22,8 +22,8 @@ import {
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { DocumentFilters } from "./DocumentFilters";
-import { DetailDocumentView } from "./detail-document/DetailDocumentView";
-import { NewDocumentModal } from "./all-document/new-document/NewDocumentModal";
+import { DetailDocumentView } from "../detail-document/DetailDocumentView";
+import { NewDocumentModal } from "../all-document/new-document/NewDocumentModal";
 import { CreateLinkModal } from "./CreateLinkModal";
 
 // --- Types ---
@@ -1006,7 +1006,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                     key={col.id}
                     className={cn(
                       "py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
-                      col.id === 'action' && "sticky right-0 bg-slate-50 text-center z-40 backdrop-blur-sm shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200"
+                      col.id === 'action' && "sticky right-0 bg-slate-50 text-center z-10 backdrop-blur-sm shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200"
                     )}
                   >
                     {col.label}
@@ -1131,7 +1131,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                           <td
                             key={col.id}
                             onClick={(e) => e.stopPropagation()}
-                            className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                            className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                           >
                             <button
                               ref={getButtonRef(doc.id)}

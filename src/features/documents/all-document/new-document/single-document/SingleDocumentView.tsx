@@ -9,7 +9,6 @@ import {
     GraduationCap,
     FileSignature,
     History,
-    GitBranch,
     Check,
     Send,
     CheckCircle2,
@@ -31,7 +30,7 @@ import { DocumentType } from "@/types/documentTypes";
 
 // --- Types ---
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
-type TabType = "general" | "training" | "document" | "signatures" | "audit" | "workflow";
+type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 export const SingleDocumentView: React.FC = () => {
     const navigate = useNavigate();
