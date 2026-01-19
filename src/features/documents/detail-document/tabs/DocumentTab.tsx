@@ -101,7 +101,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     };
 
     const handleZoomOut = () => {
-        setZoomLevel((prev) => Math.max(prev - 10, 50));
+        setZoomLevel((prev) => Math.max(prev - 10, 20));
     };
 
     const handleResetZoom = () => {
@@ -123,7 +123,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                             variant="outline"
                             size="icon-sm"
                             onClick={handleZoomOut}
-                            disabled={zoomLevel <= 50}
+                            disabled={zoomLevel <= 20}
                             title="Zoom Out"
                         >
                             <ZoomOut className="h-4 w-4" />
@@ -187,7 +187,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                             variant="outline"
                             size="icon-sm"
                             onClick={handleZoomOut}
-                            disabled={zoomLevel <= 50}
+                            disabled={zoomLevel <= 20}
                             title="Zoom Out"
                         >
                             <ZoomOut className="h-4 w-4" />
@@ -217,10 +217,15 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 </div>
                 {/* Document Content */}
                 <div className="flex-1 overflow-auto">
-                    <div className="max-w-[850px] mx-auto">
+                    <div 
+                        className="inline-block min-w-full"
+                        style={{
+                            width: `${(100 / zoomLevel) * 100}%`,
+                        }}
+                    >
                         <div
                             ref={docxContainerRef}
-                            className="docx-preview-container transition-transform duration-200"
+                            className="docx-preview-container transition-transform duration-200 origin-top-left"
                             style={{
                                 transform: `scale(${zoomLevel / 100})`,
                                 transformOrigin: 'top center',

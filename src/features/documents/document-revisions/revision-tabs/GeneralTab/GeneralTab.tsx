@@ -12,7 +12,6 @@ import {
     ControlledCopiesTab,
     RelatedDocumentsTab
 } from "./subtabs";
-import type { Revision } from './subtabs/types';
 
 type SubTabId = "revisions" | "reviewers" | "approvers" | "knowledges" | "copies" | "related";
 
@@ -25,33 +24,6 @@ interface Reviewer {
     email: string;
     department: string;
     order: number;
-}
-
-interface Approver {
-    id: string;
-    name: string;
-    role: string;
-    email: string;
-    department: string;
-}
-
-interface Knowledge {
-    id: string;
-    title: string;
-    category: string;
-}
-
-interface ControlledCopy {
-    id: string;
-    location: string;
-    custodian: string;
-}
-
-interface RelatedDocument {
-    id: string;
-    documentNumber: string;
-    title: string;
-    type: string;
 }
 
 interface SubTab {
@@ -88,15 +60,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
     hideTemplateCheckbox = false
 }) => {
     const [activeSubtab, setActiveSubtab] = useState<SubTabId>("revisions");
-    
-    // Subtab States - persisted across tab switches
-    const [revisions, setRevisions] = useState<Revision[]>([]);
     const [reviewers, setReviewers] = useState<Reviewer[]>([]);
     const [reviewFlowType, setReviewFlowType] = useState<ReviewFlowType>('parallel');
-    const [approvers, setApprovers] = useState<Approver[]>([]);
-    const [knowledges, setKnowledges] = useState<Knowledge[]>([]);
-    const [controlledCopies, setControlledCopies] = useState<ControlledCopy[]>([]);
-    const [relatedDocuments, setRelatedDocuments] = useState<RelatedDocument[]>([]);
 
     const setFormData = (data: Partial<FormData>) => {
         onFormChange({ ...formData, ...data });
@@ -379,10 +344,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 {/* Subtab Content */}
                 <div className="p-4 md:p-6">
                     {activeSubtab === "revisions" && (
-                        <DocumentRevisionsTab 
-                            revisions={revisions}
-                            onRevisionsChange={setRevisions}
-                        />
+                        <DocumentRevisionsTab />
                     )}
                     {activeSubtab === "reviewers" && (
                         <ReviewersTab 
@@ -393,28 +355,16 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         />
                     )}
                     {activeSubtab === "approvers" && (
-                        <ApproversTab 
-                            approvers={approvers}
-                            onApproversChange={setApprovers}
-                        />
+                        <ApproversTab />
                     )}
                     {activeSubtab === "knowledges" && (
-                        <DocumentKnowledgesTab 
-                            knowledges={knowledges}
-                            onKnowledgesChange={setKnowledges}
-                        />
+                        <DocumentKnowledgesTab />
                     )}
                     {activeSubtab === "copies" && (
-                        <ControlledCopiesTab 
-                            copies={controlledCopies}
-                            onCopiesChange={setControlledCopies}
-                        />
+                        <ControlledCopiesTab />
                     )}
                     {activeSubtab === "related" && (
-                        <RelatedDocumentsTab 
-                            documents={relatedDocuments}
-                            onDocumentsChange={setRelatedDocuments}
-                        />
+                        <RelatedDocumentsTab />
                     )}
                 </div>
             </div>

@@ -142,7 +142,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     };
 
     const handleZoomOut = () => {
-      setZoomLevel((prev) => Math.max(prev - 10, 50));
+      setZoomLevel((prev) => Math.max(prev - 10, 20));
     };
 
     const handleResetZoom = () => {
@@ -157,14 +157,14 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
           style={{ height: "calc(100vh - 300px)" }}
         >
           {/* Toolbar */}
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
-            <div className="flex items-center gap-2">
-              <ImageIcon className="h-4 w-4 text-slate-600" />
-              <span className="font-medium text-slate-700">
+          <div className="flex items-center justify-between px-3 md:px-4 py-2.5 md:py-3 bg-slate-50 border-b border-slate-200">
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <ImageIcon className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-600" />
+              <span className="hidden sm:inline font-medium text-slate-700 text-xs md:text-sm">
                 Image Preview (Read-Only)
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 md:gap-2">
               <Button
                 variant="outline"
                 size="icon-sm"
@@ -172,10 +172,10 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 disabled={zoomLevel <= 50}
                 title="Zoom Out"
               >
-                <ZoomOut className="h-4 w-4" />
+                <ZoomOut className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
-              <div className="min-w-[70px] text-center">
-                <span className="text-sm font-medium text-slate-700">
+              <div className="min-w-[60px] md:min-w-[70px] text-center">
+                <span className="text-xs md:text-sm font-medium text-slate-700">
                   {zoomLevel}%
                 </span>
               </div>
@@ -186,16 +186,16 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 disabled={zoomLevel >= 200}
                 title="Zoom In"
               >
-                <ZoomIn className="h-4 w-4" />
+                <ZoomIn className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
-              <div className="w-px h-6 bg-slate-300 mx-1" />
+              <div className="w-px h-5 md:h-6 bg-slate-300 mx-0.5 md:mx-1" />
               <Button
                 variant="outline"
                 size="icon-sm"
                 onClick={handleResetZoom}
                 title="Reset Zoom"
               >
-                <RotateCcw className="h-4 w-4" />
+                <RotateCcw className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
             </div>
           </div>
@@ -227,11 +227,11 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
           style={{ height: "calc(100vh - 300px)" }}
         >
           {/* Toolbar */}
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
-            <div className="flex items-center gap-2">       
-              <FileText className="h-4 w-4 text-slate-600" />
+          <div className="flex items-center justify-between px-3 md:px-4 py-2.5 md:py-3 bg-slate-50 border-b border-slate-200">
+            <div className="flex items-center gap-1.5 md:gap-2">       
+              <FileText className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-600" />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 md:gap-2">
               <Button
                 variant="outline"
                 size="icon-sm"
@@ -239,10 +239,10 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 disabled={zoomLevel <= 50}
                 title="Zoom Out"
               >
-                <ZoomOut className="h-4 w-4" />
+                <ZoomOut className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
-              <div className="min-w-[70px] text-center">
-                <span className="text-sm font-medium text-slate-700">
+              <div className="min-w-[60px] md:min-w-[70px] text-center">
+                <span className="text-xs md:text-sm font-medium text-slate-700">
                   {zoomLevel}%
                 </span>
               </div>
@@ -253,28 +253,33 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 disabled={zoomLevel >= 200}
                 title="Zoom In"
               >
-                <ZoomIn className="h-4 w-4" />
+                <ZoomIn className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
-              <div className="w-px h-6 bg-slate-300 mx-1" />
+              <div className="w-px h-5 md:h-6 bg-slate-300 mx-0.5 md:mx-1" />
               <Button
                 variant="outline"
                 size="icon-sm"
                 onClick={handleResetZoom}
                 title="Reset Zoom"
               >
-                <RotateCcw className="h-4 w-4" />
+                <RotateCcw className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
             </div>
           </div>
           {/* Document Content */}
-          <div className="flex-1 overflow-auto">
-            <div className="max-w-[850px] mx-auto">
+          <div className="flex-1 overflow-auto p-2 md:p-4">
+            <div 
+              className="inline-block min-w-full"
+              style={{
+                width: `${(100 / zoomLevel) * 100}%`,
+              }}
+            >
               <div
                 ref={docxContainerRef}
-                className="docx-preview-container transition-transform duration-200"
+                className="docx-preview-container transition-transform duration-200 origin-top-left"
                 style={{
                   transform: `scale(${zoomLevel / 100})`,
-                  transformOrigin: "top center",
+                  transformOrigin: "top left",
                 }}
               />
             </div>
@@ -291,10 +296,10 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
           className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col"
           style={{ height: "calc(100vh - 300px)" }}
         >
-          <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-slate-600" />
-              <span className="font-medium text-slate-700">
+          <div className="flex items-center justify-between px-3 md:px-4 py-2.5 md:py-3 bg-slate-50 border-b border-slate-200">
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <FileText className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-600" />
+              <span className="hidden sm:inline font-medium text-slate-700 text-xs md:text-sm">
                 PDF Document Preview (Read-Only)
               </span>
             </div>
@@ -319,9 +324,9 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
         style={{ height: "calc(100vh - 300px)" }}
       >
         <div className="text-center text-slate-400">
-          <FileText className="h-12 w-12 mx-auto mb-3 text-slate-300" />
-          <p className="text-sm">No document to preview</p>
-          <p className="text-xs mt-1">Supported: PDF, DOCX, Images (JPG, PNG)</p>
+          <FileText className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-2 md:mb-3 text-slate-300" />
+          <p className="text-xs md:text-sm">No document to preview</p>
+          <p className="text-[10px] md:text-xs mt-0.5 md:mt-1">Supported: PDF, DOCX, Images (JPG, PNG)</p>
         </div>
       </div>
     );
@@ -426,7 +431,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={cn(
-            "relative border-2 border-dashed rounded-xl p-8 transition-all duration-200",
+            "relative border-2 border-dashed rounded-xl p-6 md:p-8 transition-all duration-200",
             isDragging
               ? "border-emerald-500 bg-emerald-50"
               : "border-slate-300 bg-slate-50 hover:border-emerald-400 hover:bg-emerald-50/50"
@@ -444,33 +449,33 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
           <div className="flex flex-col items-center justify-center text-center">
             <div
               className={cn(
-                "w-14 h-14 rounded-full flex items-center justify-center mb-3 transition-colors",
+                "w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center mb-2.5 md:mb-3 transition-colors",
                 isDragging ? "bg-emerald-100" : "bg-slate-200"
               )}
             >
               <IconCloudUpload
                 className={cn(
-                  "h-7 w-7 transition-colors",
+                  "h-6 w-6 md:h-7 md:w-7 transition-colors",
                   isDragging ? "text-emerald-600" : "text-slate-500"
                 )}
               />
             </div>
 
-            <h3 className="text-base font-semibold text-slate-900 mb-2">
+            <h3 className="text-sm md:text-base font-semibold text-slate-900 mb-1.5 md:mb-2">
               {isDragging ? "Drop files here" : "Upload Document Files"}
             </h3>
-            <p className="text-sm text-slate-500 mb-4">
+            <p className="text-xs md:text-sm text-slate-500 mb-3 md:mb-4">
               Drag and drop your files here, or click to browse
             </p>
 
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors shadow-sm text-sm"
+              className="px-4 md:px-5 py-1.5 md:py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors shadow-sm text-xs md:text-sm"
             >
               Browse Files
             </button>
 
-            <p className="text-xs text-slate-400 mt-3">
+            <p className="text-[10px] md:text-xs text-slate-400 mt-2.5 md:mt-3">
               PDF, Office, Images, Text (Max 50MB)
             </p>
           </div>
@@ -478,8 +483,8 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
         {/* Uploaded Files List */}
         {uploadedFiles.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-slate-700">
+          <div className="space-y-2.5 md:space-y-3">
+            <h4 className="text-xs md:text-sm font-semibold text-slate-700">
               Uploaded Files ({uploadedFiles.length})
             </h4>
 
@@ -488,16 +493,16 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 <div
                   key={uploadedFile.id}
                   className={cn(
-                    "bg-white border rounded-lg p-3 transition-all cursor-pointer",
+                    "bg-white border rounded-lg p-2.5 md:p-3 transition-all cursor-pointer",
                     selectedFile === uploadedFile.file
                       ? "border-emerald-500"
                       : "border-slate-200"
                   )}
                   onClick={() => onSelectFile(uploadedFile.file)}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-2 md:gap-3">
                     {/* File Icon */}
-                    <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shrink-0">
                       {(() => {
                         const name = uploadedFile.file.name.toLowerCase();
                         const ext = name.split(".").pop() || "";
@@ -518,7 +523,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                           <img
                             src={iconSrc}
                             alt="file icon"
-                            className="h-8 w-8 object-contain"
+                            className="h-6 w-6 md:h-8 md:w-8 object-contain"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display =
                                 "none";
@@ -532,19 +537,19 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 truncate">
+                          <p className="text-xs md:text-sm font-medium text-slate-900 truncate">
                             {uploadedFile.file.name}
                           </p>
-                          <p className="text-xs text-slate-500 mt-0.5">
+                          <p className="text-[10px] md:text-xs text-slate-500 mt-0.5">
                             {formatFileSize(uploadedFile.file.size)}
                           </p>
                         </div>
 
                         {/* Status Icon */}
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1 md:gap-1.5">
                           {uploadedFile.status === "success" && (
                             <>
-                              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                              <CheckCircle2 className="h-3.5 w-3.5 md:h-4 md:w-4 text-emerald-600" />
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -553,12 +558,12 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                 className="p-1 hover:bg-emerald-50 rounded transition-colors"
                                 title="Preview"
                               >
-                                <Eye className="h-4 w-4 text-emerald-600" />
+                                <Eye className="h-3.5 w-3.5 md:h-4 md:w-4 text-emerald-600" />
                               </button>
                             </>
                           )}
                           {uploadedFile.status === "error" && (
-                            <AlertCircle className="h-4 w-4 text-red-600" />
+                            <AlertCircle className="h-3.5 w-3.5 md:h-4 md:w-4 text-red-600" />
                           )}
                           <button
                             onClick={(e) => {
@@ -568,15 +573,15 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                             className="p-1 hover:bg-red-50 rounded transition-colors"
                             title="Remove"
                           >
-                            <X className="h-4 w-4 text-slate-400 hover:text-red-600" />
+                            <X className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-400 hover:text-red-600" />
                           </button>
                         </div>
                       </div>
 
                       {/* Progress Bar */}
                       {uploadedFile.status === "uploading" && (
-                        <div className="mt-2">
-                          <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                        <div className="mt-1.5 md:mt-2">
+                          <div className="flex items-center justify-between text-[10px] md:text-xs text-slate-500 mb-1">
                             <span>Uploading...</span>
                             <span>{uploadedFile.progress}%</span>
                           </div>
@@ -591,14 +596,14 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
                       {/* Success Message */}
                       {uploadedFile.status === "success" && (
-                        <p className="text-xs text-emerald-600 mt-1.5 font-medium">
+                        <p className="text-[10px] md:text-xs text-emerald-600 mt-1 md:mt-1.5 font-medium">
                           ✓ Upload completed
                         </p>
                       )}
 
                       {/* Error Message */}
                       {uploadedFile.status === "error" && (
-                        <p className="text-xs text-red-600 mt-1.5">
+                        <p className="text-[10px] md:text-xs text-red-600 mt-1 md:mt-1.5">
                           {uploadedFile.error || "Upload failed"}
                         </p>
                       )}
@@ -611,11 +616,11 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
         )}
 
         {/* Info Box */}
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-start gap-2.5">
-            <File className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
-            <div className="text-sm text-blue-800">
-              <p className="font-medium mb-1">Upload Guidelines</p>
+        <div className="p-2.5 md:p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-start gap-2 md:gap-2.5">
+            <File className="h-3.5 w-3.5 md:h-4 md:w-4 text-blue-600 shrink-0 mt-0.5" />
+            <div className="text-xs md:text-sm text-blue-800">
+              <p className="font-medium mb-0.5 md:mb-1">Upload Guidelines</p>
               <ul className="space-y-0.5 text-blue-700">
                 <li>• Upload main document and supporting files</li>
                 <li>• Files are version controlled and tracked</li>
@@ -633,7 +638,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
           if (!selected || selected.status !== "success") {
             return (
               <div
-                className="w-full h-full flex items-center justify-center text-slate-400 text-sm"
+                className="w-full h-full flex items-center justify-center text-slate-400 text-xs md:text-sm"
                 style={{ height: "calc(100vh - 300px)" }}
               >
                 {selected && selected.status === "uploading" && "Uploading..."}

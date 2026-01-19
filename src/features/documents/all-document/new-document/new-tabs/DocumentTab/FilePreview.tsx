@@ -55,7 +55,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
 
     if (!file) {
         return (
-            <div className="w-full flex items-center justify-center h-full text-slate-400 text-sm" style={{ height: "calc(100vh - 300px)" }}>
+            <div className="w-full flex items-center justify-center h-full text-slate-400 text-xs md:text-sm" style={{ height: "calc(100vh - 300px)" }}>
                 There is no file available for preview.
             </div>
         );
@@ -69,7 +69,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
     };
 
     const handleZoomOut = () => {
-        setZoomLevel((prev) => Math.max(prev - 10, 50));
+        setZoomLevel((prev) => Math.max(prev - 10, 20));
     };
 
     const handleResetZoom = () => {
@@ -80,22 +80,22 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
         return (
             <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
                 {/* Toolbar */}
-                <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
-                    <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-slate-600" />
+                <div className="flex items-center rounded-t-xl justify-between px-3 md:px-4 py-2.5 md:py-3 bg-slate-50 border-b border-slate-200">
+                    <div className="flex items-center gap-1.5 md:gap-2">
+                        <FileText className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-600" />
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 md:gap-2">
                         <Button
                             variant="outline"
                             size="icon-sm"
                             onClick={handleZoomOut}
-                            disabled={zoomLevel <= 50}
+                            disabled={zoomLevel <= 20}
                             title="Zoom Out"
                         >
-                            <ZoomOut className="h-4 w-4" />
+                            <ZoomOut className="h-3.5 w-3.5 md:h-4 md:w-4" />
                         </Button>
-                        <div className="min-w-[70px] text-center">
-                            <span className="text-sm font-medium text-slate-700">{zoomLevel}%</span>
+                        <div className="min-w-[60px] md:min-w-[70px] text-center">
+                            <span className="text-xs md:text-sm font-medium text-slate-700">{zoomLevel}%</span>
                         </div>
                         <Button
                             variant="outline"
@@ -104,7 +104,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                             disabled={zoomLevel >= 200}
                             title="Zoom In"
                         >
-                            <ZoomIn className="h-4 w-4" />
+                            <ZoomIn className="h-3.5 w-3.5 md:h-4 md:w-4" />
                         </Button>
                         <Button
                             variant="outline"
@@ -112,19 +112,24 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                             onClick={handleResetZoom}
                             title="Reset Zoom"
                         >
-                            <RotateCcw className="h-4 w-4" />
+                            <RotateCcw className="h-3.5 w-3.5 md:h-4 md:w-4" />
                         </Button>
                     </div>
                 </div>
                 {/* Document Content */}
-                <div className="flex-1 overflow-auto">
-                    <div className="max-w-[850px] mx-auto">
+                <div className="flex-1 overflow-auto p-2 md:p-4">
+                    <div 
+                        className="inline-block min-w-full"
+                        style={{
+                            width: `${(100 / zoomLevel) * 100}%`,
+                        }}
+                    >
                         <div
                             ref={docxContainerRef}
-                            className="docx-preview-container transition-transform duration-200"
+                            className="docx-preview-container transition-transform duration-200 origin-top-left"
                             style={{
                                 transform: `scale(${zoomLevel / 100})`,
-                                transformOrigin: 'top center',
+                                transformOrigin: 'top left',
                             }}
                         />
                     </div>
