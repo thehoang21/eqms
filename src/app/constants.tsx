@@ -169,7 +169,7 @@ export const NAV_CONFIG: NavItem[] = [
         id: "user-management",
         label: "User Management",
         icon: Users,
-        path: "/settings/users",
+        path: "/settings/user-management",
       },
       {
         id: "roles",

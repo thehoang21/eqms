@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, createRef, RefObject } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   Plus,
@@ -9,6 +10,7 @@ import {
   UserCheck,
   Home,
   KeyRound,
+  Download,
 } from "lucide-react";
 import { IconKey, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
@@ -16,13 +18,10 @@ import { Select } from "@/components/ui/select/Select";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
-import { AddUserModal } from "./AddUserModal";
-import { CredentialsModal } from "./CredentialsModal";
-import { EditUserModal } from "./EditUserModal";
 import { ResetPasswordModal } from "./ResetPasswordModal";
-import { User, UserRole, UserStatus, TableColumn, NewUser } from "./types";
-import { BUSINESS_UNIT_DEPARTMENTS, DEFAULT_COLUMNS, getStatusColor, getRoleColor } from "./constants";
-import { removeAccents, generateUsername, generatePassword, getNextEmployeeId } from "./utils";
+import { User, UserRole, UserStatus, TableColumn } from "./types";
+import { BUSINESS_UNIT_DEPARTMENTS, DEFAULT_COLUMNS, getStatusColor, getRoleColor, USER_MANAGEMENT_ROUTES } from "./constants";
+import { generatePassword } from "./utils";
 
 // --- Mock Data ---
 
@@ -131,6 +130,7 @@ const MOCK_USERS: User[] = [
 
 export const UserManagementView: React.FC = () => {
   const { showToast } = useToast();
+  const navigate = useNavigate();
   
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<UserRole | "All">("All");
@@ -144,35 +144,7 @@ export const UserManagementView: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, userId: "", userName: "" });
   const [statusModal, setStatusModal] = useState({ isOpen: false, userId: "", action: "" as "activate" | "deactivate" });
-  const [addUserModal, setAddUserModal] = useState(false);
-  const [credentialsModal, setCredentialsModal] = useState({ isOpen: false, employeeId: "", username: "", password: "" });
   const [resetPasswordModal, setResetPasswordModal] = useState({ isOpen: false, userId: "", userName: "", password: "" });
-  const [editUserModal, setEditUserModal] = useState(false);
-  const [editUser, setEditUser] = useState<User>({
-    id: "",
-    employeeId: "",
-    fullName: "",
-    username: "",
-    email: "",
-    phone: "",
-    role: "Viewer",
-    businessUnit: "",
-    department: "",
-    status: "Active",
-    lastLogin: "",
-    createdDate: "",
-  });
-  const [newUser, setNewUser] = useState({
-    employeeId: "",
-    fullName: "",
-    email: "",
-    phone: "",
-    role: "Viewer" as UserRole,
-    businessUnit: "",
-    department: "",
-    status: "Active" as UserStatus,
-  });
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   const itemsPerPage = 10;
   const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
@@ -182,12 +154,6 @@ export const UserManagementView: React.FC = () => {
       buttonRefs.current[id] = createRef<HTMLButtonElement>();
     }
     return buttonRefs.current[id];
-  };
-
-  // Handle password regeneration
-  const handleRegeneratePassword = () => {
-    const newPassword = generatePassword();
-    setCredentialsModal({ ...credentialsModal, password: newPassword });
   };
 
   // Filter users
@@ -226,22 +192,6 @@ export const UserManagementView: React.FC = () => {
     }
     return ["All", ...(BUSINESS_UNIT_DEPARTMENTS[businessUnitFilter] || [])];
   }, [businessUnitFilter]);
-
-  // Get available departments for Add User form
-  const formDepartments = useMemo(() => {
-    if (!newUser.businessUnit) {
-      return [];
-    }
-    return BUSINESS_UNIT_DEPARTMENTS[newUser.businessUnit] || [];
-  }, [newUser.businessUnit]);
-
-  // Get available departments for Edit User form
-  const editFormDepartments = useMemo(() => {
-    if (!editUser.businessUnit) {
-      return [];
-    }
-    return BUSINESS_UNIT_DEPARTMENTS[editUser.businessUnit] || [];
-  }, [editUser.businessUnit]);
 
   const handleDropdownToggle = (userId: string, event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -291,9 +241,7 @@ export const UserManagementView: React.FC = () => {
   };
 
   const handleEdit = (user: User) => {
-    setEditUser({ ...user });
-    setFormErrors({});
-    setEditUserModal(true);
+    navigate(USER_MANAGEMENT_ROUTES.EDIT(user.id));
     setOpenDropdownId(null);
   };
 
@@ -349,156 +297,10 @@ export const UserManagementView: React.FC = () => {
     setStatusModal({ isOpen: false, userId: "", action: "activate" });
   };
 
-  const handleAddUser = () => {
-    // Auto-generate next employee ID
-    const nextId = getNextEmployeeId(MOCK_USERS);
-    
-    setNewUser({
-      employeeId: nextId,
-      fullName: "",
-      email: "",
-      phone: "",
-      role: "Viewer",
-      businessUnit: "",
-      department: "",
-      status: "Active",
-    });
-    setFormErrors({});
-    setAddUserModal(true);
-  };
-
-  const validateForm = (): boolean => {
-    const errors: { [key: string]: string } = {};
-
-    if (!newUser.employeeId.trim()) {
-      errors.employeeId = "Employee ID is required";
-    } else if (!/^\d{4}$/.test(newUser.employeeId)) {
-      errors.employeeId = "Employee ID must be 4 digits";
-    } else if (MOCK_USERS.some(u => u.employeeId === `NTP.${newUser.employeeId}`)) {
-      errors.employeeId = "Employee ID already exists";
-    }
-
-    if (!newUser.fullName.trim()) {
-      errors.fullName = "Full name is required";
-    }
-
-    if (!newUser.email.trim()) {
-      errors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
-      errors.email = "Invalid email format";
-    } else if (MOCK_USERS.some(u => u.email === newUser.email)) {
-      errors.email = "Email already exists";
-    }
-
-    if (!newUser.businessUnit.trim()) {
-      errors.businessUnit = "Business unit is required";
-    }
-
-    if (!newUser.department.trim()) {
-      errors.department = "Department is required";
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const validateEditForm = (): boolean => {
-    const errors: { [key: string]: string } = {};
-
-    if (!editUser.fullName.trim()) {
-      errors.fullName = "Full name is required";
-    }
-
-    if (!editUser.email.trim()) {
-      errors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editUser.email)) {
-      errors.email = "Invalid email format";
-    } else if (MOCK_USERS.some(u => u.email === editUser.email && u.id !== editUser.id)) {
-      errors.email = "Email already exists";
-    }
-
-    if (!editUser.businessUnit.trim()) {
-      errors.businessUnit = "Business unit is required";
-    }
-
-    if (!editUser.department.trim()) {
-      errors.department = "Department is required";
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleSubmitNewUser = () => {
-    if (!validateForm()) {
-      return;
-    }
-
-    // Generate username and password
-    const existingUsernames = MOCK_USERS.map(u => u.username);
-    const generatedUsername = generateUsername(newUser.fullName, existingUsernames);
-    const generatedPassword = generatePassword();
-
-    const newUserData: User = {
-      id: `${MOCK_USERS.length + 1}`,
-      ...newUser,
-      employeeId: `NTP.${newUser.employeeId}`,
-      username: generatedUsername,
-      lastLogin: "Never",
-      createdDate: new Date().toISOString().split('T')[0],
-    };
-
-    console.log("Creating new user:", newUserData);
-    console.log("Generated credentials:", { username: generatedUsername, password: generatedPassword });
-    // TODO: Call API to create user with password
-    // MOCK_USERS.push(newUserData); // This would work for local testing
-
-    setAddUserModal(false);
-    setCredentialsModal({ isOpen: true, employeeId: `NTP.${newUser.employeeId}`, username: generatedUsername, password: generatedPassword });
-    
-    // Reset form - keep next ID ready
-    const maxId = MOCK_USERS.reduce((max, user) => {
-      const numPart = parseInt(user.employeeId.split('.')[1] || '0');
-      return Math.max(max, numPart);
-    }, 0);
-    const nextId = (maxId + 1).toString().padStart(4, '0');
-    
-    setNewUser({
-      employeeId: nextId,
-      fullName: "",
-      email: "",
-      phone: "",
-      role: "Viewer",
-      businessUnit: "",
-      department: "",
-      status: "Active",
-    });
-    setFormErrors({});
-  };
-
-  const handleSubmitEditUser = () => {
-    if (!validateEditForm()) {
-      return;
-    }
-
-    console.log("Updating user:", editUser);
-    // TODO: Call API to update user
-    // API call would be: await updateUser(editUser.id, editUser);
-    
-    showToast({
-      type: "success",
-      title: "User Updated",
-      message: `${editUser.fullName}'s information has been updated`,
-    });
-
-    setEditUserModal(false);
-    setFormErrors({});
-  };
-
   return (
     <div className="space-y-4 sm:space-y-5 lg:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+      <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-3 lg:gap-4">
         <div className="min-w-0 flex-1">
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900">User Management</h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
@@ -511,14 +313,32 @@ export const UserManagementView: React.FC = () => {
             <span className="text-slate-700 font-medium">User Management</span>
           </div>
         </div>
-        <Button
-          size="sm"
-          className="flex items-center gap-2 whitespace-nowrap"
-          onClick={handleAddUser}
-        >
-          <Plus className="h-4 w-4" />
-          <span>Add User</span>
-        </Button>
+        <div className="flex items-center gap-2 md:gap-3">
+          <Button
+            size="sm"
+            variant="outline"
+            className="flex items-center gap-2 whitespace-nowrap"
+            onClick={() => {
+              console.log("Export users data");
+              showToast({
+                type: "info",
+                title: "Export",
+                message: "User data export feature coming soon",
+              });
+            }}
+          >
+            <Download className="h-4 w-4" />
+            <span>Export</span>
+          </Button>
+          <Button
+            size="sm"
+            className="flex items-center gap-2 whitespace-nowrap"
+            onClick={() => navigate(USER_MANAGEMENT_ROUTES.ADD)}
+          >
+            <Plus className="h-4 w-4" />
+            <span>Add User</span>
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -827,29 +647,6 @@ export const UserManagementView: React.FC = () => {
         description={`Are you sure you want to ${statusModal.action} this user?`}
       />
 
-      {/* Add User Modal */}
-      <AddUserModal
-        isOpen={addUserModal}
-        onClose={() => setAddUserModal(false)}
-        onSubmit={handleSubmitNewUser}
-        newUser={newUser}
-        setNewUser={setNewUser}
-        formErrors={formErrors}
-        setFormErrors={setFormErrors}
-        formDepartments={formDepartments}
-        businessUnitDepartments={BUSINESS_UNIT_DEPARTMENTS}
-      />
-
-      {/* Credentials Modal */}
-      <CredentialsModal
-        isOpen={credentialsModal.isOpen}
-        onClose={() => setCredentialsModal({ isOpen: false, employeeId: "", username: "", password: "" })}
-        employeeId={credentialsModal.employeeId}
-        username={credentialsModal.username}
-        password={credentialsModal.password}
-        onRegeneratePassword={handleRegeneratePassword}
-      />
-
       {/* Reset Password Modal */}
       <ResetPasswordModal
         isOpen={resetPasswordModal.isOpen}
@@ -857,22 +654,6 @@ export const UserManagementView: React.FC = () => {
         userName={resetPasswordModal.userName}
         password={resetPasswordModal.password}
         onRegeneratePassword={handleRegenerateResetPassword}
-      />
-
-      {/* Edit User Modal */}
-      <EditUserModal
-        isOpen={editUserModal}
-        onClose={() => {
-          setEditUserModal(false);
-          setFormErrors({});
-        }}
-        onSubmit={handleSubmitEditUser}
-        editUser={editUser}
-        setEditUser={setEditUser}
-        formErrors={formErrors}
-        setFormErrors={setFormErrors}
-        formDepartments={editFormDepartments}
-        businessUnitDepartments={BUSINESS_UNIT_DEPARTMENTS}
       />
     </div>
   );

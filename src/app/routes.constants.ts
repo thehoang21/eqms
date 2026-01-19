@@ -82,7 +82,9 @@ export const ROUTES = {
 
   // Settings
   SETTINGS: {
-    USERS: '/settings/users',
+    USER_MANAGEMENT: '/settings/user-management',
+    USER_MANAGEMENT_ADD: '/settings/user-management/add',
+    USER_MANAGEMENT_EDIT: (userId: string) => `/settings/user-management/edit/${userId}`,
     ROLES: '/settings/roles',
     DICTIONARIES: '/settings/dictionaries',
     CONFIG: '/settings/config',

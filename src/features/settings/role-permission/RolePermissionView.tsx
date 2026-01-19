@@ -394,8 +394,8 @@ export const RolePermissionView: React.FC = () => {
   return (
     <div className="space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
+      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 lg:gap-4">
+        <div className="flex-1 min-w-0">
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900">Role & Permissions</h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <Home className="h-4 w-4 sm:hidden" />
@@ -407,7 +407,7 @@ export const RolePermissionView: React.FC = () => {
             <span className="text-slate-700 font-medium">Role & Permissions</span>
           </div>
         </div>
-        <Button size="sm" className="whitespace-nowrap gap-2 self-start md:self-auto" onClick={openCreateModal}>
+        <Button size="sm" className="whitespace-nowrap gap-2" onClick={openCreateModal}>
           <Plus className="h-4 w-4" />
           New Role
         </Button>

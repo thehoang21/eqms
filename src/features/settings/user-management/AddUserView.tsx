@@ -1,57 +1,166 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Home, Save, X } from "lucide-react";
+import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
-import { FormModal } from "@/components/ui/modal/FormModal";
+import { AlertModal } from "@/components/ui/modal/AlertModal";
+import { CredentialsModal } from "./CredentialsModal";
+import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
+import { NewUser } from "./types";
+import { BUSINESS_UNIT_DEPARTMENTS, USER_MANAGEMENT_ROUTES } from "./constants";
+import { removeAccents, generateUsername, generatePassword } from "./utils";
 
-type UserRole = "Admin" | "QA Manager" | "Document Owner" | "Reviewer" | "Approver" | "Viewer";
-type UserStatus = "Active" | "Inactive" | "Pending";
+export const AddUserView: React.FC = () => {
+  const navigate = useNavigate();
+  const { showToast } = useToast();
 
-interface NewUser {
-  employeeId: string;
-  fullName: string;
-  email: string;
-  phone: string;
-  role: UserRole;
-  businessUnit: string;
-  department: string;
-  status: UserStatus;
-}
+  const [newUser, setNewUser] = useState<NewUser>({
+    employeeId: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    role: "Viewer",
+    businessUnit: "",
+    department: "",
+    status: "Active",
+  });
 
-interface AddUserModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: () => void;
-  newUser: NewUser;
-  setNewUser: React.Dispatch<React.SetStateAction<NewUser>>;
-  formErrors: { [key: string]: string };
-  setFormErrors: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
-  formDepartments: string[];
-  businessUnitDepartments: { [key: string]: string[] };
-}
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showCredentialsModal, setShowCredentialsModal] = useState(false);
+  const [generatedCredentials, setGeneratedCredentials] = useState({ username: "", password: "" });
 
-export const AddUserModal: React.FC<AddUserModalProps> = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  newUser,
-  setNewUser,
-  formErrors,
-  setFormErrors,
-  formDepartments,
-  businessUnitDepartments,
-}) => {
+  const formDepartments = useMemo(() => {
+    return newUser.businessUnit ? BUSINESS_UNIT_DEPARTMENTS[newUser.businessUnit] || [] : [];
+  }, [newUser.businessUnit]);
+
+  const validateForm = (): boolean => {
+    const errors: { [key: string]: string } = {};
+
+    if (!newUser.employeeId) {
+      errors.employeeId = "Employee ID is required";
+    } else if (newUser.employeeId.length !== 4) {
+      errors.employeeId = "Employee ID must be 4 digits";
+    }
+
+    if (!newUser.fullName.trim()) {
+      errors.fullName = "Full Name is required";
+    }
+
+    if (!newUser.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
+      errors.email = "Invalid email format";
+    }
+
+    if (!newUser.businessUnit) {
+      errors.businessUnit = "Business Unit is required";
+    }
+
+    if (!newUser.department) {
+      errors.department = "Department is required";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleRegeneratePassword = () => {
+    const newPassword = generatePassword();
+    setGeneratedCredentials((prev) => ({ ...prev, password: newPassword }));
+  };
+
+  const handleSubmit = () => {
+    if (!validateForm()) {
+      showToast({ type: "error", message: "Please fix all errors before submitting" });
+      return;
+    }
+
+    const username = generateUsername(newUser.fullName, []);
+    const password = generatePassword();
+    
+    setGeneratedCredentials({ username, password });
+    setShowCredentialsModal(true);
+
+    console.log("Creating user:", { ...newUser, username });
+    
+    showToast({ type: "success", message: `User ${newUser.fullName} created successfully` });
+  };
+
+  const handleCancel = () => {
+    setShowCancelModal(true);
+  };
+
+  const handleConfirmCancel = () => {
+    setShowCancelModal(false);
+    navigate("/settings/user-management");
+  };
+
+  const handleCredentialsClose = () => {
+    setShowCredentialsModal(false);
+    navigate("/settings/user-management");
+  };
+
   return (
-    <FormModal
-      isOpen={isOpen}
-      onClose={onClose}
-      onConfirm={onSubmit}
-      title="Add New User"
-      description="Fill in the information to create a new user account"
-      confirmText="Create"
-      cancelText="Cancel"
-      size="2xl"
-    >
-      <div>
+    <div className="space-y-4 md:space-y-6 w-full">
+      {/* Header */}
+      <div className="flex flex-col gap-3 md:gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 md:gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
+              Add New User
+            </h1>
+            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="hover:text-slate-700 transition-colors hidden sm:inline"
+              >
+                Dashboard
+              </button>
+              <Home className="h-4 w-4 sm:hidden" />
+              <span className="text-slate-400 mx-1">/</span>
+              <span className="hidden md:inline">Settings</span>
+              <span className="md:hidden">...</span>
+              <span className="text-slate-400 mx-1">/</span>
+              <button
+                onClick={() => navigate(USER_MANAGEMENT_ROUTES.LIST)}
+                className="hover:text-slate-700 transition-colors"
+              >
+                User Management
+              </button>
+              <span className="text-slate-400 mx-1">/</span>
+              <span className="text-slate-700 font-medium">Add User</span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+            <Button
+              onClick={handleCancel}
+              variant="outline"
+              size="sm"
+              className="whitespace-nowrap gap-2 self-start md:self-auto"
+            >
+              <X className="h-4 w-4" />
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              size="sm"
+              className="whitespace-nowrap gap-2 self-start md:self-auto"
+            >
+              <Save className="h-4 w-4" />
+              Create User
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Form Card */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="p-6">
+          <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {/* Employee ID */}
               <div>
@@ -166,7 +275,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                   }}
                   options={[
                     { label: "Select Business Unit", value: "" },
-                    ...Object.keys(businessUnitDepartments).map(bu => ({ label: bu, value: bu }))
+                    ...Object.keys(BUSINESS_UNIT_DEPARTMENTS).map(bu => ({ label: bu, value: bu }))
                   ]}
                 />
                 {formErrors.businessUnit && (
@@ -202,7 +311,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                 <Select
                   label="Role"
                   value={newUser.role}
-                  onChange={(value) => setNewUser({ ...newUser, role: value as UserRole })}
+                  onChange={(value) => setNewUser({ ...newUser, role: value as any })}
                   options={[
                     { label: "Admin", value: "Admin" },
                     { label: "QA Manager", value: "QA Manager" },
@@ -219,7 +328,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                 <Select
                   label="Status"
                   value={newUser.status}
-                  onChange={(value) => setNewUser({ ...newUser, status: value as UserStatus })}
+                  onChange={(value) => setNewUser({ ...newUser, status: value as any })}
                   options={[
                     { label: "Active", value: "Active" },
                     { label: "Inactive", value: "Inactive" },
@@ -230,7 +339,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
             </div>
 
             {/* Info Box */}
-            <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="flex items-start gap-2 sm:gap-3">
                 <div className="text-xs sm:text-sm text-blue-800">
                   <p className="font-medium mb-1">User Account Information</p>
@@ -243,6 +352,30 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               </div>
             </div>
           </div>
-    </FormModal>
+        </div>
+      </div>
+
+      {/* Modals */}
+      <AlertModal
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        onConfirm={handleConfirmCancel}
+        type="warning"
+        title="Cancel User Creation?"
+        description="Are you sure you want to cancel? All entered information will be lost."
+        confirmText="Yes, Cancel"
+        cancelText="No, Continue"
+        showCancel={true}
+      />
+
+      <CredentialsModal
+        isOpen={showCredentialsModal}
+        onClose={handleCredentialsClose}
+        employeeId={newUser.employeeId}
+        username={generatedCredentials.username}
+        password={generatedCredentials.password}
+        onRegeneratePassword={handleRegeneratePassword}
+      />
+    </div>
   );
 };

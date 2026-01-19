@@ -12,7 +12,7 @@ import { ArchivedDocumentsView } from '@/features/documents/archived-document';
 import { ControlledCopiesView, ControlledCopyDetailView, DestroyControlledCopyView } from '@/features/documents/controlled-copies';
 import { RequestControlledCopyView } from '@/features/documents/views/RequestControlledCopyView';
 import { MyTasksView } from '@/features/my-tasks';
-import { ProfileView, UserManagementView, DictionariesView } from '@/features/settings';
+import { ProfileView, UserManagementView, AddUserView, EditUserView, DictionariesView } from '@/features/settings';
 import { RolePermissionView } from '@/features/settings/role-permission';
 import { LoginView } from '@/features/auth';
 import { UIShowcase } from '@/features/ui-showcase/UIShowcase';
@@ -111,7 +111,9 @@ export const AppRoutes: React.FC = () => {
         {/* Profile */}
         <Route path="profile" element={<ProfileView onBack={() => navigate(-1)} />} />
         {/* Settings */}
-        <Route path="settings/users" element={<UserManagementView />} />
+        <Route path="settings/user-management" element={<UserManagementView />} />
+        <Route path="settings/user-management/add" element={<AddUserView />} />
+        <Route path="settings/user-management/edit/:userId" element={<EditUserView />} />
         <Route path="settings/roles" element={<RolePermissionView />} />
         <Route path="settings/dictionaries" element={<DictionariesView />} />
         {/* UI Showcase */}

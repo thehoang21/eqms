@@ -102,8 +102,8 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
           {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
 
           <div className="pt-2 flex gap-3">
-             <Button type="button" variant="outline" className="w-full" onClick={onClose}>Cancel</Button>
-             <Button type="submit" className="w-full">Sign</Button>
+             <Button type="button" size='sm' variant="outline" className="w-full" onClick={onClose}>Cancel</Button>
+             <Button type="submit" size='sm' className="w-full">Sign</Button>
           </div>
         </form>
       </div>

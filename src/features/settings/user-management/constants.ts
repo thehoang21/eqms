@@ -1,5 +1,12 @@
 import { TableColumn } from "./types";
 
+// Routes
+export const USER_MANAGEMENT_ROUTES = {
+  LIST: "/settings/user-management",
+  ADD: "/settings/user-management/add",
+  EDIT: (userId: string) => `/settings/user-management/edit/${userId}`,
+} as const;
+
 // Business Units and their Departments mapping
 export const BUSINESS_UNIT_DEPARTMENTS: { [key: string]: string[] } = {
   "Corporate": ["IT Department", "Human Resources", "Finance", "Legal"],
