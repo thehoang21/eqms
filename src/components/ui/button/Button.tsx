@@ -1,9 +1,26 @@
 import React from 'react';
 import { cn } from '../utils';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+/**
+ * Button component following shadcn/ui design system
+ * 
+ * @example
+ * ```tsx
+ * <Button variant="default" size="sm" onClick={handleClick}>
+ *   Submit
+ * </Button>
+ * 
+ * <Button variant="ghost" size="icon">
+ *   <Settings className="h-4 w-4" />
+ * </Button>
+ * ```
+ */
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Button style variant */
   variant?: 'default' | 'ghost' | 'outline' | 'secondary';
+  /** Button size with responsive support */
   size?: 'xs' | 'sm' | 'default' | 'lg' | 'xl' | 'icon' | 'icon-sm' | 'icon-lg';
+  /** Make button full width */
   fullWidth?: boolean;
 }
 

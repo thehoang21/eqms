@@ -2,12 +2,30 @@ import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '../utils';
 
-interface CheckboxProps {
+/**
+ * Checkbox component with custom styling
+ * 
+ * @example
+ * ```tsx
+ * <Checkbox 
+ *   checked={isChecked} 
+ *   onChange={setIsChecked}
+ *   label="Accept terms" 
+ * />
+ * ```
+ */
+export interface CheckboxProps {
+  /** Input element ID */
   id?: string;
+  /** Checked state */
   checked?: boolean;
+  /** Callback when checked state changes */
   onChange?: (checked: boolean) => void;
+  /** Label text */
   label?: string;
+  /** Disable the checkbox */
   disabled?: boolean;
+  /** Additional CSS classes */
   className?: string;
 }
 

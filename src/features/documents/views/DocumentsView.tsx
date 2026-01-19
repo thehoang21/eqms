@@ -20,11 +20,12 @@ import {
   IconPlus,
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
+import { StatusBadge, StatusType } from "@/components/ui/statusbadge/StatusBadge";
 import { cn } from "@/components/ui/utils";
-import { DocumentFilters } from "./DocumentFilters";
-import { DetailDocumentView } from "../detail-document/DetailDocumentView";
-import { NewDocumentModal } from "../all-document/new-document/NewDocumentModal";
-import { CreateLinkModal } from "./CreateLinkModal";
+import { DocumentFilters } from "./../shared/components/DocumentFilters";
+import { DetailDocumentView } from "../document-detail/DetailDocumentView";
+import { NewDocumentModal } from "../document-list/new-document/NewDocumentModal";
+import { CreateLinkModal } from "./../shared/components/CreateLinkModal";
 
 // --- Types ---
 
@@ -235,6 +236,26 @@ const CURRENT_USER = {
 };
 
 // --- Helper Functions ---
+
+// Map DocumentStatus to StatusType for StatusBadge component
+const mapDocumentStatusToStatusType = (status: DocumentStatus): StatusType => {
+  switch (status) {
+    case "Effective":
+      return "effective";
+    case "Approved":
+      return "approved";
+    case "Pending Approval":
+      return "pendingApproval";
+    case "Pending Review":
+      return "pendingReview";
+    case "Draft":
+      return "draft";
+    case "Archive":
+      return "archived";
+    default:
+      return "draft";
+  }
+};
 
 const getStatusColor = (status: DocumentStatus) => {
   switch (status) {
@@ -1064,12 +1085,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       if (col.id === 'status') {
                         return (
                           <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
-                            <span className={cn(
-                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                              getStatusColor(doc.status)
-                            )}>
-                              {doc.status}
-                            </span>
+                            <StatusBadge status={mapDocumentStatusToStatusType(doc.status)} />
                           </td>
                         );
                       }

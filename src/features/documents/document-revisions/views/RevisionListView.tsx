@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge';
-import { DocumentFilters } from "../../views/DocumentFilters";
+import { DocumentFilters } from "@/features/documents/shared/components";
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { IconFileCheck, IconFileTime, IconInfoCircle, IconFileExport } from "@tabler/icons-react";

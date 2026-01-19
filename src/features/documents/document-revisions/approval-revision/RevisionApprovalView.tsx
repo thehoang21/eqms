@@ -13,13 +13,13 @@ import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { useToast } from '@/components/ui/toast';
-import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../../views/DocumentWorkflowLayout";
+import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../../shared/layouts/DocumentWorkflowLayout";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
 import { GeneralTab } from "../revision-tabs/GeneralTab/GeneralTab";
 import { DocumentType as DocType } from "@/types/documentTypes";
-import { TrainingTab } from "../revision-tabs/TrainingTab/TrainingTab";
-import { SignaturesTab } from "../revision-tabs/SignaturesTab/SignaturesTab";
-import { AuditTab } from "../revision-tabs/AuditTab/AuditTab";
+import { TrainingTab } from "@/features/documents/shared/tabs/TrainingTab/TrainingTab";
+import { SignaturesTab } from "@/features/documents/shared/tabs/SignaturesTab/SignaturesTab";
+import { AuditTab } from "@/features/documents/shared/tabs/AuditTab/AuditTab";
 import { IconMessage2 } from "@tabler/icons-react";
 
 // --- Types ---

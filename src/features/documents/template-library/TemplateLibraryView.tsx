@@ -23,7 +23,7 @@ import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { TemplateFilters } from "./TemplateFilters";
 import { IconPlus, IconTemplate, IconFileExport } from "@tabler/icons-react";
-import { CreateLinkModal } from "../views/CreateLinkModal";
+import { CreateLinkModal } from "@/features/documents/shared/components";
 
 // --- Types ---
 

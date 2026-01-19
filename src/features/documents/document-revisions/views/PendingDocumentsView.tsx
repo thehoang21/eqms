@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { DocumentFilters } from "../../views/DocumentFilters";
+import { DocumentFilters } from "@/features/documents/shared/components";
 import { IconChecks, IconEyeCheck, IconInfoCircle, IconFileExport } from "@tabler/icons-react";
 
 // --- Types ---

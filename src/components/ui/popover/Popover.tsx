@@ -3,11 +3,28 @@ import { createPortal } from 'react-dom';
 import { Info } from 'lucide-react';
 import { cn } from '../utils';
 
-interface PopoverProps {
+/**
+ * Popover component for tooltips and contextual information
+ * 
+ * @example
+ * ```tsx
+ * <Popover 
+ *   title="Help"
+ *   content="This is a helpful description"
+ *   placement="top"
+ * />
+ * ```
+ */
+export interface PopoverProps {
+  /** Popover title */
   title: string;
+  /** Popover content */
   content: string | React.ReactNode;
+  /** CSS classes for trigger button */
   triggerClassName?: string;
+  /** CSS classes for content */
   contentClassName?: string;
+  /** Placement position */
   placement?: 'top' | 'bottom' | 'left' | 'right';
 }
 

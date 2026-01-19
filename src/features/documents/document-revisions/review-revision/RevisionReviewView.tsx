@@ -14,18 +14,19 @@ import {
 import { IconListNumbers, IconMessage2 } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
+import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import {
   DocumentWorkflowLayout,
   DEFAULT_WORKFLOW_TABS,
-} from "@/features/documents/views/DocumentWorkflowLayout";
+} from "@/features/documents/shared/layouts";
 import {
   GeneralInformationTab,
   TrainingInformationTab,
   DocumentTab,
   SignaturesTab,
   AuditTrailTab,
-} from "@/features/documents/detail-document/tabs";
+} from "@/features/documents/document-detail/tabs";
 
 // --- Types ---
 type DocumentType =
@@ -456,28 +457,16 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                                     </span>
                                   )}
                                   {isApproved && (
-                                    <span className="inline-flex items-center gap-1.5 px-2.5 md:px-3 py-1 md:py-1.5 bg-emerald-50 text-emerald-700 rounded-full">
-                                      <CheckCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                      <span className="text-xs font-medium">Approved</span>
-                                    </span>
+                                    <StatusBadge status="approved" size="sm" />
                                   )}
                                   {isRejected && (
-                                    <span className="inline-flex items-center gap-1.5 px-2.5 md:px-3 py-1 md:py-1.5 bg-red-50 text-red-700 rounded-full">
-                                      <XCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                      <span className="text-xs font-medium">Rejected</span>
-                                    </span>
+                                    <StatusBadge status="rejected" size="sm" />
                                   )}
                                   {isCurrent && (
-                                    <span className="inline-flex items-center gap-1.5 px-2.5 md:px-3 py-1 md:py-1.5 bg-blue-50 text-blue-700 rounded-full">
-                                      <Clock className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                      <span className="text-xs font-medium">Current</span>
-                                    </span>
+                                    <StatusBadge status="current" size="sm" />
                                   )}
                                   {isBlocked && (
-                                    <span className="inline-flex items-center gap-1.5 px-2.5 md:px-3 py-1 md:py-1.5 bg-amber-50 text-amber-700 rounded-full">
-                                      <Clock className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                      <span className="text-xs font-medium">Blocked</span>
-                                    </span>
+                                    <StatusBadge status="blocked" size="sm" />
                                   )}
                                 </div>
                               </div>
@@ -535,15 +524,9 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                             </div>
                             <div className="flex items-center gap-2 sm:shrink-0">
                               {isSigned ? (
-                                <span className="inline-flex items-center gap-1.5 px-2.5 md:px-3 py-1 md:py-1.5 bg-emerald-50 text-emerald-700 rounded-full">
-                                  <CheckCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                  <span className="text-xs font-medium">Signed</span>
-                                </span>
+                                <StatusBadge status="approved" size="sm" />
                               ) : (
-                                <span className="inline-flex items-center gap-1.5 px-2.5 md:px-3 py-1 md:py-1.5 bg-amber-50 text-amber-700 rounded-full">
-                                  <Clock className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                  <span className="text-xs font-medium">Pending</span>
-                                </span>
+                                <StatusBadge status="blocked" size="sm" />
                               )}
                             </div>
                           </div>

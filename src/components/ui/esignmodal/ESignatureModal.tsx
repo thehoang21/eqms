@@ -3,10 +3,27 @@ import { createPortal } from 'react-dom';
 import { X, Lock, AlertCircle } from 'lucide-react';
 import { Button } from '../button/Button';
 
-interface ESignatureModalProps {
+/**
+ * E-Signature Modal for secure action confirmation
+ * 
+ * @example
+ * ```tsx
+ * <ESignatureModal
+ *   isOpen={showModal}
+ *   onClose={() => setShowModal(false)}
+ *   onConfirm={(reason) => handleApprove(reason)}
+ *   actionTitle="Approve Document"
+ * />
+ * ```
+ */
+export interface ESignatureModalProps {
+  /** Modal open state */
   isOpen: boolean;
+  /** Callback to close modal */
   onClose: () => void;
+  /** Callback on confirm with reason */
   onConfirm: (reason: string) => void;
+  /** Action title displayed in modal */
   actionTitle: string;
 }
 

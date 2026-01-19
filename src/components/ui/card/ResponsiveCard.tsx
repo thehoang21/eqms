@@ -6,7 +6,10 @@ import { cn } from '../utils';
  * Optimized for Desktop and Tablet (iPad portrait & landscape)
  */
 
-interface CardProps {
+/**
+ * Card component props
+ */
+export interface CardProps {
   children: React.ReactNode;
   className?: string;
   hover?: boolean;

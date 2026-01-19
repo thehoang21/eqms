@@ -1,0 +1,666 @@
+import React, { useState } from "react";
+import {
+  User,
+  MessageSquare,
+  ThumbsUp,
+  ThumbsDown,
+  Send,
+  CheckCircle,
+  XCircle,
+  ChevronDown,
+  Users,
+  Clock,
+} from "lucide-react";
+import { IconListNumbers, IconMessage2 } from "@tabler/icons-react";
+import { cn } from "@/components/ui/utils";
+import { Button } from "@/components/ui/button/Button";
+import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
+import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
+import {
+  DocumentWorkflowLayout,
+  DEFAULT_WORKFLOW_TABS,
+} from "../../shared/layouts/DocumentWorkflowLayout";
+import {
+  GeneralInformationTab,
+  TrainingInformationTab,
+  DocumentTab,
+  SignaturesTab,
+  AuditTrailTab,
+} from "@/features/documents/document-detail/tabs";
+
+// --- Types ---
+type DocumentType =
+  | "SOP"
+  | "Policy"
+  | "Form"
+  | "Report"
+  | "Specification"
+  | "Protocol";
+type DocumentStatus =
+  | "Draft"
+  | "Pending Review"
+  | "Pending Approval"
+  | "Approved"
+  | "Pending Training"
+  | "Ready for Publishing"
+  | "Published"
+  | "Effective"
+  | "Archive";
+type ReviewFlowType = "sequential" | "parallel";
+type ReviewStatus = "pending" | "approved" | "rejected" | "completed";
+type TabType = "document" | "general" | "training" | "signatures" | "audit";
+
+interface Reviewer {
+  id: string;
+  name: string;
+  role: string;
+  email: string;
+  department: string;
+  order: number;
+  status: ReviewStatus;
+  reviewDate?: string;
+  comments?: string;
+}
+
+interface DocumentDetail {
+  id: string;
+  documentId: string;
+  title: string;
+  type: DocumentType;
+  version: string;
+  status: DocumentStatus;
+  effectiveDate: string;
+  author: string;
+  department: string;
+  created: string;
+  description: string;
+  documentType: "Document" | "Revision"; // Distinguish Document vs Revision
+  previousVersion?: string; // Only for Revision
+  reviewFlowType: ReviewFlowType;
+  reviewers: Reviewer[];
+  currentReviewerIndex: number; // For sequential review
+  // Extended fields for GeneralInformationTab
+  validUntil: string;
+  openedBy: string;
+  owner: string;
+  approvers: string[];
+  lastModified: string;
+  lastModifiedBy: string;
+  isTemplate: boolean;
+  businessUnit: string;
+  knowledgeBase: string;
+  subType: string;
+  periodicReviewCycle: number;
+  periodicReviewNotification: number;
+  language: string;
+}
+
+interface Comment {
+  id: string;
+  author: string;
+  role: string;
+  date: string;
+  content: string;
+}
+
+interface DocumentReviewViewProps {
+  documentId: string;
+  onBack: () => void;
+  currentUserId: string; // ID of the logged-in user
+}
+
+// --- Helper Functions ---
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
+// --- Mock Data ---
+const MOCK_DOCUMENT: DocumentDetail = {
+  id: "1",
+  documentId: "SOP-QA-001",
+  title: "Standard Operating Procedure for Quality Control Testing",
+  type: "SOP",
+  version: "1.0",
+  status: "Pending Review",
+  effectiveDate: "2026-02-01",
+  author: "John Smith",
+  department: "Quality Assurance",
+  created: "2026-01-05 10:30:00",
+  description:
+    "This SOP outlines the procedures for quality control testing of pharmaceutical products.",
+  documentType: "Revision", // Set as Revision to enable compare
+  previousVersion: "2.0", // Previous version for comparison
+  reviewFlowType: "sequential",
+  reviewers: [
+    {
+      id: "1",
+      name: "Nguyen Van A",
+      role: "QA Manager",
+      email: "a.nguyen@example.com",
+      department: "Quality Assurance",
+      order: 1,
+      status: "pending",
+    },
+    {
+      id: "2",
+      name: "Tran Thi B",
+      role: "Director",
+      email: "b.tran@example.com",
+      department: "Board of Directors",
+      order: 2,
+      status: "pending",
+    },
+    {
+      id: "3",
+      name: "Le Van C",
+      role: "Production Manager",
+      email: "c.le@example.com",
+      department: "Production",
+      order: 3,
+      status: "pending",
+    },
+  ],
+  currentReviewerIndex: 0,
+  // Extended fields
+  validUntil: "2028-02-01",
+  openedBy: "Nguyen Van A",
+  owner: "John Smith",
+  approvers: ["David Miller", "Jennifer Davis"],
+  lastModified: "2026-01-05",
+  lastModifiedBy: "John Smith",
+  isTemplate: false,
+  businessUnit: "Operation Unit",
+  knowledgeBase: "Quality Assurance",
+  subType: "-- None --",
+  periodicReviewCycle: 24,
+  periodicReviewNotification: 14,
+  language: "English",
+};
+
+const MOCK_COMMENTS: Comment[] = [
+  {
+    id: "1",
+    author: "John Smith",
+    role: "QA Manager",
+    date: "2026-01-05 14:30:00",
+    content:
+      "Please review Section 3.2 regarding temperature control procedures. I believe we need more specific guidelines.",
+  },
+];
+
+export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
+  documentId,
+  onBack,
+  currentUserId = "1", // Mocked current user
+}) => {
+  const [document, setDocument] = useState(MOCK_DOCUMENT);
+  const [comments, setComments] = useState(MOCK_COMMENTS);
+  const [newComment, setNewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>("document");
+  const [isWorkflowExpanded, setIsWorkflowExpanded] = useState(true);
+  const [showESignModal, setShowESignModal] = useState(false);
+  const [eSignAction, setESignAction] = useState<"approve" | "reject">(
+    "approve"
+  );
+
+  // Determine if current user can review
+  const currentReviewer = document.reviewers.find(
+    (r) => r.id === currentUserId
+  );
+  const canReview = !!(
+    currentReviewer &&
+    currentReviewer.status === "pending" &&
+    (document.reviewFlowType === "parallel" ||
+      (document.reviewFlowType === "sequential" &&
+        currentReviewer.order === document.currentReviewerIndex + 1))
+  );
+
+  const handleApprove = () => {
+    if (!currentReviewer) return;
+    setESignAction("approve");
+    setShowESignModal(true);
+  };
+
+  const handleReject = () => {
+    if (!currentReviewer) return;
+    setESignAction("reject");
+    setShowESignModal(true);
+  };
+
+  const handleESignConfirm = (reason: string) => {
+    if (!currentReviewer) return;
+
+    setIsSubmitting(true);
+    setShowESignModal(false);
+
+    // Simulate API call
+    setTimeout(() => {
+      const newStatus = eSignAction === "approve" ? "approved" : "rejected";
+      const updatedReviewers = document.reviewers.map((r) =>
+        r.id === currentUserId
+          ? {
+              ...r,
+              status: newStatus as ReviewStatus,
+              reviewDate: new Date().toISOString(),
+              comments: reason,
+            }
+          : r
+      );
+
+      let nextIndex = document.currentReviewerIndex;
+      if (
+        document.reviewFlowType === "sequential" &&
+        eSignAction === "approve"
+      ) {
+        nextIndex = document.currentReviewerIndex + 1;
+      }
+
+      setDocument({
+        ...document,
+        reviewers: updatedReviewers,
+        currentReviewerIndex: nextIndex,
+        status: eSignAction === "reject" ? "Draft" : document.status,
+      });
+
+      setIsSubmitting(false);
+    }, 1000);
+  };
+
+  const handleAddComment = () => {
+    if (!newComment.trim()) return;
+
+    const comment: Comment = {
+      id: Date.now().toString(),
+      author: currentReviewer?.name || "Current User",
+      role: currentReviewer?.role || "Reviewer",
+      date: new Date().toISOString(),
+      content: newComment,
+    };
+
+    setComments([...comments, comment]);
+    setNewComment("");
+  };
+
+  // Status workflow steps
+  const statusSteps: DocumentStatus[] = [
+    "Draft",
+    "Pending Review",
+    "Pending Approval",
+    "Approved",
+    "Pending Training",
+    "Ready for Publishing",
+    "Published",
+    "Effective",
+    "Archive",
+  ];
+
+  // Breadcrumbs
+  const breadcrumbs = [
+    { label: "Dashboard", onClick: onBack },
+    { label: "My Tasks", onClick: onBack },
+    { label: "Pending My Review", onClick: onBack },
+    { label: document.documentId, isActive: true },
+  ];
+
+  return (
+    <DocumentWorkflowLayout
+      title="Document Review"
+      breadcrumbs={breadcrumbs}
+      onBack={onBack}
+      documentId={document.documentId}
+      documentStatus={document.status}
+      statusSteps={statusSteps}
+      currentStatus={document.status}
+      tabs={DEFAULT_WORKFLOW_TABS}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+    >
+      {activeTab === "document" && (
+        <div className="space-y-6">
+          {/* PDF Preview Section */}
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <DocumentTab />
+          </div>
+
+          {/* Review Workflow Info */}
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <button
+              onClick={() => setIsWorkflowExpanded(!isWorkflowExpanded)}
+              className="w-full flex items-center justify-between p-4 md:p-6 hover:bg-slate-50 transition-colors"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <h3 className="text-base md:text-lg font-bold text-slate-900">
+                  Review Workflow
+                </h3>
+                <div className="inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1 md:py-1.5 bg-slate-50 border border-slate-200 rounded-lg w-fit">
+                  {document.reviewFlowType === "sequential" ? (
+                    <>
+                      <IconListNumbers className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-600" />
+                      <span className="text-xs md:text-sm font-medium text-slate-700">
+                        Sequential Review
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <Users className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-600" />
+                      <span className="text-xs md:text-sm font-medium text-slate-700">
+                        Parallel Review
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <ChevronDown
+                className={cn(
+                  "h-5 w-5 text-slate-400 transition-transform duration-300 ease-in-out shrink-0",
+                  isWorkflowExpanded && "transform rotate-180"
+                )}
+              />
+            </button>
+
+            <div
+              className={cn(
+                "transition-all duration-300 ease-in-out overflow-hidden",
+                isWorkflowExpanded
+                  ? "max-h-[2000px] opacity-100"
+                  : "max-h-0 opacity-0"
+              )}
+            >
+              {/* Sequential: Vertical Stepper */}
+              {document.reviewFlowType === "sequential" && (
+                <div className="px-4 md:px-6 pb-4 md:pb-6">
+                  <ul className="relative ml-3 md:ml-6">
+                    <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-slate-200" />
+                    {document.reviewers
+                      .slice()
+                      .sort((a, b) => a.order - b.order)
+                      .map((reviewer) => {
+                        const isCurrentUserReviewer = reviewer.id === currentUserId;
+                        const isCurrent =
+                          reviewer.status === "pending" &&
+                          reviewer.order === document.currentReviewerIndex + 1;
+                        const isBlocked =
+                          reviewer.status === "pending" &&
+                          reviewer.order > document.currentReviewerIndex + 1;
+                        const isApproved = reviewer.status === "approved";
+                        const isRejected = reviewer.status === "rejected";
+
+                        return (
+                          <li key={reviewer.id} className="relative pl-10 md:pl-16 py-2 md:py-3">
+                            {/* Step indicator */}
+                            <div
+                              className={cn(
+                                "absolute left-4 md:left-6 -translate-x-1/2 top-2 h-7 w-7 md:h-8 md:w-8 rounded-full flex items-center justify-center text-xs font-bold",
+                                isApproved && "bg-emerald-600 text-white",
+                                isRejected && "bg-red-600 text-white",
+                                isCurrent && "bg-blue-600 text-white",
+                                isBlocked && "bg-slate-200 text-slate-700"
+                              )}
+                              aria-hidden="true"
+                            >
+                              {isApproved && <CheckCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />}
+                              {isRejected && <XCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />}
+                              {isCurrent && reviewer.order}
+                              {isBlocked && reviewer.order}
+                            </div>
+
+                            {/* Content */}
+                            <div
+                              className={cn(
+                                "p-3 md:p-4 rounded-lg border transition-colors",
+                                isCurrent && "bg-emerald-50 border-emerald-200",
+                                isApproved && "bg-white border-slate-200",
+                                isRejected && "bg-white border-slate-200",
+                                isBlocked && "bg-white border-slate-200"
+                              )}
+                            >
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div className="flex items-center gap-3 md:gap-4">
+                                  <div className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                                    {reviewer.name.charAt(0)}
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <h4 className="font-medium text-sm md:text-base text-slate-900 truncate">{reviewer.name}</h4>
+                                      {isCurrentUserReviewer && (
+                                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded shrink-0">
+                                          You
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="flex items-center gap-1.5 md:gap-2 text-xs text-slate-500 flex-wrap">
+                                      <span className="truncate">{reviewer.role}</span>
+                                      <span className="w-1 h-1 rounded-full bg-slate-300 shrink-0" />
+                                      <span className="truncate">{reviewer.department}</span>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap sm:shrink-0">
+                                  {reviewer.reviewDate && (isApproved || isRejected) && (
+                                    <span className="text-xs text-slate-500 hidden md:inline">
+                                      {formatDate(reviewer.reviewDate)}
+                                    </span>
+                                  )}
+                                  {isApproved && (
+                                    <StatusBadge status="approved" size="sm" />
+                                  )}
+                                  {isRejected && (
+                                    <StatusBadge status="rejected" size="sm" />
+                                  )}
+                                  {isCurrent && (
+                                    <StatusBadge status="current" size="sm" />
+                                  )}
+                                  {isBlocked && (
+                                    <StatusBadge status="blocked" size="sm" />
+                                  )}
+                                </div>
+                              </div>
+                              {/* Show date on mobile for approved/rejected */}
+                              {reviewer.reviewDate && (isApproved || isRejected) && (
+                                <div className="mt-2 text-xs text-slate-500 md:hidden">
+                                  {formatDate(reviewer.reviewDate)}
+                                </div>
+                              )}
+                            </div>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                </div>
+              )}
+
+              {/* Parallel: Grid of reviewers */}
+              {document.reviewFlowType === "parallel" && (
+                <div className="px-4 md:px-6 pb-4 md:pb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
+                    {document.reviewers.map((reviewer) => {
+                      const isCurrentUserReviewer = reviewer.id === currentUserId;
+                      const isSigned = reviewer.status !== "pending";
+                      return (
+                        <div
+                          key={reviewer.id}
+                          className={cn(
+                            "p-3 md:p-4 rounded-lg border bg-white",
+                            isCurrentUserReviewer && reviewer.status === "pending"
+                              ? "ring-1 ring-emerald-200"
+                              : "border-slate-200"
+                          )}
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                            <div className="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
+                              <div className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                                {reviewer.name.charAt(0)}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <h4 className="font-medium text-sm md:text-base text-slate-900 truncate">{reviewer.name}</h4>
+                                  {isCurrentUserReviewer && (
+                                    <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded shrink-0">
+                                      You
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-1.5 md:gap-2 text-xs text-slate-500 flex-wrap">
+                                  <span className="truncate">{reviewer.role}</span>
+                                  <span className="w-1 h-1 rounded-full bg-slate-300 shrink-0" />
+                                  <span className="truncate">{reviewer.department}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 sm:shrink-0">
+                              {isSigned ? (
+                                <StatusBadge status="approved" size="sm" />
+                              ) : (
+                                <StatusBadge status="blocked" size="sm" />
+                              )}
+                            </div>
+                          </div>
+                          {isSigned && reviewer.reviewDate && (
+                            <div className="mt-2 text-xs text-slate-500">Signed on {formatDate(reviewer.reviewDate)}</div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Review Actions */}
+          {canReview && (
+            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-200 shadow-sm p-4 md:p-6">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
+                <div className="flex-1">
+                  <h3 className="text-base md:text-lg font-bold text-slate-900 mb-1">
+                    Your Review Action Required
+                  </h3>
+                </div>
+                <div className="flex items-center gap-2 md:gap-3 md:shrink-0">
+                  <Button
+                    onClick={handleReject}
+                    variant="outline"
+                    size="sm"
+                    disabled={isSubmitting}
+                    className="flex-1 md:flex-initial border-red-200 text-red-700 hover:bg-red-50"
+                  >
+                    <ThumbsDown className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2" />
+                    <span className="text-xs md:text-sm">Reject</span>
+                  </Button>
+                  <Button
+                    onClick={handleApprove}
+                    variant="default"
+                    size="sm"
+                    disabled={isSubmitting}
+                    className="flex-1 md:flex-initial"
+                  >
+                    <ThumbsUp className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2" />
+                    <span className="text-xs md:text-sm">Approve</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Comments Section */}
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 md:p-6">
+            <h3 className="text-base md:text-lg font-bold text-slate-900 mb-3 md:mb-4 flex items-center gap-2">
+              <IconMessage2 className="h-4 w-4 md:h-5 md:w-5 text-slate-600" />
+              Comments & Discussion
+            </h3>
+
+            {/* Comments List */}
+            <div className="space-y-3 md:space-y-4 mb-4 md:mb-6">
+              {comments.length > 0 ? (
+                comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="flex gap-3 md:gap-4 p-3 md:p-4 bg-slate-50 rounded-lg"
+                  >
+                    <div className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                      {comment.author.charAt(0)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 md:gap-2 mb-1 flex-wrap">
+                        <span className="font-medium text-sm md:text-base text-slate-900 truncate">
+                          {comment.author}
+                        </span>
+                        <span className="text-xs text-slate-500 shrink-0">•</span>
+                        <span className="text-xs text-slate-500 truncate">
+                          {comment.role}
+                        </span>
+                        <span className="text-xs text-slate-500 shrink-0">•</span>
+                        <span className="text-xs text-slate-500 shrink-0">
+                          {formatDate(comment.date)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-700 break-words">
+                        {comment.content}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-6 md:py-8 text-slate-500">
+                  <MessageSquare className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-2 md:mb-3 text-slate-300" />
+                  <p className="text-sm">
+                    No comments yet. Be the first to add a comment.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Add Comment */}
+            <div className="border-t border-slate-200 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                  {currentReviewer?.name.charAt(0) || "U"}
+                </div>
+                <div className="flex-1 flex flex-col sm:flex-row gap-2">
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Add a comment..."
+                    rows={3}
+                    className="flex-1 px-3 md:px-4 py-2 md:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
+                  />
+                  <button
+                    onClick={handleAddComment}
+                    disabled={!newComment.trim()}
+                    className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 sm:self-start shrink-0"
+                  >
+                    <Send className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                    <span className="text-sm sm:hidden">Send Comment</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {activeTab === "general" && (
+        <GeneralInformationTab document={document} isReadOnly={true} />
+      )}
+      {activeTab === "training" && <TrainingInformationTab />}
+      {activeTab === "signatures" && <SignaturesTab />}
+      {activeTab === "audit" && <AuditTrailTab />}
+
+      {/* E-Signature Modal */}
+      <ESignatureModal
+        isOpen={showESignModal}
+        onClose={() => setShowESignModal(false)}
+        onConfirm={handleESignConfirm}
+        actionTitle={
+          eSignAction === "approve" ? "Approve Document" : "Reject Document"
+        }
+      />
+    </DocumentWorkflowLayout>
+  );
+};

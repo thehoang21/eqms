@@ -6,7 +6,10 @@ import { cn } from '../utils';
  * Sửa lỗi: Thay đổi cách truyền điều kiện vào hàm cn()
  */
 
-interface ResponsiveTableProps {
+/**
+ * Table component props
+ */
+export interface ResponsiveTableProps {
   children: React.ReactNode;
   className?: string;
 }

@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
-import { CreateLinkModal } from "../views/CreateLinkModal";
+import { CreateLinkModal } from "@/features/documents/shared/components";
 import { CancelDistributionModal } from "./components/CancelDistributionModal";
 import { DestructionTypeSelectionModal } from "./components/DestructionTypeSelectionModal";
 import { useToast } from "@/components/ui/toast/Toast";

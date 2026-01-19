@@ -1,9 +1,10 @@
-export { DetailDocumentView } from './detail-document/DetailDocumentView';
+export { DetailDocumentView } from './document-detail/DetailDocumentView';
 export { RequestControlledCopyView } from './views/RequestControlledCopyView';
 export type { ControlledCopyRequest } from './views/RequestControlledCopyView';
 export { ControlledCopiesView } from './controlled-copies';
 export type { ControlledCopy, ControlledCopyStatus } from './controlled-copies';
-export { NewDocumentView, BatchDocumentView, NewTemplateView } from './all-document/new-document';
-export { DocumentReviewView } from './all-document/new-document/review-document';
-export { ArchivedDocumentsView } from './archived-document';
-export { CreateLinkModal } from './views/CreateLinkModal';
+export { NewDocumentView, BatchDocumentView } from './document-list/new-document';
+export { NewTemplateView } from './template-library';
+export { DocumentReviewView } from './document-list/review-document';
+export { ArchivedDocumentsView } from './archived-documents';
+export { CreateLinkModal } from './shared/components/CreateLinkModal';

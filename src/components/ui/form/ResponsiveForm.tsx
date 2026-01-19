@@ -6,7 +6,17 @@ import { cn } from '../utils';
  * Optimized for Desktop and Tablet (iPad portrait & landscape)
  */
 
-interface FormFieldProps {
+/**
+ * Form field wrapper component
+ * 
+ * @example
+ * ```tsx
+ * <FormField label="Document Title" required>
+ *   <input type="text" className="..." />
+ * </FormField>
+ * ```
+ */
+export interface FormFieldProps {
   label: string;
   children: React.ReactNode;
   error?: string;

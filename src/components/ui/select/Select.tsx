@@ -3,25 +3,57 @@ import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search } from 'lucide-react';
 import { cn } from '../utils'; // Đảm bảo đường dẫn này đúng trong project của bạn
 
+/**
+ * Option type for Select component
+ */
 export interface SelectOption {
   label: string;
   value: string | number;
   icon?: React.ReactNode;
 }
 
-interface SelectProps {
+/**
+ * Custom Select component with search functionality and portal rendering
+ * 
+ * @example
+ * ```tsx
+ * <Select
+ *   label="Status"
+ *   value={status}
+ *   onChange={setStatus}
+ *   options={[
+ *     { label: "Draft", value: "draft" },
+ *     { label: "Active", value: "active" }
+ *   ]}
+ *   enableSearch
+ * />
+ * ```
+ */
+export interface SelectProps {
+  /** Label displayed above select */
   label?: string;
+  /** Current selected value */
   value: string | number;
+  /** Callback when value changes */
   onChange: (value: any) => void;
+  /** Array of selectable options */
   options: SelectOption[];
+  /** Placeholder text when no value selected */
   placeholder?: string;
+  /** Placeholder for search input */
   searchPlaceholder?: string;
+  /** Additional CSS classes */
   className?: string;
+  /** CSS classes for trigger button */
   triggerClassName?: string;
+  /** Enable search functionality */
   enableSearch?: boolean;
+  /** Disable the select */
   disabled?: boolean;
-  maxVisibleRows?: number; // Mặc định sẽ là 4
-  rowHeight?: number;      // Mặc định sẽ là 44px
+  /** Maximum visible rows in dropdown (default: 4) */
+  maxVisibleRows?: number;
+  /** Height of each row in pixels (default: 44) */
+  rowHeight?: number;
 }
 
 export const Select: React.FC<SelectProps> = ({

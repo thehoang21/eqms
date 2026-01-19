@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { User, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { AccountInfoTab } from './AccountInfoTab';
-import { PasswordTab } from './PasswordTab';
+import { AccountInfoTab } from "./AccountInfoTab";
+import { PasswordTab } from "./PasswordTab";
 
 interface ProfileViewProps {
     onBack?: () => void;

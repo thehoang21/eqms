@@ -60,3 +60,7 @@ export const config = {
 } as const;
 
 export type Config = typeof config;
+
+// Re-export sub-configurations
+export * from './responsive';
+export * from './security';

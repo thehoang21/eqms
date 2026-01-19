@@ -1,7 +1,24 @@
 import React from 'react';
 import { cn } from '../utils';
 
-export type StatusType = 'draft' | 'pendingReview' | 'pendingApproval' | 'approved' | 'pendingTraining' | 'readyForPublishing' | 'published' | 'effective' | 'archived' | 'obsolete';
+/**
+ * Status type for document workflows
+ */
+export type StatusType = 
+  | 'draft' 
+  | 'pendingReview' 
+  | 'pendingApproval' 
+  | 'approved' 
+  | 'rejected'
+  | 'pendingTraining' 
+  | 'readyForPublishing' 
+  | 'published' 
+  | 'effective' 
+  | 'archived' 
+  | 'obsolete'
+  | 'current'
+  | 'blocked'
+  | 'inProgress';
 
 const STATUS_CONFIG: Record<StatusType, { label: string; className: string }> = {
   draft: { 
@@ -18,7 +35,23 @@ const STATUS_CONFIG: Record<StatusType, { label: string; className: string }> = 
   },
   approved: { 
     label: 'Approved', 
-    className: 'bg-cyan-50 text-cyan-700 border-cyan-200' 
+    className: 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+  },
+  rejected: {
+    label: 'Rejected',
+    className: 'bg-red-50 text-red-700 border-red-200'
+  },
+  current: {
+    label: 'Current',
+    className: 'bg-blue-50 text-blue-700 border-blue-200'
+  },
+  blocked: {
+    label: 'Blocked',
+    className: 'bg-amber-50 text-amber-700 border-amber-200'
+  },
+  inProgress: {
+    label: 'In Progress',
+    className: 'bg-amber-50 text-amber-700 border-amber-200'
   },
   pendingTraining: {
     label: 'Pending Training',
@@ -46,14 +79,49 @@ const STATUS_CONFIG: Record<StatusType, { label: string; className: string }> = 
   }
 };
 
-export const StatusBadge: React.FC<{ status: StatusType; className?: string }> = ({ status, className }) => {
+/**
+ * Status Badge component for displaying document workflow states
+ * 
+ * @example
+ * ```tsx
+ * <StatusBadge status="approved" />
+ * <StatusBadge status="pendingReview" size="sm" />
+ * <StatusBadge status="effective" icon={<CheckIcon />} />
+ * ```
+ */
+export interface StatusBadgeProps {
+  /** Status type to display */
+  status: StatusType;
+  /** Additional CSS classes */
+  className?: string;
+  /** Badge size variant */
+  size?: 'default' | 'sm' | 'lg';
+  /** Optional icon to display */
+  icon?: React.ReactNode;
+}
+
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ 
+  status, 
+  className,
+  size = 'default',
+  icon
+}) => {
   const config = STATUS_CONFIG[status] || STATUS_CONFIG.draft;
+  
+  const sizeClasses = {
+    sm: 'px-2 py-0.5 text-xs',
+    default: 'px-2.5 py-0.5 text-xs',
+    lg: 'px-3 py-1 text-sm',
+  };
+  
   return (
     <span className={cn(
-      "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border select-none", 
+      "inline-flex items-center gap-1 rounded-full font-medium border select-none", 
+      sizeClasses[size],
       config.className, 
       className
     )}>
+      {icon}
       {config.label}
     </span>
   );

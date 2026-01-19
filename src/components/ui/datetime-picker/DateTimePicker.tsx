@@ -4,10 +4,26 @@ import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, ChevronDown, Clock
 import { cn } from '../utils';
 import { Button } from '../button/Button';
 
-interface DateTimePickerProps {
+/**
+ * DateTimePicker component with calendar interface
+ * 
+ * @example
+ * ```tsx
+ * <DateTimePicker
+ *   label="Effective Date"
+ *   value={effectiveDate}
+ *   onChange={setEffectiveDate}
+ * />
+ * ```
+ */
+export interface DateTimePickerProps {
+  /** Label displayed above picker */
   label?: string;
+  /** Current date value (ISO string) */
   value: string;
+  /** Callback when date changes */
   onChange: (value: string) => void;
+  /** Placeholder text */
   placeholder?: string;
 }
 
