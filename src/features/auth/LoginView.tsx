@@ -4,9 +4,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import logoImg from '@/assets/images/logo_nobg.png';
-import factoryLoginBg from '@/assets/images/factory-login.jpg';
-import mockUp from '@/assets/images/mockup.png';
-import mockUpIpad from '@/assets/images/mockupipad.png';
+import mockUpIpad from '@/assets/images/mockupipad.webp';
 import { IconUser } from '@tabler/icons-react';
 
 interface LoginViewProps {
