@@ -319,10 +319,10 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+                        <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
                             {title}
                         </h1>
-                        <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+                        <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
                             {breadcrumbs.map((item, index) => (
                                 <React.Fragment key={index}>
                                     {index === 0 ? (
@@ -354,7 +354,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                         className="gap-1.5 md:gap-2 px-3 sm:px-4 whitespace-nowrap self-start md:self-auto"
                     >
                         <IconChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        <span className="text-xs sm:text-sm">Back to List</span>
+                        <span className="text-xs sm:text-sm">Back</span>
                     </Button>
                 </div>
             </div>

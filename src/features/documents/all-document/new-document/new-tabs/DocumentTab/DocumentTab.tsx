@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Upload, File, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { FilePreview } from "./FilePreview";
+import { DocumentRelationships, ParentDocument, RelatedDocument } from "./DocumentRelationships";
 import { IconCloudUpload } from "@tabler/icons-react";
 import pdfIcon from '@/assets/images/image-file/pdf.png';
 import docIcon from '@/assets/images/image-file/doc.png';
@@ -29,6 +30,13 @@ interface DocumentTabProps {
     selectedFile: File | null;
     onSelectFile: (file: File | null) => void;
     maxFiles?: number; // Maximum number of files allowed (undefined = unlimited)
+    // Document Relationships
+    parentDocument?: ParentDocument | null;
+    onParentDocumentChange?: (parent: ParentDocument | null) => void;
+    relatedDocuments?: RelatedDocument[];
+    onRelatedDocumentsChange?: (docs: RelatedDocument[]) => void;
+    documentType?: string;
+    onSuggestedCodeChange?: (code: string) => void;
 }
 
 export const DocumentTab: React.FC<DocumentTabProps> = ({
@@ -36,7 +44,13 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     onFilesChange,
     selectedFile,
     onSelectFile,
-    maxFiles
+    maxFiles,
+    parentDocument,
+    onParentDocumentChange,
+    relatedDocuments = [],
+    onRelatedDocumentsChange,
+    documentType,
+    onSuggestedCodeChange,
 }) => {
     const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -148,9 +162,38 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-            {/* Left Column: Upload Area */}
-            <div className="space-y-6">
+        <div className="space-y-6">
+            {/* Document Relationships Section */}
+            {onParentDocumentChange && onRelatedDocumentsChange && (
+                <DocumentRelationships
+                    parentDocument={parentDocument || null}
+                    onParentDocumentChange={onParentDocumentChange}
+                    relatedDocuments={relatedDocuments}
+                    onRelatedDocumentsChange={onRelatedDocumentsChange}
+                    documentType={documentType}
+                    onSuggestedCodeChange={onSuggestedCodeChange}
+                />
+            )}
+
+            {/* File Upload Section */}
+            <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+                <div className="px-5 py-4 bg-slate-50 border-b border-slate-200">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                            <IconCloudUpload className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-semibold text-slate-900">
+                                Upload Document File
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-5">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Left Column: Upload Area */}
+                        <div className="space-y-6">
                 {/* Upload Area */}
                 <div
                     onDragOver={handleDragOver}
@@ -365,6 +408,9 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                     return <FilePreview file={selectedFile} />;
                                 })()}
                         </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

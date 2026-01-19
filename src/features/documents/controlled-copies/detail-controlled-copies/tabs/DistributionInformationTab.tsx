@@ -17,8 +17,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
           Location Information
         </h3>
         <div className="space-y-4">
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Location Name
             </label>
             <input
@@ -28,8 +28,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Location Code
             </label>
             <input
@@ -48,8 +48,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
           Distribution Details
         </h3>
         <div className="space-y-4">
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Distribution List
             </label>
             <input
@@ -59,8 +59,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Department
             </label>
             <input
@@ -70,8 +70,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Recipient Name
             </label>
             <input
@@ -81,8 +81,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Distributed By
             </label>
             <input
@@ -92,8 +92,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Distributed Date
             </label>
             <input
@@ -112,8 +112,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
           Request Information
         </h3>
         <div className="space-y-4">
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Requested By
             </label>
             <input
@@ -123,8 +123,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
               Request Date
             </label>
             <input
@@ -134,8 +134,8 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
             />
           </div>
-          <div className="flex items-start gap-4">
-            <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0 pt-2">
+          <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4">
+            <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0 md:pt-2">
               Reason
             </label>
             <textarea

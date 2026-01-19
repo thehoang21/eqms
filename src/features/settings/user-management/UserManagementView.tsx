@@ -500,8 +500,8 @@ export const UserManagementView: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">User Management</h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs sm:text-sm">
+          <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900">User Management</h1>
+          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <span className="hidden sm:inline">Dashboard</span>
             <Home className="h-3.5 w-3.5 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>

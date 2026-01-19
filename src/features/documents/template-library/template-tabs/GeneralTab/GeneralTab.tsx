@@ -129,7 +129,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
                 {/* Created (read-only, auto-generated) */}
                 <div className="flex items-center gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Created (yyyy-MM-dd HH:mm:ss)</label>
+                    <label className="text-sm font-medium text-slate-700 text-left w-56 flex-shrink-0">Created (Date - Time)</label>
                     <input
                         type="text"
                         value={''}

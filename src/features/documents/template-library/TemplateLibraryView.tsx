@@ -520,10 +520,10 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
       {/* Header: Title + Breadcrumb + Action Button */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             Template Library
           </h1>
-          <div className="flex items-center gap-1.5 text-slate-500 text-sm mt-1">
+          <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-1 whitespace-nowrap overflow-x-auto">
             <span className="hidden sm:inline">Dashboard</span>
             <Home className="h-4 w-4 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>

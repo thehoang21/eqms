@@ -369,12 +369,12 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
               Controlled Copy Details
             </h1>
-            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
               <span className="hidden sm:inline">Dashboard</span>
               <Home className="h-4 w-4 sm:hidden" />
               <span className="text-slate-400 mx-1">/</span>
@@ -391,35 +391,35 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
-            <Button onClick={onBack} variant="outline" size="sm" className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
+            <Button onClick={onBack} variant="outline" size="sm" className="gap-1.5 shadow-sm">
               <ChevronLeft className="h-4 w-4" />
               Back
             </Button>
             <Button
               onClick={handleViewOriginalDocument}
-              variant="default"
+              variant="outline"
               size="sm"
-              className="flex items-center gap-2"
+              className="gap-1.5 shadow-sm hover:border-emerald-200 hover:text-emerald-700 hover:bg-emerald-50"
             >
               <Eye className="h-4 w-4" />
-              View Original Document
+              View Original
             </Button>
             <Button
               onClick={handleDownloadPDF}
               variant="outline"
               size="sm"
-              className="flex items-center gap-2"
+              className="gap-1.5 shadow-sm"
             >
               <Download className="h-4 w-4" />
-              Download Copy
+              Download
             </Button>
             {controlledCopy.status === "Ready for Distribution" && (
               <Button
                 onClick={handleDistribute}
                 variant="default"
                 size="sm"
-                className="flex items-center gap-2"
+                className="gap-1.5 shadow-sm"
               >
                 <IconShare3 className="h-4 w-4" />
                 Distribute
@@ -430,10 +430,10 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
                 onClick={handleReportLostDamaged}
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                className="gap-1.5 shadow-sm text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
               >
                 <AlertCircle className="h-4 w-4" />
-                Report Lost/Damaged
+                Report Lost
               </Button>
             )}
           </div>

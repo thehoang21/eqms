@@ -236,7 +236,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
 
             setIsSubmitting(false);
 
-            // Show success message and redirect back to list
+            // Show success message and redirect Back
             const message = eSignAction === 'approve' 
                 ? `Revision ${revision.documentId} v${revision.version} has been approved successfully.`
                 : `Revision ${revision.documentId} v${revision.version} has been rejected.`;

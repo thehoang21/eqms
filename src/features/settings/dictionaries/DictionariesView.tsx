@@ -78,8 +78,8 @@ export const DictionariesView: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Dictionaries Management</h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">Dictionaries Management</h1>
+          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <button className="hover:text-slate-700 transition-colors hidden sm:inline">Dashboard</button>
             <Home className="h-4 w-4 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>

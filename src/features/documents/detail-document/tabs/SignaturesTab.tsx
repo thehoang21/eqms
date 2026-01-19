@@ -11,31 +11,31 @@ const mockSignatures: SignatureRecord[] = [
   {
     actionBy: "Submitted By",
     actionByName: "Gilad Kigel",
-    actionOn: "Submitted On (yyyy-MM-dd HH:mm:ss)",
+    actionOn: "Submitted On (Date - Time)",
     actionOnValue: "2025-12-12 07:46:36"
   },
   {
     actionBy: "Rejected By",
     actionByName: "",
-    actionOn: "Rejected On (yyyy-MM-dd HH:mm:ss)",
+    actionOn: "Rejected On (Date - Time)",
     actionOnValue: ""
   },
   {
     actionBy: "Reviewed By",
     actionByName: "Jane Smith",
-    actionOn: "Reviewed On (yyyy-MM-dd HH:mm:ss)",
+    actionOn: "Reviewed On (Date - Time)",
     actionOnValue: "2025-12-11 16:30:45"
   },
   {
     actionBy: "Approved By",
     actionByName: "John Doe",
-    actionOn: "Approved On (yyyy-MM-dd HH:mm:ss)",
+    actionOn: "Approved On (Date - Time)",
     actionOnValue: "2025-12-12 09:15:20"
   },
     {
     actionBy: "Published By",
     actionByName: "Gilad Kigel",
-    actionOn: "Published On (yyyy-MM-dd HH:mm:ss)",
+    actionOn: "Published On (Date - Time)",
     actionOnValue: "2025-12-12 07:47:19"
   }
 ];
@@ -43,7 +43,7 @@ const mockSignatures: SignatureRecord[] = [
 export const SignaturesTab: React.FC = () => {
   return (
     <div className="p-4 md:p-6 bg-white">
-      <div className="grid grid-cols-2 gap-x-4 gap-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
         {mockSignatures.map((record, index) => (
           <React.Fragment key={index}>
             {/* Action By Column */}

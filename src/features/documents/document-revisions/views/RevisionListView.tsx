@@ -341,7 +341,7 @@ export const RevisionListView: React.FC = () => {
   const [columns, setColumns] = useState<TableColumn[]>([...DEFAULT_COLUMNS]);
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
 
   const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
 
@@ -427,12 +427,45 @@ export const RevisionListView: React.FC = () => {
       setOpenDropdownId(null);
       return;
     }
+    
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-    setDropdownPosition({
-      top: rect.bottom + window.scrollY + 4,
-      left: rect.right + window.scrollX - 180,
-    });
+    
+    // Menu dimensions (estimate max)
+    const menuHeight = 200;
+    const menuWidth = 200;
+    const safeMargin = 8;
+    
+    // Check available space
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    
+    // Show above if not enough space below AND there's more space above
+    const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+    
+    // Calculate vertical position
+    let top: number;
+    if (shouldShowAbove) {
+      top = rect.top + window.scrollY - 4;
+    } else {
+      top = rect.bottom + window.scrollY + 4;
+    }
+    
+    // Calculate horizontal position with safe margins
+    const viewportWidth = window.innerWidth;
+    let left = rect.right + window.scrollX - menuWidth;
+    
+    // Ensure menu doesn't overflow right edge
+    if (left + menuWidth > viewportWidth - safeMargin) {
+      left = viewportWidth - menuWidth - safeMargin + window.scrollX;
+    }
+    
+    // Ensure menu doesn't overflow left edge
+    if (left < safeMargin + window.scrollX) {
+      left = safeMargin + window.scrollX;
+    }
+    
+    setDropdownPosition({ top, left, showAbove: shouldShowAbove });
     setOpenDropdownId(id);
   };
 
@@ -498,10 +531,10 @@ export const RevisionListView: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             All Revisions
           </h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <button className="hover:text-slate-700 transition-colors hidden sm:inline">Dashboard</button>
             <Home className="h-4 w-4 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>
@@ -708,6 +741,7 @@ export const RevisionListView: React.FC = () => {
               style={{
                 top: `${dropdownPosition.top}px`,
                 left: `${dropdownPosition.left}px`,
+                transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none',
                 transformOrigin: "top right",
               }}
             >

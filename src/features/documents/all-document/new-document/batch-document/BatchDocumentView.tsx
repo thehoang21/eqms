@@ -619,42 +619,41 @@ export const BatchDocumentView: React.FC = () => {
                 />
 
                 {/* Navigation Buttons */}
-                <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-4 pt-4 md:pt-6 border-t border-slate-200">
+                <div className="flex items-center justify-between gap-2 pt-4 md:pt-6 border-t border-slate-200">
                   <Button
                     onClick={handlePreviousDocument}
                     disabled={currentDocIndex === 0}
                     variant="outline"
                     size="sm"
-                    className="flex items-center justify-center gap-2 w-full md:w-auto touch-manipulation"
+                    className="flex items-center justify-center gap-1.5 touch-manipulation"
                   >
-                    <ChevronRight className="h-4 w-4 rotate-180" />
-                    <span className="text-sm">Previous Document</span>
+                    <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4 rotate-180" />
+                    <span className="text-xs md:text-sm">Previous</span>
                   </Button>
 
-                  <div className="flex items-center justify-center gap-2 order-first md:order-none">
-                    {missingRequiredFields.length > 0 && (
-                      <div className="text-xs md:text-sm text-amber-600 flex items-center gap-1.5 px-3 py-2 bg-amber-50 rounded-lg">
-                        <AlertCircle className="h-4 w-4 shrink-0" />
-                        <span className="hidden sm:inline">
-                          {missingRequiredFields.length} required field(s)
-                          missing
-                        </span>
-                        <span className="sm:hidden">
-                          {missingRequiredFields.length} missing
-                        </span>
-                      </div>
-                    )}
-                  </div>
+                  {/* Warning message in center */}
+                  {missingRequiredFields.length > 0 && (
+                    <div className="text-xs md:text-sm text-amber-600 flex items-center gap-1.5 px-2 md:px-3 py-1.5 md:py-2 bg-amber-50 rounded-lg">
+                      <AlertCircle className="h-3.5 w-3.5 md:h-4 md:w-4 shrink-0" />
+                      <span className="hidden sm:inline">
+                        {missingRequiredFields.length} required field(s)
+                        missing
+                      </span>
+                      <span className="sm:hidden">
+                        {missingRequiredFields.length} missing
+                      </span>
+                    </div>
+                  )}
 
                   {currentDocIndex < documents.length - 1 ? (
                     <Button
                       onClick={handleNextDocument}
                       variant="default"
                       size="sm"
-                      className="flex items-center justify-center gap-2 w-full md:w-auto touch-manipulation"
+                      className="flex items-center justify-center gap-1.5 touch-manipulation"
                     >
-                      <span className="text-sm">Next Document</span>
-                      <ChevronRight className="h-4 w-4" />
+                      <span className="text-xs md:text-sm">Next</span>
+                      <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                     </Button>
                   ) : (
                     <Button
@@ -662,10 +661,10 @@ export const BatchDocumentView: React.FC = () => {
                       variant="default"
                       size="sm"
                       disabled={!isCurrentDocumentValid}
-                      className="flex items-center justify-center gap-2 w-full md:w-auto touch-manipulation"
+                      className="flex items-center justify-center gap-1.5 touch-manipulation"
                     >
-                      <span className="text-sm">Complete & Continue</span>
-                      <IconChevronRight className="h-4 w-4" />
+                      <span className="text-xs md:text-sm">Complete</span>
+                      <IconChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                     </Button>
                   )}
                 </div>

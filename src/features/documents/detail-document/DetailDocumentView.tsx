@@ -220,7 +220,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
             <h1 className="text-2xl font-bold tracking-tight text-slate-900">
               Document Details
             </h1>
-            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
+            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
               <button
                 onClick={onBack}
                 className="hover:text-slate-700 transition-colors hidden sm:inline"
@@ -253,10 +253,10 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
             onClick={onBack}
             size="sm"
             variant="outline"
-            className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-black hover:bg-slate-50 transition-colors shadow-sm"
+            className="whitespace-nowrap gap-2 self-start md:self-auto"
           >
             <IconChevronLeft className="h-4 w-4" />
-            Back to List
+            Back
           </Button>
         </div>
       </div>
