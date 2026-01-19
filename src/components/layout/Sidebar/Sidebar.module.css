@@ -1,5 +1,5 @@
 /* ===================================
-   SIDEBAR COMPONENT STYLES - Updated Design
+   SIDEBAR COMPONENT STYLES - Mobile Optimized
    =================================== */
 
 /* Hover menu portal styles */
@@ -26,22 +26,34 @@
   }
 }
 
-/* Custom scrollbar for hover menu */
-.hoverMenuPortal ::-webkit-scrollbar {
+/* Custom scrollbar for sidebar and hover menu - optimized for mobile */
+.custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
 
-.hoverMenuPortal ::-webkit-scrollbar-track {
+.custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.hoverMenuPortal ::-webkit-scrollbar-thumb {
+.custom-scrollbar::-webkit-scrollbar-thumb {
   background: var(--color-slate-300);
   border-radius: 3px;
 }
 
-.hoverMenuPortal ::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--color-slate-400);
+}
+
+/* Hide scrollbar on mobile for cleaner look */
+@media (max-width: 767px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .custom-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 .sidebar {

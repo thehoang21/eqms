@@ -85,6 +85,36 @@ export const Select: React.FC<SelectProps> = ({
 
   const selectedOption = options.find((opt) => opt.value === value);
 
+  // Recalculate position khi filtered options thay đổi (khi search)
+  useEffect(() => {
+    if (isOpen && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      const searchHeight = enableSearch ? 50 : 0;
+      const estimatedDropdownHeight = Math.min(
+        filteredOptions.length * rowHeight,
+        maxVisibleRows * rowHeight
+      ) + searchHeight + 8;
+      
+      const spaceBelow = viewportHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
+      
+      setDropdownStyle({
+        position: 'fixed',
+        top: shouldOpenUpward ? undefined : rect.bottom + 4,
+        bottom: shouldOpenUpward ? viewportHeight - rect.top + 4 : undefined,
+        left: rect.left,
+        width: rect.width,
+        zIndex: 9999,
+        maxHeight: shouldOpenUpward 
+          ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
+          : `${Math.min(spaceBelow - 8, estimatedDropdownHeight)}px`,
+      });
+    }
+  }, [isOpen, filteredOptions.length, enableSearch, rowHeight, maxVisibleRows]);
+
   // Xử lý click ra ngoài để đóng dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -129,17 +159,37 @@ export const Select: React.FC<SelectProps> = ({
     }
   }, [isOpen, enableSearch]);
 
-  // Tính toán vị trí dropdown
+  // Tính toán vị trí dropdown với smart positioning
   const handleToggle = () => {
     if (disabled) return;
     if (!isOpen && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Tính toán ước lượng chiều cao dropdown
+      const searchHeight = enableSearch ? 50 : 0; // Search input + padding
+      const estimatedDropdownHeight = Math.min(
+        filteredOptions.length * rowHeight,
+        maxVisibleRows * rowHeight
+      ) + searchHeight + 8; // +8 for padding
+      
+      // Kiểm tra có đủ không gian phía dưới không
+      const spaceBelow = viewportHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      
+      // Quyết định mở lên trên hay xuống dưới
+      const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
+      
       setDropdownStyle({
         position: 'fixed',
-        top: rect.bottom + 4,
+        top: shouldOpenUpward ? undefined : rect.bottom + 4,
+        bottom: shouldOpenUpward ? viewportHeight - rect.top + 4 : undefined,
         left: rect.left,
         width: rect.width,
         zIndex: 9999,
+        maxHeight: shouldOpenUpward 
+          ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
+          : `${Math.min(spaceBelow - 8, estimatedDropdownHeight)}px`,
       });
     }
     setIsOpen(!isOpen);
@@ -189,7 +239,13 @@ export const Select: React.FC<SelectProps> = ({
         <div 
           ref={dropdownRef}
           style={dropdownStyle}
-          className="rounded-md border border-slate-200 bg-white shadow-lg animate-in fade-in zoom-in-95 duration-100 overflow-hidden min-w-[200px]"
+          className={cn(
+            "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden min-w-[200px]",
+            "animate-in fade-in duration-100",
+            dropdownStyle.bottom !== undefined 
+              ? "slide-in-from-bottom-2" 
+              : "slide-in-from-top-2 zoom-in-95"
+          )}
         >
           {enableSearch && (
             <div className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white">

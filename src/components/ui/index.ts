@@ -13,6 +13,7 @@ export * from './form';
 // Layout Components
 export * from './card';
 export * from './table';
+export * from './dropdown';
 
 // Feedback Components
 export * from './modal';

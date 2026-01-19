@@ -249,14 +249,18 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           className={cn(
             "w-full flex items-center group relative overflow-visible z-10 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/20",
             `transition-all duration-200 ease-in-out`,
-            "h-11",
+            // Mobile: Taller touch target (h-12), Desktop: h-11
+            "h-12 md:h-11",
             isCollapsed ? "justify-center px-0" : "justify-start pr-3",
             isActive && level === 0
               ? "text-slate-900 bg-slate-100"
-              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 active:bg-slate-100",
             (!isCollapsed && level === 0 && isActive) && "rounded-lg mx-2"
           )}
-          style={{ paddingLeft: isCollapsed ? 0 : `${paddingLeft}px` }}
+          style={{ 
+            paddingLeft: isCollapsed ? 0 : `${paddingLeft}px`,
+            WebkitTapHighlightColor: 'transparent'
+          }}
         >
           {/* Active indicator */}
           {level === 0 && isActive && !isCollapsed && (
@@ -472,28 +476,46 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
       {/* Mobile Overlay Backdrop - Only show on mobile (<768px) */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-200"
+          className="fixed inset-0 bg-slate-900/40 z-40 md:hidden animate-in fade-in duration-200"
           onClick={onClose}
           aria-hidden="true"
+          style={{
+            WebkitTapHighlightColor: 'transparent'
+          }}
         />
       )}
 
       {/* Sidebar */}
       <aside
         className={cn(
-          "bg-white border-r border-slate-200 h-screen flex flex-col shadow-sm",
-          "fixed top-0 left-0 z-50 md:sticky md:z-30",
-          isCollapsed ? "w-20" : "w-[280px]",
-          "transition-all duration-300 ease-in-out",
+          "bg-white border-r border-slate-200 flex flex-col shadow-lg md:shadow-sm",
+          // Mobile: Full viewport height with safe area insets
+          "fixed top-0 left-0 bottom-0 z-50",
+          // Desktop: Sticky positioning
+          "md:sticky md:top-0 md:z-30 md:h-screen",
+          // Width
+          isCollapsed ? "w-20" : "w-[280px] max-w-[85vw]",
+          // Smooth transitions
+          "transition-all duration-300 ease-out",
+          // Mobile slide animation
           "md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
+        style={{
+          // Safe area insets for iOS devices (notch, home indicator)
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          // Full viewport height on mobile
+          height: 'calc(100vh + env(safe-area-inset-top) + env(safe-area-inset-bottom))',
+        }}
       >
         {/* Header / Logo Area */}
         <div 
           className={cn(
-            "h-16 flex items-center border-b border-slate-100 bg-white relative",
+            "flex items-center border-b border-slate-100 bg-white relative shrink-0",
             "transition-all duration-300 ease-in-out",
+            // Mobile: Higher header with close button
+            "h-16 md:h-16",
             isCollapsed ? "justify-center px-0" : "justify-between px-5"
           )}
         >
@@ -517,11 +539,43 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
               />
             </div>
           </div>
+
+          {/* Close button for mobile */}
+          {!isCollapsed && (
+            <button
+              onClick={onClose}
+              className={cn(
+                "md:hidden flex items-center justify-center h-10 w-10 rounded-lg",
+                "text-slate-600 hover:text-slate-900 hover:bg-slate-100",
+                "transition-colors duration-200 active:scale-95",
+                "-mr-2"
+              )}
+              aria-label="Close sidebar"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+          )}
         </div>
 
         {/* Navigation Menu */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden py-3 custom-scrollbar">
-          <nav className="space-y-0.5">
+        <div 
+          className={cn(
+            "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar",
+            // Mobile: More padding for easier scrolling
+            "py-4 md:py-3"
+          )}
+          style={{
+            // Smooth scrolling on mobile
+            WebkitOverflowScrolling: 'touch',
+            // Hide scrollbar on mobile for cleaner look
+            scrollbarWidth: 'thin',
+          }}
+        >
+          <nav className={cn(
+            // Mobile: Larger spacing between items
+            "space-y-1 md:space-y-0.5"
+          )}>
             {NAV_CONFIG.map((item) => renderMenuItem(item))}
           </nav>
         </div>

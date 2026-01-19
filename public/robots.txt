@@ -1,0 +1,23 @@
+# Sitemap for Ngoc Thien Pharma QMS
+User-agent: *
+Allow: /
+
+# Main pages
+Allow: /dashboard
+Allow: /my-tasks
+Allow: /documents
+Allow: /change-control
+Allow: /capa
+Allow: /deviations
+Allow: /complaints
+Allow: /training
+Allow: /audit-trail
+Allow: /settings
+
+# Disallow
+Disallow: /api/
+Disallow: /admin/
+Disallow: /*.json$
+
+# Sitemap
+Sitemap: https://qms.ngocthienpharma.com/sitemap.xml
