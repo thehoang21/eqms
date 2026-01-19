@@ -42,7 +42,7 @@ const mockSignatures: SignatureRecord[] = [
 
 export const SignaturesTab: React.FC = () => {
   return (
-    <div className="p-4 md:p-6 bg-white">
+    <div className="bg-white">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
         {mockSignatures.map((record, index) => (
           <React.Fragment key={index}>

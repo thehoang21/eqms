@@ -521,42 +521,42 @@ export const RevisionWorkspaceView: React.FC = () => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
                         <Button
                             onClick={handleBackToImpactAnalysis}
                             variant="outline"
                             size="sm"
-                            className="flex items-center gap-2"
+                            className="gap-1.5 shadow-sm"
                         >
                             <ChevronRight className="h-4 w-4 rotate-180" />
-                            Back
+                            <span className="text-xs md:text-sm">Back</span>
                         </Button>
                         <Button
                             onClick={handleBack}
                             variant="outline"
                             size="sm"
-                            className="flex items-center gap-2"
+                            className="gap-1.5 shadow-sm"
                         >
                             <X className="h-4 w-4" />
-                            Cancel
+                            <span className="text-xs md:text-sm">Cancel</span>
                         </Button>
                         <Button
                             onClick={handleSave}
                             disabled={isSaving || isSubmitting || !allFilesUploaded}
                             size="sm"
-                            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
+                            className="gap-1.5 shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
                         >
                             <Save className="h-4 w-4" />
-                            {isSaving ? "Saving..." : "Save Draft"}
+                            <span className="text-xs md:text-sm">{isSaving ? "Saving..." : "Save Draft"}</span>
                         </Button>
                         <Button
                             onClick={handleSubmitForReview}
                             disabled={isSaving || isSubmitting || !allFilesUploaded}
                             size="sm"
-                            className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300"
+                            className="gap-1.5 shadow-sm !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300"
                         >
                             <Send className="h-4 w-4" />
-                            {isSubmitting ? "Submitting..." : "Submit"}
+                            <span className="text-xs md:text-sm">{isSubmitting ? "Submitting..." : "Submit"}</span>
                         </Button>
                     </div>
                 </div>
@@ -815,7 +815,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                     className="flex items-center gap-2"
                                 >
                                     <ChevronRight className="h-4 w-4 rotate-180" />
-                                    Previous Document
+                                    Previous
                                 </Button>
 
                                 <div className="flex items-center gap-2">
@@ -834,7 +834,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                         size="sm"
                                         className="flex items-center gap-2"
                                     >
-                                        Next Document
+                                        Next
                                         <ChevronRight className="h-4 w-4" />
                                     </Button>
                                 ) : (

@@ -38,6 +38,7 @@ interface EvidenceFile {
 }
 
 interface DestructionFormData {
+  destructionType: "Lost" | "Damaged";
   destructionDate: string;
   destructionMethod: string;
   destructedBy: string;
@@ -62,6 +63,7 @@ export const DestroyControlledCopyView: React.FC = () => {
   };
 
   const [formData, setFormData] = useState<DestructionFormData>({
+    destructionType: "Damaged",
     destructionDate: getCurrentDateTime(),
     destructionMethod: "",
     destructedBy: "",
@@ -166,7 +168,8 @@ export const DestroyControlledCopyView: React.FC = () => {
     if (!formData.destructionSupervisor.trim()) {
       newErrors.destructionSupervisor = "Supervisor name is required";
     }
-    if (formData.evidenceFiles.length === 0) {
+    // Evidence photos only required for Damaged cases
+    if (formData.destructionType === "Damaged" && formData.evidenceFiles.length === 0) {
       newErrors.evidenceFile = "At least one evidence photo is required";
     }
 
@@ -221,7 +224,7 @@ export const DestroyControlledCopyView: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-              Report Lost/Damaged
+              Report {formData.destructionType} Controlled Copy
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
               <span className="hidden sm:inline">Dashboard</span>
@@ -230,7 +233,7 @@ export const DestroyControlledCopyView: React.FC = () => {
               <span className="hidden sm:inline">Controlled Copies</span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <span className="text-slate-700 font-medium">Report Lost/Damaged</span>
+              <span className="text-slate-700 font-medium">Report {formData.destructionType}</span>
             </div>
           </div>
           <div className="flex gap-3 self-start md:self-auto">
@@ -267,9 +270,9 @@ export const DestroyControlledCopyView: React.FC = () => {
               Irreversible Action - Proceed with Caution
             </h3>
             <p className="text-sm text-red-800 leading-relaxed">
-              This action cannot be undone. Once marked as destroyed, this controlled copy will
+              This action cannot be undone. Once marked as {formData.destructionType.toLowerCase()}, this controlled copy will
               be permanently removed from active inventory and cannot be recovered. Ensure all
-              destruction procedures are followed according to company policy.
+              {formData.destructionType === "Damaged" ? " destruction" : ""} procedures are followed according to company policy.
             </p>
           </div>
         </div>
@@ -345,8 +348,43 @@ export const DestroyControlledCopyView: React.FC = () => {
       {/* Destruction Form */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-6">
-          Destruction Details
+          Report Details
         </h2>
+
+        {/* Type Selection */}
+        <div className="mb-8 pb-6 border-b border-slate-200">
+          <label className="text-sm font-medium text-slate-700 mb-3 block">
+            Report Type <span className="text-red-500">*</span>
+          </label>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="radio"
+                name="destructionType"
+                value="Damaged"
+                checked={formData.destructionType === "Damaged"}
+                onChange={(e) => handleInputChange("destructionType", e.target.value)}
+                className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500 cursor-pointer"
+              />
+              <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+                Damaged (Requires Evidence Photos)
+              </span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <input
+                type="radio"
+                name="destructionType"
+                value="Lost"
+                checked={formData.destructionType === "Lost"}
+                onChange={(e) => handleInputChange("destructionType", e.target.value)}
+                className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500 cursor-pointer"
+              />
+              <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+                Lost (No Evidence Required)
+              </span>
+            </label>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Destruction Information */}
@@ -449,14 +487,16 @@ export const DestroyControlledCopyView: React.FC = () => {
           <div className="space-y-5">
             <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2 pb-2 border-b border-slate-200">
               <FileText className="h-4 w-4 text-slate-600" />
-              Destruction Evidence
+              {formData.destructionType === "Damaged" ? "Destruction Evidence" : "Additional Information"}
             </h3>
 
-            {/* File Upload */}
-            <div>
-              <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                Evidence Photos <span className="text-red-500">*</span>
-              </label>
+            {formData.destructionType === "Damaged" ? (
+              <>
+                {/* File Upload */}
+                <div>
+                  <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                    Evidence Photos <span className="text-red-500">*</span>
+                  </label>
 
               {/* Upload Area */}
               <div className="relative">
@@ -573,6 +613,37 @@ export const DestroyControlledCopyView: React.FC = () => {
                 </li>
               </ul>
             </div>
+          </>
+            ) : (
+              /* Lost Case - No Evidence Required */
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-5">
+                <h4 className="text-sm font-semibold text-amber-900 mb-3 flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  Lost Controlled Copy Report
+                </h4>
+                <p className="text-sm text-amber-800 mb-4">
+                  For lost controlled copies, evidence photos are not required. However, please ensure:
+                </p>
+                <ul className="space-y-2 text-sm text-amber-800">
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600 mt-0.5">•</span>
+                    <span>Conduct thorough search before reporting as lost</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600 mt-0.5">•</span>
+                    <span>Document when and where it was last seen</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600 mt-0.5">•</span>
+                    <span>Notify supervisor immediately upon discovery</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-amber-600 mt-0.5">•</span>
+                    <span>Investigation may be initiated per company policy</span>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>

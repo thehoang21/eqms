@@ -561,17 +561,17 @@ export const DocumentReviewViewWithBatch: React.FC<DocumentReviewViewProps> = ({
                             <Button
                                 onClick={handleReject}
                                 variant="outline"
-                                size="default"
+                                size="sm"
                                 disabled={isSubmitting || isNavigating}
-                                className="gap-2 border-red-200 text-red-700 hover:bg-red-50"
+                                className="flex-1 md:flex-initial border-red-200 text-red-700 hover:bg-red-50"
                             >
-                                <ThumbsDown className="h-4 w-4" />
-                                Reject
+                                <ThumbsDown className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2" />
+                                <span className="text-xs md:text-sm">Reject</span>
                             </Button>
                             <Button
                                 onClick={handleApprove}
                                 variant="default"
-                                size="default"
+                                size="sm"
                                 disabled={isSubmitting || isNavigating}
                                 className="gap-2 bg-emerald-600 hover:bg-emerald-700"
                             >

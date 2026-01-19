@@ -49,7 +49,6 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
       title={isCreateMode ? "Create New Role" : "Edit Role"}
       confirmText={isCreateMode ? "Create Role" : "Save Changes"}
       size="xl"
-      static={true}
     >
       <div className="space-y-4">
         <div>

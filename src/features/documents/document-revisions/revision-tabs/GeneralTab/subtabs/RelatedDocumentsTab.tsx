@@ -76,7 +76,7 @@ export const RelatedDocumentsTab: React.FC = () => {
             {isAdding && (
                 <div className="p-4 border border-slate-200 rounded-lg bg-slate-50 space-y-3">
                     <div>
-                        <label className="text-sm font-medium text-slate-700 block mb-1.5">
+                        <label className="text-xs md:text-sm font-medium text-slate-700 block mb-1.5">
                             Select Document<span className="text-red-500 ml-1">*</span>
                         </label>
                         <Select
@@ -88,7 +88,7 @@ export const RelatedDocumentsTab: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label className="text-sm font-medium text-slate-700 block mb-1.5">
+                        <label className="text-xs md:text-sm font-medium text-slate-700 block mb-1.5">
                             Relationship Type
                         </label>
                         <Select

@@ -79,8 +79,8 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                 onClick={onClose}
             />
             <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-200">
-                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                    <h3 className="text-lg font-semibold text-slate-900">Select Reviewers</h3>
+                <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-b border-slate-100">
+                    <h3 className="text-base md:text-lg font-semibold text-slate-900">Select Reviewers</h3>
                     <Button 
                         onClick={onClose}
                         variant="ghost"
@@ -91,9 +91,9 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                     </Button>
                 </div>
                 
-                <div className="p-4 border-b border-slate-100 bg-slate-50/50">
+                <div className="p-3 md:p-4 border-b border-slate-100 bg-slate-50/50">
                     <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 md:h-4 md:w-4 text-slate-400" />
                         <input
                             type="text"
                             placeholder="Search by name, role, or department..."
