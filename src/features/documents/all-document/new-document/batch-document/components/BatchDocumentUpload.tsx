@@ -599,7 +599,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                         >
                                             <div className={cn(
-                                                "border-2 rounded-xl p-5 transition-all",
+                                                "border-2 rounded-xl p-3 md:p-5 transition-all",
                                                 isBatchParent(doc.id)
                                                     ? "border-emerald-300 bg-gradient-to-br from-emerald-50 to-green-50 hover:border-emerald-400 ring-2 ring-emerald-200"
                                                     : effectiveParent
@@ -607,42 +607,44 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                                                         : "border-slate-200 bg-white hover:border-slate-300",
                                                 "hover:shadow-md"
                                             )}>
-                                                <div className="flex items-start gap-2 md:gap-4">
-                                                    {/* Document Number */}
-                                                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 border-2 border-slate-200 shrink-0">
-                                                        <span className="text-xs font-bold text-slate-700">
-                                                            {index + 1}
-                                                        </span>
-                                                    </div>
-                                                    
-                                                    {/* File Icon */}
-                                                    <div className={cn(
-                                                        "w-14 h-14 md:w-12 md:h-12 rounded-lg flex items-center justify-center shrink-0",
-                                                        isBatchParent(doc.id)
-                                                            ? "bg-emerald-100"
-                                                            : effectiveParent 
-                                                                ? "bg-blue-100" 
-                                                                : "bg-slate-100"
-                                                    )}>
-                                                        {getFileIcon(doc.fileName) ? (
-                                                            <img 
-                                                                src={getFileIcon(doc.fileName)!} 
-                                                                alt="File Icon" 
-                                                                className="h-10 w-10 md:h-8 md:w-8 object-contain"
-                                                            />
-                                                        ) : (
-                                                            <FileText className={cn(
-                                                                "h-7 w-7 md:h-6 md:w-6",
-                                                                isBatchParent(doc.id)
-                                                                    ? "text-emerald-600"
-                                                                    : effectiveParent 
-                                                                        ? "text-blue-600" 
-                                                                        : "text-slate-600"
-                                                            )} />
-                                                        )}
-                                                    </div>
-                                                    
-                                                    <div className="flex-1 min-w-0 space-y-2 md:space-y-3">
+                                                <div className="flex flex-col gap-3 md:flex-row md:items-start md:gap-4">
+                                                    {/* Top Row: Number, Icon, Content */}
+                                                    <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0">
+                                                        {/* Document Number */}
+                                                        <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-100 border-2 border-slate-200 shrink-0">
+                                                            <span className="text-xs font-bold text-slate-700">
+                                                                {index + 1}
+                                                            </span>
+                                                        </div>
+                                                        
+                                                        {/* File Icon */}
+                                                        <div className={cn(
+                                                            "w-12 h-12 md:w-12 md:h-12 rounded-lg flex items-center justify-center shrink-0",
+                                                            isBatchParent(doc.id)
+                                                                ? "bg-emerald-100"
+                                                                : effectiveParent 
+                                                                    ? "bg-blue-100" 
+                                                                    : "bg-slate-100"
+                                                        )}>
+                                                            {getFileIcon(doc.fileName) ? (
+                                                                <img 
+                                                                    src={getFileIcon(doc.fileName)!} 
+                                                                    alt="File Icon" 
+                                                                    className="h-8 w-8 md:h-8 md:w-8 object-contain"
+                                                                />
+                                                            ) : (
+                                                                <FileText className={cn(
+                                                                    "h-6 w-6 md:h-6 md:w-6",
+                                                                    isBatchParent(doc.id)
+                                                                        ? "text-emerald-600"
+                                                                        : effectiveParent 
+                                                                            ? "text-blue-600" 
+                                                                            : "text-slate-600"
+                                                                )} />
+                                                            )}
+                                                        </div>
+                                                        
+                                                        <div className="flex-1 min-w-0 space-y-2 md:space-y-3">
                                                         {/* File Info */}
                                                         <div>
                                                             <p className="text-xs md:text-sm font-semibold text-slate-900 truncate">
@@ -712,38 +714,45 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                                                                 </div>
                                                             </div>
                                                         ) : null}
+                                                        </div>
                                                     </div>
                                                     
-                                                    {/* Actions */}
-                                                    <div className="flex flex-wrap items-center gap-1.5 md:gap-2 shrink-0">
+                                                    {/* Actions Row - Mobile: full width below, Desktop: beside content */}
+                                                    <div className="flex items-center gap-1.5 md:gap-2 w-full md:w-auto md:shrink-0">
                                                         {/* Set Parent Button - Show on all documents except current parent */}
                                                         {!isBatchParent(doc.id) && (
-                                                            <button
+                                                            <Button
                                                                 onClick={() => handleSetAsBatchParent(doc.id)}
-                                                                className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 border border-emerald-600 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
+                                                                variant="default"
+                                                                size="xs"
+                                                                className="flex-1 md:flex-initial justify-center gap-1 md:gap-1.5"
                                                                 title="Set as parent document"
                                                             >
                                                                 <Star className="h-3.5 w-3.5" />
-                                                                <span className="hidden sm:inline">Set Parent</span>
-                                                            </button>
+                                                                <span>Set Parent</span>
+                                                            </Button>
                                                         )}
                                                         
-                                                        <button
+                                                        <Button
                                                             onClick={() => handlePreviewDocument(doc.file)}
-                                                            className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium bg-blue-600 text-white hover:bg-blue-700 border border-blue-600 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
+                                                            variant="outline"
+                                                            size="xs"
+                                                            className="flex-1 md:flex-initial justify-center gap-1 md:gap-1.5 text-blue-600 border-blue-300 hover:bg-blue-50 hover:border-blue-400"
                                                             title="Preview document"
                                                         >
                                                             <Eye className="h-3.5 w-3.5" />
-                                                            <span className="hidden sm:inline">Preview</span>
-                                                        </button>
-                                                        <button
+                                                            <span>Preview</span>
+                                                        </Button>
+                                                        <Button
                                                             onClick={() => handleRemoveDocument(doc.id)}
-                                                            className="flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium bg-red-600 text-white hover:bg-red-700 border border-red-600 rounded-lg transition-colors whitespace-nowrap touch-manipulation active:scale-95"
+                                                            variant="outline"
+                                                            size="xs"
+                                                            className="flex-1 md:flex-initial justify-center gap-1 md:gap-1.5 text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400"
                                                             title="Remove document"
                                                         >
                                                             <IconTrash className="h-3.5 w-3.5" />
-                                                            <span className="hidden sm:inline">Remove</span>
-                                                        </button>
+                                                            <span>Remove</span>
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             </div>

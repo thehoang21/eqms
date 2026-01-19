@@ -806,36 +806,40 @@ export const RevisionWorkspaceView: React.FC = () => {
                             />
 
                             {/* Navigation Buttons */}
-                            <div className="flex items-center justify-between pt-6 border-t border-slate-200">
+                            <div className="flex items-center justify-between gap-2 pt-4 md:pt-6 border-t border-slate-200">
                                 <Button
                                     onClick={handlePreviousDocument}
                                     disabled={currentDocIndex === 0}
                                     variant="outline"
                                     size="sm"
-                                    className="flex items-center gap-2"
+                                    className="flex items-center justify-center gap-1.5 touch-manipulation"
                                 >
-                                    <ChevronRight className="h-4 w-4 rotate-180" />
-                                    Previous
+                                    <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4 rotate-180" />
+                                    <span className="text-xs md:text-sm">Previous</span>
                                 </Button>
 
-                                <div className="flex items-center gap-2">
-                                    {missingRequiredFields.length > 0 && (
-                                        <div className="text-xs text-amber-600 flex items-center gap-1">
-                                            <AlertCircle className="h-4 w-4" />
+                                {/* Warning message in center */}
+                                {missingRequiredFields.length > 0 && (
+                                    <div className="text-xs md:text-sm text-amber-600 flex items-center gap-1.5 px-2 md:px-3 py-1.5 md:py-2 bg-amber-50 rounded-lg">
+                                        <AlertCircle className="h-3.5 w-3.5 md:h-4 md:w-4 shrink-0" />
+                                        <span className="hidden sm:inline">
                                             {missingRequiredFields.length} required field(s) missing
-                                        </div>
-                                    )}
-                                </div>
+                                        </span>
+                                        <span className="sm:hidden">
+                                            {missingRequiredFields.length} missing
+                                        </span>
+                                    </div>
+                                )}
 
                                 {currentDocIndex < workspaceDocuments.length - 1 ? (
                                     <Button
                                         onClick={handleNextDocument}
                                         variant="default"
                                         size="sm"
-                                        className="flex items-center gap-2"
+                                        className="flex items-center justify-center gap-1.5 touch-manipulation"
                                     >
-                                        Next
-                                        <ChevronRight className="h-4 w-4" />
+                                        <span className="text-xs md:text-sm">Next</span>
+                                        <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                                     </Button>
                                 ) : (
                                     <Button
@@ -843,10 +847,10 @@ export const RevisionWorkspaceView: React.FC = () => {
                                         variant="default"
                                         size="sm"
                                         disabled={!isCurrentDocumentValid}
-                                        className="flex items-center gap-2"
+                                        className="flex items-center justify-center gap-1.5 touch-manipulation"
                                     >
-                                        Complete & Continue
-                                        <IconChevronRight className="h-4 w-4" />
+                                        <span className="text-xs md:text-sm">Complete & Continue</span>
+                                        <IconChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                                     </Button>
                                 )}
                             </div>
