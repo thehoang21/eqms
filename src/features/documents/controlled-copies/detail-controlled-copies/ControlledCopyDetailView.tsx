@@ -29,6 +29,7 @@ import { cn } from "@/components/ui/utils";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { useToast } from "@/components/ui/toast/Toast";
 import { ControlledCopy, ControlledCopyStatus, CurrentStage } from "../types";
+import { DestructionTypeSelectionModal } from "../components/DestructionTypeSelectionModal";
 import { IconFileShredder, IconShare3 } from "@tabler/icons-react";
 import {
   DocumentInformationTab,
@@ -341,28 +342,16 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
   };
 
   const handleReportLostDamaged = () => {
-    // Mở modal Report Lost/Damaged
+    // Mở modal chọn type
     setIsReportLostDamagedModalOpen(true);
   };
 
-  const handleReportLostDamagedConfirm = (formData: any, reason: string) => {
+  const handleReportLostDamagedConfirm = (type: "Lost" | "Damaged") => {
     // Đóng modal
     setIsReportLostDamagedModalOpen(false);
     
-    // Hiển thị toast thành công
-    showToast({
-      type: "success",
-      title: "Report Submitted",
-      message: "Controlled copy has been marked as lost/damaged and cancelled.",
-      duration: 3500,
-    });
-
-    // Thực hiện report lost/damaged
-    console.log("Report lost/damaged:", formData, reason);
-    // TODO: Call API to mark as lost/damaged
-    // Update status to "Closed - Cancelled"
-    // Add audit trail entry
-    // Send notification
+    // Navigate to destroy page với type parameter
+    navigate(`/documents/controlled-copies/${controlledCopy.id}/destroy?type=${type}`);
   };
 
   return (
@@ -559,6 +548,13 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         onClose={() => setIsDistributeModalOpen(false)}
         onConfirm={handleDistributeSuccess}
         actionTitle="Distribute Controlled Copy"
+      />
+
+      {/* Destruction Type Selection Modal */}
+      <DestructionTypeSelectionModal
+        isOpen={isReportLostDamagedModalOpen}
+        onClose={() => setIsReportLostDamagedModalOpen(false)}
+        onConfirm={handleReportLostDamagedConfirm}
       />
     </div>
   );

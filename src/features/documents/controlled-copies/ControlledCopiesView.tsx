@@ -18,6 +18,7 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { CreateLinkModal } from "../views/CreateLinkModal";
 import { CancelDistributionModal } from "./components/CancelDistributionModal";
+import { DestructionTypeSelectionModal } from "./components/DestructionTypeSelectionModal";
 import { useToast } from "@/components/ui/toast/Toast";
 import type { ControlledCopy, ControlledCopyStatus, TableColumn } from "./types";
 import { IconShare3 } from "@tabler/icons-react";
@@ -469,6 +470,10 @@ export const ControlledCopiesView: React.FC = () => {
   const [isDistributeESignModalOpen, setIsDistributeESignModalOpen] = useState(false);
   const [selectedCopyForDistribute, setSelectedCopyForDistribute] = useState<ControlledCopy | null>(null);
 
+  // Report Lost/Damaged modal
+  const [isReportLostDamagedModalOpen, setIsReportLostDamagedModalOpen] = useState(false);
+  const [selectedCopyForReportLostDamaged, setSelectedCopyForReportLostDamaged] = useState<ControlledCopy | null>(null);
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -642,7 +647,16 @@ export const ControlledCopiesView: React.FC = () => {
   };
 
   const handleReportLostDamaged = (copy: ControlledCopy) => {
-    navigate(`/documents/controlled-copies/${copy.id}/destroy`);
+    setSelectedCopyForReportLostDamaged(copy);
+    setIsReportLostDamagedModalOpen(true);
+    setOpenDropdownId(null);
+  };
+
+  const handleReportLostDamagedConfirm = (type: "Lost" | "Damaged") => {
+    setIsReportLostDamagedModalOpen(false);
+    if (selectedCopyForReportLostDamaged) {
+      navigate(`/documents/controlled-copies/${selectedCopyForReportLostDamaged.id}/destroy?type=${type}`);
+    }
   };
 
   const handleDistribute = (copy: ControlledCopy) => {
@@ -1016,6 +1030,16 @@ export const ControlledCopiesView: React.FC = () => {
         }}
         onConfirm={handleDistributeESignConfirm}
         actionTitle="Confirm Distribution of Controlled Copy"
+      />
+
+      {/* Destruction Type Selection Modal */}
+      <DestructionTypeSelectionModal
+        isOpen={isReportLostDamagedModalOpen}
+        onClose={() => {
+          setIsReportLostDamagedModalOpen(false);
+          setSelectedCopyForReportLostDamaged(null);
+        }}
+        onConfirm={handleReportLostDamagedConfirm}
       />
     </div>
   );
