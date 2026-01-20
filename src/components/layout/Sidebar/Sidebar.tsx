@@ -504,6 +504,11 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           "md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
+        style={{
+          paddingTop: 'var(--safe-area-inset-top)',
+          paddingLeft: 'var(--safe-area-inset-left)',
+          paddingBottom: 'var(--safe-area-inset-bottom)',
+        }}
       >
         {/* Header / Logo Area */}
         <div 

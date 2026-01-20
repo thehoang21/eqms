@@ -37,7 +37,14 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
   }, [isUserMenuOpen]);
 
   return (
-    <header className="h-14 md:h-16 lg:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-sm shrink-0">
+    <header 
+      className="h-14 md:h-16 lg:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-sm shrink-0"
+      style={{
+        paddingTop: 'var(--safe-area-inset-top)',
+        paddingLeft: 'var(--safe-area-inset-left)',
+        paddingRight: 'var(--safe-area-inset-right)',
+      }}
+    >
       
       {/* Overlay for visual effect */}
       {isUserMenuOpen && createPortal(
