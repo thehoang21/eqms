@@ -180,10 +180,8 @@ export const DashboardView: React.FC = () => {
         ))}
       </div>
 
-      {/* Document Status & Tasks Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-        {/* Document Status Chart */}
-        <div className="xl:col-span-2 rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 lg:p-6">
+      {/* Document Status Chart */}
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 lg:p-6">
         <div className="mb-4 sm:mb-6">
           <h3 className="text-base sm:text-lg font-bold text-slate-900">Document Status</h3>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">Distribution and trends</p>
@@ -213,43 +211,15 @@ export const DashboardView: React.FC = () => {
 
         {/* Legend */}
         <div className="pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
-            {MOCK_CHART_DATA.documentStatus.map((item, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <div className={cn('h-3 w-3 rounded-full', item.color)}></div>
-                <div className="flex flex-col">
-                  <span className="text-xs text-slate-600">{item.name}</span>
-                  <span className="text-sm font-semibold text-slate-900">{item.value}</span>
-                </div>
+          {MOCK_CHART_DATA.documentStatus.map((item, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <div className={cn('h-3 w-3 rounded-full', item.color)}></div>
+              <div className="flex flex-col">
+                <span className="text-xs text-slate-600">{item.name}</span>
+                <span className="text-sm font-semibold text-slate-900">{item.value}</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Tasks by Module */}
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 lg:p-6">
-          <div className="flex items-center justify-between mb-4 sm:mb-6">
-            <div className="min-w-0 flex-1">
-              <h3 className="text-base sm:text-lg font-bold text-slate-900">Tasks by Module</h3>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">Active workload</p>
             </div>
-            <FolderOpen className="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 flex-shrink-0" />
-          </div>
-          <div className="space-y-4">
-            {MOCK_CHART_DATA.tasksByModule.map((item, idx) => (
-              <div key={idx} className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium text-slate-700">{item.module}</span>
-                  <span className="text-slate-900 font-semibold">{item.count}</span>
-                </div>
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className={cn('h-full transition-all', item.color)}
-                    style={{ width: `${(item.count / maxTaskValue) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
 

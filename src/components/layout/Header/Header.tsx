@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
   }, [isUserMenuOpen]);
 
   return (
-    <header className="h-16 md:h-16 w-full sticky top-0 z-40 border-b border-slate-200 bg-white backdrop-blur-sm shadow-sm shrink-0">
+    <header className="h-14 md:h-16 lg:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-sm shrink-0">
       
       {/* Overlay for visual effect */}
       {isUserMenuOpen && createPortal(
@@ -48,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
       )}
 
       {/* Header Content Container */}
-      <div className="h-full flex items-center justify-between gap-2 md:gap-4 px-3 md:px-4 lg:px-6">
+      <div className="h-full flex items-center justify-between gap-1.5 md:gap-2 lg:gap-3 px-3 md:px-4 lg:px-6">
 
         {/* LEFT: Sidebar Toggle */}
         <div className="flex items-center shrink-0">
@@ -61,28 +61,28 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
           >
               {/* Tablet/Desktop: Expand Icon - Show when sidebar is collapsed */}
               <IconLayoutSidebarLeftExpand className={cn(
-                "h-5.5 w-5.5 lg:h-6 lg:w-6 absolute transition-all duration-300 ease-in-out hidden md:block",
+                "h-6 w-6 absolute transition-all duration-300 ease-in-out hidden md:block",
                 isSidebarCollapsed 
                   ? "opacity-100 rotate-0 scale-100" 
                   : "opacity-0 rotate-180 scale-90"
               )} />
               {/* Tablet/Desktop: Collapse Icon - Show when sidebar is expanded */}
               <IconLayoutSidebarLeftCollapse className={cn(
-                "h-5.5 w-5.5 lg:h-6 lg:w-6 absolute transition-all duration-300 ease-in-out hidden md:block",
+                "h-6 w-6 absolute transition-all duration-300 ease-in-out hidden md:block",
                 isSidebarCollapsed 
                   ? "opacity-0 -rotate-180 scale-90" 
                   : "opacity-100 rotate-0 scale-100"
               )} />
               {/* Mobile: Menu Icon - Show when mobile menu is closed */}
               <Menu className={cn(
-                "h-5.5 w-5.5 absolute transition-all duration-300 ease-in-out md:hidden",
+                "h-6 w-6 absolute transition-all duration-300 ease-in-out md:hidden",
                 isMobileMenuOpen 
                   ? "opacity-0 rotate-180 scale-90" 
                   : "opacity-100 rotate-0 scale-100"
               )} />
               {/* Mobile: X Icon - Show when mobile menu is open */}
               <X className={cn(
-                "h-5.5 w-5.5 absolute transition-all duration-300 ease-in-out md:hidden",
+                "h-6 w-6 absolute transition-all duration-300 ease-in-out md:hidden",
                 isMobileMenuOpen 
                   ? "opacity-100 rotate-0 scale-100" 
                   : "opacity-0 -rotate-180 scale-90"
@@ -111,13 +111,13 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
           {/* User Profile Dropdown */}
           <div className="relative" ref={userMenuRef}>
             <button 
-              className="flex items-center gap-2 lg:gap-2.5 cursor-pointer hover:bg-slate-50 px-1.5 py-1.5 lg:px-2 lg:py-1.5 rounded-lg border border-transparent hover:border-slate-200 transition-all select-none group"
+              className="flex items-center gap-1.5 md:gap-2 lg:gap-2.5 cursor-pointer hover:bg-slate-50 px-1.5 py-1.5 lg:px-2 lg:py-1.5 rounded-lg border border-transparent hover:border-slate-200 transition-all select-none group"
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               aria-label="User menu"
             >
               {/* Avatar */}
-              <div className="h-8 w-8 md:h-9 md:w-9 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
-                <User className="h-4.5 w-4.5 md:h-5 md:w-5" />
+              <div className="h-8 w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
+                <User className="h-4 w-4 md:h-4.5 md:w-4.5 lg:h-5 lg:w-5" />
               </div>
               {/* User Info - Hidden on mobile and tablet */}
               <div className="hidden lg:block text-left pr-1">
@@ -151,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                         onNavigateToProfile?.();
                       }}
                   >
-                      <User className="h-4.5 w-4.5 shrink-0" />
+                      <User className="h-5 w-5 shrink-0" />
                       <span>Profile</span>
                   </button>
                 </div>
@@ -165,7 +165,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                         onLogout?.();
                       }}
                   >
-                      <IconLogout className="h-4.5 w-4.5 shrink-0" />
+                      <IconLogout className="h-5 w-5 shrink-0" />
                       <span>Logout</span>
                   </button>
                 </div>
