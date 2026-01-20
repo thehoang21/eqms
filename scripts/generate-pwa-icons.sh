@@ -3,7 +3,7 @@
 # PWA Icon Generator Script
 # Generates all required icon sizes for PWA from source logo
 
-SOURCE_LOGO="src/assets/images/logo_doc_nobg.png"
+SOURCE_LOGO="src/assets/images/pwa.png"
 OUTPUT_DIR="public/icons"
 
 # Create output directory

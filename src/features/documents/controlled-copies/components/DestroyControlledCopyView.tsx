@@ -642,23 +642,23 @@ export const DestroyControlledCopyView: React.FC = () => {
             />
 
             {/* Foreground content */}
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-6 lg:p-8">
               <button
                 onClick={() => setSelectedImageIndex(null)}
-                className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
+                className="absolute top-2 right-2 md:top-4 md:right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-10"
                 aria-label="Close image viewer"
               >
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5 md:h-6 md:w-6" />
               </button>
 
-              <div className="relative max-w-5xl max-h-[90vh] w-full">
+              <div className="relative flex items-center justify-center w-full h-full">
                 <img
                   src={formData.evidenceFiles[selectedImageIndex].preview}
                   alt={`Evidence ${selectedImageIndex + 1}`}
-                  className="w-full h-full object-contain rounded-lg"
+                  className="max-w-full max-h-full w-auto h-auto object-contain rounded-lg"
                 />
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-sm px-4 py-2 rounded-full">
-                  <p className="text-sm text-white font-medium">
+                <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full">
+                  <p className="text-xs md:text-sm text-white font-medium">
                     {selectedImageIndex + 1} / {formData.evidenceFiles.length}
                   </p>
                 </div>
@@ -673,10 +673,10 @@ export const DestroyControlledCopyView: React.FC = () => {
                           prev! > 0 ? prev! - 1 : formData.evidenceFiles.length - 1
                         );
                       }}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
+                      className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
                       aria-label="Previous image"
                     >
-                      <ArrowLeft className="h-6 w-6" />
+                      <ArrowLeft className="h-5 w-5 md:h-6 md:w-6" />
                     </button>
                     <button
                       onClick={(e) => {
@@ -685,10 +685,10 @@ export const DestroyControlledCopyView: React.FC = () => {
                           prev! < formData.evidenceFiles.length - 1 ? prev! + 1 : 0
                         );
                       }}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
+                      className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
                       aria-label="Next image"
                     >
-                      <ArrowLeft className="h-6 w-6 rotate-180" />
+                      <ArrowLeft className="h-5 w-5 md:h-6 md:w-6 rotate-180" />
                     </button>
                   </>
                 )}

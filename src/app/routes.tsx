@@ -1,66 +1,55 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-dom';
 
 // Layout
 import { MainLayout } from '@/components/layout/MainLayout';
 
-// Features - Dashboard & Tasks
-import { DashboardView } from '@/features/dashboard';
-import { MyTasksView } from '@/features/my-tasks';
-
-// Features - Documents
-import { 
-  DetailDocumentView,
-  ArchivedDocumentsView 
-} from '@/features/documents';
-import { DocumentsView } from '@/features/documents/document-list';
-import { 
-  NewDocumentView, 
-  BatchDocumentView 
-} from '@/features/documents/document-list/new-document';
-import { DocumentReviewView } from '@/features/documents/document-list/review-document';
-import { DocumentApprovalView } from '@/features/documents/document-list/approval-document';
-
-// Features - Document Revisions
-import { 
-  RevisionListView, 
-  NewRevisionView, 
-  RevisionsOwnedByMeView, 
-  RevisionWorkspaceView, 
-  PendingDocumentsView, 
-  RevisionReviewView, 
-  RevisionApprovalView 
-} from '@/features/documents/document-revisions';
-import { StandaloneRevisionView } from '@/features/documents/document-revisions/components/StandaloneRevisionView';
-
-// Features - Templates & Controlled Copies
-import { 
-  TemplateLibraryView,
-  NewTemplateView 
-} from '@/features/documents/template-library';
-import { 
-  ControlledCopiesView, 
-  ControlledCopyDetailView, 
-  DestroyControlledCopyView 
-} from '@/features/documents/controlled-copies';
-import { RequestControlledCopyView } from '@/features/documents/views/RequestControlledCopyView';
-
-// Features - Settings
-import { 
-  ProfileView, 
-  UserManagementView, 
-  AddUserView, 
-  EditUserView, 
-  DictionariesView 
-} from '@/features/settings';
-import { RolePermissionView } from '@/features/settings/role-permission';
-
-// Features - Auth
+// Features - Auth (eager load for login page)
 import { LoginView } from '@/features/auth';
+import { UnderConstruction } from './UnderConstruction';
+
+// ==================== LAZY LOADED FEATURES ====================
+// Dashboard & Tasks
+const DashboardView = lazy(() => import('@/features/dashboard').then(m => ({ default: m.DashboardView })));
+const MyTasksView = lazy(() => import('@/features/my-tasks').then(m => ({ default: m.MyTasksView })));
+
+// Documents
+const DetailDocumentView = lazy(() => import('@/features/documents').then(m => ({ default: m.DetailDocumentView })));
+const ArchivedDocumentsView = lazy(() => import('@/features/documents').then(m => ({ default: m.ArchivedDocumentsView })));
+const DocumentsView = lazy(() => import('@/features/documents/document-list').then(m => ({ default: m.DocumentsView })));
+const NewDocumentView = lazy(() => import('@/features/documents/document-list/new-document').then(m => ({ default: m.NewDocumentView })));
+const BatchDocumentView = lazy(() => import('@/features/documents/document-list/new-document').then(m => ({ default: m.BatchDocumentView })));
+const DocumentReviewView = lazy(() => import('@/features/documents/document-list/review-document').then(m => ({ default: m.DocumentReviewView })));
+const DocumentApprovalView = lazy(() => import('@/features/documents/document-list/approval-document').then(m => ({ default: m.DocumentApprovalView })));
+
+// Document Revisions
+const RevisionListView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionListView })));
+const NewRevisionView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.NewRevisionView })));
+const RevisionsOwnedByMeView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionsOwnedByMeView })));
+const RevisionWorkspaceView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionWorkspaceView })));
+const PendingDocumentsView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.PendingDocumentsView })));
+const RevisionReviewView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionReviewView })));
+const RevisionApprovalView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionApprovalView })));
+const StandaloneRevisionView = lazy(() => import('@/features/documents/document-revisions/components/StandaloneRevisionView').then(m => ({ default: m.StandaloneRevisionView })));
+
+// Templates & Controlled Copies
+const TemplateLibraryView = lazy(() => import('@/features/documents/template-library').then(m => ({ default: m.TemplateLibraryView })));
+const NewTemplateView = lazy(() => import('@/features/documents/template-library').then(m => ({ default: m.NewTemplateView })));
+const ControlledCopiesView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.ControlledCopiesView })));
+const ControlledCopyDetailView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.ControlledCopyDetailView })));
+const DestroyControlledCopyView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.DestroyControlledCopyView })));
+const RequestControlledCopyView = lazy(() => import('@/features/documents/views/RequestControlledCopyView').then(m => ({ default: m.RequestControlledCopyView })));
+
+// Settings
+const ProfileView = lazy(() => import('@/features/settings').then(m => ({ default: m.ProfileView })));
+const UserManagementView = lazy(() => import('@/features/settings').then(m => ({ default: m.UserManagementView })));
+const AddUserView = lazy(() => import('@/features/settings').then(m => ({ default: m.AddUserView })));
+const EditUserView = lazy(() => import('@/features/settings').then(m => ({ default: m.EditUserView })));
+const DictionariesView = lazy(() => import('@/features/settings').then(m => ({ default: m.DictionariesView })));
+const RolePermissionView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RolePermissionView })));
 
 // Dev Tools
-import { UIShowcase } from '@/features/ui-showcase/UIShowcase';
-import { UnderConstruction } from './UnderConstruction';
+const UIShowcase = lazy(() => import('@/features/ui-showcase/UIShowcase').then(m => ({ default: m.UIShowcase })));
 
 // ==================== ROUTE WRAPPERS ====================
 // Reusable wrapper for extracting ID from URL params
@@ -85,7 +74,9 @@ const RouteWrapper: React.FC<RouteWrapperProps> = ({ render }) => {
 const DetailDocumentViewWrapper = () => (
   <RouteWrapper 
     render={(id, navigate) => (
-      <DetailDocumentView documentId={id} onBack={() => navigate(-1)} />
+      <Suspense fallback={<LoadingFallback />}>
+        <DetailDocumentView documentId={id} onBack={() => navigate(-1)} />
+      </Suspense>
     )} 
   />
 );
@@ -93,7 +84,9 @@ const DetailDocumentViewWrapper = () => (
 const DocumentReviewViewWrapper = () => (
   <RouteWrapper 
     render={(id, navigate) => (
-      <DocumentReviewView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
+      <Suspense fallback={<LoadingFallback />}>
+        <DocumentReviewView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
+      </Suspense>
     )} 
   />
 );
@@ -101,7 +94,9 @@ const DocumentReviewViewWrapper = () => (
 const DocumentApprovalViewWrapper = () => (
   <RouteWrapper 
     render={(id, navigate) => (
-      <DocumentApprovalView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
+      <Suspense fallback={<LoadingFallback />}>
+        <DocumentApprovalView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
+      </Suspense>
     )} 
   />
 );
@@ -109,7 +104,9 @@ const DocumentApprovalViewWrapper = () => (
 const RevisionReviewViewWrapper = () => (
   <RouteWrapper 
     render={(id, navigate) => (
-      <RevisionReviewView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
+      <Suspense fallback={<LoadingFallback />}>
+        <RevisionReviewView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
+      </Suspense>
     )} 
   />
 );
@@ -117,7 +114,9 @@ const RevisionReviewViewWrapper = () => (
 const RevisionApprovalViewWrapper = () => (
   <RouteWrapper 
     render={(id, navigate) => (
-      <RevisionApprovalView revisionId={id} onBack={() => navigate(-1)} currentUserId="1" />
+      <Suspense fallback={<LoadingFallback />}>
+        <RevisionApprovalView revisionId={id} onBack={() => navigate(-1)} currentUserId="1" />
+      </Suspense>
     )} 
   />
 );
@@ -125,9 +124,21 @@ const RevisionApprovalViewWrapper = () => (
 const ControlledCopyDetailViewWrapper = () => (
   <RouteWrapper 
     render={(id, navigate) => (
-      <ControlledCopyDetailView controlledCopyId={id} onBack={() => navigate(-1)} />
+      <Suspense fallback={<LoadingFallback />}>
+        <ControlledCopyDetailView controlledCopyId={id} onBack={() => navigate(-1)} />
+      </Suspense>
     )} 
   />
+);
+
+// ==================== LOADING FALLBACK ====================
+const LoadingFallback: React.FC = () => (
+  <div className="flex items-center justify-center min-h-[400px]">
+    <div className="flex flex-col items-center gap-3">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600"></div>
+      <p className="text-sm text-slate-500">Loading...</p>
+    </div>
+  </div>
 );
 
 // ==================== MAIN ROUTES ====================
@@ -138,27 +149,26 @@ export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       {/* ==================== PUBLIC ROUTES ==================== */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginView onLogin={() => navigate('/dashboard')} />} />
       
       {/* ==================== PROTECTED ROUTES (WITH LAYOUT) ==================== */}
       <Route path="/" element={<MainLayout />}>
-        {/* Root redirect */}
-        <Route index element={<Navigate to="dashboard" replace />} />
         
         {/* ===== DASHBOARD & TASKS ===== */}
-        <Route path="dashboard" element={<DashboardView />} />
-        <Route path="my-tasks" element={<MyTasksView />} />
+        <Route path="dashboard" element={<Suspense fallback={<LoadingFallback />}><DashboardView /></Suspense>} />
+        <Route path="my-tasks" element={<Suspense fallback={<LoadingFallback />}><MyTasksView /></Suspense>} />
         
         {/* ===== DOCUMENTS ===== */}
         <Route path="documents">
           {/* Document Lists */}
-          <Route path="owned" element={<DocumentsView viewType="owned-by-me" onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
-          <Route path="all" element={<DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
-          <Route path="all/new" element={<NewDocumentView />} />
-          <Route path="archived" element={<ArchivedDocumentsView />} />
+          <Route path="owned" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="owned-by-me" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
+          <Route path="all" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
+          <Route path="all/new" element={<Suspense fallback={<LoadingFallback />}><NewDocumentView /></Suspense>} />
+          <Route path="archived" element={<Suspense fallback={<LoadingFallback />}><ArchivedDocumentsView /></Suspense>} />
           
           {/* Batch Operations */}
-          <Route path="batch/new" element={<BatchDocumentView />} />
+          <Route path="batch/new" element={<Suspense fallback={<LoadingFallback />}><BatchDocumentView /></Suspense>} />
           
           {/* Document Detail & Actions */}
           <Route path=":id" element={<DetailDocumentViewWrapper />} />
@@ -167,50 +177,79 @@ export const AppRoutes: React.FC = () => {
           
           {/* Document Revisions */}
           <Route path="revisions">
-            <Route path="all" element={<RevisionListView />} />
-            <Route path="owned" element={<RevisionsOwnedByMeView />} />
-            <Route path="pending-review" element={<PendingDocumentsView viewType="review" onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
-            <Route path="pending-approval" element={<PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
-            <Route path="new" element={<NewRevisionView />} />
-            <Route path="new-standalone" element={<StandaloneRevisionView />} />
-            <Route path="workspace" element={<RevisionWorkspaceView />} />
+            <Route path="all" element={<Suspense fallback={<LoadingFallback />}><RevisionListView /></Suspense>} />
+            <Route path="owned" element={<Suspense fallback={<LoadingFallback />}><RevisionsOwnedByMeView /></Suspense>} />
+            <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="review" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
+            <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
+            <Route path="new" element={<Suspense fallback={<LoadingFallback />}><NewRevisionView /></Suspense>} />
+            <Route path="new-standalone" element={<Suspense fallback={<LoadingFallback />}><StandaloneRevisionView /></Suspense>} />
+            <Route path="workspace" element={<Suspense fallback={<LoadingFallback />}><RevisionWorkspaceView /></Suspense>} />
             <Route path="review/:id" element={<RevisionReviewViewWrapper />} />
             <Route path="approval/:id" element={<RevisionApprovalViewWrapper />} />
-            <Route path="*" element={<DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
+            <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
           </Route>
           
           {/* Controlled Copies */}
           <Route path="controlled-copies">
-            <Route index element={<ControlledCopiesView />} />
+            <Route index element={<Suspense fallback={<LoadingFallback />}><ControlledCopiesView /></Suspense>} />
             <Route path=":id" element={<ControlledCopyDetailViewWrapper />} />
-            <Route path=":id/destroy" element={<DestroyControlledCopyView />} />
-            <Route path="*" element={<DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} />} />
+            <Route path=":id/destroy" element={<Suspense fallback={<LoadingFallback />}><DestroyControlledCopyView /></Suspense>} />
+            <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
           </Route>
-          <Route path="controlled-copy/request" element={<RequestControlledCopyView />} />
+          <Route path="controlled-copy/request" element={<Suspense fallback={<LoadingFallback />}><RequestControlledCopyView /></Suspense>} />
           
           {/* Templates */}
           <Route path="templates">
-            <Route index element={<TemplateLibraryView onViewTemplate={(id) => navigate(`/documents/templates/${id}`)} onCreateTemplate={() => navigate('/documents/templates/new')} />} />
-            <Route path="new" element={<NewTemplateView />} />
+            <Route index element={<Suspense fallback={<LoadingFallback />}><TemplateLibraryView onViewTemplate={(id) => navigate(`/documents/templates/${id}`)} onCreateTemplate={() => navigate('/documents/templates/new')} /></Suspense>} />
+            <Route path="new" element={<Suspense fallback={<LoadingFallback />}><NewTemplateView /></Suspense>} />
           </Route>
         </Route>
         
         {/* ===== SETTINGS ===== */}
         <Route path="settings">
           <Route path="user-management">
-            <Route index element={<UserManagementView />} />
-            <Route path="add" element={<AddUserView />} />
-            <Route path="edit/:userId" element={<EditUserView />} />
+            <Route index element={<Suspense fallback={<LoadingFallback />}><UserManagementView /></Suspense>} />
+            <Route path="add" element={<Suspense fallback={<LoadingFallback />}><AddUserView /></Suspense>} />
+            <Route path="edit/:userId" element={<Suspense fallback={<LoadingFallback />}><EditUserView /></Suspense>} />
           </Route>
-          <Route path="roles" element={<RolePermissionView />} />
-          <Route path="dictionaries" element={<DictionariesView />} />
+          <Route path="roles" element={<Suspense fallback={<LoadingFallback />}><RolePermissionView /></Suspense>} />
+          <Route path="dictionaries" element={<Suspense fallback={<LoadingFallback />}><DictionariesView /></Suspense>} />
+          <Route path="config" element={<UnderConstruction />} />
+          <Route path="info-system" element={<UnderConstruction />} />
         </Route>
         
+        {/* ===== TRAINING MANAGEMENT ===== */}
+        <Route path="training-management" element={<UnderConstruction />} />
+        
+        {/* ===== DEVIATION & NCs ===== */}
+        <Route path="deviations-ncs" element={<UnderConstruction />} />
+        
+        {/* ===== CAPA MANAGEMENT ===== */}
+        <Route path="capa-management" element={<UnderConstruction />} />
+        
+        {/* ===== CHANGE MANAGEMENT ===== */}
+        <Route path="change-management" element={<UnderConstruction />} />
+        
+        {/* ===== COMPLAINTS MANAGEMENT ===== */}
+        <Route path="complaints-management" element={<UnderConstruction />} />
+        
+        {/* ===== EQUIPMENT MANAGEMENT ===== */}
+        <Route path="equipment-management" element={<UnderConstruction />} />
+        
+        {/* ===== SUPPLIER MANAGEMENT ===== */}
+        <Route path="supplier-management" element={<UnderConstruction />} />
+        
+        {/* ===== RISK MANAGEMENT ===== */}
+        <Route path="risk-management" element={<UnderConstruction />} />
+        
+        {/* ===== AUDIT TRAIL SYSTEM ===== */}
+        <Route path="audit-trail" element={<UnderConstruction />} />
+        
         {/* ===== PROFILE ===== */}
-        <Route path="profile" element={<ProfileView onBack={() => navigate(-1)} />} />
+        <Route path="profile" element={<Suspense fallback={<LoadingFallback />}><ProfileView onBack={() => navigate(-1)} /></Suspense>} />
         
         {/* ===== DEV TOOLS ===== */}
-        <Route path="ui-demo" element={<UIShowcase />} />
+        <Route path="ui-demo" element={<Suspense fallback={<LoadingFallback />}><UIShowcase /></Suspense>} />
         
         {/* ===== FALLBACK ===== */}
         <Route path="*" element={<UnderConstruction />} />
