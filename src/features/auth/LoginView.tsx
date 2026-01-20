@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Eye, EyeOff, ArrowRight, Shield, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, ChevronLeft, ArrowRight, Shield, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
@@ -8,6 +8,7 @@ import slide1 from '@/assets/images/slide-image/ipad1.webp';
 import slide2 from '@/assets/images/slide-image/ipad2.webp';
 import slide3 from '@/assets/images/slide-image/ipad3.webp';
 import slide4 from '@/assets/images/slide-image/ipad4.webp';
+import { IconArrowLeft } from '@tabler/icons-react';
 
 interface LoginViewProps {
   onLogin?: (username: string, password: string, rememberMe: boolean) => void;
@@ -27,6 +28,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showSplash, setShowSplash] = useState(true);
 
   const slides = [slide1, slide2, slide3, slide4];
 
@@ -34,7 +36,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 2000); // Change slide every 3 seconds
+    }, 2000); // Change slide every 2 seconds
 
     return () => clearInterval(timer);
   }, [slides.length]);
@@ -100,6 +102,91 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen w-full flex overflow-hidden">
+      {/* Mobile Splash Screen */}
+      <div className={cn(
+        "lg:hidden fixed inset-0 z-50 bg-slate-900 transition-all duration-700 ease-in-out",
+        showSplash ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-110 pointer-events-none"
+      )}>
+        {/* Carousel Background */}
+          <div className="absolute inset-0 z-0">
+            {slides.map((slide, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "absolute inset-0 transition-all duration-1000 ease-in-out",
+                  index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
+                )}
+              >
+                <img 
+                  src={slide} 
+                  alt={`Slide ${index + 1}`}
+                  className="w-full h-full object-cover opacity-80"
+                />
+              </div>
+            ))}
+            {/* Dark Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/80" />
+          </div>
+
+          {/* Splash Content */}
+          <div className="relative z-10 h-full flex flex-col p-8 text-white">
+            {/* Logo at Top */}
+            <div className="pt-4 pb-8 flex justify-center">
+              <img 
+                src={logoImg} 
+                alt="Logo" 
+                className="h-12 sm:h-14 w-auto object-contain drop-shadow-2xl mx-auto"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+
+            {/* Title & Description - Centered */}
+            <div className="flex-1 flex flex-col justify-center items-center text-center">
+              <div className="space-y-3">
+                <h1 className="text-2xl font-bold leading-tight tracking-tight">
+                  Quality Management System
+                </h1>
+                <p className="text-sm text-white/90 leading-relaxed max-w-sm mx-auto">
+                  Next generation pharmaceutical quality management. Intelligent, compliant, and secure.
+                </p>
+              </div>
+            </div>
+
+            {/* Sign In Button */}
+            <div className="space-y-4">
+              <Button
+                onClick={() => setShowSplash(false)}
+                size="default"
+                className="w-full h-14 text-base font-bold shadow-2xl shadow-emerald-500/30"
+              >
+                Sign In
+              </Button>
+              
+              {/* Carousel Indicators */}
+              <div className="flex justify-center gap-2 pb-2">
+                {slides.map((_, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      "h-1.5 rounded-full transition-all duration-300",
+                      index === currentSlide 
+                        ? "w-8 bg-white" 
+                        : "w-1.5 bg-white/40"
+                    )}
+                  />
+                ))}
+              </div>
+
+              {/* Footer */}
+              <p className="text-xs text-center text-white/70 pb-4">
+                A product of NTP Dev Team - Ngoc Thien Pharma.
+              </p>
+            </div>
+          </div>
+        </div>
+
       {/* Left Side - Branding & Image (Hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 p-4 lg:p-6 items-center justify-center bg-white">
         {/* Branding Card with Carousel */}
@@ -159,7 +246,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             {/* Footer */}
             <div className="relative">
               <p className="text-sm text-white/90">
-                A product of NTP Dev Team - Ngoc Thien Trading and Pharmaceutical JSC.
+                A product of NTP Dev Team - Ngoc Thien Pharma.
               </p>
             </div>
           </div>
@@ -167,7 +254,19 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 xl:w-2/5 relative flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-white">
+      <div className={cn(
+        "w-full lg:w-1/2 xl:w-2/5 relative flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-white transition-all duration-700 ease-in-out",
+        showSplash ? "opacity-0 scale-95 lg:opacity-100 lg:scale-100" : "opacity-100 scale-100"
+      )}>
+        {/* Back Button (Mobile Only) */}
+        <button
+          onClick={() => setShowSplash(true)}
+          className="lg:hidden absolute top-6 left-6 h-10 w-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors z-20"
+          aria-label="Back to splash"
+        >
+          <IconArrowLeft className="h-5 w-5" />
+        </button>
+
         {/* Form Container */}
         <div className="w-full max-w-md mt-20 lg:mt-0">
           <div className="bg-white overflow-hidden">
