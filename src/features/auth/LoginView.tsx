@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, Lock, ArrowRight, Shield, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Eye, EyeOff, ArrowRight, Shield, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import logoImg from '@/assets/images/logo_nobg.png';
-import mockUpIpad from '@/assets/images/mockupipad.webp';
-import { IconUser } from '@tabler/icons-react';
+import slide1 from '@/assets/images/slide-image/ipad1.webp';
+import slide2 from '@/assets/images/slide-image/ipad2.webp';
+import slide3 from '@/assets/images/slide-image/ipad3.webp';
+import slide4 from '@/assets/images/slide-image/ipad4.webp';
 
 interface LoginViewProps {
   onLogin?: (username: string, password: string, rememberMe: boolean) => void;
@@ -24,6 +26,18 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [slide1, slide2, slide3, slide4];
+
+  // Auto-play carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 2000); // Change slide every 3 seconds
+
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   const handleInputChange = (field: 'username' | 'password', value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -88,18 +102,45 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
     <div className="min-h-screen w-full flex overflow-hidden">
       {/* Left Side - Branding & Image (Hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 p-4 lg:p-6 items-center justify-center bg-white">
-        {/* Branding Card */}
+        {/* Branding Card with Carousel */}
         <div className="relative w-full h-full rounded-[1.25rem] overflow-hidden bg-slate-600 ring-1 ring-black/5">
-          {/* Background Image with Overlay */}
+          {/* Carousel Container */}
           <div className="absolute inset-0 z-0">
-            <img 
-              src={mockUpIpad} 
-              alt="Factory Background" 
-              className="w-full h-full object-cover opacity-90 scale-100"
-            />
+            {slides.map((slide, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "absolute inset-0 transition-all duration-1000 ease-in-out",
+                  index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
+                )}
+              >
+                <img 
+                  src={slide} 
+                  alt={`Slide ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
           </div>
 
-          {/* Content */}
+          {/* Carousel Indicators */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300",
+                  index === currentSlide 
+                    ? "w-8 bg-white" 
+                    : "w-2 bg-white/50 hover:bg-white/75"
+                )}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Content Overlay */}
           <div className="relative z-10 flex flex-col justify-between h-full p-10 xl:p-14 text-white">
             {/* Top Content */}
             <div className="space-y-3">
@@ -173,19 +214,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                     Username or Email
                   </label>
                   <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <IconUser className={cn(
-                        "h-5 w-5 transition-colors",
-                        errors.username ? "text-red-400" : "text-slate-400 group-focus-within:text-emerald-500"
-                      )} />
-                    </div>
                     <input
                       id="username"
                       type="text"
                       value={formData.username}
                       onChange={(e) => handleInputChange('username', e.target.value)}
                       className={cn(
-                        "w-full h-12 pl-12 pr-4 text-sm font-medium border-2 rounded-xl transition-all",
+                        "w-full h-12 px-4 text-sm font-medium border-2 rounded-xl transition-all",
                         "placeholder:text-slate-400 placeholder:font-normal",
                         "focus:outline-none focus:ring-4",
                         errors.username
@@ -209,19 +244,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                     Password
                   </label>
                   <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Lock className={cn(
-                        "h-5 w-5 transition-colors",
-                        errors.password ? "text-red-400" : "text-slate-400 group-focus-within:text-emerald-500"
-                      )} />
-                    </div>
                     <input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
                       className={cn(
-                        "w-full h-12 pl-12 pr-12 text-sm font-medium border-2 rounded-xl transition-all",
+                        "w-full h-12 pl-4 pr-12 text-sm font-medium border-2 rounded-xl transition-all",
                         "placeholder:text-slate-400 placeholder:font-normal",
                         "focus:outline-none focus:ring-4",
                         errors.password
