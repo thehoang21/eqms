@@ -77,9 +77,6 @@ const MOCK_DEADLINES = [
 ];
 
 export const DashboardView: React.FC = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'quarter'>('month');
-  const [chartType, setChartType] = useState<'bar' | 'pie' | 'line' | 'polar' | 'radar'>('bar');
-
   const maxDocValue = Math.max(...MOCK_CHART_DATA.timeline.map(d => d.documents));
   const maxTaskValue = Math.max(...MOCK_CHART_DATA.tasksByModule.map(d => d.count));
   const totalDocStatus = MOCK_CHART_DATA.documentStatus.reduce((sum, item) => sum + item.value, 0);
@@ -187,339 +184,35 @@ export const DashboardView: React.FC = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
         {/* Document Status Chart */}
         <div className="xl:col-span-2 rounded-xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 lg:p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
-          <div className="min-w-0">
-            <h3 className="text-base sm:text-lg font-bold text-slate-900">Document Status</h3>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">Distribution and trends</p>
-          </div>
-          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm overflow-x-auto">
-            <button
-              onClick={() => setChartType('bar')}
-              className={cn(
-                'px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1 sm:gap-2 whitespace-nowrap rounded-md',
-                chartType === 'bar'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              )}
-            >
-              <BarChart3 className="h-4 w-4" />
-              <span className="hidden sm:inline">Bar</span>
-            </button>
-            <button
-              onClick={() => setChartType('pie')}
-              className={cn(
-                'px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap rounded-md',
-                chartType === 'pie'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              )}
-            >
-              <PieChart className="h-4 w-4" />
-              <span className="hidden sm:inline">Pie</span>
-            </button>
-            <button
-              onClick={() => setChartType('line')}
-              className={cn(
-                'px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap rounded-md',
-                chartType === 'line'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              )}
-            >
-              <TrendingUp className="h-4 w-4" />
-              <span className="hidden sm:inline">Line</span>
-            </button>
-            <button
-              onClick={() => setChartType('polar')}
-              className={cn(
-                'px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap rounded-md',
-                chartType === 'polar'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              )}
-            >
-              <Activity className="h-4 w-4" />
-              <span className="hidden sm:inline">Polar</span>
-            </button>
-            <button
-              onClick={() => setChartType('radar')}
-              className={cn(
-                'px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap rounded-md',
-                chartType === 'radar'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              )}
-            >
-              <IconRadarFilled className="h-4 w-4" />
-              <span className="hidden sm:inline">Radar</span>
-            </button>
-          </div>
+        <div className="mb-4 sm:mb-6">
+          <h3 className="text-base sm:text-lg font-bold text-slate-900">Document Status</h3>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">Distribution and trends</p>
         </div>
 
-        {/* Chart Content */}
-        <div className="space-y-6">
-          {chartType === 'bar' && (
-            <div className="space-y-4">
-              {MOCK_CHART_DATA.documentStatus.map((item, idx) => (
-                <div key={idx} className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-slate-700">{item.name}</span>
-                    <span className="text-slate-900 font-semibold">{item.value}</span>
-                  </div>
-                  <div className="h-8 bg-slate-50 rounded-lg overflow-hidden flex items-center">
-                    <div
-                      className={cn('h-full flex items-center justify-end pr-3', item.color)}
-                      style={{ width: `${(item.value / totalDocStatus) * 100}%` }}
-                    >
-                      {item.value > totalDocStatus * 0.15 && (
-                        <span className="text-xs font-medium text-white">{item.value}</span>
-                      )}
-                    </div>
-                  </div>
+        {/* Bar Chart */}
+        <div className="space-y-4 mb-6">
+          {MOCK_CHART_DATA.documentStatus.map((item, idx) => (
+            <div key={idx} className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium text-slate-700">{item.name}</span>
+                <span className="text-slate-900 font-semibold">{item.value}</span>
+              </div>
+              <div className="h-8 bg-slate-50 rounded-lg overflow-hidden flex items-center">
+                <div
+                  className={cn('h-full flex items-center justify-end pr-3', item.color)}
+                  style={{ width: `${(item.value / totalDocStatus) * 100}%` }}
+                >
+                  {item.value > totalDocStatus * 0.15 && (
+                    <span className="text-xs font-medium text-white">{item.value}</span>
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
-
-          {chartType === 'line' && (
-            <div className="relative h-64">
-              <svg viewBox="0 0 600 240" className="w-full h-full">
-                {/* Grid lines */}
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <line
-                    key={i}
-                    x1="40"
-                    y1={40 + i * 50}
-                    x2="580"
-                    y2={40 + i * 50}
-                    stroke="#f1f5f9"
-                    strokeWidth="1"
-                  />
-                ))}
-                {/* Line path */}
-                <polyline
-                  points={MOCK_CHART_DATA.documentStatus
-                    .map((item, idx) => {
-                      const x = 80 + idx * 120;
-                      const y = 240 - (item.value / totalDocStatus) * 180;
-                      return `${x},${y}`;
-                    })
-                    .join(' ')}
-                  fill="none"
-                  stroke="#10b981"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                {/* Data points */}
-                {MOCK_CHART_DATA.documentStatus.map((item, idx) => {
-                  const x = 80 + idx * 120;
-                  const y = 240 - (item.value / totalDocStatus) * 180;
-                  return (
-                    <g key={idx}>
-                      <circle cx={x} cy={y} r="6" fill="white" stroke="#10b981" strokeWidth="3" />
-                      <text x={x} y="230" textAnchor="middle" fontSize="12" fill="#64748b">
-                        {item.name.split(' ')[0]}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
-            </div>
-          )}
-
-          {chartType === 'pie' && (
-            <div className="relative h-100 flex items-center justify-center">
-              <svg viewBox="0 0 200 200" className="w-full max-w-sm h-auto">
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#f1f5f9" strokeWidth="40" />
-                {(() => {
-                  let currentAngle = -90;
-                  const colors: { [key: string]: string } = {
-                    'bg-emerald-500': '#10b981',
-                    'bg-amber-500': '#f59e0b',
-                    'bg-blue-500': '#3b82f6',
-                    'bg-slate-400': '#94a3b8',
-                    'bg-red-500': '#ef4444',
-                  };
-                  return MOCK_CHART_DATA.documentStatus.map((item, idx) => {
-                    const percentage = (item.value / totalDocStatus) * 100;
-                    const angle = (percentage / 100) * 360;
-                    const startAngle = currentAngle;
-                    currentAngle += angle;
-
-                    const startRad = (startAngle * Math.PI) / 180;
-                    const endRad = (currentAngle * Math.PI) / 180;
-                    const largeArc = angle > 180 ? 1 : 0;
-
-                    const x1 = 100 + 80 * Math.cos(startRad);
-                    const y1 = 100 + 80 * Math.sin(startRad);
-                    const x2 = 100 + 80 * Math.cos(endRad);
-                    const y2 = 100 + 80 * Math.sin(endRad);
-
-                    return (
-                      <path
-                        key={idx}
-                        d={`M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z`}
-                        fill={colors[item.color]}
-                        opacity="0.9"
-                      />
-                    );
-                  });
-                })()}
-                <circle cx="100" cy="100" r="50" fill="white" />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center flex-col">
-                <p className="text-3xl font-bold text-slate-900">{totalDocStatus}</p>
-                <p className="text-sm text-slate-500">Total</p>
               </div>
             </div>
-          )}
+          ))}
+        </div>
 
-          {chartType === 'polar' && (
-            <div className="relative h-100 flex items-center justify-center">
-              <svg viewBox="0 0 300 300" className="w-full max-w-md h-auto">
-                {/* Concentric circles */}
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <circle
-                    key={i}
-                    cx="150"
-                    cy="150"
-                    r={i * 24}
-                    fill="none"
-                    stroke="#f1f5f9"
-                    strokeWidth="1"
-                  />
-                ))}
-                {/* Polar segments */}
-                {(() => {
-                  const colors: { [key: string]: string } = {
-                    'bg-emerald-500': '#10b981',
-                    'bg-amber-500': '#f59e0b',
-                    'bg-blue-500': '#3b82f6',
-                    'bg-slate-400': '#94a3b8',
-                    'bg-red-500': '#ef4444',
-                  };
-                  const maxValue = Math.max(...MOCK_CHART_DATA.documentStatus.map(d => d.value));
-                  let currentAngle = -90;
-                  
-                  return MOCK_CHART_DATA.documentStatus.map((item, idx) => {
-                    const angleStep = 360 / MOCK_CHART_DATA.documentStatus.length;
-                    const startAngle = currentAngle;
-                    const endAngle = currentAngle + angleStep;
-                    currentAngle = endAngle;
-
-                    const radius = (item.value / maxValue) * 120;
-                    const startRad = (startAngle * Math.PI) / 180;
-                    const endRad = (endAngle * Math.PI) / 180;
-
-                    const x1 = 150 + radius * Math.cos(startRad);
-                    const y1 = 150 + radius * Math.sin(startRad);
-                    const x2 = 150 + radius * Math.cos(endRad);
-                    const y2 = 150 + radius * Math.sin(endRad);
-
-                    return (
-                      <path
-                        key={idx}
-                        d={`M 150 150 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`}
-                        fill={colors[item.color]}
-                        opacity="0.8"
-                        stroke="white"
-                        strokeWidth="2"
-                      />
-                    );
-                  });
-                })()}
-              </svg>
-            </div>
-          )}
-
-          {chartType === 'radar' && (
-            <div className="relative h-100 flex items-center justify-center">
-              <svg viewBox="0 0 300 300" className="w-full max-w-md h-auto">
-                {/* Radar grid */}
-                {[1, 2, 3, 4, 5].map((level) => {
-                  const radius = level * 24;
-                  const points = MOCK_CHART_DATA.documentStatus.map((_, idx) => {
-                    const angle = (idx * 360 / MOCK_CHART_DATA.documentStatus.length - 90) * Math.PI / 180;
-                    const x = 150 + radius * Math.cos(angle);
-                    const y = 150 + radius * Math.sin(angle);
-                    return `${x},${y}`;
-                  }).join(' ');
-                  return (
-                    <polygon
-                      key={level}
-                      points={points}
-                      fill="none"
-                      stroke="#f1f5f9"
-                      strokeWidth="1"
-                    />
-                  );
-                })}
-                {/* Axis lines */}
-                {MOCK_CHART_DATA.documentStatus.map((item, idx) => {
-                  const angle = (idx * 360 / MOCK_CHART_DATA.documentStatus.length - 90) * Math.PI / 180;
-                  const x = 150 + 120 * Math.cos(angle);
-                  const y = 150 + 120 * Math.sin(angle);
-                  return (
-                    <line
-                      key={idx}
-                      x1="150"
-                      y1="150"
-                      x2={x}
-                      y2={y}
-                      stroke="#e2e8f0"
-                      strokeWidth="1"
-                    />
-                  );
-                })}
-                {/* Data polygon */}
-                <polygon
-                  points={MOCK_CHART_DATA.documentStatus
-                    .map((item, idx) => {
-                      const maxValue = Math.max(...MOCK_CHART_DATA.documentStatus.map(d => d.value));
-                      const radius = (item.value / maxValue) * 120;
-                      const angle = (idx * 360 / MOCK_CHART_DATA.documentStatus.length - 90) * Math.PI / 180;
-                      const x = 150 + radius * Math.cos(angle);
-                      const y = 150 + radius * Math.sin(angle);
-                      return `${x},${y}`;
-                    })
-                    .join(' ')}
-                  fill="#10b981"
-                  fillOpacity="0.3"
-                  stroke="#10b981"
-                  strokeWidth="2"
-                />
-                {/* Data points */}
-                {MOCK_CHART_DATA.documentStatus.map((item, idx) => {
-                  const maxValue = Math.max(...MOCK_CHART_DATA.documentStatus.map(d => d.value));
-                  const radius = (item.value / maxValue) * 120;
-                  const angle = (idx * 360 / MOCK_CHART_DATA.documentStatus.length - 90) * Math.PI / 180;
-                  const x = 150 + radius * Math.cos(angle);
-                  const y = 150 + radius * Math.sin(angle);
-                  const labelX = 150 + 135 * Math.cos(angle);
-                  const labelY = 150 + 135 * Math.sin(angle);
-                  return (
-                    <g key={idx}>
-                      <circle cx={x} cy={y} r="4" fill="#10b981" stroke="white" strokeWidth="2" />
-                      <text
-                        x={labelX}
-                        y={labelY}
-                        textAnchor="middle"
-                        fontSize="11"
-                        fill="#64748b"
-                        fontWeight="500"
-                      >
-                        {item.name.split(' ')[0]}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
-            </div>
-          )}
-
-          {/* Legend */}
-          <div className="pt-3 sm:pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
+        {/* Legend */}
+        <div className="pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
             {MOCK_CHART_DATA.documentStatus.map((item, idx) => (
               <div key={idx} className="flex items-center gap-2">
                 <div className={cn('h-3 w-3 rounded-full', item.color)}></div>
@@ -530,7 +223,6 @@ export const DashboardView: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
         </div>
 
         {/* Tasks by Module */}

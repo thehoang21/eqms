@@ -41,6 +41,8 @@ import {
   IconShieldCheck,
   IconUsersGroup,
   IconDatabase,
+  IconBrandAsana,
+  IconSmartHome,
 } from "@tabler/icons-react";
 import { NavItem } from "@/types";
 
@@ -48,13 +50,13 @@ export const NAV_CONFIG: NavItem[] = [
   {
     id: "dashboard",
     label: "Dashboard",
-    icon: IconLayoutDashboard,
+    icon: IconSmartHome,
     path: "/dashboard",
   },
   {
     id: "my-tasks",
     label: "My Tasks",
-    icon: ListTodo,
+    icon: IconBrandAsana,
     path: "/my-tasks",
   },
   {

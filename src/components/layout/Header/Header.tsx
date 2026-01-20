@@ -37,142 +37,144 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
   }, [isUserMenuOpen]);
 
   return (
-    <header className="h-16 md:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm px-4 md:px-2 flex items-center justify-between shadow-sm/30 shrink-0 transition-all">
+    <header className="h-16 md:h-16 w-full sticky top-0 z-40 border-b border-slate-200 bg-white backdrop-blur-sm shadow-sm shrink-0">
       
       {/* Overlay for visual effect */}
       {isUserMenuOpen && createPortal(
         <div 
-          className="fixed inset-0 z-40 bg-slate-900/10 backdrop-blur-[1px]"
+          className="fixed inset-0 z-40 bg-slate-900/10 backdrop-blur-[1px] animate-in fade-in duration-150"
         />,
         document.body
       )}
 
-      {/* LEFT: Sidebar Toggle */}
-      <div className="flex items-center shrink-0">
-        <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={onToggleSidebar}
-            className="text-slate-500 hover:bg-slate-100 relative overflow-hidden"
-            title={isMobileMenuOpen ? "Close Menu" : (isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar")}
-        >
-            {/* Tablet/Desktop: Expand Icon - Show when sidebar is collapsed */}
-            <IconLayoutSidebarLeftExpand className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out hidden md:block origin-center",
-              isSidebarCollapsed 
-                ? "opacity-100 rotate-0 scale-100" 
-                : "opacity-0 rotate-180 scale-90"
-            )} 
-              style={{ willChange: 'transform, opacity' }}
-            />
-            {/* Tablet/Desktop: Collapse Icon - Show when sidebar is expanded */}
-            <IconLayoutSidebarLeftCollapse className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out hidden md:block origin-center",
-              isSidebarCollapsed 
-                ? "opacity-0 -rotate-180 scale-90" 
-                : "opacity-100 rotate-0 scale-100"
-            )} 
-              style={{ willChange: 'transform, opacity' }}
-            />
-            {/* Mobile: Menu Icon - Show when mobile menu is closed */}
-            <IconLayoutSidebarLeftCollapse className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out md:hidden origin-center",
-              isMobileMenuOpen 
-                ? "opacity-0 rotate-180 scale-90" 
-                : "opacity-100 rotate-0 scale-100"
-            )} 
-              style={{ willChange: 'transform, opacity' }}
-            />
-            {/* Mobile: X Icon - Show when mobile menu is open */}
-            <X className={cn(
-              "h-5 w-5 md:h-6 md:w-6 absolute transition-[transform,opacity] duration-300 ease-in-out md:hidden origin-center",
-              isMobileMenuOpen 
-                ? "opacity-100 rotate-0 scale-100" 
-                : "opacity-0 -rotate-180 scale-90"
-            )} 
-              style={{ willChange: 'transform, opacity' }}
-            />
-        </Button>
-      </div>
+      {/* Header Content Container */}
+      <div className="h-full flex items-center justify-between gap-2 md:gap-4 px-3 md:px-4 lg:px-6">
 
-      {/* CENTER: Global Search (Expanded) - Responsive */}
-      <div className="flex-1 flex justify-center px-3 md:px-6 lg:px-8 relative z-20">
-        <SearchDropdown />
-      </div>
-
-      {/* RIGHT: Notifications & Profile - Responsive */}
-      <div className="flex items-center gap-2 md:gap-3 lg:gap-4 shrink-0 relative z-20">
-        
-        {/* Notifications */}
-        <NotificationsDropdown
-          isOpen={isNotificationsOpen}
-          onClose={() => setIsNotificationsOpen(false)}
-          onToggle={() => setIsNotificationsOpen(!isNotificationsOpen)}
-        />
-
-        {/* thêm thanh dọc để phân chia */}
-        <div className="w-px h-8 bg-slate-300"></div>
-        
-        {/* User Profile Dropdown */}
-        <div className="relative" ref={userMenuRef}>
-          <div 
-            className="flex items-center space-x-3 cursor-pointer hover:bg-slate-50 p-1.5 rounded-full border border-transparent hover:border-slate-200 transition-all select-none group"
-            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+        {/* LEFT: Sidebar Toggle */}
+        <div className="flex items-center shrink-0">
+          <Button 
+              variant="ghost" 
+              size="icon-sm"
+              onClick={onToggleSidebar}
+              className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 relative overflow-hidden transition-colors"
+              title={isMobileMenuOpen ? "Close Menu" : (isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar")}
           >
-            <div className="h-9 w-9 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-              <User className="h-5 w-5" />
-            </div>
-            <div className="hidden xl:block text-left pr-2">
-               <p className="text-sm font-semibold text-slate-700 leading-none group-hover:text-slate-900">Dr. A. Smith</p>
-               <p className="text-xs text-slate-500 leading-tight mt-0.5">QA Manager</p>
-            </div>
-          </div>
-
-          {/* Dropdown Menu */}
-          {isUserMenuOpen && createPortal(
-            <div
-                ref={menuDropdownRef}
-                className="fixed w-56 origin-top-right bg-white border border-slate-200 rounded-md shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none animate-in fade-in zoom-in-95 duration-200 z-50"
-                style={{
-                    top: `${userMenuRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
-                    right: `${window.innerWidth - userMenuRef.current?.getBoundingClientRect().right! - window.scrollX}px`
-                }}
-            >
-               <div className="px-4 py-3 border-b border-slate-100">
-                  <p className="text-sm font-medium text-slate-900">Dr. A. Smith</p>
-                  <p className="text-xs text-slate-500 truncate">a.smith@qualiguard.eu</p>
-               </div>
-               <div className="py-1">
-                 <button 
-                    className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary flex items-center transition-colors"
-                    onClick={() => {
-                      console.log('Profile clicked, navigating...');
-                      setIsUserMenuOpen(false);
-                      onNavigateToProfile?.();
-                    }}
-                 >
-                    <User className="h-4 w-4 mr-2" />
-                    Profile
-                 </button>
-               </div>
-               <div className="border-t border-slate-100 py-1">
-                 <button 
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center transition-colors"
-                    onClick={() => {
-                      console.log('Logout clicked');
-                      setIsUserMenuOpen(false);
-                      onLogout?.();
-                    }}
-                 >
-                    <IconLogout className="h-4 w-4 mr-2" />
-                    Logout
-                 </button>
-               </div>
-            </div>,
-            document.body
-          )}
+              {/* Tablet/Desktop: Expand Icon - Show when sidebar is collapsed */}
+              <IconLayoutSidebarLeftExpand className={cn(
+                "h-5.5 w-5.5 lg:h-6 lg:w-6 absolute transition-all duration-300 ease-in-out hidden md:block",
+                isSidebarCollapsed 
+                  ? "opacity-100 rotate-0 scale-100" 
+                  : "opacity-0 rotate-180 scale-90"
+              )} />
+              {/* Tablet/Desktop: Collapse Icon - Show when sidebar is expanded */}
+              <IconLayoutSidebarLeftCollapse className={cn(
+                "h-5.5 w-5.5 lg:h-6 lg:w-6 absolute transition-all duration-300 ease-in-out hidden md:block",
+                isSidebarCollapsed 
+                  ? "opacity-0 -rotate-180 scale-90" 
+                  : "opacity-100 rotate-0 scale-100"
+              )} />
+              {/* Mobile: Menu Icon - Show when mobile menu is closed */}
+              <Menu className={cn(
+                "h-5.5 w-5.5 absolute transition-all duration-300 ease-in-out md:hidden",
+                isMobileMenuOpen 
+                  ? "opacity-0 rotate-180 scale-90" 
+                  : "opacity-100 rotate-0 scale-100"
+              )} />
+              {/* Mobile: X Icon - Show when mobile menu is open */}
+              <X className={cn(
+                "h-5.5 w-5.5 absolute transition-all duration-300 ease-in-out md:hidden",
+                isMobileMenuOpen 
+                  ? "opacity-100 rotate-0 scale-100" 
+                  : "opacity-0 -rotate-180 scale-90"
+              )} />
+          </Button>
         </div>
 
+        {/* CENTER: Global Search - Responsive width */}
+        <div className="flex-1 flex justify-center max-w-xl lg:max-w-2xl mx-auto">
+          <SearchDropdown />
+        </div>
+
+        {/* RIGHT: Notifications & Profile */}
+        <div className="flex items-center gap-1.5 md:gap-2 lg:gap-3 shrink-0">
+          
+          {/* Notifications */}
+          <NotificationsDropdown
+            isOpen={isNotificationsOpen}
+            onClose={() => setIsNotificationsOpen(false)}
+            onToggle={() => setIsNotificationsOpen(!isNotificationsOpen)}
+          />
+
+          {/* Divider - Hidden on mobile */}
+          <div className="hidden md:block w-px h-6 bg-slate-200"></div>
+          
+          {/* User Profile Dropdown */}
+          <div className="relative" ref={userMenuRef}>
+            <button 
+              className="flex items-center gap-2 lg:gap-2.5 cursor-pointer hover:bg-slate-50 px-1.5 py-1.5 lg:px-2 lg:py-1.5 rounded-lg border border-transparent hover:border-slate-200 transition-all select-none group"
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              aria-label="User menu"
+            >
+              {/* Avatar */}
+              <div className="h-8 w-8 md:h-9 md:w-9 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
+                <User className="h-4.5 w-4.5 md:h-5 md:w-5" />
+              </div>
+              {/* User Info - Hidden on mobile and tablet */}
+              <div className="hidden lg:block text-left pr-1">
+                <p className="text-sm font-semibold text-slate-700 leading-tight group-hover:text-slate-900">Dr. A. Smith</p>
+                <p className="text-xs text-slate-500 leading-tight">QA Manager</p>
+              </div>
+            </button>
+
+            {/* Dropdown Menu */}
+            {isUserMenuOpen && createPortal(
+              <div
+                  ref={menuDropdownRef}
+                  className="fixed w-56 bg-white border border-slate-200 rounded-lg shadow-lg focus:outline-none animate-in fade-in zoom-in-95 duration-200 z-50"
+                  style={{
+                      top: `${userMenuRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
+                      right: `${window.innerWidth - userMenuRef.current?.getBoundingClientRect().right! - window.scrollX}px`
+                  }}
+              >
+                {/* User Info Header */}
+                <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/50">
+                  <p className="text-sm font-semibold text-slate-900 truncate">Dr. A. Smith</p>
+                  <p className="text-xs text-slate-500 truncate mt-0.5">a.smith@qualiguard.eu</p>
+                </div>
+                
+                {/* Menu Items */}
+                <div className="py-1">
+                  <button 
+                      className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-3 transition-colors"
+                      onClick={() => {
+                        setIsUserMenuOpen(false);
+                        onNavigateToProfile?.();
+                      }}
+                  >
+                      <User className="h-4.5 w-4.5 shrink-0" />
+                      <span>Profile</span>
+                  </button>
+                </div>
+                
+                {/* Logout */}
+                <div className="border-t border-slate-100 py-1">
+                  <button 
+                      className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors"
+                      onClick={() => {
+                        setIsUserMenuOpen(false);
+                        onLogout?.();
+                      }}
+                  >
+                      <IconLogout className="h-4.5 w-4.5 shrink-0" />
+                      <span>Logout</span>
+                  </button>
+                </div>
+              </div>,
+              document.body
+            )}
+          </div>
+
+        </div>
       </div>
     </header>
   );

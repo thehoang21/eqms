@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 import { useToast } from '@/components/ui/toast/Toast';
-import { IconChevronLeft } from '@tabler/icons-react';
+import { IconChevronLeft, IconSmartHome } from '@tabler/icons-react';
 
 // --- Types ---
 interface DistributionLocation {
@@ -233,7 +233,7 @@ export const RequestControlledCopyView: React.FC = () => {
                   >
                     Dashboard
                   </button>
-                  <Home className="h-4 w-4 sm:hidden" />
+                  <IconSmartHome className="h-4 w-4 sm:hidden" />
                   <span className="text-slate-400 mx-1">/</span>
                   <button
                     className="transition-colors hidden sm:inline"

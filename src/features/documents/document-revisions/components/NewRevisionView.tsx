@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { IconDeviceFloppy, IconX } from '@tabler/icons-react';
+import { IconDeviceFloppy, IconSmartHome, IconX } from '@tabler/icons-react';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 
 // --- Types ---
@@ -208,7 +208,7 @@ export const NewRevisionView: React.FC = () => {
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 text-xs whitespace-nowrap overflow-x-auto">
                             <button className="hover:text-slate-700 transition-colors hidden sm:inline">Dashboard</button>
-                            <Home className="h-4 w-4 sm:hidden" />
+                            <IconSmartHome className="h-4 w-4 sm:hidden" />
                             <span className="text-slate-400 mx-1">/</span>
                             <button
                                 className="hover:text-slate-700 transition-colors hidden sm:inline"

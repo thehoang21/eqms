@@ -125,8 +125,8 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
-              "block w-full pl-10 md:pl-11 pr-12 md:pr-16 py-2 md:py-2.5 rounded-lg border leading-5 transition-all duration-200",
-              "text-sm md:text-[15px]",
+              "block w-full pl-10 md:pl-11 pr-12 md:pr-16 py-2 md:py-2.5 rounded-xl border leading-5 transition-all duration-200",
+              "text-sm md:text-[14px]",
               "placeholder-slate-400 focus:outline-none",
               isSearchFocused 
                 ? "bg-white ring-2 ring-emerald-500/50 border-emerald-500 shadow-lg shadow-emerald-500/5" 
@@ -225,7 +225,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
             ) : (
               // Recent Items
               <div className="p-2">
-                <div className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <div className="px-3 py-2 text-xs font-medium text-emerald-700">
                   Recent
                 </div>
                 <button 
@@ -253,7 +253,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
                   </div>
                 </button>
                 
-                <div className="px-3 py-2 mt-1 text-xs font-semibold text-slate-500 uppercase tracking-wider border-t border-slate-100">
+                <div className="px-3 py-2 mt-1 text-xs font-medium text-emerald-700 border-t border-slate-100">
                   Quick Actions
                 </div>
                 <button 

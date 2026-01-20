@@ -18,7 +18,7 @@ import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge
 import { DocumentFilters } from "@/features/documents/shared/components";
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
-import { IconFileCheck, IconFileTime, IconInfoCircle, IconFileExport } from "@tabler/icons-react";
+import { IconFileCheck, IconFileTime, IconInfoCircle, IconFileExport, IconSmartHome, IconEyeCheck, IconChecks } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -536,7 +536,7 @@ export const RevisionListView: React.FC = () => {
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <button className="hover:text-slate-700 transition-colors hidden sm:inline">Dashboard</button>
-            <Home className="h-4 w-4 sm:hidden" />
+            <IconSmartHome className="h-4 w-4 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>
             <button className="hover:text-slate-700 transition-colors hidden sm:inline">
               Document Control
@@ -764,7 +764,7 @@ export const RevisionListView: React.FC = () => {
                     }}
                     className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                   >
-                    <IconFileCheck className="h-4 w-4 text-slate-500" />
+                    <IconEyeCheck className="h-4 w-4 text-slate-500" />
                     <span>Review Revision</span>
                   </button>
                 )}
@@ -776,7 +776,7 @@ export const RevisionListView: React.FC = () => {
                     }}
                     className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                   >
-                    <ThumbsUp className="h-4 w-4 text-slate-500" />
+                    <IconChecks className="h-4 w-4 text-slate-500" />
                     <span>Approve Revision</span>
                   </button>
                 )}

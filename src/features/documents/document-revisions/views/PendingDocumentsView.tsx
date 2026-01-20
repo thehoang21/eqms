@@ -15,7 +15,7 @@ import {
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "@/features/documents/shared/components";
-import { IconChecks, IconEyeCheck, IconInfoCircle, IconFileExport } from "@tabler/icons-react";
+import { IconChecks, IconEyeCheck, IconInfoCircle, IconFileExport, IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
 
@@ -515,7 +515,7 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-1 whitespace-nowrap overflow-x-auto">
             <span className="hidden sm:inline">Dashboard</span>
-            <Home className="h-4 w-4 sm:hidden" />
+            <IconSmartHome className="h-4 w-4 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>

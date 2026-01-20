@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Button } from "@/components/ui/button/Button";
-import { IconChevronLeft } from "@tabler/icons-react";
+import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
@@ -330,7 +330,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                                             <span className="hidden sm:inline">
                                                 {item.label}
                                             </span>
-                                            <Home className="h-4 w-4 sm:hidden" />
+                                            <IconSmartHome className="h-4 w-4 sm:hidden" />
                                         </>
                                     ) : item.isActive ? (
                                         <span className="text-slate-700 font-medium">{item.label}</span>

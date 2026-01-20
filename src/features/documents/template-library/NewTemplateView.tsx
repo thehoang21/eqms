@@ -27,6 +27,7 @@ import {
     AuditTab,
     type UploadedFile,
 } from "@/features/documents/template-library/template-tabs";
+import { IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
@@ -168,7 +169,7 @@ export const NewTemplateView: React.FC = () => {
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
                             <span className="hidden sm:inline">Dashboard</span>
-                            <Home className="h-4 w-4 sm:hidden" />
+                            <IconSmartHome className="h-4 w-4 sm:hidden" />
                             <span className="text-slate-400 mx-1">/</span>
                             <span className="hidden sm:inline">Document Control</span>
                             <span className="sm:hidden">...</span>

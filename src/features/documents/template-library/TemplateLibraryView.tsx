@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { TemplateFilters } from "./TemplateFilters";
-import { IconPlus, IconTemplate, IconFileExport } from "@tabler/icons-react";
+import { IconPlus, IconTemplate, IconFileExport, IconSmartHome } from "@tabler/icons-react";
 import { CreateLinkModal } from "@/features/documents/shared/components";
 
 // --- Types ---
@@ -525,7 +525,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-1 whitespace-nowrap overflow-x-auto">
             <span className="hidden sm:inline">Dashboard</span>
-            <Home className="h-4 w-4 sm:hidden" />
+            <IconSmartHome className="h-4 w-4 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>

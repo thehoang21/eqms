@@ -18,6 +18,7 @@ import {
   IconChecks,
   IconFileDownload,
   IconPlus,
+  IconSmartHome,
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { StatusBadge, StatusType } from "@/components/ui/statusbadge/StatusBadge";
@@ -920,7 +921,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <span className="hidden sm:inline">Dashboard</span>
-            <Home className="h-4 w-4 sm:hidden" />
+            <IconSmartHome className="h-4 w-4 sm:hidden" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>

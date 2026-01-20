@@ -254,7 +254,9 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             "h-12 md:h-11",
             isCollapsed ? "justify-center px-0" : "justify-start pr-3",
             isActive && level === 0
-              ? "text-slate-900 bg-slate-100"
+              ? "text-emerald-700 bg-emerald-50"
+              : isActive && level > 0
+              ? "text-emerald-700 bg-emerald-50/50"
               : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 active:bg-slate-100",
             (!isCollapsed && level === 0 && isActive) && "rounded-lg mx-2"
           )}
@@ -281,7 +283,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
               <Icon 
                 className={cn(
                   "h-5 w-5 transition-colors duration-200",
-                  isActive ? "text-slate-900" : "text-slate-500 group-hover:text-slate-900"
+                  isActive ? "text-emerald-700" : "text-slate-500 group-hover:text-slate-900"
                 )} 
               />
             )}
@@ -299,7 +301,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           >
             <span className={cn(
               "truncate block text-sm",
-              isActive && level === 0 ? "font-semibold text-slate-900" : "font-medium"
+              isActive ? "font-semibold text-emerald-700" : "font-medium"
             )}>
               {item.label}
             </span>

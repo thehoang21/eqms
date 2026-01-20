@@ -8,6 +8,7 @@ import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
 import { User } from "../types";
 import { BUSINESS_UNIT_DEPARTMENTS, USER_MANAGEMENT_ROUTES } from "../constants";
+import { IconSmartHome } from "@tabler/icons-react";
 
 // Mock data - in real app, fetch by userId from API
 const MOCK_USER: User = {
@@ -107,7 +108,7 @@ export const EditUserView: React.FC = () => {
               >
                 Dashboard
               </button>
-              <Home className="h-4 w-4 sm:hidden" />
+              <IconSmartHome className="h-4 w-4 sm:hidden" />
               <span className="text-slate-400 mx-1">/</span>
               <span className="hidden md:inline">Settings</span>
               <span className="md:hidden">...</span>

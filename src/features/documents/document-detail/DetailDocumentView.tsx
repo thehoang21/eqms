@@ -22,7 +22,7 @@ import {
   AuditTrailTab,
 } from "./tabs";
 import { Button } from "@/components/ui/button/Button";
-import { IconChevronLeft } from "@tabler/icons-react";
+import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType =
@@ -227,7 +227,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
               >
                 Dashboard
               </button>
-              <Home className="h-4 w-4 sm:hidden" />
+              <IconSmartHome className="h-4 w-4 sm:hidden" />
               <span className="text-slate-400 mx-1">/</span>
               <button
                 onClick={onBack}
