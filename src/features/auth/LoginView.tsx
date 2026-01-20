@@ -261,7 +261,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         {/* Back Button (Mobile Only) */}
         <button
           onClick={() => setShowSplash(true)}
-          className="lg:hidden absolute top-6 left-6 h-10 w-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors z-20"
+          className="mt-8 lg:hidden absolute top-6 left-6 h-10 w-10 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors z-20"
           aria-label="Back to splash"
         >
           <IconArrowLeft className="h-5 w-5" />
