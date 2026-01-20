@@ -6,6 +6,7 @@ import { NAV_CONFIG } from '@/app/constants';
 import { cn } from '@/components/ui/utils';
 import logoFull from '@/assets/images/logo_nobg.png';
 import logoCollapsed from '@/assets/images/LOGO.png';
+import './Sidebar.module.css';
 
 // Constants
 const BASE_PADDING = 12;
@@ -488,7 +489,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
       {/* Sidebar */}
       <aside
         className={cn(
-          "bg-white border-r border-slate-200 flex flex-col shadow-lg md:shadow-sm",
+          "bg-white border-r border-slate-200 flex flex-col shadow-lg md:shadow-sm sidebar-mobile",
           // Mobile: Full viewport height with safe area insets
           "fixed top-0 left-0 bottom-0 z-50",
           // Desktop: Sticky positioning
@@ -501,13 +502,6 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           "md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
-        style={{
-          // Safe area insets for iOS devices (notch, home indicator)
-          paddingTop: 'env(safe-area-inset-top)',
-          paddingBottom: 'env(safe-area-inset-bottom)',
-          // Full viewport height on mobile
-          height: 'calc(100vh + env(safe-area-inset-top) + env(safe-area-inset-bottom))',
-        }}
       >
         {/* Header / Logo Area */}
         <div 

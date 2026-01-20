@@ -44,7 +44,11 @@
   background: var(--color-slate-400);
 }
 
-/* Hide scrollbar on mobile for cleaner look */
+/* ===================================
+   MOBILE SAFE AREA SUPPORT (iOS Notch, Dynamic Island, Safari Tab Bar)
+   =================================== */
+
+/* Mobile sidebar - Handle iOS safe areas and dynamic viewport */
 @media (max-width: 767px) {
   .custom-scrollbar::-webkit-scrollbar {
     display: none;
@@ -53,6 +57,40 @@
   .custom-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+}
+
+/* Mobile-specific sidebar styles */
+@supports (height: 100dvh) {
+  /* Use dynamic viewport height (dvh) for browsers that support it */
+  /* This accounts for Safari tab bar, address bar, etc. */
+  .sidebar-mobile {
+    height: 100dvh !important;
+  }
+}
+
+/* iOS Safe Area Insets - Apply only on mobile */
+@media (max-width: 767px) {
+  .sidebar-mobile {
+    /* Fallback for browsers without dvh support */
+    height: 100vh;
+    
+    /* Safe area insets for notch and home indicator */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    
+    /* Prevent content from being hidden behind system UI */
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: 0; /* Right side doesn't need safe area */
+  }
+}
+
+/* Desktop - No safe area needed */
+@media (min-width: 768px) {
+  .sidebar-mobile {
+    /* Desktop uses standard vh */
+    height: 100vh;
+    padding: 0; /* No safe area padding on desktop */
   }
 }
 

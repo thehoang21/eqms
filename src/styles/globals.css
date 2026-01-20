@@ -11,8 +11,8 @@
 /* Smooth scroll behavior for entire app */
 html {
   scroll-behavior: smooth;
-  /* Support for safe area insets (iOS devices with notch) */
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  /* IMPORTANT: Remove padding from html element - safe area handled per component */
+  /* This prevents double padding issues */
 }
 
 /* Prevent text size adjustment on mobile */
@@ -21,11 +21,15 @@ html, body {
   -moz-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  
+  /* Full viewport height for mobile - use dvh when available */
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
 }
 
 /* CSS Variables for theming */
 :root {
-  /* Safe Area Insets for iOS devices */
+  /* Safe Area Insets for iOS devices (notch, dynamic island, home indicator) */
   --safe-area-inset-top: env(safe-area-inset-top, 0px);
   --safe-area-inset-right: env(safe-area-inset-right, 0px);
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
