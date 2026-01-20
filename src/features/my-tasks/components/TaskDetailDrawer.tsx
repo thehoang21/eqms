@@ -170,10 +170,10 @@ export const TaskDetailDrawer: React.FC<{
           "pointer-events-auto bg-white shadow-2xl flex flex-col relative",
           // Mobile: Bottom Sheet (Height 85%)
           "w-full h-[85vh] rounded-t-2xl",
-          // Tablet: Side Sheet (Width 90%)
-          "md:h-full md:w-[90vw] md:rounded-t-none md:rounded-l-xl",
-          // Desktop: Side Sheet (Width 450px or 35%)
-          "lg:w-[450px] xl:w-[35vw]",
+          // Tablet: Side Sheet (Width 600px)
+          "md:h-full md:w-[600px] md:rounded-t-none md:rounded-l-xl",
+          // Desktop: Side Sheet (Width 420px)
+          "lg:w-[420px]",
           // Animation
           isClosing ? "responsive-drawer-exit" : "responsive-drawer-enter"
         )}
