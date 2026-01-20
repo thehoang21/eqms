@@ -131,11 +131,11 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
           {/* Splash Content */}
           <div className="relative z-10 h-full flex flex-col p-8 text-white">
             {/* Logo at Top */}
-            <div className="pt-4 pb-8 flex justify-center">
+            <div className="pt-8 pb-8 flex justify-center">
               <img 
                 src={logoImg} 
                 alt="Logo" 
-                className="h-12 sm:h-14 w-auto object-contain drop-shadow-2xl mx-auto"
+                className="h-14 sm:h-16 w-auto object-contain drop-shadow-2xl mx-auto"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
