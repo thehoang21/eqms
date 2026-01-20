@@ -378,11 +378,12 @@ export const TaskDetailDrawer: React.FC<{
         </div>
 
         {/* Footer Actions (Fixed) */}
-        <div className="p-4 md:p-5 border-t border-slate-200 bg-white flex flex-col-reverse md:flex-row justify-end gap-3 shrink-0">
+        <div className="p-4 md:p-5 border-t border-slate-200 bg-white flex flex-row flex-nowrap justify-end gap-2 md:gap-3 shrink-0">
           <Button
             variant="outline"
+            size="sm"
             onClick={handleClose}
-            className="w-full md:w-auto"
+            className="shrink-0"
           >
             Close
           </Button>
@@ -391,7 +392,8 @@ export const TaskDetailDrawer: React.FC<{
               {isDocumentReviewTask ? (
                 <Button
                   onClick={handleStartReview}
-                  className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
+                  size="sm"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
                 >
                   <IconPlayerPlay className="mr-2 h-4 w-4" />
                   Start Review
@@ -399,13 +401,14 @@ export const TaskDetailDrawer: React.FC<{
               ) : isRevisionApprovalTask ? (
                 <Button
                   onClick={handleStartApproval}
-                  className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20"
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20"
                 >
                   <Eye className="mr-2 h-4 w-4" />
                   Review & Approve
                 </Button>
               ) : (
-                <Button className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
+                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
                   Process Task <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               )}
