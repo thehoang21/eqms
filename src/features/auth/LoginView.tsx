@@ -273,7 +273,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <Button
                   type="submit"
                   size="default"
-                  className="w-full h-12 mt-6 text-base font-semibold shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transition-all group"
+                  className="w-full h-12 mt-6 text-base font-bold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all group"
                   disabled={isLoading}
                 >
                   {isLoading ? (
