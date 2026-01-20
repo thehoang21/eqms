@@ -156,7 +156,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-xl md:text-2xl font-bold text-slate-900">User Profile</h1>
+                    <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">User Profile</h1>
                 </div>
             </div>
 

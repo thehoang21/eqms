@@ -255,30 +255,30 @@ const Pagination: React.FC<{
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-white">
-      <div className="flex items-center gap-2 text-sm text-slate-600">
-        <span>
-          Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
-          <span className="font-medium text-slate-900">{endItem}</span> of{" "}
-          <span className="font-medium text-slate-900">{totalItems}</span> results
-        </span>
+    <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white">
+      <div className="text-xs md:text-sm text-slate-600">
+        Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
+        <span className="font-medium text-slate-900">{endItem}</span> of{" "}
+        <span className="font-medium text-slate-900">{totalItems}</span>
+        <span className="hidden sm:inline"> results</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 md:gap-2">
         <Button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           variant="outline"
           size="sm"
-          className="flex items-center gap-1.5"
+          className="text-xs md:text-sm px-2.5 md:px-4"
         >
-          Previous
+          <span className="hidden xs:inline">Previous</span>
+          <span className="xs:hidden">Prev</span>
         </Button>
         <Button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
           variant="outline"
           size="sm"
-          className="flex items-center gap-1.5"
+          className="text-xs md:text-sm px-2.5 md:px-4"
         >
           Next
         </Button>

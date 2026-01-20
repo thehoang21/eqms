@@ -316,28 +316,28 @@ const Pagination: React.FC<{
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-white">
-      <div className="flex items-center gap-2 text-sm text-slate-600">
-        <span>
-          Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
-          <span className="font-medium text-slate-900">{endItem}</span> of{" "}
-          <span className="font-medium text-slate-900">{totalItems}</span> results
-        </span>
+    <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white">
+      <div className="text-xs md:text-sm text-slate-600">
+        Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
+        <span className="font-medium text-slate-900">{endItem}</span> of{" "}
+        <span className="font-medium text-slate-900">{totalItems}</span>
+        <span className="hidden sm:inline"> results</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 md:gap-2">
         <Button
           variant="outline"
           size="sm"
-          className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-xs md:text-sm px-2.5 md:px-4"
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
         >
-          Previous
+          <span className="hidden xs:inline">Previous</span>
+          <span className="xs:hidden">Prev</span>
         </Button>
         <Button
           variant="outline"
           size="sm"
-          className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+          className="text-xs md:text-sm px-2.5 md:px-4"
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
         >
@@ -382,28 +382,18 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   };
 
   // Handle New Revision with relationship check
-  const handleNewRevision = async (doc: Document) => {
-    setIsNavigating(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 400));
-      if (doc.status === "Effective" && doc.hasRelatedDocuments) {
-        // Navigate to NewRevisionView (multi-document with related documents)
-        navigate(`/documents/revisions/new-multi?sourceDocId=${doc.id}`);
-      } else if (doc.status === "Effective") {
-        // Navigate to StandaloneRevisionView (single document)
-        navigate(`/documents/revisions/new-standalone?sourceDocId=${doc.id}`);
-      } else {
-        // Fallback for non-Effective documents
-        navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
-      }
-      onClose();
-    } catch (error) {
-      console.error("Error checking relationships:", error);
+  const handleNewRevision = (doc: Document) => {
+    if (doc.status === "Effective" && doc.hasRelatedDocuments) {
+      // Navigate to NewRevisionView (multi-document with related documents)
       navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
-      onClose();
-    } finally {
-      setIsNavigating(false);
+    } else if (doc.status === "Effective") {
+      // Navigate to StandaloneRevisionView (single document)
+      navigate(`/documents/revisions/new-standalone?sourceDocId=${doc.id}`);
+    } else {
+      // Fallback for non-Effective documents
+      navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
     }
+    onClose();
   };
 
   // Dynamic menu items based on document status

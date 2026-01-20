@@ -197,7 +197,7 @@ export const ArchivedDocumentsView: React.FC = () => {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900">Archived Documents</h1>
+                    <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">Archived Documents</h1>
                     <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-1 whitespace-nowrap overflow-x-auto">
                         <span className="hidden sm:inline">Dashboard</span>
                         <Home className="h-3 w-3 sm:hidden" />
@@ -345,28 +345,32 @@ export const ArchivedDocumentsView: React.FC = () => {
 
                 {/* Pagination */}
                 {filteredDocuments.length > 0 && (
-                    <div className="flex items-center justify-between border-t border-slate-200 bg-white px-6 py-4">
-                        <div className="text-sm text-slate-600">
-                            Showing <span className="font-medium text-slate-900">{startIndex + 1}-{Math.min(endIndex, filteredDocuments.length)}</span> of <span className="font-medium text-slate-900">{filteredDocuments.length}</span> results
+                    <div className="flex items-center justify-between border-t border-slate-200 bg-white px-4 md:px-6 py-3 md:py-4">
+                        <div className="text-xs md:text-sm text-slate-600">
+                            Showing <span className="font-medium text-slate-900">{startIndex + 1}</span> to{" "}
+                            <span className="font-medium text-slate-900">{Math.min(endIndex, filteredDocuments.length)}</span> of{" "}
+                            <span className="font-medium text-slate-900">{filteredDocuments.length}</span>
+                            <span className="hidden sm:inline"> results</span>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 md:gap-2">
                             <button
                                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                                 disabled={currentPage === 1}
                                 className={cn(
-                                    'h-9 px-4 text-sm font-medium rounded-md transition-all border border-slate-200',
+                                    'text-xs md:text-sm px-2.5 md:px-4 h-9 font-medium rounded-md transition-all border border-slate-200',
                                     currentPage === 1 ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
                                 )}
                             >
-                                Previous
+                                <span className="hidden xs:inline">Previous</span>
+                                <span className="xs:hidden">Prev</span>
                             </button>
 
                             <button
                                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                                 disabled={currentPage === totalPages}
                                 className={cn(
-                                    'h-9 px-4 text-sm font-medium rounded-md transition-all border border-slate-200',
+                                    'text-xs md:text-sm px-2.5 md:px-4 h-9 font-medium rounded-md transition-all border border-slate-200',
                                     currentPage === totalPages ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
                                 )}
                             >

@@ -85,7 +85,7 @@ export const DashboardView: React.FC = () => {
     <div className="space-y-4 sm:space-y-5 lg:space-y-6 animate-in fade-in duration-500">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             Dashboard
           </h1>
       </div>

@@ -302,7 +302,7 @@ export const UserManagementView: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-3 lg:gap-4">
         <div className="min-w-0 flex-1">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900">User Management</h1>
+          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">User Management</h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <span className="hidden sm:inline">Dashboard</span>
             <Home className="h-3.5 w-3.5 sm:hidden" />
@@ -510,28 +510,28 @@ export const UserManagementView: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-white">
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <span>
-              Showing <span className="font-medium text-slate-900">{filteredUsers.length === 0 ? 0 : startIndex + 1}</span> to{" "}
-              <span className="font-medium text-slate-900">{Math.min(endIndex, filteredUsers.length)}</span> of{" "}
-              <span className="font-medium text-slate-900">{filteredUsers.length}</span> results
-            </span>
+        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white">
+          <div className="text-xs md:text-sm text-slate-600">
+            Showing <span className="font-medium text-slate-900">{filteredUsers.length === 0 ? 0 : startIndex + 1}</span> to{" "}
+            <span className="font-medium text-slate-900">{Math.min(endIndex, filteredUsers.length)}</span> of{" "}
+            <span className="font-medium text-slate-900">{filteredUsers.length}</span>
+            <span className="hidden sm:inline"> results</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 md:gap-2">
             <Button
               variant="outline"
               size="sm"
-              className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs md:text-sm px-2.5 md:px-4"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
-              Previous
+              <span className="hidden xs:inline">Previous</span>
+              <span className="xs:hidden">Prev</span>
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="h-8 px-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-xs md:text-sm px-2.5 md:px-4"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
             >
