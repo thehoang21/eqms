@@ -183,7 +183,7 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Module */}
-                  <td className="hidden md:table-cell py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <span
                       className={cn(
                         "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border",
@@ -195,7 +195,7 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Assignee */}
-                  <td className="hidden lg:table-cell py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       <div className="h-6 w-6 rounded-full bg-emerald-50 flex items-center justify-center text-xs font-bold text-emerald-600 border border-emerald-100">
                         {task.assignee.charAt(0)}
@@ -207,7 +207,7 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Reporter */}
-                  <td className="hidden lg:table-cell py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       <div className="h-6 w-6 rounded-full bg-orange-50 flex items-center justify-center text-xs font-bold text-orange-600 border border-orange-100">
                         {task.reporter.charAt(0)}
@@ -219,7 +219,7 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Days Left */}
-                  <td className="hidden md:table-cell py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <span
                       className={cn(
                         "text-sm font-medium",
@@ -233,7 +233,7 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Status */}
-                  <td className="hidden xl:table-cell py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <span
                       className={cn(
                         "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border",
@@ -245,7 +245,7 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Progress */}
-                  <td className="hidden 2xl:table-cell py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       <div className="w-20 bg-slate-100 rounded-full h-2 overflow-hidden">
                         <div
@@ -268,7 +268,7 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Due Date */}
-                  <td className="hidden xl:table-cell py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-1.5 text-slate-700">
                       <Calendar className="h-3.5 w-3.5 text-slate-400" />
                       <span>{formatDate(task.dueDate)}</span>
@@ -276,7 +276,7 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Priority */}
-                  <td className="hidden md:table-cell py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <span
                       className={cn(
                         "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border",
@@ -290,7 +290,10 @@ export const TaskTable: React.FC<{
                   {/* Action (Sticky) */}
                   <td
                     onClick={(e) => e.stopPropagation()}
-                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                    className={cn(
+                      "sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50",
+                      task.status === "Completed" && "completed-row-cell"
+                    )}
                   >
                     {task.status === "Completed" ? (
                       <div className="inline-flex items-center rounded-lg border border-emerald-600 gap-1.5 px-1.5 py-1.5 text-emerald-600 text-xs font-medium">

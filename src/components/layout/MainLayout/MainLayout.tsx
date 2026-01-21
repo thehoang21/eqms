@@ -36,7 +36,7 @@ export const MainLayout: React.FC = () => {
       />
 
       {/* Main Content Wrapper */}
-      <div className="flex-1 flex flex-col min-w-0 h-full transition-all duration-300 ease-in-out">
+      <div className="flex-1 flex flex-col min-w-0 h-full transition-all duration-300 ease-in-out overflow-hidden">
         {/* Header - Sticky with responsive height */}
         <Header 
           onToggleSidebar={toggleSidebar}
@@ -62,7 +62,7 @@ export const MainLayout: React.FC = () => {
           </main>
         </div>
 
-        {/* Footer */}
+        {/* Footer - Sticky bottom */}
         <Footer />
       </div>
     </div>
