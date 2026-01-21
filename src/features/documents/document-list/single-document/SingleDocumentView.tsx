@@ -29,6 +29,7 @@ import {
     type RelatedDocument,
 } from "@/features/documents/document-list/new-document/new-tabs";
 import { DocumentType } from "@/types/documentTypes";
+import { IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
@@ -187,18 +188,13 @@ export const SingleDocumentView: React.FC = () => {
         <div className="space-y-6 w-full">
             {/* Header: Title + Breadcrumb + Actions */}
             <div className="flex flex-col gap-4">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div>
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
+                    <div className="flex-1 min-w-0">
                         <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
                             Single Document Creation
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                            <button
-                                onClick={() => navigate("/dashboard")}
-                                className="hover:text-slate-700 transition-colors"
-                            >
-                                Dashboard
-                            </button>
+                            <IconSmartHome className="h-4 w-4" />
                             <span className="text-slate-400 mx-1">/</span>
                             <button className="hover:text-slate-700 transition-colors">
                                 <span className="hidden md:inline">Document Control</span>
@@ -218,7 +214,7 @@ export const SingleDocumentView: React.FC = () => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                         <Button
                             onClick={handleCancel}
                             variant="outline"

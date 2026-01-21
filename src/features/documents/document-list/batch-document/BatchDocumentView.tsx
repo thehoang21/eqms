@@ -27,7 +27,7 @@ import {
 } from "@/features/documents/document-list/new-document/new-tabs";
 import { BatchDocumentUpload } from "./components/BatchDocumentUpload";
 import { DocumentTreeView } from "./components/DocumentTreeView";
-import { IconChevronRight, IconStar } from "@tabler/icons-react";
+import { IconChevronRight, IconSmartHome, IconStar } from "@tabler/icons-react";
 import { DocumentType } from "@/types/documentTypes";
 
 // --- Types ---
@@ -330,13 +330,7 @@ export const BatchDocumentView: React.FC = () => {
               Batch Document Creation
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs md:text-sm">
-              <button
-                onClick={() => navigate("/dashboard")}
-                className="hover:text-slate-700 transition-colors hidden sm:inline"
-              >
-                Dashboard
-              </button>
-              <Home className="h-3.5 w-3.5 md:h-4 md:w-4 sm:hidden" />
+              <IconSmartHome className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <button className="hover:text-slate-700 transition-colors">
                 <span className="hidden md:inline">Document Control</span>

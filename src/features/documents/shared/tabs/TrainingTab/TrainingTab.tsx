@@ -101,7 +101,7 @@ export const TrainingTab: React.FC = () => {
     const isTestMode = config.trainingType === "test_certification";
 
     return (
-        <div className="space-y-4 md:space-y-6">
+        <div className="space-y-4 lg:space-y-6">
             <div className="flex items-center justify-between font-semibold text-slate-900">
                 <Checkbox
                     id="requires-training"
@@ -121,24 +121,24 @@ export const TrainingTab: React.FC = () => {
 
                     {/* Quiz Builder - Only show for Test & Certification */}
                     {isTestMode && (
-                        <div className="space-y-3 md:space-y-4">
+                        <div className="space-y-3 lg:space-y-4">
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <h3 className="text-base md:text-lg font-semibold text-slate-900">Quiz Questions</h3>
+                                <h3 className="text-base lg:text-lg font-semibold text-slate-900">Quiz Questions</h3>
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                                    <div className="text-xs md:text-sm font-medium text-slate-600">
+                                    <div className="text-xs lg:text-sm font-medium text-slate-600">
                                         Total Points: <span className={cn(totalPoints === 10 ? "text-emerald-600" : totalPoints > 10 ? "text-red-600" : "text-amber-600")}>{totalPoints.toFixed(2)}</span> / 10
                                     </div>
                                     <button
                                         onClick={addQuestion}
-                                        className="flex items-center justify-center gap-1.5 md:gap-2 px-3 md:px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs md:text-sm font-medium w-full sm:w-auto"
+                                        className="flex items-center justify-center gap-1.5 lg:gap-2 px-3 lg:px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs lg:text-sm font-medium w-full sm:w-auto"
                                     >
-                                        <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                                        <Plus className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
                                         <span>Add Question</span>
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="space-y-3 md:space-y-4">
+                            <div className="space-y-3 lg:space-y-4">
                                 {config.questions.map((question, index) => (
                                     <QuestionCard
                                         key={question.id}
@@ -158,13 +158,13 @@ export const TrainingTab: React.FC = () => {
                                 ))}
 
                                 {config.questions.length === 0 && (
-                                    <div className="text-center py-6 md:py-8 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
-                                        <HelpCircle className="h-10 w-10 md:h-12 md:w-12 text-slate-300 mx-auto mb-2 md:mb-3" />
-                                        <h3 className="text-base md:text-lg font-medium text-slate-900">No Questions Added</h3>
-                                        <p className="text-xs md:text-sm text-slate-500 mb-3 md:mb-4 px-4">Start building your training quiz by adding questions.</p>
+                                    <div className="text-center py-6 lg:py-8 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
+                                        <HelpCircle className="h-10 w-10 lg:h-12 lg:w-12 text-slate-300 mx-auto mb-2 lg:mb-3" />
+                                        <h3 className="text-base lg:text-lg font-medium text-slate-900">No Questions Added</h3>
+                                        <p className="text-xs lg:text-sm text-slate-500 mb-3 lg:mb-4 px-4">Start building your training quiz by adding questions.</p>
                                         <button
                                             onClick={addQuestion}
-                                            className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs md:text-sm font-medium"
+                                            className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs lg:text-sm font-medium"
                                         >
                                             Create First Question
                                         </button>
@@ -173,12 +173,12 @@ export const TrainingTab: React.FC = () => {
                             </div>
 
                             {config.questions.length > 0 && (
-                                <div className="flex justify-end pt-4 md:pt-6 border-t border-slate-200 mt-4 md:mt-6">
+                                <div className="flex justify-end pt-4 lg:pt-6 border-t border-slate-200 mt-4 lg:mt-6">
                                     <button
                                         onClick={() => { }}
-                                        className="flex items-center justify-center gap-1.5 md:gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs md:text-sm font-medium shadow-sm w-full sm:w-auto"
+                                        className="flex items-center justify-center gap-1.5 lg:gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-xs lg:text-sm font-medium shadow-sm w-full sm:w-auto"
                                     >
-                                        <Save className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                                        <Save className="h-3.5 w-3.5 lg:h-4 lg:w-4" />
                                         <span>Save Quiz</span>
                                     </button>
                                 </div>

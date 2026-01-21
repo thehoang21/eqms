@@ -12,7 +12,7 @@ import {
   KeyRound,
   Download,
 } from "lucide-react";
-import { IconKey, IconTrash } from "@tabler/icons-react";
+import { IconKey, IconSmartHome, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
@@ -304,8 +304,7 @@ export const UserManagementView: React.FC = () => {
         <div className="min-w-0 flex-1">
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">User Management</h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <span className="hidden sm:inline">Dashboard</span>
-            <Home className="h-3.5 w-3.5 sm:hidden" />
+            <IconSmartHome className="h-3.5 w-3.5" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Setting</span>
             <span className="sm:hidden">...</span>

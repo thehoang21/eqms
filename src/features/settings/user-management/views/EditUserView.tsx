@@ -102,13 +102,7 @@ export const EditUserView: React.FC = () => {
               Edit User
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <button
-                onClick={() => navigate("/dashboard")}
-                className="hover:text-slate-700 transition-colors hidden sm:inline"
-              >
-                Dashboard
-              </button>
-              <IconSmartHome className="h-4 w-4 sm:hidden" />
+              <IconSmartHome className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <span className="hidden md:inline">Settings</span>
               <span className="md:hidden">...</span>

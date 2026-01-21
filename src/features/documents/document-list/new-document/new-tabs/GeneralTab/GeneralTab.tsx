@@ -117,8 +117,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
         <div className="space-y-4">
             <div className="grid grid-cols-1 gap-x-8 gap-y-4">
                 {/* Document Number (read-only, auto-generated) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Document Number</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Document Number</label>
                     <input
                         type="text"
                         value={''}
@@ -129,8 +129,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Created (read-only, auto-generated) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Created (Date - Time)</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Created (Date - Time)</label>
                     <input
                         type="text"
                         value={''}
@@ -141,8 +141,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Opened by (read-only, auto-generated) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Opened by</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Opened by</label>
                     <input
                         type="text"
                         value={''}
@@ -154,8 +154,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
                 {/* Suggested Document Code (if parent is selected) */}
                 {suggestedDocumentCode && (
-                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                        <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0"></label>
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                        <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0"></label>
                         <div className="flex-1 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                             <div className="flex items-center gap-2">
                                 <LinkIcon className="h-4 w-4 text-blue-600 flex-shrink-0" />
@@ -169,8 +169,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 )}
 
                 {/* Author (Select) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Author<span className="text-red-500 ml-1">*</span></label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Author<span className="text-red-500 ml-1">*</span></label>
                     <div className="flex-1">
                         <Select
                             value={formData.author}
@@ -188,8 +188,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
                 {/* Is Template - HIDDEN in template mode OR when hideTemplateCheckbox is true */}
                 {!isTemplateMode && !hideTemplateCheckbox && (
-                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                        <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Is Template?</label>
+                    <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                        <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Is Template?</label>
                         <div className="flex-1">
                             <Checkbox
                                 id="isTemplate"
@@ -201,8 +201,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 )}
 
                 {/* Document Name */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Document Name<span className="text-red-500 ml-1">*</span></label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Document Name<span className="text-red-500 ml-1">*</span></label>
                     <div className="flex-1 flex items-center gap-2">
                         <input
                             type="text"
@@ -215,8 +215,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Document Type (Select) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Document Type<span className="text-red-500 ml-1">*</span></label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Document Type<span className="text-red-500 ml-1">*</span></label>
                     <div className="flex-1">
                         <Select
                             value={formData.type}
@@ -228,8 +228,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Sub-Type (Select) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Sub-Type</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Sub-Type</label>
                     <div className="flex-1">
                         <Select
                             value={formData.subType}
@@ -246,8 +246,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Business Unit (Select) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Business Unit<span className="text-red-500 ml-1">*</span></label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Business Unit<span className="text-red-500 ml-1">*</span></label>
                     <div className="flex-1">
                         <Select
                             value={formData.businessUnit}
@@ -264,8 +264,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Department (Select) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Department</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Department</label>
                     <div className="flex-1">
                         <Select
                             value={formData.department}
@@ -282,8 +282,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Knowledge Base */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Knowledge Base</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Knowledge Base</label>
                     <div className="flex-1 flex items-center gap-2">
                         <input
                             type="text"
@@ -296,8 +296,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Periodic Review Cycle */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Periodic Review Cycle (Months)<span className="text-red-500 ml-1">*</span></label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Periodic Review Cycle (Months)<span className="text-red-500 ml-1">*</span></label>
                     <input
                         type="number"
                         value={formData.periodicReviewCycle}
@@ -307,8 +307,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Periodic Review Notification */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Periodic Review Notification (Days)<span className="text-red-500 ml-1">*</span></label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Periodic Review Notification (Days)<span className="text-red-500 ml-1">*</span></label>
                     <input
                         type="number"
                         value={formData.periodicReviewNotification}
@@ -318,8 +318,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Effective Date (read-only, auto-generated) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Effective Date (yyyy-MM-dd)</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Effective Date (yyyy-MM-dd)</label>
                     <input
                         type="text"
                         value={''}
@@ -330,8 +330,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Valid Until (read-only, auto-generated) */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Valid Until (yyyy-MM-dd)</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Valid Until (yyyy-MM-dd)</label>
                     <input
                         type="text"
                         value={''}
@@ -342,8 +342,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Language */}
-                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">Language</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0">Language</label>
                     <div className="flex-1">
                         <Select
                             value={formData.language}
@@ -358,8 +358,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Description */}
-                <div className="flex flex-col md:flex-row gap-2 md:gap-4">
-                    <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0 md:pt-2">Description</label>
+                <div className="flex flex-col lg:flex-row gap-2 lg:gap-4">
+                    <label className="text-sm font-medium text-slate-700 text-left lg:w-56 lg:flex-shrink-0 lg:pt-2">Description</label>
                     <textarea
                         value={formData.description}
                         onChange={(e) => setFormData({ description: e.target.value })}

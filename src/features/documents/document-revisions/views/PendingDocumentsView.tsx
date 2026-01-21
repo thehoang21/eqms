@@ -508,14 +508,13 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header: Title + Breadcrumb */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
+        <div className="flex-1 min-w-0">
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             {config.title}
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-1 whitespace-nowrap overflow-x-auto">
-            <span className="hidden sm:inline">Dashboard</span>
-            <IconSmartHome className="h-4 w-4 sm:hidden" />
+            <IconSmartHome className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Document Control</span>
             <span className="sm:hidden">...</span>
@@ -526,18 +525,20 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
             <span className="text-slate-700 font-medium">{config.breadcrumbLast}</span>
           </div>
         </div>
-        <Button
-          onClick={() => {
-            console.log("Export triggered");
-            // TODO: Implement export functionality
-          }}
-          variant="outline"
-          size="sm"
-          className="whitespace-nowrap gap-2 self-start md:self-auto"
-        >
-          <Download className="h-4 w-4" />
-          Export
-        </Button>
+        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+          <Button
+            onClick={() => {
+              console.log("Export triggered");
+              // TODO: Implement export functionality
+            }}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}

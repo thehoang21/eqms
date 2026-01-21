@@ -24,7 +24,7 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
                 {/* Training Type Selector */}
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700">Training Type</label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <button
                             onClick={() => onUpdate({ trainingType: "read_understand" })}
                             className={cn(
@@ -87,7 +87,7 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
 
                 {/* Configuration Fields */}
                     {/* Configuration Fields */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {isTestMode && (
                         <>
                             <div className="space-y-2">

@@ -317,8 +317,8 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
             )}
             {/* Header */}
             <div className="flex flex-col gap-4">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div>
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
+                    <div className="flex-1 min-w-0">
                         <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
                             {title}
                         </h1>
@@ -326,12 +326,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                             {breadcrumbs.map((item, index) => (
                                 <React.Fragment key={index}>
                                     {index === 0 ? (
-                                        <>
-                                            <span className="hidden sm:inline">
-                                                {item.label}
-                                            </span>
-                                            <IconSmartHome className="h-4 w-4 sm:hidden" />
-                                        </>
+                                        <IconSmartHome className="h-4 w-4" />
                                     ) : item.isActive ? (
                                         <span className="text-slate-700 font-medium">{item.label}</span>
                                     ) : (
@@ -347,7 +342,8 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                             ))}
                         </div>
                     </div>
-                    <Button
+                    <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+                        <Button
                         onClick={onBack}
                         size="sm"
                         variant="outline"
@@ -356,6 +352,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                         <IconChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         <span className="text-xs sm:text-sm">Back</span>
                     </Button>
+                    </div>
                 </div>
             </div>
 
