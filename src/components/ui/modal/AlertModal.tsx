@@ -103,7 +103,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
               <X className="h-5 w-5" />
             </button>
             
-            <div className="flex flex-col items-center gap-4 text-center">
+            <div className="flex gap-4">
               <div className={cn(
                 "h-12 w-12 rounded-full flex items-center justify-center shrink-0 border",
                 currentConfig.bgColor,
@@ -112,12 +112,12 @@ export const AlertModal: React.FC<AlertModalProps> = ({
                 <Icon className={cn("h-6 w-6", currentConfig.color)} />
               </div>
 
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 leading-6 mb-2 text-center">
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-slate-900 leading-6 mb-2">
                   {title}
                 </h3>
                 {description && (
-                  <div className="text-sm text-slate-500 leading-relaxed text-left">
+                  <div className="text-sm text-slate-500 leading-relaxed">
                     {description}
                   </div>
                 )}
@@ -126,14 +126,13 @@ export const AlertModal: React.FC<AlertModalProps> = ({
           </div>
         </div>
 
-        <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-center gap-3">
+        <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3">
           {shouldShowCancel && (
             <Button
               size='sm'
               variant="outline"
               onClick={onClose}
               disabled={isLoading}
-              className="flex-1 max-w-[200px] whitespace-nowrap"
             >
               {cancelText}
             </Button>
@@ -142,7 +141,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
           <Button
             size='sm'
             onClick={onConfirm || onClose}
-            className={cn("flex-1 max-w-[200px] whitespace-nowrap", getConfirmButtonClass())}
+            className={getConfirmButtonClass()}
             disabled={isLoading}
           >
             {isLoading ? 'Processing...' : finalConfirmText}

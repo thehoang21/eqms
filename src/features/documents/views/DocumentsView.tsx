@@ -227,6 +227,88 @@ const MOCK_DOCUMENTS: Document[] = [
     openedBy: "Manufacturing Manager",
     description: "Comprehensive GMP guidelines for pharmaceutical manufacturing",
   },
+  // Documents for testing Review (Single Document)
+  {
+    id: "12",
+    documentId: "SOP-QA-001",
+    title: "Standard Operating Procedure for Quality Control Testing",
+    type: "SOP",
+    version: "1.0",
+    status: "Pending Review",
+    effectiveDate: "2026-02-01",
+    validUntil: "2028-02-01",
+    author: "John Smith",
+    department: "Quality Assurance",
+    created: "2026-01-05",
+    openedBy: "Nguyen Van A",
+    description: "This SOP outlines the procedures for quality control testing of pharmaceutical products.",
+    hasRelatedDocuments: false,
+  },
+  // Documents for testing Batch Review
+  {
+    id: "13",
+    documentId: "SOP-QA-002",
+    title: "Quality Assurance Documentation Standards",
+    type: "SOP",
+    version: "2.0",
+    status: "Pending Review",
+    effectiveDate: "2026-02-05",
+    validUntil: "2028-02-05",
+    author: "Jane Doe",
+    department: "Quality Assurance",
+    created: "2026-01-06",
+    openedBy: "Nguyen Van A",
+    description: "Standards for maintaining QA documentation in compliance with regulatory requirements.",
+    hasRelatedDocuments: true,
+  },
+  {
+    id: "14",
+    documentId: "SOP-QA-003",
+    title: "Environmental Monitoring Procedures",
+    type: "SOP",
+    version: "1.5",
+    status: "Pending Review",
+    effectiveDate: "2026-02-10",
+    validUntil: "2028-02-10",
+    author: "Robert Lee",
+    department: "Quality Assurance",
+    created: "2026-01-07",
+    openedBy: "Nguyen Van A",
+    description: "Procedures for environmental monitoring in controlled manufacturing areas.",
+    hasRelatedDocuments: false,
+  },
+  {
+    id: "15",
+    documentId: "SOP-QA-004",
+    title: "Calibration and Maintenance of Equipment",
+    type: "SOP",
+    version: "3.0",
+    status: "Pending Review",
+    effectiveDate: "2026-02-15",
+    validUntil: "2028-02-15",
+    author: "Emily Chen",
+    department: "Quality Assurance",
+    created: "2026-01-08",
+    openedBy: "Nguyen Van A",
+    description: "Guidelines for calibration and preventive maintenance of laboratory equipment.",
+    hasRelatedDocuments: true,
+  },
+  {
+    id: "16",
+    documentId: "SOP-QA-005",
+    title: "Deviation Management Procedures",
+    type: "SOP",
+    version: "1.0",
+    status: "Pending Review",
+    effectiveDate: "2026-02-20",
+    validUntil: "2028-02-20",
+    author: "David Park",
+    department: "Quality Assurance",
+    created: "2026-01-09",
+    openedBy: "Nguyen Van A",
+    description: "Procedures for identifying, investigating, and resolving deviations from SOPs.",
+    hasRelatedDocuments: false,
+  },
 ];
 
 // Mock current user
@@ -1003,8 +1085,6 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           setValidToDate(dateStr);
           setCurrentPage(1);
         }}
-        columns={columns}
-        onColumnsChange={setColumns}
       />
 
       {/* Table Container with Pagination */}

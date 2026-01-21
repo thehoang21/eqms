@@ -282,13 +282,13 @@ export const RequestControlledCopyView: React.FC = () => {
           </div>
 
           {/* Main Content */}
-          <form id="controlled-copy-form" onSubmit={handleSubmit} className="space-y-6">
+          <form id="controlled-copy-form" onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
             {/* Important Notice Banner */}
-            <div className="bg-amber-50 border border-amber-400 rounded-lg p-4 shadow-sm">
-              <div className="flex items-start gap-3">
+            <div className="bg-amber-50 border border-amber-400 rounded-lg p-3 lg:p-4 shadow-sm">
+              <div className="flex items-start gap-2 lg:gap-3">
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-amber-900 mb-2">Important Notice</h3>
-                  <div className="space-y-1.5 text-sm text-amber-800">
+                  <h3 className="text-xs lg:text-sm font-semibold text-amber-900 mb-1.5 lg:mb-2">Important Notice</h3>
+                  <div className="space-y-1 lg:space-y-1.5 text-xs lg:text-sm text-amber-800">
                     <p>• All printed copies will be individually numbered and must be recalled when a new version is available.</p>
                     <p>• The issuance of controlled copies must comply with the organization's document management procedures.</p>
                     <p>• This action will be recorded in the audit trail and requires electronic signature approval.</p>
@@ -298,38 +298,38 @@ export const RequestControlledCopyView: React.FC = () => {
             </div>
 
             {/* Document Info - Full Width */}
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 lg:p-6">
+              <h2 className="text-base lg:text-lg font-semibold text-slate-900 mb-3 lg:mb-4">
                 Document Information
               </h2>
-              <div className="space-y-4">
+              <div className="space-y-3 lg:space-y-4">
                 {/* Document ID */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 pb-4 border-b border-slate-200">
-                  <label className="text-sm font-medium text-slate-700 w-full sm:w-40 flex-shrink-0">Document ID</label>
-                  <p className="text-sm text-slate-900 font-medium flex-1">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-2 pb-3 lg:pb-4 border-b border-slate-200">
+                  <label className="text-xs lg:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Document ID</label>
+                  <p className="text-xs lg:text-sm text-slate-900 font-medium flex-1">
                     {documentId}
                   </p>
                 </div>
 
                 {/* Title */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 pb-4 border-b border-slate-200">
-                  <label className="text-sm font-medium text-slate-700 w-full sm:w-40 flex-shrink-0">Title</label>
-                  <p className="text-sm text-slate-900 flex-1" title={documentTitle}>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-2 pb-3 lg:pb-4 border-b border-slate-200">
+                  <label className="text-xs lg:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Title</label>
+                  <p className="text-xs lg:text-sm text-slate-900 flex-1" title={documentTitle}>
                     {documentTitle}
                   </p>
                 </div>
 
                 {/* Version */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 pb-4 border-b border-slate-200">
-                  <label className="text-sm font-medium text-slate-700 w-full sm:w-40 flex-shrink-0">Version</label>
-                  <p className="text-sm text-slate-900 font-medium flex-1">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-2 pb-3 lg:pb-4 border-b border-slate-200">
+                  <label className="text-xs lg:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Version</label>
+                  <p className="text-xs lg:text-sm text-slate-900 font-medium flex-1">
                     v{documentVersion}
                   </p>
                 </div>
 
                 {/* Status */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                  <label className="text-sm font-medium text-slate-700 w-full sm:w-40 flex-shrink-0">Status</label>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-2">
+                  <label className="text-xs lg:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Status</label>
                   <div className="flex-1">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
                       Effective
@@ -343,13 +343,13 @@ export const RequestControlledCopyView: React.FC = () => {
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {/* Document Selection - Only show if has related documents */}
               {hasRelatedDocs && (
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                  <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 lg:p-6">
+                  <h2 className="text-base lg:text-lg font-semibold text-slate-900 mb-3 lg:mb-4">
                     Select Documents to Print
                   </h2>
                   <div>
                     {/* Select All */}
-                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
+                    <div className="flex items-center justify-between pb-2.5 lg:pb-3 mb-2.5 lg:mb-3 border-b border-slate-200">
                       <Checkbox
                         id="select-all"
                         checked={isAllSelected}
@@ -367,36 +367,36 @@ export const RequestControlledCopyView: React.FC = () => {
                     </div>
 
                     {/* Document List */}
-                    <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                    <div className="space-y-2.5 lg:space-y-3 max-h-96 overflow-y-auto pr-1 lg:pr-2">
                       {documentsToShow.map((doc: DocumentToPrint) => (
                         <div
                           key={doc.id}
-                          className="border border-slate-200 rounded-lg p-4 hover:bg-slate-50 transition-colors"
+                          className="border border-slate-200 rounded-lg p-3 lg:p-4 hover:bg-slate-50 transition-colors"
                         >
-                          <div className="flex items-start gap-3">
+                          <div className="flex items-start gap-2 lg:gap-3">
                             <Checkbox
                               id={`doc-${doc.id}`}
                               checked={selectedDocumentIds.has(doc.id)}
                               onChange={(checked) => handleToggleDocument(doc.id, checked)}
                             />
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                <span className={`text-sm font-medium ${doc.isParent ? 'text-slate-900' : 'text-slate-700'}`}>
+                              <div className="flex items-center gap-1.5 lg:gap-2 mb-1 flex-wrap">
+                                <span className={`text-xs lg:text-sm font-medium ${doc.isParent ? 'text-slate-900' : 'text-slate-700'}`}>
                                   {doc.documentId}
                                 </span>
                                 <span className="text-xs text-slate-500">v{doc.version}</span>
                                 {doc.isParent && (
-                                  <span className="px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                  <span className="px-1.5 lg:px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                                     Parent
                                   </span>
                                 )}
                                 {doc.status !== 'Effective' && (
-                                  <span className="px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                  <span className="px-1.5 lg:px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
                                     {doc.status}
                                   </span>
                                 )}
                               </div>
-                              <p className="text-sm text-slate-600">{doc.title}</p>
+                              <p className="text-xs lg:text-sm text-slate-600">{doc.title}</p>
                               {doc.status !== 'Effective' && (
                                 <div className="flex items-center gap-1 mt-2 text-xs text-amber-600">
                                   <AlertCircle className="h-3.5 w-3.5" />
@@ -431,15 +431,15 @@ export const RequestControlledCopyView: React.FC = () => {
               )}
 
               {/* Distribution Details */}
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-slate-900 mb-4">
+              <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 lg:p-6">
+                <h2 className="text-base lg:text-lg font-semibold text-slate-900 mb-3 lg:mb-4">
                   Distribution Details
                 </h2>
                 <div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     {/* Location Dropdown */}
                     <div>
-                      <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                      <label className="text-xs lg:text-sm font-medium text-slate-700 mb-1.5 block">
                         Location <span className="text-red-600">*</span>
                       </label>
                       <Select
@@ -451,16 +451,16 @@ export const RequestControlledCopyView: React.FC = () => {
                           }
                         }}
                         options={locationOptions}
-                        placeholder="Select distribution location"
+                        placeholder="Select location"
                         enableSearch
                       />
                       {errors.location && (
-                        <p className="text-sm text-red-600 mt-1.5 flex items-center gap-1">
+                        <p className="text-xs lg:text-sm text-red-600 mt-1.5 flex items-center gap-1">
                           <AlertCircle className="h-3.5 w-3.5" />
                           {errors.location}
                         </p>
                       )}
-                      <p className="text-xs text-slate-500 mt-1.5">
+                      <p className="text-xs text-slate-500 mt-1">
                         Choose where the controlled copy will be distributed
                       </p>
                     </div>
@@ -469,11 +469,11 @@ export const RequestControlledCopyView: React.FC = () => {
                     <div>
                       <label
                         htmlFor="quantity"
-                        className="text-sm font-medium text-slate-700 mb-1.5 block"
+                        className="text-xs lg:text-sm font-medium text-slate-700 mb-1.5 block"
                       >
-                        Number of Copies <span className="text-red-600">*</span>
+                        Copies <span className="text-red-600">*</span>
                       </label>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 lg:gap-3">
                         <button
                           type="button"
                           onClick={() => {
@@ -484,10 +484,10 @@ export const RequestControlledCopyView: React.FC = () => {
                               }
                             }
                           }}
-                          className="h-11 w-11 rounded-md border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="h-9 w-9 lg:h-11 lg:w-11 rounded-md border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={quantity <= 1}
                         >
-                          <span className="text-lg font-medium text-slate-700">−</span>
+                          <span className="text-base lg:text-lg font-medium text-slate-700">−</span>
                         </button>
                         
                         <input
@@ -503,7 +503,7 @@ export const RequestControlledCopyView: React.FC = () => {
                           }}
                           min={1}
                           max={50}
-                          className={`h-11 w-24 px-3 py-2 border rounded-md text-sm text-center font-medium focus:outline-none focus:ring-2 transition-colors ${
+                          className={`h-9 lg:h-11 w-20 lg:w-24 px-2 lg:px-3 py-2 border rounded-md text-xs lg:text-sm text-center font-medium focus:outline-none focus:ring-2 transition-colors ${
                             errors.quantity
                               ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                               : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
@@ -520,19 +520,19 @@ export const RequestControlledCopyView: React.FC = () => {
                               }
                             }
                           }}
-                          className="h-11 w-11 rounded-md border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="h-9 w-9 lg:h-11 lg:w-11 rounded-md border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={quantity >= 50}
                         >
-                          <span className="text-lg font-medium text-slate-700">+</span>
+                          <span className="text-base lg:text-lg font-medium text-slate-700">+</span>
                         </button>
                       </div>
                       {errors.quantity && (
-                        <p className="text-sm text-red-600 mt-1.5 flex items-center gap-1">
+                        <p className="text-xs lg:text-sm text-red-600 mt-1.5 flex items-center gap-1">
                           <AlertCircle className="h-3.5 w-3.5" />
                           {errors.quantity}
                         </p>
                       )}
-                      <p className="text-xs text-slate-500 mt-1.5">
+                      <p className="text-xs text-slate-500 mt-1">
                         Each copy will be assigned a unique control number (max: 50 copies)
                       </p>
                     </div>
@@ -541,9 +541,9 @@ export const RequestControlledCopyView: React.FC = () => {
                     <div className="lg:col-span-2">
                       <label
                         htmlFor="reason"
-                        className="text-sm font-medium text-slate-700 mb-1.5 block"
+                        className="text-xs lg:text-sm font-medium text-slate-700 mb-1.5 block"
                       >
-                        Reason for Printing <span className="text-red-600">*</span>
+                        Reason <span className="text-red-600">*</span>
                       </label>
                       <textarea
                         id="reason"
@@ -554,21 +554,21 @@ export const RequestControlledCopyView: React.FC = () => {
                             setErrors({ ...errors, reason: '' });
                           }
                         }}
-                        placeholder="e.g., 'Replace damaged copy', 'New production line setup', 'Additional copy for shift rotation'"
-                        rows={4}
-                        className={`w-full px-3 py-2.5 border rounded-md text-sm focus:outline-none focus:ring-2 transition-colors resize-none ${
+                        placeholder="e.g., Replace damaged copy, New production line..."
+                        rows={3}
+                        className={`w-full px-3 py-2 lg:py-2.5 border rounded-md text-xs lg:text-sm focus:outline-none focus:ring-2 transition-colors resize-none ${
                           errors.reason
                             ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                             : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
                         }`}
                       />
                       {errors.reason && (
-                        <p className="text-sm text-red-600 mt-1.5 flex items-center gap-1">
+                        <p className="text-xs lg:text-sm text-red-600 mt-1.5 flex items-center gap-1">
                           <AlertCircle className="h-3.5 w-3.5" />
                           {errors.reason}
                         </p>
                       )}
-                      <p className="text-xs text-slate-500 mt-1.5">
+                      <p className="text-xs text-slate-500 mt-1">
                         Minimum 10 characters. This will be recorded in the audit trail.
                       </p>
                     </div>
@@ -578,21 +578,21 @@ export const RequestControlledCopyView: React.FC = () => {
 
               {/* Summary - Show in same row with Distribution Details if no related docs */}
               {!hasRelatedDocs && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
-                  <h3 className="text-sm font-semibold text-emerald-900 mb-3">Summary</h3>
-                  <div className="space-y-2 text-sm text-emerald-800">
-                    <div className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 lg:p-5">
+                  <h3 className="text-xs lg:text-sm font-semibold text-emerald-900 mb-2 lg:mb-3">Summary</h3>
+                  <div className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-emerald-800">
+                    <div className="flex items-center gap-1.5 lg:gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
                       <span>
                         <span className="font-medium">{quantity}</span> controlled {quantity === 1 ? 'copy' : 'copies'} will be printed
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                    <div className="flex items-center gap-1.5 lg:gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
                       <span>Each copy will receive a unique control number</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                    <div className="flex items-center gap-1.5 lg:gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
                       <span>All copies must be returned when document is revised or obsolete</span>
                     </div>
                   </div>
@@ -602,27 +602,27 @@ export const RequestControlledCopyView: React.FC = () => {
 
             {/* Summary - Show below if has related docs */}
             {hasRelatedDocs && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
-                <h3 className="text-sm font-semibold text-emerald-900 mb-3">Summary</h3>
-                <div className="space-y-2 text-sm text-emerald-800">
-                  <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 lg:p-5">
+                <h3 className="text-xs lg:text-sm font-semibold text-emerald-900 mb-2 lg:mb-3">Summary</h3>
+                <div className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-emerald-800">
+                  <div className="flex items-center gap-1.5 lg:gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
                     <span>
                       <span className="font-medium">{selectedDocumentIds.size}</span> document{selectedDocumentIds.size !== 1 ? 's' : ''} selected
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                  <div className="flex items-center gap-1.5 lg:gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
                     <span>
                       <span className="font-medium">{quantity}</span> {quantity === 1 ? 'copy' : 'copies'} per document = <span className="font-medium">{selectedDocumentIds.size * quantity}</span> total prints
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                  <div className="flex items-center gap-1.5 lg:gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
                     <span>Each copy will receive a unique control number</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                  <div className="flex items-center gap-1.5 lg:gap-2">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-600 flex-shrink-0" />
                     <span>All copies must be returned when document is revised or obsolete</span>
                   </div>
                 </div>

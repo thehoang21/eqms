@@ -330,12 +330,6 @@ interface FiltersProps {
   statusFilter: Status | "All";
   onStatusChange: (value: Status | "All") => void;
   // ... other filters
-  columns: TableColumn[];
-  onColumnsChange: (columns: TableColumn[]) => void;
-  ColumnCustomizerComponent: React.ComponentType<{
-    columns: TableColumn[];
-    onColumnsChange: (columns: TableColumn[]) => void;
-  }>;
 }
 ```
 
@@ -343,19 +337,11 @@ interface FiltersProps {
 ```tsx
 <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-    {/* Search input: xl:col-span-4 */}
-    {/* Column Customizer: xl:col-span-2 */}
+    {/* Search input: xl:col-span-6 */}
     {/* Regular filters: xl:col-span-3 each */}
   </div>
 </div>
 ```
-
-### 6.3 Column Customizer
-- Drag-and-drop để reorder columns (draggable attribute)
-- Checkbox để toggle visibility
-- Locked columns không thể ẩn hoặc di chuyển
-- Reset button để về mặc định
-- Dropdown style: `absolute right-0 left-0 top-full mt-2 z-50`
 
 ## 7. Navigation & Breadcrumbs
 - **Breadcrumb separator:** Sử dụng dấu `/` text: `<span className="text-slate-400 mx-1">/</span>`

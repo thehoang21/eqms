@@ -6,7 +6,6 @@ import {
   MoreVertical,
   Eye,
   History,
-  GripVertical,
   ChevronDown,
   Plus,
   Home,
@@ -16,21 +15,12 @@ import {
 import { Button } from '@/components/ui/button/Button';
 import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge';
 import { DocumentFilters } from "@/features/documents/shared/components";
-import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import { IconFileCheck, IconFileTime, IconInfoCircle, IconFileExport, IconSmartHome, IconEyeCheck, IconChecks } from "@tabler/icons-react";
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
-
-interface TableColumn {
-  id: string;
-  label: string;
-  visible: boolean;
-  order: number;
-  locked?: boolean;
-}
 
 interface Revision {
   id: string;
@@ -146,181 +136,7 @@ const MOCK_REVISIONS: Revision[] = [
   })),
 ];
 
-// Default columns configuration
-const DEFAULT_COLUMNS: TableColumn[] = [
-  { id: "no", label: "No.", visible: true, order: 0, locked: true },
-  { id: "documentNumber", label: "Document Number", visible: true, order: 1 },
-  { id: "revisionNumber", label: "Revision Number", visible: true, order: 2 },
-  { id: "created", label: "Created", visible: true, order: 3 },
-  { id: "openedBy", label: "Opened by", visible: true, order: 4 },
-  { id: "revisionName", label: "Revision Name", visible: true, order: 5 },
-  { id: "state", label: "State", visible: true, order: 6 },
-  { id: "author", label: "Author", visible: true, order: 7 },
-  { id: "effectiveDate", label: "Effective Date", visible: true, order: 8 },
-  { id: "validUntil", label: "Valid Until", visible: true, order: 9 },
-  { id: "documentName", label: "Document Name", visible: true, order: 10 },
-  { id: "action", label: "Action", visible: true, order: 11, locked: true },
-];
 
-// --- Column Customizer Component ---
-interface RevisionColumnCustomizerProps {
-  columns: TableColumn[];
-  onColumnsChange: (columns: TableColumn[]) => void;
-}
-
-const RevisionColumnCustomizer: React.FC<RevisionColumnCustomizerProps> = ({
-  columns,
-  onColumnsChange,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Filter out locked columns for reordering
-  const reorderableColumns = columns.filter(col => !col.locked);
-  const lockedColumns = columns.filter(col => col.locked);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleDragStart = (index: number) => {
-    setDraggedIndex(index);
-  };
-
-  const handleDragOver = (e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index) return;
-
-    const newColumns = [...reorderableColumns];
-    const draggedColumn = newColumns[draggedIndex];
-    newColumns.splice(draggedIndex, 1);
-    newColumns.splice(index, 0, draggedColumn);
-
-    // Update order property
-    const updatedReorderable = newColumns.map((col, idx) => ({
-      ...col,
-      order: idx + 1, // Start from 1 (0 is reserved for "No.")
-    }));
-
-    // Merge with locked columns
-    const finalColumns = [
-      ...lockedColumns,
-      ...updatedReorderable,
-    ].sort((a, b) => a.order - b.order);
-
-    onColumnsChange(finalColumns);
-    setDraggedIndex(index);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null);
-  };
-
-  const toggleVisibility = (columnId: string) => {
-    const updatedColumns = columns.map(col =>
-      col.id === columnId ? { ...col, visible: !col.visible } : col
-    );
-    onColumnsChange(updatedColumns);
-  };
-
-  const resetToDefault = () => {
-    onColumnsChange([...DEFAULT_COLUMNS]);
-  };
-
-  const handleDone = () => {
-    setIsOpen(false);
-  };
-
-  return (
-    <div ref={containerRef} className="relative">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "flex items-center justify-between gap-2 w-full px-3 h-11 border rounded-md bg-white text-sm transition-all",
-          isOpen 
-            ? "border-emerald-500 ring-2 ring-emerald-500" 
-            : "border-slate-200 hover:border-slate-300"
-        )}
-      >
-        <span className="text-slate-700 font-medium">Customize Columns</span>
-        <ChevronDown className={cn("h-4 w-4 text-slate-400 transition-transform", isOpen && "rotate-180")} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 left-0 top-full mt-2 z-50 w-full bg-white rounded-lg border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-150">
-          {/* Header */}
-          <div className="px-4 py-2 border-b border-slate-100">
-            <h3 className="text-sm font-semibold text-slate-700">Customize Columns</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Scroll to View, Drag to reorder</p>
-          </div>
-
-          {/* Column List */}
-          <div className="p-2 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
-            {reorderableColumns.map((column, index) => (
-              <div
-                key={column.id}
-                draggable
-                onDragStart={() => handleDragStart(index)}
-                onDragOver={(e) => handleDragOver(e, index)}
-                onDragEnd={handleDragEnd}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 mb-1 rounded-md border border-transparent transition-all cursor-move group',
-                  draggedIndex === index
-                    ? 'bg-blue-50 border-blue-200 opacity-50'
-                    : 'hover:bg-slate-50'
-                )}
-              >
-                <Checkbox
-                  id={`column-${column.id}`}
-                  checked={column.visible}
-                  onChange={() => toggleVisibility(column.id)}
-                  className="flex-shrink-0"
-                />
-                
-                <span className={cn(
-                  "text-sm font-medium flex-1",
-                  column.visible ? "text-slate-700" : "text-slate-400"
-                )}>
-                  {column.label}
-                </span>
-
-                <GripVertical className="h-4 w-4 text-slate-400 flex-shrink-0" />
-              </div>
-            ))}
-          </div>
-
-          {/* Footer */}
-          <div className="px-3 py-2 rounded-b-lg border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={resetToDefault}
-              className="flex-1"
-            >
-              Reset
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleDone}
-              className="flex-1"
-            >
-              Done
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 // --- Main Component ---
 export const RevisionListView: React.FC = () => {
@@ -338,7 +154,6 @@ export const RevisionListView: React.FC = () => {
   const [effectiveToDate, setEffectiveToDate] = useState("");
   const [validFromDate, setValidFromDate] = useState("");
   const [validToDate, setValidToDate] = useState("");
-  const [columns, setColumns] = useState<TableColumn[]>([...DEFAULT_COLUMNS]);
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
@@ -411,9 +226,6 @@ export const RevisionListView: React.FC = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedRevisions = filteredRevisions.slice(startIndex, endIndex);
-
-  // Visible columns
-  const visibleColumns = columns.filter((col) => col.visible).sort((a, b) => a.order - b.order);
 
   // Handlers
   const handleViewRevision = (id: string) => {
@@ -492,42 +304,10 @@ export const RevisionListView: React.FC = () => {
     }
   };
 
-  // Render column cell
-  const renderCell = (column: TableColumn, revision: Revision, index: number) => {
-    switch (column.id) {
-      case "no":
-        return startIndex + index + 1;
-      case "documentNumber":
-        return <span className="font-medium text-emerald-600">{revision.documentNumber}</span>;
-      case "revisionNumber":
-        return revision.revisionNumber;
-      case "created":
-        return revision.created;
-      case "openedBy":
-        return revision.openedBy;
-      case "revisionName":
-        return revision.revisionName;
-      case "state":
-        return (
-          <span className="inline-flex items-center gap-1.5">
-            <StatusBadge status={mapStatusToType(revision.state)} />
-          </span>
-        );
-      case "author":
-        return revision.author;
-      case "effectiveDate":
-        return revision.effectiveDate;
-      case "validUntil":
-        return revision.validUntil;
-      case "documentName":
-        return revision.documentName;
-      default:
-        return null;
-    }
-  };
+
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="flex flex-col h-full gap-4 md:gap-6">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
         <div className="flex-1 min-w-0">
@@ -558,11 +338,12 @@ export const RevisionListView: React.FC = () => {
             }}
             variant="outline"
             size="sm"
-          className="whitespace-nowrap gap-2 self-start md:self-auto"
-        >
-          <Download className="h-4 w-4" />
-          Export
-        </Button>
+            className="whitespace-nowrap gap-2 self-start md:self-auto"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -634,21 +415,20 @@ export const RevisionListView: React.FC = () => {
             <table className="w-full">
               <thead className="bg-slate-50/80 border-b-2 border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
                 <tr>
-                  {visibleColumns.map((column) => (
-                    <th
-                      key={column.id}
-                      className={cn(
-                        "py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
-                        column.id === 'action' 
-                          ? "sticky right-0 bg-slate-50/80 text-center z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm"
-                          : "text-left"
-                      )}
-                    >
-                      {column.label}
-                    </th>
-                  ))}
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Number</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Revision Number</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Created</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Opened by</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Revision Name</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">State</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Author</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Effective Date</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Valid Until</th>
+                  <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Document Name</th>
+                  <th className="sticky right-0 bg-slate-50/80 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">Action</th>
                 </tr>
-                </thead>
+              </thead>
               <tbody className="divide-y divide-slate-100">
                 {paginatedRevisions.map((revision, index) => (
                   <tr
@@ -656,31 +436,37 @@ export const RevisionListView: React.FC = () => {
                     onClick={() => handleViewRevision(revision.id)}
                     className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
                   >
-                    {visibleColumns.map((column) =>
-                      column.id === "action" ? (
-                        <td
-                          key={column.id}
-                          onClick={(e) => e.stopPropagation()}
-                          className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
-                        >
-                          <button
-                            ref={getButtonRef(revision.id)}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDropdownToggle(revision.id, e);
-                            }}
-                            className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
-                            aria-label="More actions"
-                          >
-                            <MoreVertical className="h-4 w-4 text-slate-600" />
-                          </button>
-                        </td>
-                      ) : (
-                        <td key={column.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                          {renderCell(column, revision, index)}
-                        </td>
-                      )
-                    )}
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{startIndex + index + 1}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      <span className="font-medium text-emerald-600">{revision.documentNumber}</span>
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.revisionNumber}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.created}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.openedBy}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.revisionName}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      <StatusBadge status={mapStatusToType(revision.state)} />
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.author}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.effectiveDate}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.validUntil}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.documentName}</td>
+                    <td
+                      onClick={(e) => e.stopPropagation()}
+                      className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                    >
+                      <button
+                        ref={getButtonRef(revision.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDropdownToggle(revision.id, e);
+                        }}
+                        className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                        aria-label="More actions"
+                      >
+                        <MoreVertical className="h-4 w-4 text-slate-600" />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -796,7 +582,6 @@ export const RevisionListView: React.FC = () => {
           document.body
         );
       })()}
-    </div>
     </div>
   );
 };

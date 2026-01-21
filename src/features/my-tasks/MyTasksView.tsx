@@ -17,7 +17,6 @@ import { TaskCalendarView } from "./components/TaskCalendarView";
 import { TaskGanttView } from "./components/TaskGanttView";
 import { TaskDetailDrawer } from "./components/TaskDetailDrawer";
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
-import { TableColumn } from "./types";
 
 // --- Mock Data ---
 const MOCK_TASKS: Task[] = [
@@ -671,22 +670,6 @@ export const MyTasksView: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
 
-  // Column Customization State
-  const [tableColumns, setTableColumns] = useState<TableColumn[]>([
-    { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
-    { id: 'taskId', label: 'Task ID', visible: true, order: 1 },
-    { id: 'taskName', label: 'Task Name', visible: true, order: 2 },
-    { id: 'module', label: 'Module', visible: true, order: 3 },
-    { id: 'assignee', label: 'Assignee', visible: true, order: 4 },
-    { id: 'reporter', label: 'Reporter', visible: true, order: 5 },
-    { id: 'daysLeft', label: 'Days Left', visible: true, order: 6 },
-    { id: 'status', label: 'Status', visible: true, order: 7 },
-    { id: 'progress', label: 'Progress', visible: true, order: 8 },
-    { id: 'dueDate', label: 'Due Date', visible: true, order: 9 },
-    { id: 'priority', label: 'Priority', visible: true, order: 10 },
-    { id: 'action', label: 'Action', visible: true, order: 11, locked: true },
-  ]);
-
   // Simulate loading on filter change
   useEffect(() => {
     setIsLoading(true);
@@ -835,7 +818,6 @@ export const MyTasksView: React.FC = () => {
                       tasks={paginatedData}
                       onTaskClick={setSelectedTask}
                       startIndex={(currentPage - 1) * ITEMS_PER_PAGE + 1}
-                      columns={tableColumns}
                     />
                     <Pagination
                       currentPage={currentPage}

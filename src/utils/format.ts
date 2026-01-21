@@ -5,11 +5,12 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'full
     return 'Invalid Date';
   }
 
-  const options: Intl.DateTimeFormatOptions = {
+  const optionsMap: Record<'short' | 'long' | 'full', Intl.DateTimeFormatOptions> = {
     short: { year: 'numeric', month: '2-digit', day: '2-digit' },
     long: { year: 'numeric', month: 'short', day: 'numeric' },
     full: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
-  }[format];
+  };
+  const options = optionsMap[format];
 
   return new Intl.DateTimeFormat('en-US', options).format(dateObj);
 }

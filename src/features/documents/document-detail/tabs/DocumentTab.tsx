@@ -180,7 +180,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-slate-600" />
-                        <span className="text-sm font-medium text-slate-700">Word Document Preview</span>
+                        <span className="text-sm font-medium text-slate-700"></span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Button

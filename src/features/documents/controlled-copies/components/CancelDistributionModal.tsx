@@ -1,6 +1,7 @@
 import React from "react";
 import { AlertTriangle } from "lucide-react";
 import { FormModal } from "@/components/ui/modal/FormModal";
+import { RadioGroup } from "@/components/ui/radio/Radio";
 
 interface CancelDistributionModalProps {
   isOpen: boolean;
@@ -85,76 +86,27 @@ export const CancelDistributionModal: React.FC<CancelDistributionModalProps> = (
         </div>
 
         {/* Return to Stage */}
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2.5">
-            Return to Stage <span className="text-red-500">*</span>
-          </label>
-          <div className="grid grid-cols-2 gap-3">
-            <label
-              className={`relative flex flex-col p-4 border-2 rounded-lg cursor-pointer transition-all hover:border-emerald-400 ${
-                formData.returnToStage === "Draft"
-                  ? "border-emerald-500 bg-emerald-50/50 shadow-sm"
-                  : "border-slate-200 bg-white"
-              }`}
-            >
-              <input
-                type="radio"
-                name="returnToStage"
-                value="Draft"
-                checked={formData.returnToStage === "Draft"}
-                onChange={(e) => handleStageChange(e.target.value as "Draft")}
-                className="sr-only"
-              />
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-slate-900">Draft</span>
-                <div
-                  className={`h-4 w-4 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    formData.returnToStage === "Draft"
-                      ? "border-emerald-500 bg-emerald-500"
-                      : "border-slate-300 bg-white"
-                  }`}
-                >
-                  {formData.returnToStage === "Draft" && (
-                    <div className="h-1.5 w-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-              </div>
-              <p className="text-xs text-slate-600">Return for editing</p>
-            </label>
-
-            <label
-              className={`relative flex flex-col p-4 border-2 rounded-lg cursor-pointer transition-all hover:border-emerald-400 ${
-                formData.returnToStage === "Cancelled"
-                  ? "border-emerald-500 bg-emerald-50/50 shadow-sm"
-                  : "border-slate-200 bg-white"
-              }`}
-            >
-              <input
-                type="radio"
-                name="returnToStage"
-                value="Cancelled"
-                checked={formData.returnToStage === "Cancelled"}
-                onChange={(e) => handleStageChange(e.target.value as "Cancelled")}
-                className="sr-only"
-              />
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-slate-900">Closed - Cancelled</span>
-                <div
-                  className={`h-4 w-4 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    formData.returnToStage === "Cancelled"
-                      ? "border-emerald-500 bg-emerald-500"
-                      : "border-slate-300 bg-white"
-                  }`}
-                >
-                  {formData.returnToStage === "Cancelled" && (
-                    <div className="h-1.5 w-1.5 rounded-full bg-white" />
-                  )}
-                </div>
-              </div>
-              <p className="text-xs text-slate-600">Permanently cancel</p>
-            </label>
-          </div>
-        </div>
+        <RadioGroup
+          label="Return to Stage"
+          name="returnToStage"
+          value={formData.returnToStage}
+          onChange={(val) => handleStageChange(val as "Draft" | "Cancelled")}
+          layout="horizontal"
+          variant="card"
+          required
+          options={[
+            { 
+              label: "Draft", 
+              value: "Draft", 
+              description: "Return for editing" 
+            },
+            { 
+              label: "Closed - Cancelled", 
+              value: "Cancelled", 
+              description: "Permanently cancel" 
+            },
+          ]}
+        />
       </div>
     </FormModal>
   );

@@ -16,6 +16,7 @@ import { Popover } from '@/components/ui/popover/Popover';
 import { FormField } from '@/components/ui/form/ResponsiveForm';
 import { Select } from '@/components/ui/select/Select';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
+import { Radio, RadioGroup } from '@/components/ui/radio/Radio';
 import { AlertModal, AlertModalType } from '@/components/ui/modal';
 import { MoreHorizontal, Eye, Edit, Trash2, FileText, Download } from 'lucide-react';
 
@@ -39,7 +40,9 @@ export const UIShowcase: React.FC = () => {
     name: '',
     role: 'developer',
     notifications: true,
-    bio: ''
+    bio: '',
+    priority: 'medium',
+    gender: 'other'
   });
 
   // Table State
@@ -258,6 +261,58 @@ export const UIShowcase: React.FC = () => {
                   checked={formData.notifications}
                   onChange={(checked) => setFormData({...formData, notifications: checked})}
                 />
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium text-slate-700 pt-4">Radio Buttons</h4>
+                
+                {/* Radio Group - Vertical Layout */}
+                <RadioGroup
+                  label="Priority Level"
+                  name="priority"
+                  value={formData.priority}
+                  onChange={(val) => setFormData({...formData, priority: val as string})}
+                  required
+                  options={[
+                    { label: 'Low', value: 'low', description: 'Can be addressed later' },
+                    { label: 'Medium', value: 'medium', description: 'Normal priority task' },
+                    { label: 'High', value: 'high', description: 'Needs immediate attention' },
+                    { label: 'Critical', value: 'critical', description: 'Urgent and important', disabled: true },
+                  ]}
+                />
+
+                {/* Radio Group - Horizontal Layout */}
+                <RadioGroup
+                  label="Gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={(val) => setFormData({...formData, gender: val as string})}
+                  layout="horizontal"
+                  options={[
+                    { label: 'Male', value: 'male' },
+                    { label: 'Female', value: 'female' },
+                    { label: 'Other', value: 'other' },
+                  ]}
+                />
+
+                {/* Individual Radio Buttons */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-slate-700 block">Document Type</label>
+                  <div className="space-y-2">
+                    <Radio
+                      name="docType"
+                      value="sop"
+                      label="Standard Operating Procedure (SOP)"
+                      checked={true}
+                    />
+                    <Radio
+                      name="docType"
+                      value="policy"
+                      label="Policy Document"
+                      checked={false}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

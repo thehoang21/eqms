@@ -90,6 +90,8 @@ export const Select: React.FC<SelectProps> = ({
     if (isOpen && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const safeMargin = 8; // Safe margin from viewport edges
       
       const searchHeight = enableSearch ? 50 : 0;
       const estimatedDropdownHeight = Math.min(
@@ -101,12 +103,31 @@ export const Select: React.FC<SelectProps> = ({
       const spaceAbove = rect.top;
       const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
       
+      // Calculate horizontal position with safe margins
+      let leftPosition = rect.left;
+      let dropdownWidth = rect.width;
+      
+      // On mobile/narrow screens, use viewport width with margins
+      if (viewportWidth < 640) { // sm breakpoint
+        dropdownWidth = Math.min(rect.width, viewportWidth - (safeMargin * 2));
+        leftPosition = Math.max(safeMargin, Math.min(rect.left, viewportWidth - dropdownWidth - safeMargin));
+      } else {
+        // Ensure dropdown doesn't overflow right edge
+        if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
+          leftPosition = viewportWidth - dropdownWidth - safeMargin;
+        }
+        // Ensure dropdown doesn't overflow left edge
+        if (leftPosition < safeMargin) {
+          leftPosition = safeMargin;
+        }
+      }
+      
       setDropdownStyle({
         position: 'fixed',
         top: shouldOpenUpward ? undefined : rect.bottom + 4,
         bottom: shouldOpenUpward ? viewportHeight - rect.top + 4 : undefined,
-        left: rect.left,
-        width: rect.width,
+        left: leftPosition,
+        width: dropdownWidth,
         zIndex: 9999,
         maxHeight: shouldOpenUpward 
           ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
@@ -117,7 +138,7 @@ export const Select: React.FC<SelectProps> = ({
 
   // Xử lý click ra ngoài để đóng dropdown
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target as Node) &&
@@ -129,7 +150,11 @@ export const Select: React.FC<SelectProps> = ({
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
   // Xử lý scroll/resize window
@@ -165,6 +190,8 @@ export const Select: React.FC<SelectProps> = ({
     if (!isOpen && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const safeMargin = 8; // Safe margin from viewport edges
       
       // Tính toán ước lượng chiều cao dropdown
       const searchHeight = enableSearch ? 50 : 0; // Search input + padding
@@ -180,12 +207,31 @@ export const Select: React.FC<SelectProps> = ({
       // Quyết định mở lên trên hay xuống dưới
       const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
       
+      // Calculate horizontal position with safe margins
+      let leftPosition = rect.left;
+      let dropdownWidth = rect.width;
+      
+      // On mobile/narrow screens, use viewport width with margins
+      if (viewportWidth < 640) { // sm breakpoint
+        dropdownWidth = Math.min(rect.width, viewportWidth - (safeMargin * 2));
+        leftPosition = Math.max(safeMargin, Math.min(rect.left, viewportWidth - dropdownWidth - safeMargin));
+      } else {
+        // Ensure dropdown doesn't overflow right edge
+        if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
+          leftPosition = viewportWidth - dropdownWidth - safeMargin;
+        }
+        // Ensure dropdown doesn't overflow left edge
+        if (leftPosition < safeMargin) {
+          leftPosition = safeMargin;
+        }
+      }
+      
       setDropdownStyle({
         position: 'fixed',
         top: shouldOpenUpward ? undefined : rect.bottom + 4,
         bottom: shouldOpenUpward ? viewportHeight - rect.top + 4 : undefined,
-        left: rect.left,
-        width: rect.width,
+        left: leftPosition,
+        width: dropdownWidth,
         zIndex: 9999,
         maxHeight: shouldOpenUpward 
           ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
@@ -248,7 +294,11 @@ export const Select: React.FC<SelectProps> = ({
           )}
         >
           {enableSearch && (
-            <div className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white">
+            <div 
+              className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white"
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+            >
               <Search className="mr-2 h-4 w-4 text-slate-400 shrink-0 opacity-50" />
               <input
                 ref={searchInputRef}
@@ -256,6 +306,8 @@ export const Select: React.FC<SelectProps> = ({
                 placeholder={searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
               />
             </div>
           )}

@@ -6,14 +6,6 @@ import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 
-interface TableColumn {
-    id: string;
-    label: string;
-    visible: boolean;
-    order: number;
-    locked?: boolean;
-}
-
 interface DocumentFiltersProps {
     searchQuery: string;
     onSearchChange: (value: string) => void;
@@ -42,12 +34,6 @@ interface DocumentFiltersProps {
     showDepartmentFilter?: boolean;
     disableStatusFilter?: boolean;
     authorFilterDisabled?: boolean;
-    columns?: TableColumn[];
-    onColumnsChange?: (columns: TableColumn[]) => void;
-    ColumnCustomizerComponent?: React.ComponentType<{
-        columns: TableColumn[];
-        onColumnsChange: (columns: TableColumn[]) => void;
-    }>;
 }
 
 export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
@@ -77,17 +63,14 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
     showDepartmentFilter = true,
     disableStatusFilter = false,
     authorFilterDisabled = false,
-    columns,
-    onColumnsChange,
-    ColumnCustomizerComponent,
 }) => {
     return (
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-                {/* Row 1: Search, Column Customizer, Type, Department */}
+                {/* Row 1: Search, Type, Department */}
 
                 {/* Search */}
-                <div className={ColumnCustomizerComponent ? "xl:col-span-4 w-full" : "xl:col-span-6 w-full"}>
+                <div className="xl:col-span-6 w-full">
                     <label className="text-sm font-medium text-slate-700 mb-1.5 block">
                         Search
                     </label>
@@ -104,19 +87,6 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         />
                     </div>
                 </div>
-
-                {/* Column Customizer */}
-                {ColumnCustomizerComponent && columns && onColumnsChange && (
-                    <div className="xl:col-span-2 w-full">
-                        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                            Columns
-                        </label>
-                        <ColumnCustomizerComponent
-                            columns={columns}
-                            onColumnsChange={onColumnsChange}
-                        />
-                    </div>
-                )}
 
                 {/* Type Filter */}
                 {showTypeFilter && (

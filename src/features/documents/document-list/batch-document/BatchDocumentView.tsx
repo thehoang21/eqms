@@ -628,7 +628,7 @@ export const BatchDocumentView: React.FC = () => {
                   {/* Warning message in center */}
                   {missingRequiredFields.length > 0 && (
                     <div className="text-xs md:text-sm text-amber-600 flex items-center gap-1.5 px-2 md:px-3 py-1.5 md:py-2 bg-amber-50 rounded-lg">
-                      <AlertCircle className="h-3.5 w-3.5 md:h-4 md:w-4 shrink-0" />
+                      
                       <span className="hidden sm:inline">
                         {missingRequiredFields.length} required field(s)
                         missing

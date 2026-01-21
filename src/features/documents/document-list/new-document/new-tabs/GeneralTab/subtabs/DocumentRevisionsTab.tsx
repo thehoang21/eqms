@@ -42,19 +42,19 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ onCo
     }, [revisions.length, onCountChange]);
 
     return (
-        <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-slate-900">Revision History</h3>
+        <div className="space-y-3 md:space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <h3 className="text-xs md:text-sm font-semibold text-slate-900">Revision History</h3>
                 <span className="text-xs text-slate-500">{revisions.length} revision(s)</span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
                 {revisions.map((revision) => (
-                    <div key={revision.id} className="bg-slate-50 rounded-lg p-4 border border-slate-200 hover:border-emerald-300 transition-colors">
-                        <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-sm font-semibold text-slate-900">Version {revision.version}</span>
+                    <div key={revision.id} className="bg-slate-50 rounded-lg p-3 md:p-4 border border-slate-200 hover:border-emerald-300 transition-colors">
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-1.5 md:mb-2">
+                                    <span className="text-xs md:text-sm font-semibold text-slate-900">Version {revision.version}</span>
                                     <span className={`px-2 py-0.5 text-xs rounded-full ${
                                         revision.status === "Approved" 
                                             ? "bg-emerald-100 text-emerald-700" 
@@ -63,19 +63,19 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ onCo
                                         {revision.status}
                                     </span>
                                 </div>
-                                <p className="text-sm text-slate-700 mb-3">{revision.changes}</p>
-                                <div className="flex items-center gap-4 text-xs text-slate-500">
+                                <p className="text-xs md:text-sm text-slate-700 mb-2 md:mb-3">{revision.changes}</p>
+                                <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs text-slate-500">
                                     <div className="flex items-center gap-1">
-                                        <User className="h-3.5 w-3.5" />
+                                        <User className="h-3 w-3 md:h-3.5 md:w-3.5" />
                                         <span>{revision.author}</span>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                        <Calendar className="h-3.5 w-3.5" />
+                                        <Calendar className="h-3 w-3 md:h-3.5 md:w-3.5" />
                                         <span>{revision.date}</span>
                                     </div>
                                 </div>
                             </div>
-                            <button className="ml-4 p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">
+                            <button className="sm:ml-4 p-1.5 md:p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors self-end sm:self-start">
                                 <Download className="h-4 w-4" />
                             </button>
                         </div>

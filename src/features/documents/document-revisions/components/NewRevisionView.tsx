@@ -241,16 +241,16 @@ export const NewRevisionView: React.FC = () => {
             </div>
 
             {/* Source Document Info */}
-            <div className="rounded-xl border border-slate-200 bg-gradient-to-br from-emerald-50 to-white shadow-sm p-6">
-                <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center">
-                        <FileText className="h-6 w-6 text-emerald-600" />
+            <div className="rounded-xl border border-slate-200 bg-gradient-to-br from-emerald-50 to-white shadow-sm p-4 lg:p-6">
+                <div className="flex items-start gap-3 lg:gap-4">
+                    <div className="flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 rounded-lg bg-emerald-100 flex items-center justify-center">
+                        <FileText className="h-5 w-5 lg:h-6 lg:w-6 text-emerald-600" />
                     </div>
                     <div className="flex-1">
-                        <h2 className="text-lg font-semibold text-slate-900 mb-1">
+                        <h2 className="text-base lg:text-lg font-semibold text-slate-900 mb-1">
                             Source Document
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mt-2 lg:mt-3">
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">Document Code</p>
                                 <p className="text-sm font-semibold text-slate-900">{MOCK_SOURCE_DOCUMENT.code}</p>
@@ -273,13 +273,13 @@ export const NewRevisionView: React.FC = () => {
             </div>
 
             {/* Info Banner */}
-            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 flex items-start gap-3">
-                <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 lg:p-4 flex items-start gap-2 lg:gap-3">
+                <Info className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-blue-900 mb-1">
+                    <h3 className="text-xs lg:text-sm font-semibold text-blue-900 mb-1">
                         Linked Documents Impact Analysis
                     </h3>
-                    <p className="text-sm text-blue-700">
+                    <p className="text-xs lg:text-sm text-blue-700">
                         Review all linked documents (Forms, Annexes, References) and decide whether to keep the current version 
                         or upgrade to the new revision. Documents marked for upgrade will be highlighted below.
                     </p>
@@ -289,21 +289,21 @@ export const NewRevisionView: React.FC = () => {
             {/* Impact Analysis Table */}
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                 {/* Table Header */}
-                <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
-                    <div className="flex items-center justify-between">
+                <div className="bg-slate-50 border-b border-slate-200 px-4 lg:px-6 py-3 lg:py-4">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-0">
                         <div>
-                            <h2 className="text-base font-semibold text-slate-900">
+                            <h2 className="text-sm lg:text-base font-semibold text-slate-900">
                                 Linked Documents ({MOCK_LINKED_DOCUMENTS.length})
                             </h2>
-                            <p className="text-sm text-slate-500 mt-1">
+                            <p className="text-xs lg:text-sm text-slate-500 mt-0.5 lg:mt-1">
                                 {upgradeCount} document(s) selected for upgrade
                             </p>
                         </div>
-                        <div className="hidden md:flex items-center gap-2 text-sm">
+                        <div className="flex items-center gap-2 text-xs lg:text-sm flex-wrap">
                             <span className="text-slate-600">Legend:</span>
                             <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-slate-100">
                                 <div className="w-3 h-3 rounded-full bg-slate-300"></div>
-                                <span className="text-xs text-slate-700">Keep Current</span>
+                                <span className="text-xs text-slate-700">Keep</span>
                             </div>
                             <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-100">
                                 <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
@@ -318,25 +318,25 @@ export const NewRevisionView: React.FC = () => {
                     <table className="w-full">
                         <thead className="bg-slate-50/80 border-b border-slate-200">
                             <tr>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider w-16">
+                                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider w-12 lg:w-16">
                                     No.
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    Document Code
+                                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    Code
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    Document Name
+                                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    Name
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                                     Type
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    Current Version
+                                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    Current
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    Next Version
+                                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    Next
                                 </th>
-                                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">
                                     Decision
                                 </th>
                             </tr>
@@ -354,18 +354,18 @@ export const NewRevisionView: React.FC = () => {
                                                 : "hover:bg-slate-50"
                                         )}
                                     >
-                                        <td className="py-3.5 px-4 text-sm text-slate-700">
+                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm text-slate-700">
                                             {index + 1}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm font-medium text-slate-900">
+                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm font-medium text-slate-900">
                                             {doc.code}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm text-slate-700">
+                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm text-slate-700">
                                             {doc.name}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm">
+                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm">
                                             <span className={cn(
-                                                "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
+                                                "inline-flex items-center px-2 lg:px-2.5 py-0.5 lg:py-1 rounded-full text-xs font-medium border",
                                                 doc.type === "Form" && "bg-blue-50 text-blue-700 border-blue-200",
                                                 doc.type === "Annex" && "bg-purple-50 text-purple-700 border-purple-200",
                                                 doc.type === "Reference" && "bg-amber-50 text-amber-700 border-amber-200"
@@ -373,10 +373,10 @@ export const NewRevisionView: React.FC = () => {
                                                 {doc.type}
                                             </span>
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm font-medium text-slate-700">
+                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm font-medium text-slate-700">
                                             {doc.currentVersion}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm">
+                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm">
                                             {isUpgrade ? (
                                                 <span className="font-semibold text-blue-600">
                                                     {doc.nextVersion}
@@ -387,8 +387,8 @@ export const NewRevisionView: React.FC = () => {
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="py-3.5 px-4 text-center">
-                                            <div className="flex items-center justify-center gap-3">
+                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-center">
+                                            <div className="flex items-center justify-center gap-1.5 lg:gap-3">
                                                 <span className={cn(
                                                     "text-xs font-medium transition-colors",
                                                     isUpgrade ? "text-slate-400" : "text-slate-700"
@@ -398,7 +398,7 @@ export const NewRevisionView: React.FC = () => {
                                                 <button
                                                     onClick={() => handleToggleDecision(doc.id)}
                                                     className={cn(
-                                                        "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+                                                        "relative inline-flex h-5 w-9 lg:h-6 lg:w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
                                                         isUpgrade ? "bg-emerald-500" : "bg-slate-300"
                                                     )}
                                                     role="switch"
@@ -406,8 +406,8 @@ export const NewRevisionView: React.FC = () => {
                                                 >
                                                     <span
                                                         className={cn(
-                                                            "inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200",
-                                                            isUpgrade ? "translate-x-6" : "translate-x-1"
+                                                            "inline-block h-3.5 w-3.5 lg:h-4 lg:w-4 transform rounded-full bg-white transition-transform duration-200",
+                                                            isUpgrade ? "translate-x-5 lg:translate-x-6" : "translate-x-0.5 lg:translate-x-1"
                                                         )}
                                                     />
                                                 </button>
@@ -428,13 +428,13 @@ export const NewRevisionView: React.FC = () => {
             </div>
 
             {/* Reason for Change */}
-            <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6">
-                <div className="flex items-start gap-3 mb-4">
+            <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 lg:p-6">
+                <div className="flex items-start gap-2 lg:gap-3 mb-3 lg:mb-4">
                     <div className="flex-1">
-                        <label className="block text-sm font-semibold text-slate-900 mb-1">
+                        <label className="block text-xs lg:text-sm font-semibold text-slate-900 mb-1">
                             Reason for Change <span className="text-red-500">*</span>
                         </label>
-                        <p className="text-sm text-slate-500 mb-3">
+                        <p className="text-xs lg:text-sm text-slate-500 mb-2 lg:mb-3">
                             Provide a detailed explanation for creating this revision and the impact on linked documents.
                         </p>
                     </div>
@@ -447,12 +447,12 @@ export const NewRevisionView: React.FC = () => {
                     }}
                     placeholder="e.g., Updated testing procedures to comply with new regulatory requirements. Forms FORM.0001.01 and FORM.0002.01 require updates to reflect new data fields..."
                     className={cn(
-                        "w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
+                        "w-full px-3 lg:px-4 py-2 lg:py-3 border rounded-lg text-xs lg:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
                         showError && (reasonForChange.length < 50)
                             ? "border-red-300 bg-red-50"
                             : "border-slate-200 bg-white"
                     )}
-                    rows={6}
+                    rows={4}
                     maxLength={2000}
                 />
                 {showError && (reasonForChange.length < 50) && (
@@ -481,13 +481,13 @@ export const NewRevisionView: React.FC = () => {
             </div>
 
             {/* Summary Footer */}
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 lg:p-6">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-4">
                     <div>
-                        <h3 className="text-sm font-semibold text-slate-900 mb-2">
+                        <h3 className="text-xs lg:text-sm font-semibold text-slate-900 mb-1.5 lg:mb-2">
                             Impact Analysis Summary
                         </h3>
-                        <div className="flex flex-wrap items-center gap-4 text-sm">
+                        <div className="flex flex-wrap items-center gap-3 lg:gap-4 text-xs lg:text-sm">
                             <div className="flex items-center gap-2">
                                 <span className="text-slate-600">Total Linked Documents:</span>
                                 <span className="font-semibold text-slate-900">{MOCK_LINKED_DOCUMENTS.length}</span>

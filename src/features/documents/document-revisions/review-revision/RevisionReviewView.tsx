@@ -340,24 +340,24 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <button
               onClick={() => setIsWorkflowExpanded(!isWorkflowExpanded)}
-              className="w-full flex items-center justify-between p-4 md:p-6 hover:bg-slate-50 transition-colors"
+              className="w-full flex items-center justify-between p-4 lg:p-6 hover:bg-slate-50 transition-colors"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                <h3 className="text-base md:text-lg font-bold text-slate-900">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-3">
+                <h3 className="text-base lg:text-lg font-bold text-slate-900">
                   Review Workflow
                 </h3>
-                <div className="inline-flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1 md:py-1.5 bg-slate-50 border border-slate-200 rounded-lg w-fit">
+                <div className="inline-flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 bg-slate-50 border border-slate-200 rounded-lg w-fit">
                   {document.reviewFlowType === "sequential" ? (
                     <>
-                      <IconListNumbers className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-600" />
-                      <span className="text-xs md:text-sm font-medium text-slate-700">
+                      <IconListNumbers className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-slate-600" />
+                      <span className="text-xs lg:text-sm font-medium text-slate-700">
                         Sequential Review
                       </span>
                     </>
                   ) : (
                     <>
-                      <Users className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-600" />
-                      <span className="text-xs md:text-sm font-medium text-slate-700">
+                      <Users className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-slate-600" />
+                      <span className="text-xs lg:text-sm font-medium text-slate-700">
                         Parallel Review
                       </span>
                     </>
@@ -382,9 +382,9 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
             >
               {/* Sequential: Vertical Stepper */}
               {document.reviewFlowType === "sequential" && (
-                <div className="px-4 md:px-6 pb-4 md:pb-6">
-                  <ul className="relative ml-3 md:ml-6">
-                    <div className="absolute left-4 md:left-6 top-0 bottom-0 w-px bg-slate-200" />
+                <div className="px-4 lg:px-6 pb-4 lg:pb-6">
+                  <ul className="relative ml-2 lg:ml-4">
+                    <div className="absolute left-4 lg:left-5 top-0 bottom-0 w-px bg-slate-200" />
                     {document.reviewers
                       .slice()
                       .sort((a, b) => a.order - b.order)
@@ -400,11 +400,11 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                         const isRejected = reviewer.status === "rejected";
 
                         return (
-                          <li key={reviewer.id} className="relative pl-10 md:pl-16 py-2 md:py-3">
+                          <li key={reviewer.id} className="relative pl-10 lg:pl-14 py-2 lg:py-3">
                             {/* Step indicator */}
                             <div
                               className={cn(
-                                "absolute left-4 md:left-6 -translate-x-1/2 top-2 h-7 w-7 md:h-8 md:w-8 rounded-full flex items-center justify-center text-xs font-bold",
+                                "absolute left-4 lg:left-5 -translate-x-1/2 top-2 h-7 w-7 lg:h-8 lg:w-8 rounded-full flex items-center justify-center text-xs font-bold",
                                 isApproved && "bg-emerald-600 text-white",
                                 isRejected && "bg-red-600 text-white",
                                 isCurrent && "bg-blue-600 text-white",
@@ -412,8 +412,8 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                               )}
                               aria-hidden="true"
                             >
-                              {isApproved && <CheckCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />}
-                              {isRejected && <XCircle className="h-3.5 w-3.5 md:h-4 md:w-4" />}
+                              {isApproved && <CheckCircle className="h-3.5 w-3.5 lg:h-4 lg:w-4" />}
+                              {isRejected && <XCircle className="h-3.5 w-3.5 lg:h-4 lg:w-4" />}
                               {isCurrent && reviewer.order}
                               {isBlocked && reviewer.order}
                             </div>
@@ -421,28 +421,28 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                             {/* Content */}
                             <div
                               className={cn(
-                                "p-3 md:p-4 rounded-lg border transition-colors",
+                                "p-3 lg:p-4 rounded-lg border transition-colors",
                                 isCurrent && "bg-emerald-50 border-emerald-200",
                                 isApproved && "bg-white border-slate-200",
                                 isRejected && "bg-white border-slate-200",
                                 isBlocked && "bg-white border-slate-200"
                               )}
                             >
-                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                                <div className="flex items-center gap-3 md:gap-4">
-                                  <div className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-9 w-9 lg:h-10 lg:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
                                     {reviewer.name.charAt(0)}
                                   </div>
                                   <div className="min-w-0 flex-1">
                                     <div className="flex items-center gap-2 flex-wrap">
-                                      <h4 className="font-medium text-sm md:text-base text-slate-900 truncate">{reviewer.name}</h4>
+                                      <h4 className="font-medium text-sm lg:text-base text-slate-900 truncate">{reviewer.name}</h4>
                                       {isCurrentUserReviewer && (
                                         <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded shrink-0">
                                           You
                                         </span>
                                       )}
                                     </div>
-                                    <div className="flex items-center gap-1.5 md:gap-2 text-xs text-slate-500 flex-wrap">
+                                    <div className="flex items-center gap-1.5 text-xs text-slate-500 flex-wrap">
                                       <span className="truncate">{reviewer.role}</span>
                                       <span className="w-1 h-1 rounded-full bg-slate-300 shrink-0" />
                                       <span className="truncate">{reviewer.department}</span>
@@ -450,9 +450,9 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                                   </div>
                                 </div>
 
-                                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap sm:shrink-0">
+                                <div className="flex items-center gap-2 flex-wrap lg:shrink-0">
                                   {reviewer.reviewDate && (isApproved || isRejected) && (
-                                    <span className="text-xs text-slate-500 hidden md:inline">
+                                    <span className="text-xs text-slate-500 hidden lg:inline">
                                       {formatDate(reviewer.reviewDate)}
                                     </span>
                                   )}
@@ -470,9 +470,9 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                                   )}
                                 </div>
                               </div>
-                              {/* Show date on mobile for approved/rejected */}
+                              {/* Show date on narrow screens for approved/rejected */}
                               {reviewer.reviewDate && (isApproved || isRejected) && (
-                                <div className="mt-2 text-xs text-slate-500 md:hidden">
+                                <div className="mt-2 text-xs text-slate-500 lg:hidden">
                                   {formatDate(reviewer.reviewDate)}
                                 </div>
                               )}
@@ -486,8 +486,8 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
 
               {/* Parallel: Grid of reviewers */}
               {document.reviewFlowType === "parallel" && (
-                <div className="px-4 md:px-6 pb-4 md:pb-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
+                <div className="px-4 lg:px-6 pb-4 lg:pb-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4">
                     {document.reviewers.map((reviewer) => {
                       const isCurrentUserReviewer = reviewer.id === currentUserId;
                       const isSigned = reviewer.status !== "pending";
@@ -495,44 +495,46 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                         <div
                           key={reviewer.id}
                           className={cn(
-                            "p-3 md:p-4 rounded-lg border bg-white",
+                            "p-3 lg:p-4 rounded-lg border bg-white",
                             isCurrentUserReviewer && reviewer.status === "pending"
                               ? "ring-1 ring-emerald-200"
                               : "border-slate-200"
                           )}
                         >
-                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                            <div className="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
-                              <div className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
+                          <div className="flex flex-col gap-3">
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                              <div className="h-9 w-9 lg:h-10 lg:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
                                 {reviewer.name.charAt(0)}
                               </div>
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <h4 className="font-medium text-sm md:text-base text-slate-900 truncate">{reviewer.name}</h4>
+                                  <h4 className="font-medium text-sm lg:text-base text-slate-900 truncate">{reviewer.name}</h4>
                                   {isCurrentUserReviewer && (
                                     <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded shrink-0">
                                       You
                                     </span>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-1.5 md:gap-2 text-xs text-slate-500 flex-wrap">
+                                <div className="flex items-center gap-1.5 text-xs text-slate-500 flex-wrap">
                                   <span className="truncate">{reviewer.role}</span>
                                   <span className="w-1 h-1 rounded-full bg-slate-300 shrink-0" />
                                   <span className="truncate">{reviewer.department}</span>
                                 </div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 sm:shrink-0">
-                              {isSigned ? (
-                                <StatusBadge status="approved" size="sm" />
-                              ) : (
-                                <StatusBadge status="blocked" size="sm" />
+                            <div className="flex items-center justify-between gap-2">
+                              {isSigned && reviewer.reviewDate && (
+                                <div className="text-xs text-slate-500">Signed on {formatDate(reviewer.reviewDate)}</div>
                               )}
+                              <div className="flex items-center gap-2 shrink-0 ml-auto">
+                                {isSigned ? (
+                                  <StatusBadge status="approved" size="sm" />
+                                ) : (
+                                  <StatusBadge status="blocked" size="sm" />
+                                )}
+                              </div>
                             </div>
                           </div>
-                          {isSigned && reviewer.reviewDate && (
-                            <div className="mt-2 text-xs text-slate-500">Signed on {formatDate(reviewer.reviewDate)}</div>
-                          )}
                         </div>
                       );
                     })}
@@ -544,33 +546,33 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
 
           {/* Review Actions */}
           {canReview && (
-            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-200 shadow-sm p-4 md:p-6">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
+            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-200 shadow-sm p-4 lg:p-6">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 lg:gap-4">
                 <div className="flex-1">
-                  <h3 className="text-base md:text-lg font-bold text-slate-900 mb-1">
+                  <h3 className="text-base lg:text-lg font-bold text-slate-900 mb-1">
                     Your Review Action Required
                   </h3>
                 </div>
-                <div className="flex items-center gap-2 md:gap-3 md:shrink-0">
+                <div className="flex items-center gap-2 lg:gap-3 lg:shrink-0">
                   <Button
                     onClick={handleReject}
                     variant="outline"
                     size="sm"
                     disabled={isSubmitting}
-                    className="flex-1 md:flex-initial border-red-200 text-red-700 hover:bg-red-50"
+                    className="flex-1 lg:flex-initial border-red-200 text-red-700 hover:bg-red-50"
                   >
-                    <ThumbsDown className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2" />
-                    <span className="text-xs md:text-sm">Reject</span>
+                    <ThumbsDown className="h-3.5 w-3.5 lg:h-4 lg:w-4 mr-1.5 lg:mr-2" />
+                    <span className="text-xs lg:text-sm">Reject</span>
                   </Button>
                   <Button
                     onClick={handleApprove}
                     variant="default"
                     size="sm"
                     disabled={isSubmitting}
-                    className="flex-1 md:flex-initial"
+                    className="flex-1 lg:flex-initial"
                   >
-                    <ThumbsUp className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2" />
-                    <span className="text-xs md:text-sm">Approve</span>
+                    <ThumbsUp className="h-3.5 w-3.5 lg:h-4 lg:w-4 mr-1.5 lg:mr-2" />
+                    <span className="text-xs lg:text-sm">Approve</span>
                   </Button>
                 </div>
               </div>

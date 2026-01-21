@@ -515,7 +515,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
+                    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-start">
                         <Button
                             onClick={handleBackToImpactAnalysis}
                             variant="outline"
@@ -764,29 +764,29 @@ export const RevisionWorkspaceView: React.FC = () => {
                     )}
 
                     {activeTab === "general" && currentDocument && (
-                        <div className="space-y-6">
+                        <div className="space-y-4 lg:space-y-6">
                             {/* Current Document Context */}
-                            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-6">
-                                <div className="flex items-start justify-between gap-4">
-                                    <div className="flex-1">
-                                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-4 lg:p-6">
+                                <div className="flex items-start justify-between gap-3 lg:gap-4">
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="text-base lg:text-lg font-semibold text-slate-900 mb-1.5 lg:mb-2">
                                             Editing: {currentDocument.code}
                                         </h3>
-                                        <p className="text-sm text-slate-600 mb-2">
+                                        <p className="text-xs lg:text-sm text-slate-600 mb-1.5 lg:mb-2 truncate">
                                             {currentDocument.name}
                                         </p>
                                         {uploadedFiles[currentDocument.id] && (
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <FileText className="h-4 w-4 text-blue-600" />
-                                                <span className="text-blue-700 font-medium">
+                                            <div className="flex items-center gap-1.5 lg:gap-2 text-xs lg:text-sm">
+                                                <FileText className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-blue-600 shrink-0" />
+                                                <span className="text-blue-700 font-medium truncate">
                                                     File: {uploadedFiles[currentDocument.id]?.name}
                                                 </span>
                                             </div>
                                         )}
                                     </div>
-                                    <div className="text-right">
-                                        <div className="text-sm text-slate-600">Document</div>
-                                        <div className="text-2xl font-bold text-slate-900">
+                                    <div className="text-right shrink-0">
+                                        <div className="text-xs lg:text-sm text-slate-600">Document</div>
+                                        <div className="text-xl lg:text-2xl font-bold text-slate-900 whitespace-nowrap">
                                             {currentDocIndex + 1} / {workspaceDocuments.length}
                                         </div>
                                     </div>
@@ -815,7 +815,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                 {/* Warning message in center */}
                                 {missingRequiredFields.length > 0 && (
                                     <div className="text-xs md:text-sm text-amber-600 flex items-center gap-1.5 px-2 md:px-3 py-1.5 md:py-2 bg-amber-50 rounded-lg">
-                                        <AlertCircle className="h-3.5 w-3.5 md:h-4 md:w-4 shrink-0" />
+                                        
                                         <span className="hidden sm:inline">
                                             {missingRequiredFields.length} required field(s) missing
                                         </span>
@@ -843,7 +843,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                         disabled={!isCurrentDocumentValid}
                                         className="flex items-center justify-center gap-1.5 touch-manipulation"
                                     >
-                                        <span className="text-xs md:text-sm">Complete & Continue</span>
+                                        <span className="text-xs md:text-sm">Continue</span>
                                         <IconChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                                     </Button>
                                 )}

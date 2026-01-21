@@ -6,6 +6,7 @@
 // Form Components
 export * from './button';
 export * from './checkbox';
+export * from './radio';
 export * from './select';
 export * from './datetime-picker';
 export * from './form';
