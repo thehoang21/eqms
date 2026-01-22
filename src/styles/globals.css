@@ -35,6 +35,19 @@ html, body {
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-inset-left: env(safe-area-inset-left, 0px);
   
+  /* Z-Index Scale - Standardized across application */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-footer: 20;
+  --z-table-header: 30;
+  --z-sidebar: 30;
+  --z-header: 40;
+  --z-backdrop: 40;
+  --z-dropdown: 50;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-portal-escape: 9999; /* Only for portal components escaping stacking contexts */
+  
   /* Primary Colors */
   --color-primary: #6366f1; /* Indigo */
   --color-primary-dark: #4f46e5;

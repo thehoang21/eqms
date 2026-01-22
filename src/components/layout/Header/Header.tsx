@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
       {/* Overlay for visual effect */}
       {isUserMenuOpen && createPortal(
         <div 
-          className="fixed inset-0 z-40 bg-slate-900/10 backdrop-blur-[1px] animate-in fade-in duration-150"
+          className="fixed inset-0 z-[39] bg-slate-900/10 backdrop-blur-[1px] animate-in fade-in duration-150"
         />,
         document.body
       )}
@@ -65,6 +65,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
               onClick={onToggleSidebar}
               className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 relative overflow-hidden transition-colors"
               title={isMobileMenuOpen ? "Close Menu" : (isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar")}
+              aria-label={isMobileMenuOpen ? "Close navigation menu" : (isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar")}
           >
               {/* Tablet/Desktop: Expand Icon - Show when sidebar is collapsed */}
               <IconLayoutSidebarLeftExpand className={cn(
@@ -123,7 +124,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
               aria-label="User menu"
             >
               {/* Avatar */}
-              <div className="h-8 w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
+              <div className="h-11 w-11 md:h-9 md:w-9 lg:h-10 lg:w-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
                 <User className="h-4 w-4 md:h-4.5 md:w-4.5 lg:h-5 lg:w-5" />
               </div>
               {/* User Info - Hidden on mobile and tablet */}

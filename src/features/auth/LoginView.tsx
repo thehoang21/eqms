@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { Eye, EyeOff, ChevronLeft, ArrowRight, Shield, CheckCircle2 } from 'lucide-react';
-import { Button } from '@/components/ui/button/Button';
-import { Checkbox } from '@/components/ui/checkbox/Checkbox';
-import { cn } from '@/components/ui/utils';
-import logoImg from '@/assets/images/logo_nobg.png';
-import slide1 from '@/assets/images/slide-image/ipad1.webp';
-import slide2 from '@/assets/images/slide-image/ipad2.webp';
-import slide3 from '@/assets/images/slide-image/ipad3.webp';
-import slide4 from '@/assets/images/slide-image/ipad4.webp';
-import { IconArrowLeft } from '@tabler/icons-react';
+import React, { useState, useEffect } from "react";
+import {
+  Eye,
+  EyeOff,
+  ChevronLeft,
+  ArrowRight,
+  Shield,
+  CheckCircle2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button/Button";
+import { Checkbox } from "@/components/ui/checkbox/Checkbox";
+import { cn } from "@/components/ui/utils";
+import logoImg from "@/assets/images/logo_nobg.png";
+import slide1 from "@/assets/images/slide-image/ipad1.webp";
+import slide2 from "@/assets/images/slide-image/ipad2.webp";
+import slide3 from "@/assets/images/slide-image/ipad3.webp";
+import slide4 from "@/assets/images/slide-image/ipad4.webp";
+import { IconArrowLeft } from "@tabler/icons-react";
 
 interface LoginViewProps {
   onLogin?: (username: string, password: string, rememberMe: boolean) => void;
@@ -16,17 +23,17 @@ interface LoginViewProps {
 
 export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
     rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [loginError, setLoginError] = useState('');
+  const [loginError, setLoginError] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showSplash, setShowSplash] = useState(true);
 
@@ -41,29 +48,29 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  const handleInputChange = (field: 'username' | 'password', value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setErrors(prev => ({ ...prev, [field]: '' }));
-    setLoginError('');
+  const handleInputChange = (field: "username" | "password", value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: "" }));
+    setLoginError("");
   };
 
   const validateForm = () => {
     const newErrors = {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     };
     let isValid = true;
 
     if (!formData.username.trim()) {
-      newErrors.username = 'Username or email is required';
+      newErrors.username = "Username or email is required";
       isValid = false;
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
       isValid = false;
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
       isValid = false;
     }
 
@@ -73,7 +80,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoginError('');
+    setLoginError("");
 
     if (!validateForm()) {
       return;
@@ -84,18 +91,18 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      
+
       // Hard-coded credentials
-      if (formData.username === 'admin' && formData.password === '123456') {
+      if (formData.username === "admin" && formData.password === "123456") {
         // Login successful
         if (onLogin) {
           onLogin(formData.username, formData.password, formData.rememberMe);
         } else {
-          console.log('Login successful:', formData);
+          console.log("Login successful:", formData);
         }
       } else {
         // Login failed
-        setLoginError('Invalid username or password. Please try again.');
+        setLoginError("Invalid username or password. Please try again.");
       }
     }, 1500);
   };
@@ -103,89 +110,96 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   return (
     <div className="min-h-screen w-full flex overflow-hidden">
       {/* Mobile Splash Screen */}
-      <div className={cn(
-        "lg:hidden fixed inset-0 z-50 bg-slate-900 transition-all duration-700 ease-in-out",
-        showSplash ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-110 pointer-events-none"
-      )}>
+      <div
+        className={cn(
+          "lg:hidden fixed inset-0 z-50 bg-slate-900 transition-all duration-700 ease-in-out",
+          showSplash
+            ? "visible scale-100"
+            : "opacity-0 invisible scale-110 pointer-events-none",
+        )}
+      >
         {/* Carousel Background */}
-          <div className="absolute inset-0 z-0">
-            {slides.map((slide, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "absolute inset-0 transition-all duration-1000 ease-in-out",
-                  index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
-                )}
-              >
-                <img 
-                  src={slide} 
-                  alt={`Slide ${index + 1}`}
-                  className="w-full h-full object-cover opacity-80"
-                />
-              </div>
-            ))}
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/80" />
-          </div>
-
-          {/* Splash Content */}
-          <div className="relative z-10 h-full flex flex-col p-8 text-white">
-            {/* Logo at Top */}
-            <div className="pt-8 pb-8 flex justify-center">
-              <img 
-                src={logoImg} 
-                alt="Logo" 
-                className="h-14 sm:h-16 w-auto object-contain drop-shadow-2xl mx-auto"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
+        <div className="absolute inset-0 z-0">
+          {slides.map((slide, index) => (
+            <div
+              key={index}
+              className={cn(
+                "absolute inset-0 transition-all duration-1000 ease-in-out",
+                index === currentSlide
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-105",
+              )}
+            >
+              <img
+                src={slide}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-full object-cover opacity-80"
               />
             </div>
+          ))}
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/80" />
+        </div>
 
-            {/* Title & Description - Centered */}
-            <div className="flex-1 flex flex-col justify-center items-center text-center">
-              <div className="space-y-3">
-                <h1 className="text-2xl font-bold leading-tight tracking-tight">
-                  Quality Management System
-                </h1>
-                <p className="text-sm text-white/90 leading-relaxed max-w-sm mx-auto">
-                  Next generation pharmaceutical quality management. Intelligent, compliant, and secure.
-                </p>
-              </div>
-            </div>
+        {/* Splash Content */}
+        <div className="relative z-10 h-full flex flex-col p-8 text-white">
+          {/* Logo at Top */}
+          <div className="pt-8 pb-8 flex justify-center">
+            <img
+              src={logoImg}
+              alt="Logo"
+              className="h-14 sm:h-16 w-auto object-contain drop-shadow-2xl mx-auto"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          </div>
 
-            {/* Sign In Button */}
-            <div className="space-y-4">
-              <Button
-                onClick={() => setShowSplash(false)}
-                size="default"
-                className="w-full h-14 text-base font-bold shadow-2xl shadow-emerald-500/30"
-              >
-                Sign In
-              </Button>
-              
-              {/* Carousel Indicators */}
-              <div className="flex justify-center gap-2 pb-2">
-                {slides.map((_, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "h-1.5 rounded-full transition-all duration-300",
-                      index === currentSlide 
-                        ? "w-8 bg-white" 
-                        : "w-1.5 bg-white/40"
-                    )}
-                  />
-                ))}
-              </div>
-
-              {/* Footer */}
-              <p className="text-xs text-center text-white/70 pb-4">
-                A product of NTP Dev Team - Ngoc Thien Pharma.
+          {/* Title & Description - Centered */}
+          <div className="flex-1 flex flex-col justify-center items-center text-center">
+            <div className="space-y-3">
+              <h1 className="text-2xl font-bold leading-tight tracking-wide">
+                Quality Management System
+              </h1>
+              <p className="text-sm text-white/90 leading-relaxed max-w-sm mx-auto tracking-wide">
+                Next generation pharmaceutical quality management. Intelligent,
+                compliant, and secure.
               </p>
             </div>
           </div>
+
+          {/* Sign In Button */}
+          <div className="space-y-4">
+            <Button
+              onClick={() => setShowSplash(false)}
+              size="default"
+              className="w-full h-14 text-base font-bold shadow-2xl shadow-emerald-500/30"
+            >
+              Sign In
+            </Button>
+
+            {/* Carousel Indicators */}
+            <div className="flex justify-center gap-2 pb-2">
+              {slides.map((_, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all duration-300",
+                    index === currentSlide
+                      ? "w-8 bg-white"
+                      : "w-1.5 bg-white/40",
+                  )}
+                />
+              ))}
+            </div>
+
+            {/* Footer */}
+            <p className="text-xs text-center text-white/70 pb-4">
+              A product of NTP Dev Team - Ngoc Thien Pharma.
+            </p>
+          </div>
         </div>
+      </div>
 
       {/* Left Side - Branding & Image (Hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 p-4 lg:p-6 items-center justify-center bg-white">
@@ -198,11 +212,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 key={index}
                 className={cn(
                   "absolute inset-0 transition-all duration-1000 ease-in-out",
-                  index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105"
+                  index === currentSlide
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-105",
                 )}
               >
-                <img 
-                  src={slide} 
+                <img
+                  src={slide}
                   alt={`Slide ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
@@ -218,9 +234,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 onClick={() => setCurrentSlide(index)}
                 className={cn(
                   "h-2 rounded-full transition-all duration-300",
-                  index === currentSlide 
-                    ? "w-8 bg-white" 
-                    : "w-2 bg-white/50 hover:bg-white/75"
+                  index === currentSlide
+                    ? "w-8 bg-white"
+                    : "w-2 bg-white/50 hover:bg-white/75",
                 )}
                 aria-label={`Go to slide ${index + 1}`}
               />
@@ -236,10 +252,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               <div className="space-y-4 relative z-10">
                 <h1 className="text-5xl xl:text-6xl font-bold leading-tight font-display tracking-tight">
                   Enter the Future of
-                  <span className="block mt-2 text-6xl xl:text-7xl">Quality Assurance</span>
+                  <span className="block mt-2 text-6xl xl:text-7xl">
+                    Quality Assurance
+                  </span>
                 </h1>
                 <p className="text-lg text-white leading-relaxed max-w-auto font-base">
-                  Experience the next generation of pharmaceutical quality management. Intelligent, compliant, and secure.
+                  Experience the next generation of pharmaceutical quality
+                  management. Intelligent, compliant, and secure.
                 </p>
               </div>
             </div>
@@ -254,10 +273,14 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className={cn(
-        "w-full lg:w-1/2 xl:w-2/5 relative flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-white transition-all duration-700 ease-in-out",
-        showSplash ? "opacity-0 scale-95 lg:opacity-100 lg:scale-100" : "opacity-100 scale-100"
-      )}>
+      <div
+        className={cn(
+          "w-full lg:w-1/2 xl:w-2/5 relative flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-white transition-all duration-700 ease-in-out",
+          showSplash
+            ? "opacity-0 scale-95 lg:opacity-100 lg:scale-100"
+            : "opacity-100 scale-100",
+        )}
+      >
         {/* Back Button (Mobile Only) */}
         <button
           onClick={() => setShowSplash(true)}
@@ -274,12 +297,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             <div className="px-6 sm:px-8 pt-8 pb-6">
               <div className="text-center space-y-2">
                 <div className="inline-flex items-center justify-center mb-4">
-                  <img 
-                    src={logoImg} 
-                    alt="QualiGuard Logo" 
+                  <img
+                    src={logoImg}
+                    alt="QualiGuard Logo"
                     className="h-12 sm:h-14 w-auto object-contain drop-shadow-lg"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.style.display = "none";
                     }}
                   />
                 </div>
@@ -297,10 +320,11 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               {/* Login Error Alert */}
               {loginError && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                  <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-                  </div>
+                  <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center shrink-0"></div>
                   <div className="flex-1 min-w-0 pt-0.5">
-                    <p className="text-sm font-semibold text-red-900">Authentication Failed</p>
+                    <p className="text-sm font-semibold text-red-900">
+                      Authentication Failed
+                    </p>
                     <p className="text-sm text-red-700 mt-0.5">{loginError}</p>
                   </div>
                 </div>
@@ -309,7 +333,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Username/Email Field */}
                 <div className="space-y-2">
-                  <label htmlFor="username" className="block text-sm font-semibold text-slate-700">
+                  <label
+                    htmlFor="username"
+                    className="block text-sm font-semibold text-slate-700"
+                  >
                     Username or Email
                   </label>
                   <div className="relative group">
@@ -317,14 +344,16 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                       id="username"
                       type="text"
                       value={formData.username}
-                      onChange={(e) => handleInputChange('username', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("username", e.target.value)
+                      }
                       className={cn(
                         "w-full h-12 px-4 text-sm font-medium border-2 rounded-xl transition-all",
                         "placeholder:text-slate-400 placeholder:font-normal",
                         "focus:outline-none focus:ring-4",
                         errors.username
                           ? "border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-500/10"
-                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10",
                       )}
                       placeholder="Enter your username or email"
                       disabled={isLoading}
@@ -339,22 +368,27 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
                 {/* Password Field */}
                 <div className="space-y-2">
-                  <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-semibold text-slate-700"
+                  >
                     Password
                   </label>
                   <div className="relative group">
                     <input
                       id="password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
                       className={cn(
                         "w-full h-12 pl-4 pr-12 text-sm font-medium border-2 rounded-xl transition-all",
                         "placeholder:text-slate-400 placeholder:font-normal",
                         "focus:outline-none focus:ring-4",
                         errors.password
                           ? "border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-500/10"
-                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10",
                       )}
                       placeholder="Enter your password"
                       disabled={isLoading}
@@ -384,7 +418,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   <Checkbox
                     id="rememberMe"
                     checked={formData.rememberMe}
-                    onChange={(checked) => setFormData(prev => ({ ...prev, rememberMe: checked }))}
+                    onChange={(checked) =>
+                      setFormData((prev) => ({ ...prev, rememberMe: checked }))
+                    }
                     label="Remember me"
                     disabled={isLoading}
                   />
@@ -423,14 +459,16 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   <div className="w-full border-t border-slate-200"></div>
                 </div>
                 <div className="relative flex justify-center text-xs">
-                  <span className="px-3 bg-white text-slate-500 font-medium">Need help?</span>
+                  <span className="px-3 bg-white text-slate-500 font-medium">
+                    Need help?
+                  </span>
                 </div>
               </div>
 
               {/* Footer Text */}
               <div className="text-center">
                 <p className="text-sm text-slate-600">
-                  Don't have an account?{' '}
+                  Don't have an account?{" "}
                   <button className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors hover:underline">
                     Contact Administrator
                   </button>

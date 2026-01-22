@@ -141,7 +141,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
         {isSearchFocused && createPortal(
           <div 
             ref={searchDropdownRef}
-            className="fixed bg-white rounded-lg shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 z-[100]"
+            className="fixed bg-white rounded-lg shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 z-50"
             style={{
               top: `${searchContainerRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
               left: `${searchContainerRef.current?.getBoundingClientRect().left! + window.scrollX}px`,

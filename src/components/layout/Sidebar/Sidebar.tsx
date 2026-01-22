@@ -429,7 +429,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
       <>
         {/* Invisible backdrop to detect outside clicks */}
         <div
-          className="fixed inset-0 z-[59]"
+          className="fixed inset-0 z-40"
           onClick={() => setHoverMenu(prev => ({ ...prev, isOpen: false }))}
           aria-hidden="true"
         />
@@ -437,7 +437,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         {/* Menu content */}
         <div
           className={cn(
-            "fixed z-[60] min-w-[240px] max-w-[280px] bg-white rounded-xl border border-slate-200 shadow-xl",
+            "fixed z-50 min-w-[240px] max-w-[280px] bg-white rounded-xl border border-slate-200 shadow-xl",
             hoverMenu.position.showAbove
               ? "animate-in fade-in slide-in-from-bottom-2 duration-200"
               : "animate-in fade-in slide-in-from-left-2 duration-200"

@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
         paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
       }}
     >
-      <div className="max-w-[1920px] mx-auto px-4 md:px-6 lg:px-8">
+      <div className="max-w-[1920px] px-4 md:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-3">
           {/* Left: Copyright */}
           <div className="text-center md:text-left">
