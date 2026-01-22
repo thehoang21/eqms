@@ -36,8 +36,8 @@ export const MainLayout: React.FC = () => {
       />
 
       {/* Main Content Wrapper */}
-      <div className="flex-1 flex flex-col min-w-0 h-full transition-all duration-300 ease-in-out overflow-hidden">
-        {/* Header - Sticky with responsive height */}
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+        {/* Header - Fixed at top */}
         <Header 
           onToggleSidebar={toggleSidebar}
           isSidebarCollapsed={isSidebarCollapsed}
@@ -46,24 +46,24 @@ export const MainLayout: React.FC = () => {
           onLogout={handleLogout}
         />
 
-        {/* Scrollable Content Area */}
+        {/* Scrollable Content Area with Footer */}
         <div 
-          className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar"
+          className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden custom-scrollbar"
           style={{
             paddingLeft: 'var(--safe-area-inset-left)',
             paddingRight: 'var(--safe-area-inset-right)',
           }}
         >
           {/* Main Content: Responsive padding */}
-          <main className="w-full p-4 md:p-6 lg:p-8 pb-6">
+          <main className="flex-1 w-full p-4 md:p-6 lg:p-8 pb-6">
             <div className="w-full max-w-[1920px] mx-auto space-y-4 md:space-y-6">
               <Outlet />
             </div>
           </main>
-        </div>
 
-        {/* Footer - Sticky bottom */}
-        <Footer />
+          {/* Footer - Sticky at bottom of scroll container */}
+          <Footer />
+        </div>
       </div>
     </div>
   );
