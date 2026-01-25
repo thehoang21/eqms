@@ -402,7 +402,7 @@ export const TaskDetailDrawer: React.FC<{
                 <Button
                   onClick={handleStartApproval}
                   size="sm"
-                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
                 >
                   <Eye className="mr-2 h-4 w-4" />
                   Review & Approve

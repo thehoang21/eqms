@@ -251,9 +251,9 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
                       <span className={cn(
                         "w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full shrink-0",
                         task.priority === "Critical" && "bg-red-600",
-                        task.priority === "High" && "bg-orange-600",
-                        task.priority === "Medium" && "bg-amber-600",
-                        task.priority === "Low" && "bg-blue-600"
+                        task.priority === "High" && "bg-orange-500",
+                        task.priority === "Medium" && "bg-amber-500",
+                        task.priority === "Low" && "bg-emerald-500"
                       )} />
                     </div>
 
@@ -282,15 +282,15 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
           <span className="text-xs text-slate-600">Critical</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-orange-600"></span>
+          <span className="w-3 h-3 rounded-full bg-orange-500"></span>
           <span className="text-xs text-slate-600">High</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-amber-600"></span>
+          <span className="w-3 h-3 rounded-full bg-amber-500"></span>
           <span className="text-xs text-slate-600">Medium</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-blue-600"></span>
+          <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
           <span className="text-xs text-slate-600">Low</span>
         </div>
       </div>

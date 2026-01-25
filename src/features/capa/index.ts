@@ -1,2 +1,4 @@
 // Export CAPA components
-// export { CapaView } from './CapaView';
+export { CAPAView } from './CAPAView';
+export type { CAPA, CAPAFilters, CAPAType, CAPASource, CAPAStatus } from './types';
+

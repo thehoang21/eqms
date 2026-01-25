@@ -1,2 +1,4 @@
 // Export Deviation Management components
-// export { DeviationView } from './DeviationView';
+export { DeviationsView } from './DeviationsView';
+export type { Deviation, DeviationFilters, DeviationStatus, DeviationCategory, DeviationSeverity } from './types';
+

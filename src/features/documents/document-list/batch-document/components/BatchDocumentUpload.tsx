@@ -356,7 +356,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                 {/* Header with actions */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 lg:gap-3 mb-3">
                     <div className="flex items-center gap-1.5 lg:gap-2">
-                        <Network className="h-4 w-4 lg:h-5 lg:w-5 text-emerald-600" />
+                        <Network className="h-4 w-4 lg:h-5 lg:w-5 text-cyan-600" />
                         <h4 className="text-sm lg:text-base font-semibold text-slate-900">
                             {(batchParentId || globalParentId) ? "Document Relationship" : "Upload Multiple Documents"}
                         </h4>
@@ -399,7 +399,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                     )}
                     {childDocs.length > 0 && (
                         <div className="flex items-center gap-1.5 lg:gap-2">
-                            <Network className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-blue-600" />
+                            <Network className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-cyan-600" />
                             <span className="text-slate-700">
                                 <span className="font-semibold">{childDocs.length}</span> with parent
                             </span>
@@ -426,8 +426,8 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                         ) : globalParentId && (() => {
                             const parentInfo = getParentInfo(globalParentId);
                             return parentInfo ? (
-                                <div className="flex items-start gap-2 lg:gap-3 p-2.5 lg:p-3 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-lg">
-                                    <FileText className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600 shrink-0 mt-0.5" />
+                                <div className="flex items-start gap-2 lg:gap-3 p-2.5 lg:p-3 bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-300 rounded-lg">
+                                    <FileText className="h-4 w-4 lg:h-5 lg:w-5 text-cyan-600 shrink-0 mt-0.5" />
                                     <div className="flex-1 min-w-0">
                                         <p className="text-xs lg:text-xs font-semibold text-blue-800 uppercase tracking-wide">
                                             Parent Document (External)
@@ -462,10 +462,10 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
 
             {/* Global Parent Assignment Section - Only show when no batch parent is set */}
             {documents.length > 0 && !batchParentId && (
-                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-xl p-3 lg:p-5 shadow-sm">
+                <div className="bg-gradient-to-br from-cyan-50 to-blue-50 border-2 border-cyan-300 rounded-xl p-3 lg:p-5 shadow-sm">
                     <div className="flex items-start gap-2 lg:gap-3 mb-2 lg:mb-4">
-                        <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-                            <Network className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600" />
+                        <div className="w-7 h-7 lg:w-10 lg:h-10 rounded-lg bg-cyan-100 flex items-center justify-center shrink-0">
+                            <Network className="h-4 w-4 lg:h-5 lg:w-5 text-cyan-600" />
                         </div>
                         <div className="flex-1 min-w-0">
                             <h4 className="text-xs lg:text-base font-semibold text-slate-900 mb-1">
@@ -473,7 +473,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                             </h4>
                             <p className="text-xs lg:text-sm text-slate-600 leading-relaxed">
                                 Select existing document as parent. 
-                                <strong className="text-blue-700"> Metadata inherited.</strong>
+                                <strong className="text-cyan-700"> Metadata inherited.</strong>
                             </p>
                         </div>
                     </div>
@@ -739,7 +739,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                                                             onClick={() => handlePreviewDocument(doc.file)}
                                                             variant="outline"
                                                             size="xs"
-                                                            className="flex-1 lg:flex-initial justify-center gap-0 sm:gap-1 lg:gap-1.5 px-1.5 sm:px-3 h-8 sm:h-9 text-blue-600 border-blue-300 hover:bg-blue-50 hover:border-blue-400"
+                                                            className="flex-1 lg:flex-initial justify-center gap-0 sm:gap-1 lg:gap-1.5 px-1.5 sm:px-3 h-8 sm:h-9 text-slate-600 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                                                             title="Preview document"
                                                         >
                                                             <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />

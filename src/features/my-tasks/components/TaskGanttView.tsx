@@ -343,9 +343,9 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
                         <span className={cn(
                           "w-1.5 h-1.5 rounded-full shrink-0 mt-1.5",
                           task.priority === "Critical" && "bg-red-600",
-                          task.priority === "High" && "bg-orange-600",
-                          task.priority === "Medium" && "bg-amber-600",
-                          task.priority === "Low" && "bg-blue-600"
+                          task.priority === "High" && "bg-orange-500",
+                          task.priority === "Medium" && "bg-amber-500",
+                          task.priority === "Low" && "bg-emerald-500"
                         )} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
@@ -543,7 +543,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
                               : task.status === "Completed"
                               ? "bg-gradient-to-r from-emerald-500 to-emerald-600"
                               : task.status === "In-Progress"
-                              ? "bg-gradient-to-r from-blue-500 to-blue-600"
+                              ? "bg-gradient-to-r from-cyan-500 to-cyan-600"
                               : "bg-gradient-to-r from-slate-400 to-slate-500"
                           )}>
                             {/* Progress Bar Overlay */}

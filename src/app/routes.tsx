@@ -48,6 +48,11 @@ const EditUserView = lazy(() => import('@/features/settings').then(m => ({ defau
 const DictionariesView = lazy(() => import('@/features/settings').then(m => ({ default: m.DictionariesView })));
 const RolePermissionView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RolePermissionView })));
 
+// Quality Management
+const TrainingView = lazy(() => import('@/features/training').then(m => ({ default: m.TrainingView })));
+const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
+const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
+
 // Dev Tools
 const UIShowcase = lazy(() => import('@/features/ui-showcase/UIShowcase').then(m => ({ default: m.UIShowcase })));
 
@@ -219,13 +224,13 @@ export const AppRoutes: React.FC = () => {
         </Route>
         
         {/* ===== TRAINING MANAGEMENT ===== */}
-        <Route path="training-management" element={<UnderConstruction />} />
+        <Route path="training-management" element={<Suspense fallback={<LoadingFallback />}><TrainingView /></Suspense>} />
         
         {/* ===== DEVIATION & NCs ===== */}
-        <Route path="deviations-ncs" element={<UnderConstruction />} />
+        <Route path="deviations-ncs" element={<Suspense fallback={<LoadingFallback />}><DeviationsView /></Suspense>} />
         
         {/* ===== CAPA MANAGEMENT ===== */}
-        <Route path="capa-management" element={<UnderConstruction />} />
+        <Route path="capa-management" element={<Suspense fallback={<LoadingFallback />}><CAPAView /></Suspense>} />
         
         {/* ===== CHANGE MANAGEMENT ===== */}
         <Route path="change-management" element={<UnderConstruction />} />
