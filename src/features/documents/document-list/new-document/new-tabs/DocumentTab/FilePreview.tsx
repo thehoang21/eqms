@@ -78,7 +78,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
 
     if (isDocx) {
         return (
-            <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
+            <div className="w-full h-full border rounded-xl flex flex-col">
                 {/* Toolbar */}
                 <div className="flex items-center rounded-t-xl justify-between px-3 md:px-4 py-2.5 md:py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-1.5 md:gap-2">

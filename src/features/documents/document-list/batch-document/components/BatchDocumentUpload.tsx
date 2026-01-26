@@ -50,7 +50,7 @@ interface BatchDocument {
     formData: {
         title: string;
         type: DocumentType;
-        author: string;
+        author: (string | number)[];
         businessUnit: string;
         department: string;
         knowledgeBase: string;
@@ -156,7 +156,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
             formData: {
                 title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
                 type: "Standard Operating Procedure" as DocumentType,
-                author: "",
+                author: [],
                 businessUnit: "",
                 department: "",
                 knowledgeBase: "",

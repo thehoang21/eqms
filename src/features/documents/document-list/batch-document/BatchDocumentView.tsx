@@ -54,10 +54,12 @@ interface BatchDocument {
   fileName: string;
   file: File;
   childType?: ChildDocumentType;
+  uploadProgress?: number; // 0-100
+  isUploading?: boolean;
   formData: {
     title: string;
     type: DocumentType;
-    author: string;
+    author: (string | number)[];
     businessUnit: string;
     department: string;
     knowledgeBase: string;
@@ -97,7 +99,7 @@ export const BatchDocumentView: React.FC = () => {
       return !!(
         formData.title.trim() &&
         String(formData.type || "").trim() &&
-        formData.author.trim() &&
+        Array.isArray(formData.author) && formData.author.length > 0 &&
         formData.businessUnit.trim() &&
         Number.isFinite(formData.periodicReviewCycle) &&
         formData.periodicReviewCycle > 0 &&
@@ -115,7 +117,7 @@ export const BatchDocumentView: React.FC = () => {
     return !!(
       formData.title.trim() &&
       String(formData.type || "").trim() &&
-      formData.author.trim() &&
+      Array.isArray(formData.author) && formData.author.length > 0 &&
       formData.businessUnit.trim() &&
       Number.isFinite(formData.periodicReviewCycle) &&
       formData.periodicReviewCycle > 0 &&
@@ -131,7 +133,7 @@ export const BatchDocumentView: React.FC = () => {
 
     if (!formData.title.trim()) missing.push("Document Name");
     if (!String(formData.type || "").trim()) missing.push("Document Type");
-    if (!formData.author.trim()) missing.push("Author");
+    if (!Array.isArray(formData.author) || formData.author.length === 0) missing.push("Author");
     if (!formData.businessUnit.trim()) missing.push("Business Unit");
     if (
       !Number.isFinite(formData.periodicReviewCycle) ||
@@ -192,7 +194,7 @@ export const BatchDocumentView: React.FC = () => {
         return !(
           formData.title.trim() &&
           String(formData.type || "").trim() &&
-          formData.author.trim() &&
+          Array.isArray(formData.author) && formData.author.length > 0 &&
           formData.businessUnit.trim() &&
           Number.isFinite(formData.periodicReviewCycle) &&
           formData.periodicReviewCycle > 0 &&

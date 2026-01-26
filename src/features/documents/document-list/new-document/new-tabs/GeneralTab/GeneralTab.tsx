@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Calendar, FileText, UserPlus, UserCheck, BookOpen, Copy, LinkIcon } from "lucide-react";
 import { Select } from '@/components/ui/select/Select';
+import { MultiSelect } from '@/components/ui/select/MultiSelect';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { cn } from '@/components/ui/utils';
 import {
@@ -62,7 +63,7 @@ interface SubTab {
 interface FormData {
     title: string;
     type: DocumentType;
-    author: string;
+    author: (string | number)[];
     businessUnit: string;
     department: string;
     knowledgeBase: string;
@@ -165,12 +166,12 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         </div>
                 )}
 
-                {/* Author (Select) */}
+                {/* Authors (MultiSelect) */}
                 <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-slate-700">Author<span className="text-red-500 ml-1">*</span></label>
-                    <Select
+                    <label className="text-sm font-medium text-slate-700">Authors<span className="text-red-500 ml-1">*</span></label>
+                    <MultiSelect
                         value={formData.author}
-                        onChange={(value) => setFormData({ author: value })}
+                        onChange={(values) => setFormData({ author: values })}
                         options={[
                             { label: "Shani Rosenbilt", value: "Shani Rosenbilt" },
                             { label: "John Smith", value: "John Smith" },
@@ -178,6 +179,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                             { label: "Robert Brown", value: "Robert Brown" }
                         ]}
                         enableSearch={true}
+                        placeholder="Select authors..."
+                        maxVisibleTags={2}
                     />
                 </div>
 

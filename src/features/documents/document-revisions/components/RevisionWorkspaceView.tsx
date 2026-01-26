@@ -63,7 +63,7 @@ interface WorkspaceDocument {
     formData: {
         title: string;
         type: DocumentType;
-        author: string;
+        author: (string | number)[];
         businessUnit: string;
         department: string;
         knowledgeBase: string;
@@ -139,7 +139,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                         formData: {
                             title: state.sourceDocument.name,
                             type: (state.sourceDocument.type || "SOP") as DocumentType,
-                            author: "",
+                            author: [],
                             businessUnit: "",
                             department: "",
                             knowledgeBase: "",
@@ -168,7 +168,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                         formData: {
                             title: state.sourceDocument.name,
                             type: (state.sourceDocument.type || "SOP") as DocumentType,
-                            author: "",
+                            author: [],
                             businessUnit: "",
                             department: "",
                             knowledgeBase: "",
@@ -196,7 +196,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                 formData: {
                                     title: doc.name,
                                     type: "SOP" as DocumentType,
-                                    author: "",
+                                    author: [],
                                     businessUnit: "",
                                     department: "",
                                     knowledgeBase: "",

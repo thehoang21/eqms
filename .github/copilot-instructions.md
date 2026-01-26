@@ -20,32 +20,38 @@ Bạn là một chuyên gia Senior React Developer (ReactJS, Tailwind CSS, shadc
    - Portal rendering (z-index: 9999)
    - Props: `label`, `value`, `onChange`, `options`, `placeholder`, `enableSearch`
 
-3. **Checkbox** (`components/ui/checkbox/Checkbox.tsx`)
+3. **MultiSelect** (`components/ui/select/MultiSelect.tsx`)
+   - Multiple selection dropdown với search functionality
+   - Display selected items as tags với remove button
+   - Portal rendering (z-index: 9999)
+   - Props: `label`, `value` (array), `onChange`, `options`, `placeholder`, `enableSearch`, `maxVisibleTags`
+
+4. **Checkbox** (`components/ui/checkbox/Checkbox.tsx`)
    - Props: `checked`, `onChange`, `id`, `label`, `disabled`
 
-4. **DateTimePicker** (`components/ui/datetime-picker/DateTimePicker.tsx`)
+5. **DateTimePicker** (`components/ui/datetime-picker/DateTimePicker.tsx`)
    - Date/time selection với calendar interface
    - Props: `label`, `value`, `onChange`, `placeholder`
 
-5. **StatusBadge** (`components/ui/statusbadge/StatusBadge.tsx`)
+6. **StatusBadge** (`components/ui/statusbadge/StatusBadge.tsx`)
    - Hiển thị status/state với colors chuẩn
    - Tự động map status → color theme
 
-6. **AlertModal** (`components/ui/modal/AlertModal.tsx`)
+7. **AlertModal** (`components/ui/modal/AlertModal.tsx`)
    - Modal types: `success`, `error`, `warning`, `confirm`, `info`
    - Props: `isOpen`, `onClose`, `onConfirm`, `type`, `title`, `message`, `isLoading`
 
-7. **ResponsiveCard** (`components/ui/card/ResponsiveCard.tsx`)
+8. **ResponsiveCard** (`components/ui/card/ResponsiveCard.tsx`)
    - Card container với responsive padding
    - Props: `title`, `subtitle`, `children`, `className`
 
-8. **Popover** (`components/ui/popover/Popover.tsx`)
+9. **Popover** (`components/ui/popover/Popover.tsx`)
    - Tooltip/popover với positioning
 
-9. **ResponsiveForm** (`components/ui/form/ResponsiveForm.tsx`)
+10. **ResponsiveForm** (`components/ui/form/ResponsiveForm.tsx`)
    - Form layout với responsive grid
 
-10. **ResponsiveTable** (`components/ui/table/ResponsiveTable.tsx`)
+11. **ResponsiveTable** (`components/ui/table/ResponsiveTable.tsx`)
     - ⚠️ CHỈ dùng cho simple tables, ưu tiên native HTML table cho complex tables
 
 ### 0.2 Quy trình khi cần UI component
@@ -108,6 +114,23 @@ import { Select } from "@/components/ui/select/Select";
     { label: "Draft", value: "draft" },
     { label: "Active", value: "active" }
   ]}
+/>
+```
+
+✅ **ĐÚNG - Dùng MultiSelect cho multiple values:**
+```tsx
+import { MultiSelect } from "@/components/ui/select/MultiSelect";
+
+<MultiSelect
+  label="Authors"
+  value={authors}
+  onChange={setAuthors}
+  options={[
+    { label: "John Doe", value: "john" },
+    { label: "Jane Smith", value: "jane" }
+  ]}
+  placeholder="Select authors..."
+  maxVisibleTags={2}
 />
 ```
 

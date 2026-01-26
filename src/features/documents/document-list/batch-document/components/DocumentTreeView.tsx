@@ -13,7 +13,7 @@ interface BatchDocument {
     formData: {
         title: string;
         type: DocumentType;
-        author: string;
+        author: (string | number)[];
         businessUnit: string;
         department: string;
         knowledgeBase: string;
@@ -83,7 +83,7 @@ export const DocumentTreeView: React.FC<DocumentTreeViewProps> = ({
         const isValid = !!(
             formData.title.trim() &&
             String(formData.type || "").trim() &&
-            formData.author.trim() &&
+            Array.isArray(formData.author) && formData.author.length > 0 &&
             formData.businessUnit.trim() &&
             Number.isFinite(formData.periodicReviewCycle) && formData.periodicReviewCycle > 0 &&
             Number.isFinite(formData.periodicReviewNotification) && formData.periodicReviewNotification > 0

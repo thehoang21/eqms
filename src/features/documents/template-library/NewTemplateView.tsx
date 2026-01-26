@@ -52,7 +52,7 @@ export const NewTemplateView: React.FC = () => {
     const [formData, setFormData] = useState({
         title: "",
         type: "SOP" as DocumentType,
-        author: "",
+        author: [] as (string | number)[],
         businessUnit: "",
         department: "",
         knowledgeBase: "",
@@ -68,7 +68,7 @@ export const NewTemplateView: React.FC = () => {
         const missing: string[] = [];
         if (!formData.title.trim()) missing.push("Template Name");
         if (!String(formData.type || "").trim()) missing.push("Document Type");
-        if (!formData.author.trim()) missing.push("Author");
+        if (!formData.author || formData.author.length === 0) missing.push("Authors");
         if (!formData.businessUnit.trim()) missing.push("Business Unit");
         if (!Number.isFinite(formData.periodicReviewCycle) || formData.periodicReviewCycle <= 0) {
             missing.push("Periodic Review Cycle (Months)");
