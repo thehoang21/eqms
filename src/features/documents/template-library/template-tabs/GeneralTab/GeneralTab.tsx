@@ -9,7 +9,6 @@ import {
     DocumentRevisionsTab,
     ReviewersTab,
     ApproversTab,
-    DocumentKnowledgesTab,
     ControlledCopiesTab,
     RelatedDocumentsTab,
     CorrelatedDocumentsTab
@@ -18,7 +17,7 @@ import type { Revision } from './subtabs/types';
 import { DocumentType, DOCUMENT_TYPES } from "@/types/documentTypes";
 import { DocumentRelationships, ParentDocument, RelatedDocument as RelationshipDocument } from './subtabs';
 
-type SubTabId = "revisions" | "reviewers" | "approvers" | "knowledges" | "copies" | "related" | "correlated";
+type SubTabId = "revisions" | "reviewers" | "approvers" | "copies" | "related" | "correlated";
 
 type ReviewFlowType = 'sequential' | 'parallel';
 
@@ -120,7 +119,6 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
         { id: "revisions", label: "Document Revisions" },
         { id: "reviewers", label: "Reviewers" },
         { id: "approvers", label: "Approvers" },
-        { id: "knowledges", label: "Document Knowledges" },
         { id: "copies", label: "Controlled Copies" },
         { id: "related", label: "Related Documents" },
         { id: "correlated", label: "Correlated Documents" }
@@ -363,7 +361,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 </div>
 
                 {/* Add Reviewer, Approver, Related & Correlated Documents Buttons */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <Button
                         onClick={() => {
                             setActiveSubtab("reviewers");
@@ -469,7 +467,6 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         isModalOpen={isApproverModalOpen}
                         onModalClose={() => setIsApproverModalOpen(false)}
                     />}
-                    {activeSubtab === "knowledges" && <DocumentKnowledgesTab />}
                     {activeSubtab === "copies" && <ControlledCopiesTab />}
                     {activeSubtab === "related" && <RelatedDocumentsTab 
                         relatedDocuments={relationshipDocs}
