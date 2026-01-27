@@ -1,9 +1,22 @@
-export { GeneralTab } from './GeneralTab/GeneralTab';
+/**
+ * New Document Tabs
+ * 
+ * Tab components for new document creation workflow.
+ * Specific tabs are defined here, shared tabs are re-exported from shared/tabs.
+ */
+
+// Document-specific tabs (kept separate due to different functionality)
 export { DocumentTab, type UploadedFile } from './DocumentTab/DocumentTab';
 export { FilePreview } from './DocumentTab/FilePreview';
-export { DocumentRelationships, type ParentDocument, type RelatedDocument } from './GeneralTab/subtabs/components/DocumentRelationships';
 
-// Re-export shared tabs
-export { TrainingTab } from '@/features/documents/shared/tabs/TrainingTab/TrainingTab';
-export { SignaturesTab } from '@/features/documents/shared/tabs/SignaturesTab/SignaturesTab';
-export { AuditTab } from '@/features/documents/shared/tabs/AuditTab/AuditTab';
+// Re-export shared tabs for convenience
+export { 
+  GeneralTab,
+  TrainingTab, 
+  SignaturesTab, 
+  AuditTab,
+  // GeneralTab subtabs components
+  DocumentRelationships,
+  type ParentDocument,
+  type RelatedDocument,
+} from '@/features/documents/shared/tabs';

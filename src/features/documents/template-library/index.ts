@@ -1,5 +1,15 @@
+/**
+ * Template Library Module
+ * 
+ * Contains views and components for document template management.
+ */
+
+// Views
 export { TemplateLibraryView } from './TemplateLibraryView';
 export { NewTemplateView } from './NewTemplateView';
 
-// Export template tabs
+// Components
+export { TemplateFilters } from './TemplateFilters';
+
+// Tabs
 export * from './template-tabs';

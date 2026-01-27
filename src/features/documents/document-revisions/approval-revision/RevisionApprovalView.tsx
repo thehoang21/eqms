@@ -13,13 +13,10 @@ import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { useToast } from '@/components/ui/toast';
-import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "../../shared/layouts/DocumentWorkflowLayout";
+import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
-import { GeneralTab } from "../revision-tabs/GeneralTab/GeneralTab";
+import { GeneralTab, TrainingTab, SignaturesTab, AuditTab, type GeneralTabFormData } from "@/features/documents/shared/tabs";
 import { DocumentType as DocType } from "@/types/documentTypes";
-import { TrainingTab } from "@/features/documents/shared/tabs/TrainingTab/TrainingTab";
-import { SignaturesTab } from "@/features/documents/shared/tabs/SignaturesTab/SignaturesTab";
-import { AuditTab } from "@/features/documents/shared/tabs/AuditTab/AuditTab";
 import { IconMessage2 } from "@tabler/icons-react";
 
 // --- Types ---
@@ -84,20 +81,8 @@ interface RevisionApprovalViewProps {
     currentUserId: string;
 }
 
-interface FormData {
-    title: string;
-    type: DocType;
-    author: string;
-    businessUnit: string;
-    department: string;
-    knowledgeBase: string;
-    subType: string;
-    periodicReviewCycle: number;
-    periodicReviewNotification: number;
-    language: string;
-    description: string;
-    isTemplate: boolean;
-}
+// Use shared FormData type from GeneralTab
+type FormData = GeneralTabFormData;
 
 // --- Helper Functions ---
 const formatDate = (dateString: string) => {
@@ -184,7 +169,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const [formData, setFormData] = useState<FormData>({
         title: revision.title,
         type: revision.type as DocType,
-        author: revision.author,
+        author: [revision.author], // Convert string to array for GeneralTabFormData
         businessUnit: revision.businessUnit,
         department: revision.department,
         knowledgeBase: revision.knowledgeBase,

@@ -62,7 +62,8 @@ interface SubTab {
     label: string;
 }
 
-interface FormData {
+// Export FormData interface to be reused by parent components
+export interface GeneralTabFormData {
     title: string;
     type: DocumentType;
     author: (string | number)[];
@@ -76,6 +77,9 @@ interface FormData {
     description: string;
     isTemplate: boolean;
 }
+
+// Alias for backward compatibility
+type FormData = GeneralTabFormData;
 
 interface GeneralTabProps {
     formData: FormData;

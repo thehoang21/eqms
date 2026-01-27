@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { Task } from "../types";
+import type { Task } from "../types";
 import {
   getModuleBadgeStyle,
   getModuleIcon,

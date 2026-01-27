@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Calendar, CheckCircle2 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { Task } from "../types";
+import type { Task } from "../types";
 import {
   getModuleBadgeStyle,
   getModuleIcon,
@@ -10,40 +10,11 @@ import {
   daysUntil,
   getStatusBadgeStyle,
   getPriorityColor,
+  calculateDaysLeft,
+  formatDate,
+  getPriorityBadgeStyle,
 } from "../utils";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
-
-// Helper functions
-const calculateDaysLeft = (dueDate: string): number => {
-  const due = new Date(dueDate);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  due.setHours(0, 0, 0, 0);
-  const diffTime = due.getTime() - today.getTime();
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
-
-const formatDate = (dateStr: string): string => {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-};
-
-const getPriorityBadgeStyle = (priority: string): string => {
-  switch (priority) {
-    case "High":
-      return "bg-red-50 text-red-700 border-red-200";
-    case "Medium":
-      return "bg-amber-50 text-amber-700 border-amber-200";
-    case "Low":
-      return "bg-slate-50 text-slate-700 border-slate-200";
-    default:
-      return "bg-slate-50 text-slate-700 border-slate-200";
-  }
-};
 
 // Add diagonal stripes pattern for completed tasks
 const diagonalStripesStyle = `

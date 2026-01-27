@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
 import { cn } from '@/components/ui/utils';
-import { Task } from "../types";
+import type { Task } from "../types";
 import {
   getModuleBadgeStyle,
   getModuleIcon,

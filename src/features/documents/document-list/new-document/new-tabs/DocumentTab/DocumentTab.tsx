@@ -14,6 +14,7 @@ import fileIcon from "@/assets/images/image-file/file.png";
 import jpgIcon from "@/assets/images/image-file/jpg.png";
 import jpegIcon from "@/assets/images/image-file/jpeg.png";
 import pngIcon from "@/assets/images/image-file/png.png";
+import type { ParentDocument, RelatedDocument } from "@/features/documents/shared/tabs/GeneralTab/subtabs/types";
 
 export interface UploadedFile {
   id: string;
@@ -31,6 +32,13 @@ interface DocumentTabProps {
   selectedFile: File | null;
   onSelectFile: (file: File | null) => void;
   maxFiles?: number; // Maximum number of files allowed (undefined = unlimited)
+  // Optional extended props for document relationships
+  parentDocument?: ParentDocument | null;
+  onParentDocumentChange?: (doc: ParentDocument | null) => void;
+  relatedDocuments?: RelatedDocument[];
+  onRelatedDocumentsChange?: (docs: RelatedDocument[]) => void;
+  documentType?: string;
+  onSuggestedCodeChange?: (code: string) => void;
 }
 
 export const DocumentTab: React.FC<DocumentTabProps> = ({
@@ -39,6 +47,13 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
   selectedFile,
   onSelectFile,
   maxFiles,
+  // Extended props (unused in this component but accepted for compatibility)
+  parentDocument: _parentDocument,
+  onParentDocumentChange: _onParentDocumentChange,
+  relatedDocuments: _relatedDocuments,
+  onRelatedDocumentsChange: _onRelatedDocumentsChange,
+  documentType: _documentType,
+  onSuggestedCodeChange: _onSuggestedCodeChange,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

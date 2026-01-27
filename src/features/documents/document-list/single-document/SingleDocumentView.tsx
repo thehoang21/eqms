@@ -18,9 +18,7 @@ import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
-import { TrainingTab } from "@/features/documents/shared/tabs/TrainingTab/TrainingTab";
-import { SignaturesTab } from "@/features/documents/shared/tabs/SignaturesTab/SignaturesTab";
-import { AuditTab } from "@/features/documents/shared/tabs/AuditTab/AuditTab";
+import { TrainingTab, SignaturesTab, AuditTab } from "@/features/documents/shared/tabs";
 import {
     GeneralTab,
     DocumentTab,

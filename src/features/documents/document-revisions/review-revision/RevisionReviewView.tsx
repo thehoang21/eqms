@@ -9,7 +9,6 @@ import {
   XCircle,
   ChevronDown,
   Users,
-  Clock,
 } from "lucide-react";
 import { IconListNumbers, IconMessage2 } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
@@ -321,18 +320,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
       {activeTab === "document" && (
         <div className="space-y-6">
           {/* PDF Preview Section */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-              <span className="font-medium text-slate-700">
-                Preview: {document.title} (v{document.version})
-              </span>
-              {document.previousVersion && (
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Clock className="w-4 h-4" />
-                  Compare with v{document.previousVersion}
-                </Button>
-              )}
-            </div>
+          <div className="overflow-hidden">
             <DocumentTab />
           </div>
 

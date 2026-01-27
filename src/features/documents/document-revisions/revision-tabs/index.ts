@@ -1,8 +1,19 @@
-export { GeneralTab } from './GeneralTab/GeneralTab';
+/**
+ * Revision Tabs
+ * 
+ * Tab components for document revision workflow.
+ * DocumentTab has view/edit mode specific to revisions.
+ * GeneralTab and other shared tabs are re-exported from shared/tabs.
+ */
+
+// Revision-specific DocumentTab (has view mode for revisions)
 export { DocumentTab, type UploadedFile } from './DocumentTab/DocumentTab';
 export { FilePreview } from './DocumentTab/FilePreview';
 
-// Re-export shared tabs
-export { TrainingTab } from '@/features/documents/shared/tabs/TrainingTab/TrainingTab';
-export { SignaturesTab } from '@/features/documents/shared/tabs/SignaturesTab/SignaturesTab';
-export { AuditTab } from '@/features/documents/shared/tabs/AuditTab/AuditTab';
+// Re-export shared tabs for convenience
+export { 
+  GeneralTab,
+  TrainingTab, 
+  SignaturesTab, 
+  AuditTab 
+} from '@/features/documents/shared/tabs';

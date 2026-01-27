@@ -17,7 +17,7 @@ import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
-import { useBatchNavigation, BatchDocument } from "@/features/documents/document-list/new-document/useBatchNavigation";
+import { useBatchNavigation, BatchDocument } from "@/features/documents/hooks";
 import {
     GeneralInformationTab,
     TrainingInformationTab,

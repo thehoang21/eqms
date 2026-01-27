@@ -1,3 +1,9 @@
+/**
+ * My Tasks - Type Definitions
+ *
+ * Centralized types for the My Tasks feature.
+ */
+
 export type Priority = "Critical" | "High" | "Medium" | "Low";
 export type TaskStatus = "Pending" | "In-Progress" | "Reviewing" | "Completed";
 export type ModuleType = "Document" | "Deviation" | "CAPA" | "Training";

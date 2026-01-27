@@ -26,11 +26,12 @@ import {
     SignaturesTab,
     AuditTab,
     type UploadedFile,
+    type GeneralTabFormData,
 } from "@/features/documents/template-library/template-tabs";
 import { IconSmartHome } from "@tabler/icons-react";
+import { DocumentType } from "@/types/documentTypes";
 
 // --- Types ---
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
 type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
@@ -49,7 +50,7 @@ export const NewTemplateView: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     // Form state - isTemplate is ALWAYS true for templates
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<GeneralTabFormData>({
         title: "",
         type: "SOP" as DocumentType,
         author: [] as (string | number)[],

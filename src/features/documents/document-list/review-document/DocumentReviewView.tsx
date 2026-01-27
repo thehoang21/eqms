@@ -19,7 +19,7 @@ import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import {
   DocumentWorkflowLayout,
   DEFAULT_WORKFLOW_TABS,
-} from "../../shared/layouts/DocumentWorkflowLayout";
+} from "@/features/documents/shared/layouts";
 import {
   GeneralInformationTab,
   TrainingInformationTab,

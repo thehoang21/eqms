@@ -11,11 +11,8 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { Task, ViewMode } from "./types";
-import { TaskTable } from "./components/TaskTable";
-import { TaskCalendarView } from "./components/TaskCalendarView";
-import { TaskGanttView } from "./components/TaskGanttView";
-import { TaskDetailDrawer } from "./components/TaskDetailDrawer";
+import type { Task, ViewMode } from "./types";
+import { TaskTable, TaskCalendarView, TaskGanttView, TaskDetailDrawer } from "./components";
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 
 // --- Mock Data ---

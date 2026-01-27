@@ -154,7 +154,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
       return (
         <div
           className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col"
-          style={{ height: "calc(100vh - 300px)" }}
+          style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}
         >
           {/* Toolbar */}
           <div className="flex items-center justify-between px-3 md:px-4 py-2.5 md:py-3 bg-slate-50 border-b border-slate-200">
@@ -212,7 +212,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 src={imagePreviewUrl}
                 alt={mockFile?.name || "Preview"}
                 className="max-w-full h-auto shadow-lg"
-                style={{ maxHeight: 'calc(100vh - 400px)' }}
+                style={{ maxHeight: 'calc(100vh - 280px)' }}
               />
             </div>
           </div>
@@ -224,7 +224,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
       return (
         <div
           className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col"
-          style={{ height: "calc(100vh - 300px)" }}
+          style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}
         >
           {/* Toolbar */}
           <div className="flex items-center justify-between px-3 md:px-4 py-2.5 md:py-3 bg-slate-50 border-b border-slate-200">
@@ -294,7 +294,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
       return (
         <div
           className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col"
-          style={{ height: "calc(100vh - 300px)" }}
+          style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}
         >
           <div className="flex items-center justify-between px-3 md:px-4 py-2.5 md:py-3 bg-slate-50 border-b border-slate-200">
             <div className="flex items-center gap-1.5 md:gap-2">
@@ -321,7 +321,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     return (
       <div
         className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex items-center justify-center"
-        style={{ height: "calc(100vh - 300px)" }}
+        style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}
       >
         <div className="text-center text-slate-400">
           <FileText className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-2 md:mb-3 text-slate-300" />
@@ -639,7 +639,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
             return (
               <div
                 className="w-full h-full flex items-center justify-center text-slate-400 text-xs md:text-sm"
-                style={{ height: "calc(100vh - 300px)" }}
+                style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}
               >
                 {selected && selected.status === "uploading" && "Uploading..."}
                 {selected &&

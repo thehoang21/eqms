@@ -151,7 +151,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
     }
 
     return (
-        <div className="w-full" style={{ height: "calc(100vh - 300px)" }}>
+        <div className="w-full h-full overflow-hidden">
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                 {fileUrl && (
                     <Viewer

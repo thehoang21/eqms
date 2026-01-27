@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
 import { ChevronRight, ChevronDown, AlertCircle, ZoomIn, ZoomOut, BarChart3 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
-import { Task } from "../types";
+import type { Task } from "../types";
 import {
   getModuleBadgeStyle,
   getModuleIcon,

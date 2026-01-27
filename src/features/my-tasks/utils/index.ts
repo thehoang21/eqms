@@ -1,3 +1,9 @@
+/**
+ * My Tasks - Utility Functions
+ *
+ * Helper functions for task display, styling, and calculations.
+ */
+
 import React from "react";
 import {
   FileText,
@@ -5,9 +11,12 @@ import {
   Shield,
   GraduationCap,
 } from "lucide-react";
-import { Priority, TaskStatus, ModuleType } from "./types";
+import type { Priority, TaskStatus, ModuleType } from "../types";
 
-export const getPriorityColor = (p: Priority) => {
+/**
+ * Get priority badge color classes
+ */
+export const getPriorityColor = (p: Priority): string => {
   switch (p) {
     case "Critical":
       return "bg-rose-100 text-rose-800 border-rose-200";
@@ -22,7 +31,10 @@ export const getPriorityColor = (p: Priority) => {
   }
 };
 
-export const getStatusBadgeStyle = (s: TaskStatus) => {
+/**
+ * Get status badge style classes
+ */
+export const getStatusBadgeStyle = (s: TaskStatus | "Overdue"): string => {
   switch (s) {
     case "Pending":
       return "bg-slate-100 text-slate-600 border-slate-200";
@@ -39,6 +51,9 @@ export const getStatusBadgeStyle = (s: TaskStatus) => {
   }
 };
 
+/**
+ * Get module icon component
+ */
 export const getModuleIcon = (m: ModuleType) => {
   switch (m) {
     case "Document":
@@ -52,7 +67,10 @@ export const getModuleIcon = (m: ModuleType) => {
   }
 };
 
-export const getModuleBadgeStyle = (m: ModuleType) => {
+/**
+ * Get module badge style classes
+ */
+export const getModuleBadgeStyle = (m: ModuleType): string => {
   switch (m) {
     case "Document":
       return "bg-sky-50 text-sky-700 border-sky-200";
@@ -65,12 +83,18 @@ export const getModuleBadgeStyle = (m: ModuleType) => {
   }
 };
 
-export const isOverdue = (dateString: string) => {
+/**
+ * Check if a date is overdue (before today)
+ */
+export const isOverdue = (dateString: string): boolean => {
   const today = new Date().toISOString().split("T")[0];
   return dateString < today;
 };
 
-export const daysUntil = (dateString: string) => {
+/**
+ * Calculate days until a date
+ */
+export const daysUntil = (dateString: string): number => {
   const due = new Date(dateString);
   const today = new Date();
   // Normalize to midnight to avoid partial-day rounding issues
@@ -85,4 +109,46 @@ export const daysUntil = (dateString: string) => {
     today.getDate()
   ).getTime();
   return Math.ceil((dueMid - todayMid) / (1000 * 60 * 60 * 24));
+};
+
+/**
+ * Calculate days left until due date
+ */
+export const calculateDaysLeft = (dueDate: string): number => {
+  const due = new Date(dueDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+  const diffTime = due.getTime() - today.getTime();
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
+
+/**
+ * Format date to readable string
+ */
+export const formatDate = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date);
+};
+
+/**
+ * Get priority badge style (alternative)
+ */
+export const getPriorityBadgeStyle = (priority: string): string => {
+  switch (priority) {
+    case "Critical":
+      return "bg-rose-100 text-rose-800 border-rose-200";
+    case "High":
+      return "bg-red-50 text-red-700 border-red-200";
+    case "Medium":
+      return "bg-amber-50 text-amber-700 border-amber-200";
+    case "Low":
+      return "bg-slate-50 text-slate-700 border-slate-200";
+    default:
+      return "bg-slate-50 text-slate-700 border-slate-200";
+  }
 };

@@ -111,7 +111,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     // Image viewer
     if (isImage && imagePreviewUrl) {
         return (
-            <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
+            <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}>
                 {/* Toolbar */}
                 <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
@@ -164,7 +164,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                             src={imagePreviewUrl}
                             alt={fileToRender?.name || "Preview"}
                             className="max-w-full h-auto shadow-lg"
-                            style={{ maxHeight: 'calc(100vh - 400px)' }}
+                            style={{ maxHeight: 'calc(100vh - 280px)' }}
                         />
                     </div>
                 </div>
@@ -175,7 +175,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     // DOCX viewer
     if (isDocx) {
         return (
-            <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
+            <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}>
                 {/* Toolbar */}
                 <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
@@ -241,7 +241,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     if (isPdf && fileToRender) {
         const pdfUrl = URL.createObjectURL(fileToRender);
         return (
-            <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 300px)" }}>
+            <div className="w-full h-full border rounded-xl flex flex-col" style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}>
                 <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-slate-600" />
@@ -263,7 +263,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
     // No file or unsupported type
     return (
-        <div className="w-full border rounded-xl" style={{ height: "calc(100vh - 300px)" }}>
+        <div className="w-full border rounded-xl" style={{ height: "calc(100vh - 180px)", minHeight: "600px" }}>
             <div className="flex flex-col items-center justify-center h-full text-slate-400">
                 <FileText className="h-12 w-12 mb-3 text-slate-300" />
                 <p className="text-sm">No document to preview</p>
