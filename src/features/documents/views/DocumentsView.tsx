@@ -533,18 +533,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         });
         break;
 
-      case "Approved":
-        items.push({
-          icon: IconFileDownload,
-          label: "Download PDF",
-          onClick: () => {
-            console.log("Download PDF:", document.id);
-            onClose();
-          },
-          color: "text-slate-500"
-        });
-        break;
-
       case "Effective":
         items.push(
           {
@@ -559,15 +547,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             label: "Request Controlled Copy",
             onClick: () => {
               onPrintControlledCopy?.(document);
-              onClose();
-            },
-            color: "text-slate-500"
-          },
-          {
-            icon: Download,
-            label: "Download PDF",
-            onClick: () => {
-              console.log("Download PDF:", document.id);
               onClose();
             },
             color: "text-slate-500"

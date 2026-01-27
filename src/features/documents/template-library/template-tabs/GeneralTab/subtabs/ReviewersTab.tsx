@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Users, Plus, Trash2, Search, User, X, ShieldCheck, Check, GripVertical, ArrowRight } from "lucide-react";
 import { createPortal } from "react-dom";
 import { IconListNumbers } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button/Button";
 
 interface Reviewer {
     id: string;
@@ -81,13 +82,15 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
             />
             <div className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                    <h3 className="text-lg font-semibold text-slate-900">Select Reviewers</h3>
-                    <button 
+                    <h3 className="text-lg font-semibold text-slate-900">Setup Reviewers</h3>
+                    <Button 
                         onClick={onClose}
-                        className="p-2 text-slate-400 hover:text-slate-500 hover:bg-slate-100 rounded-full transition-colors"
+                        variant="ghost"
+                        size="icon-sm"
+                        className="rounded-full"
                     >
                         <X className="h-5 w-5" />
-                    </button>
+                    </Button>
                 </div>
                 
                 <div className="p-4 border-b border-slate-100 bg-slate-50/50">
@@ -104,10 +107,10 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-2">
+                <div className="flex-1 overflow-y-auto max-h-[290px] px-4 py-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-slate-400">
                     {filteredUsers.length > 0 ? (
-                        <div className="space-y-1">
-                            {filteredUsers.map((user) => {
+                        <div className="space-y-0 divide-y divide-slate-100">
+                            {filteredUsers.map((user, index) => {
                                 const isAlreadyAdded = existingIds.includes(user.id);
                                 const isSelected = selectedIds.includes(user.id);
                                 
@@ -116,28 +119,28 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                                         key={user.id}
                                         onClick={() => !isAlreadyAdded && handleToggleUser(user.id)}
                                         disabled={isAlreadyAdded}
-                                        className={`w-full flex items-center gap-4 p-3 rounded-lg transition-all group text-left border ${
+                                        className={`w-full flex items-center gap-3 py-3 transition-all group text-left ${
                                             isSelected 
-                                                ? "bg-emerald-50 border-emerald-200" 
+                                                ? "bg-emerald-50/80" 
                                                 : isAlreadyAdded
-                                                    ? "bg-slate-50 border-transparent opacity-60 cursor-not-allowed"
-                                                    : "bg-white border-transparent hover:bg-slate-50"
+                                                    ? "bg-slate-50 opacity-60 cursor-not-allowed"
+                                                    : "hover:bg-slate-50/80"
                                         }`}
                                     >
-                                        <div className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0 transition-colors ${
-                                            isSelected ? "bg-emerald-600 text-white" : "bg-emerald-100 text-emerald-600"
+                                        <div className={`w-8 flex items-center justify-center text-sm font-semibold shrink-0 transition-colors ${
+                                            isSelected ? "text-emerald-600" : "text-slate-400"
                                         }`}>
-                                            {isSelected ? <Check className="h-5 w-5" /> : user.name.charAt(0)}
+                                            {isSelected ? <Check className="h-4 w-4" /> : (index + 1)}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-medium text-slate-900 truncate">
+                                            <div className="font-medium text-slate-900 truncate text-sm">
                                                 {user.name}
                                                 {isAlreadyAdded && <span className="ml-2 text-xs text-slate-500 font-normal">(Already Added)</span>}
                                             </div>
                                             <div className="text-xs text-slate-500 truncate">{user.role} • {user.department}</div>
                                         </div>
                                         {isSelected && (
-                                            <div className="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-md">
+                                            <div className="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-md shrink-0">
                                                 Selected
                                             </div>
                                         )}
@@ -154,19 +157,20 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                 </div>
 
                 <div className="p-4 border-t border-slate-100 bg-slate-50 rounded-b-xl flex justify-end gap-3">
-                    <button
+                    <Button
                         onClick={onClose}
-                        className="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 rounded-lg transition-colors"
+                        variant="outline"
+                        size="sm"
                     >
                         Cancel
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={handleSave}
                         disabled={selectedIds.length === 0}
-                        className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors shadow-sm"
+                        size="sm"
                     >
-                        Add Selected ({selectedIds.length})
-                    </button>
+                        Update Reviewers ({selectedIds.length})
+                    </Button>
                 </div>
             </div>
         </div>,
@@ -179,10 +183,30 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
     reviewers,
     onReviewersChange,
     reviewFlowType,
-    onReviewFlowTypeChange
+    onReviewFlowTypeChange,
+    isModalOpen: externalModalOpen,
+    onModalClose: externalModalClose
 }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [internalModalOpen, setInternalModalOpen] = useState(false);
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+    // Use external modal state if provided, otherwise use internal
+    const isModalOpen = externalModalOpen !== undefined ? externalModalOpen : internalModalOpen;
+    const handleModalClose = () => {
+        if (externalModalClose) {
+            externalModalClose();
+        } else {
+            setInternalModalOpen(false);
+        }
+    };
+    const handleModalOpen = () => {
+        if (externalModalClose) {
+            // When using external control, we can't directly open the modal
+            // The parent component should handle opening via button click
+        } else {
+            setInternalModalOpen(true);
+        }
+    };
 
     useEffect(() => {
         onCountChange?.(reviewers.length);
@@ -244,51 +268,33 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h3 className="text-sm font-semibold text-slate-900">Document Reviewers</h3>
-                    <p className="text-xs text-slate-500 mt-0.5">Select reviewers for this document</p>
-                </div>
-                <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium shadow-sm"
-                >
-                    <Plus className="h-4 w-4" />
-                    Add Reviewer
-                </button>
-            </div>
-
             {reviewers.length > 0 && (
                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
                     <div>
                         <label className="text-sm font-medium text-slate-700 block mb-2">Review Flow Type</label>
                         <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
-                            <button
+                            <Button
                                 onClick={() => onReviewFlowTypeChange('parallel')}
-                                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
-                                    reviewFlowType === 'parallel'
-                                        ? 'bg-emerald-600 text-white shadow-sm'
-                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                                }`}
+                                variant={reviewFlowType === 'parallel' ? 'default' : 'ghost'}
+                                size="sm"
+                                className="rounded-md"
                             >
                                 <div className="flex items-center gap-2">
                                     <Users className="h-4 w-4" />
                                     <span>Parallel</span>
                                 </div>
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => onReviewFlowTypeChange('sequential')}
-                                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
-                                    reviewFlowType === 'sequential'
-                                        ? 'bg-emerald-600 text-white shadow-sm'
-                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                                }`}
+                                variant={reviewFlowType === 'sequential' ? 'default' : 'ghost'}
+                                size="sm"
+                                className="rounded-md"
                             >
                                 <div className="flex items-center gap-2">
                                     <IconListNumbers className="h-4 w-4" />
                                     <span>Sequential</span>
                                 </div>
-                            </button>
+                            </Button>
                         </div>
                     </div>
                     
@@ -361,7 +367,7 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
                 </div>
             ) : (
                 <div 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleModalOpen}
                     className="group relative flex flex-col items-center justify-center py-12 px-4 bg-slate-50 hover:bg-slate-50/80 border-2 border-dashed border-slate-200 hover:border-emerald-500/50 rounded-xl transition-all cursor-pointer"
                 >
                     <div className="h-12 w-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-200">
@@ -376,7 +382,7 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
 
             <UserSelectionModal 
                 isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
+                onClose={handleModalClose}
                 onConfirm={handleAddReviewers}
                 existingIds={reviewers.map(r => r.id)}
             />

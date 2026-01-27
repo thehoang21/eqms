@@ -217,11 +217,6 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
 
     return (
         <div className="space-y-4">
-            <div>
-                <h3 className="text-sm font-semibold text-slate-900">Document Approver</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Select the final approver for this document</p>
-            </div>
-
             {approvers.length > 0 ? (
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                     <div className="p-4 flex items-center gap-4">

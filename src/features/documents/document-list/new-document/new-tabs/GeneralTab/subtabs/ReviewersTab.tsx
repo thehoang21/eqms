@@ -268,11 +268,6 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
 
     return (
         <div className="space-y-4">
-            <div>
-                <h3 className="text-sm font-semibold text-slate-900">Document Reviewers</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Select reviewers for this document</p>
-            </div>
-
             {reviewers.length > 0 && (
                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
                     <div>

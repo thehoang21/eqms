@@ -243,11 +243,15 @@ export const RevisionWorkspaceView: React.FC = () => {
         if (!currentDocument) return false;
         const formData = currentDocument.formData;
 
+        const hasAuthor = Array.isArray(formData.author)
+            ? formData.author.length > 0
+            : Boolean(String(formData.author ?? "").trim());
+
         return !!(
-            formData.title.trim() &&
-            String(formData.type || "").trim() &&
-            formData.author.trim() &&
-            formData.businessUnit.trim() &&
+            String(formData.title ?? "").trim() &&
+            String(formData.type ?? "").trim() &&
+            hasAuthor &&
+            String(formData.businessUnit ?? "").trim() &&
             Number.isFinite(formData.periodicReviewCycle) &&
             formData.periodicReviewCycle > 0 &&
             Number.isFinite(formData.periodicReviewNotification) &&
@@ -260,10 +264,14 @@ export const RevisionWorkspaceView: React.FC = () => {
         const missing: string[] = [];
         const formData = currentDocument.formData;
 
-        if (!formData.title.trim()) missing.push("Document Name");
-        if (!String(formData.type || "").trim()) missing.push("Document Type");
-        if (!formData.author.trim()) missing.push("Author");
-        if (!formData.businessUnit.trim()) missing.push("Business Unit");
+        const hasAuthor = Array.isArray(formData.author)
+            ? formData.author.length > 0
+            : Boolean(String(formData.author ?? "").trim());
+
+        if (!String(formData.title ?? "").trim()) missing.push("Document Name");
+        if (!String(formData.type ?? "").trim()) missing.push("Document Type");
+        if (!hasAuthor) missing.push("Author");
+        if (!String(formData.businessUnit ?? "").trim()) missing.push("Business Unit");
         if (
             !Number.isFinite(formData.periodicReviewCycle) ||
             formData.periodicReviewCycle <= 0

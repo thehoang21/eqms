@@ -168,7 +168,7 @@ export const TaskTable: React.FC<{
 
                   {/* Task ID */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className="font-mono font-semibold text-emerald-600">
+                    <span className="font-semibold text-emerald-600">
                       {task.taskId}
                     </span>
                   </td>
@@ -176,7 +176,7 @@ export const TaskTable: React.FC<{
                   {/* Task Name */}
                   <td className="py-3.5 px-4 text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-slate-900 line-clamp-2 break-words max-w-xs">
+                      <span className="font-medium text-slate-900 line-clamp-2 break-words max-w-sm">
                         {task.title}
                       </span>
                     </div>
