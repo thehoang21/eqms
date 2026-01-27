@@ -1,7 +1,7 @@
 export { GeneralTab } from './GeneralTab/GeneralTab';
 export { DocumentTab, type UploadedFile } from './DocumentTab/DocumentTab';
 export { FilePreview } from './DocumentTab/FilePreview';
-export { DocumentRelationships, type ParentDocument, type RelatedDocument } from './DocumentTab/DocumentRelationships';
+export { DocumentRelationships, type ParentDocument, type RelatedDocument } from './GeneralTab/subtabs/components/DocumentRelationships';
 
 // Re-export shared tabs
 export { TrainingTab } from '@/features/documents/shared/tabs/TrainingTab/TrainingTab';

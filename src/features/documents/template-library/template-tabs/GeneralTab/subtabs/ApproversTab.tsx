@@ -12,6 +12,8 @@ interface Approver {
 
 interface ApproversTabProps {
     onCountChange?: (count: number) => void;
+    isModalOpen?: boolean;
+    onModalClose?: () => void;
 }
 
 // Mock Data for User Selection

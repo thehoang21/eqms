@@ -16,7 +16,6 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
             <div className="flex items-center gap-3 mb-6">
                 <div>
                     <h3 className="text-lg font-semibold text-slate-900">Training Configuration</h3>
-                    <p className="text-sm text-slate-500">Set up the requirements for completing this training.</p>
                 </div>
             </div>
 

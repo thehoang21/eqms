@@ -18,6 +18,8 @@ interface ReviewersTabProps {
     onReviewersChange: (reviewers: Reviewer[]) => void;
     reviewFlowType: ReviewFlowType;
     onReviewFlowTypeChange: (type: ReviewFlowType) => void;
+    isModalOpen?: boolean;
+    onModalClose?: () => void;
 }
 
 type ReviewFlowType = 'sequential' | 'parallel';

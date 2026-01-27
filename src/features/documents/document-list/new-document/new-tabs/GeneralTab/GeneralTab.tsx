@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Calendar, FileText, UserPlus, UserCheck, BookOpen, Copy, LinkIcon } from "lucide-react";
+import { Calendar, FileText, UserPlus, UserCheck, BookOpen, Copy, LinkIcon, Plus } from "lucide-react";
 import { Select } from '@/components/ui/select/Select';
 import { MultiSelect } from '@/components/ui/select/MultiSelect';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
+import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import {
     DocumentRevisionsTab,
@@ -10,12 +11,14 @@ import {
     ApproversTab,
     DocumentKnowledgesTab,
     ControlledCopiesTab,
-    RelatedDocumentsTab
+    RelatedDocumentsTab,
+    CorrelatedDocumentsTab
 } from "./subtabs";
 import type { Revision } from './subtabs/types';
 import { DocumentType, DOCUMENT_TYPES } from "@/types/documentTypes";
+import { DocumentRelationships, ParentDocument, RelatedDocument as RelationshipDocument } from './subtabs';
 
-type SubTabId = "revisions" | "reviewers" | "approvers" | "knowledges" | "copies" | "related";
+type SubTabId = "revisions" | "reviewers" | "approvers" | "knowledges" | "copies" | "related" | "correlated";
 
 type ReviewFlowType = 'sequential' | 'parallel';
 
@@ -91,6 +94,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
     suggestedDocumentCode = "",
 }) => {
     const [activeSubtab, setActiveSubtab] = useState<SubTabId>("revisions");
+    const [isReviewerModalOpen, setIsReviewerModalOpen] = useState(false);
+    const [isApproverModalOpen, setIsApproverModalOpen] = useState(false);
+    const [isRelatedModalOpen, setIsRelatedModalOpen] = useState(false);
+    const [isCorrelatedModalOpen, setIsCorrelatedModalOpen] = useState(false);
     
     // Subtab States - persisted across tab switches
     const [revisions, setRevisions] = useState<Revision[]>([]);
@@ -100,6 +107,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
     const [knowledges, setKnowledges] = useState<Knowledge[]>([]);
     const [controlledCopies, setControlledCopies] = useState<ControlledCopy[]>([]);
     const [relatedDocuments, setRelatedDocuments] = useState<RelatedDocument[]>([]);
+    
+    // Document Relationships State
+    const [parentDocument, setParentDocument] = useState<ParentDocument | null>(null);
+    const [relationshipDocs, setRelationshipDocs] = useState<RelationshipDocument[]>([]);
 
     const setFormData = (data: Partial<FormData>) => {
         onFormChange({ ...formData, ...data });
@@ -111,7 +122,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
         { id: "approvers", label: "Approvers" },
         { id: "knowledges", label: "Document Knowledges" },
         { id: "copies", label: "Controlled Copies" },
-        { id: "related", label: "Related Documents" }
+        { id: "related", label: "Related Documents" },
+        { id: "correlated", label: "Correlated Documents" }
     ];
 
     return (
@@ -349,7 +361,74 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
                     />
                 </div>
+
+                {/* Add Reviewer, Approver, Related & Correlated Documents Buttons */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    <Button
+                        onClick={() => {
+                            setActiveSubtab("reviewers");
+                            setIsReviewerModalOpen(true);
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="whitespace-nowrap !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
+                    >
+                        Reviewers
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setActiveSubtab("approvers");
+                            setIsApproverModalOpen(true);
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="whitespace-nowrap !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
+                    >
+                        Approvers
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setActiveSubtab("related");
+                            setIsRelatedModalOpen(true);
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="whitespace-nowrap !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
+                    >
+                        Select Related Documents
+                        {relationshipDocs.length > 0 && (
+                            <span className="ml-2 text-xs opacity-70">({relationshipDocs.length})</span>
+                        )}
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setActiveSubtab("correlated");
+                            setIsCorrelatedModalOpen(true);
+                        }}
+                        variant="outline"
+                        size="sm"
+                        className="whitespace-nowrap !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
+                    >
+                        Select Correlated Documents
+                        {parentDocument && (
+                            <span className="ml-2 text-xs opacity-70">(1)</span>
+                        )}
+                    </Button>
+                </div>
             </div>
+
+            {/* DocumentRelationships Modals */}
+            <DocumentRelationships
+                parentDocument={parentDocument}
+                onParentDocumentChange={setParentDocument}
+                relatedDocuments={relationshipDocs}
+                onRelatedDocumentsChange={setRelationshipDocs}
+                documentType={formData.type}
+                isRelatedModalOpen={isRelatedModalOpen}
+                onRelatedModalClose={() => setIsRelatedModalOpen(false)}
+                isCorrelatedModalOpen={isCorrelatedModalOpen}
+                onCorrelatedModalClose={() => setIsCorrelatedModalOpen(false)}
+            />
 
             {/* Subtabs Card */}
             <div className="mt-6 border rounded-xl bg-white shadow-sm overflow-hidden">
@@ -378,15 +457,28 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                 {/* Subtab Content */}
                 <div className="p-4 md:p-6">
                     {activeSubtab === "revisions" && <DocumentRevisionsTab />}
-                    {activeSubtab === "reviewers" && <ReviewersTab reviewers={[]} onReviewersChange={function (reviewers: Reviewer[]): void {
-                        throw new Error("Function not implemented.");
-                    } } reviewFlowType={"sequential"} onReviewFlowTypeChange={function (type: "sequential" | "parallel"): void {
-                        throw new Error("Function not implemented.");
-                    } } />}
-                    {activeSubtab === "approvers" && <ApproversTab />}
+                    {activeSubtab === "reviewers" && <ReviewersTab 
+                        reviewers={reviewers} 
+                        onReviewersChange={setReviewers}
+                        reviewFlowType={reviewFlowType} 
+                        onReviewFlowTypeChange={setReviewFlowType}
+                        isModalOpen={isReviewerModalOpen}
+                        onModalClose={() => setIsReviewerModalOpen(false)}
+                    />}
+                    {activeSubtab === "approvers" && <ApproversTab 
+                        isModalOpen={isApproverModalOpen}
+                        onModalClose={() => setIsApproverModalOpen(false)}
+                    />}
                     {activeSubtab === "knowledges" && <DocumentKnowledgesTab />}
                     {activeSubtab === "copies" && <ControlledCopiesTab />}
-                    {activeSubtab === "related" && <RelatedDocumentsTab />}
+                    {activeSubtab === "related" && <RelatedDocumentsTab 
+                        relatedDocuments={relationshipDocs}
+                        onRelatedDocumentsChange={setRelationshipDocs}
+                    />}
+                    {activeSubtab === "correlated" && <CorrelatedDocumentsTab 
+                        parentDocument={parentDocument}
+                        onParentDocumentChange={setParentDocument}
+                    />}
                 </div>
             </div>
         </div>

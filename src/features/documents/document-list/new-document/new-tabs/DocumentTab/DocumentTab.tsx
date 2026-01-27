@@ -1,13 +1,8 @@
 import React, { useState, useRef } from "react";
 import { Upload, File, X, CheckCircle2, AlertCircle } from "lucide-react";
+import { IconCloudUpload } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
 import { FilePreview } from "./FilePreview";
-import {
-  DocumentRelationships,
-  ParentDocument,
-  RelatedDocument,
-} from "./DocumentRelationships";
-import { IconCloudUpload } from "@tabler/icons-react";
 import pdfIcon from "@/assets/images/image-file/pdf.png";
 import docIcon from "@/assets/images/image-file/doc.png";
 import docxIcon from "@/assets/images/image-file/docx.png";
@@ -36,13 +31,6 @@ interface DocumentTabProps {
   selectedFile: File | null;
   onSelectFile: (file: File | null) => void;
   maxFiles?: number; // Maximum number of files allowed (undefined = unlimited)
-  // Document Relationships
-  parentDocument?: ParentDocument | null;
-  onParentDocumentChange?: (parent: ParentDocument | null) => void;
-  relatedDocuments?: RelatedDocument[];
-  onRelatedDocumentsChange?: (docs: RelatedDocument[]) => void;
-  documentType?: string;
-  onSuggestedCodeChange?: (code: string) => void;
 }
 
 export const DocumentTab: React.FC<DocumentTabProps> = ({
@@ -51,17 +39,9 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
   selectedFile,
   onSelectFile,
   maxFiles,
-  parentDocument,
-  onParentDocumentChange,
-  relatedDocuments = [],
-  onRelatedDocumentsChange,
-  documentType,
-  onSuggestedCodeChange,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isRelatedModalOpen, setIsRelatedModalOpen] = useState(false);
-  const [isCorrelatedModalOpen, setIsCorrelatedModalOpen] = useState(false);
 
   // Check if max files limit is reached
   const isMaxFilesReached =
@@ -166,82 +146,6 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Buttons Row: Upload File + Document Relationships */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-        {/* Upload File Button */}
-        <div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple={maxFiles === undefined || maxFiles > 1}
-            onChange={handleFileSelect}
-            className="hidden"
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.txt"
-            disabled={isMaxFilesReached}
-          />
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isMaxFilesReached}
-            className={cn(
-              "w-full inline-flex items-center justify-center gap-2 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium rounded-lg border transition-all shadow-sm",
-              isMaxFilesReached
-                ? "border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed"
-                : "border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 hover:border-emerald-700 active:scale-95"
-            )}
-          >
-            <span>Upload File</span>
-          </button>
-        </div>
-
-        {/* Document Relationships Buttons */}
-        {onParentDocumentChange && onRelatedDocumentsChange && (
-          <>
-            <div>
-              <button
-                onClick={() => setIsRelatedModalOpen(true)} 
-                className="w-full h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 shadow-sm transition-all active:scale-95 inline-flex items-center justify-center"
-              >
-                Select Related Documents
-                {relatedDocuments.length > 0 && (
-                  <span className="ml-2 text-xs text-slate-500">
-                    ({relatedDocuments.length})
-                  </span>
-                )}
-              </button>
-            </div>
-            <div>
-              <button
-                onClick={() => setIsCorrelatedModalOpen(true)}
-                className="w-full h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 shadow-sm transition-all active:scale-95 inline-flex items-center justify-center"
-              >
-                Select Correlated Documents
-                {parentDocument && (
-                  <span className="ml-2 text-xs text-slate-500">
-                    ({parentDocument.id})
-                  </span>
-                )}
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* DocumentRelationships Modals */}
-      {onParentDocumentChange && onRelatedDocumentsChange && (
-        <DocumentRelationships
-          parentDocument={parentDocument || null}
-          onParentDocumentChange={onParentDocumentChange}
-          relatedDocuments={relatedDocuments}
-          onRelatedDocumentsChange={onRelatedDocumentsChange}
-          documentType={documentType}
-          onSuggestedCodeChange={onSuggestedCodeChange}
-          isRelatedModalOpen={isRelatedModalOpen}
-          onRelatedModalClose={() => setIsRelatedModalOpen(false)}
-          isCorrelatedModalOpen={isCorrelatedModalOpen}
-          onCorrelatedModalClose={() => setIsCorrelatedModalOpen(false)}
-        />
-      )}
-
       {/* File Preview and Uploaded Files */}
       <div className="space-y-4 md:space-y-6">
         {/* Uploaded Files List - Horizontal scroll on desktop */}
@@ -372,17 +276,65 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
         )}
 
         {/* File Preview - Full width */}
-        <div className="h-[600px]">
+        <div className=" grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
           {(() => {
             if (uploadedFiles.length === 0) {
               return (
-                <div className="h-full flex items-center justify-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
-                  <div className="text-center p-8">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
-                      <File className="h-8 w-8 text-slate-400" />
-                    </div>
-                    <p className="text-sm font-medium text-slate-900 mb-1">No files uploaded</p>
-                    <p className="text-sm text-slate-500">Click "Upload File" button to add documents</p>
+                <div
+                  className={cn(
+                    "h-full border-2 border-dashed rounded-xl p-8 lg:p-12 flex items-center justify-center transition-all duration-200",
+                    isMaxFilesReached
+                      ? "border-slate-200 bg-slate-50 opacity-50 cursor-not-allowed"
+                      : isDragging 
+                        ? "border-emerald-500 bg-emerald-50 scale-[1.02]" 
+                        : "border-slate-300 bg-white hover:border-slate-400"
+                  )}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  <div className="text-center">
+                    <IconCloudUpload className={cn(
+                      "h-12 w-12 lg:h-16 lg:w-16 mx-auto mb-3 lg:mb-4 transition-colors",
+                      isMaxFilesReached
+                        ? "text-slate-400"
+                        : isDragging 
+                          ? "text-emerald-600" 
+                          : "text-slate-400"
+                    )} />
+                    <h4 className="text-base lg:text-lg font-semibold text-slate-900 mb-2">
+                      {isMaxFilesReached 
+                        ? `Maximum ${maxFiles} file${maxFiles > 1 ? 's' : ''} uploaded`
+                        : isDragging 
+                          ? "Drop files here" 
+                          : "Drop files here or click to browse"}
+                    </h4>
+                    <p className="text-xs lg:text-sm text-slate-600 mb-4 lg:mb-6">
+                      {isMaxFilesReached
+                        ? "Remove existing file to upload a new one"
+                        : "Support for PDF, DOCX, DOC, and other document formats"}
+                    </p>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple={maxFiles === undefined || maxFiles > 1}
+                      onChange={handleFileSelect}
+                      className="hidden"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.txt"
+                      disabled={isMaxFilesReached}
+                    />
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isMaxFilesReached}
+                      className={cn(
+                        "px-5 py-2 rounded-lg font-medium transition-colors shadow-sm text-sm",
+                        isMaxFilesReached
+                          ? "bg-slate-300 text-slate-500 cursor-not-allowed"
+                          : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                      )}
+                    >
+                      Browse Files
+                    </button>
                   </div>
                 </div>
               );
