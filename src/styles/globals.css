@@ -107,6 +107,54 @@ html, body {
 }
 
 /* ===================================
+   iOS SAFARI FIXED/STICKY POSITION FIX
+   iOS Safari has issues with sticky/fixed positioning
+   when parent has overflow:hidden or transform
+   =================================== */
+
+@supports (-webkit-touch-callout: none) {
+  /* Force GPU acceleration for fixed elements */
+  .ios-fixed-header,
+  .ios-fixed-footer {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+  
+  /* Ensure fixed elements stay fixed during keyboard show/hide */
+  .ios-layout-container {
+    height: 100%;
+    height: -webkit-fill-available;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+  
+  /* Scrollable content area with proper iOS momentum scrolling */
+  .ios-scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* Safari-specific sticky fix using CSS feature query */
+@supports (position: -webkit-sticky) or (position: sticky) {
+  .safari-sticky-header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* ===================================
    MOBILE SIDEBAR & OVERLAY SCROLL FIX
    Ensures sidebar content is fully scrollable on mobile
    Prevents content from being hidden behind browser UI

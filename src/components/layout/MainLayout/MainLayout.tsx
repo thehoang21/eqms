@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar';
 import { Header } from '@/components/layout/Header/Header';
@@ -7,12 +7,19 @@ import { NetworkStatusMonitor } from '@/components/NetworkStatusMonitor';
 import { useResponsiveSidebar } from './useResponsiveSidebar';
 import { useNavigation } from './useNavigation';
 import { resetViewportZoom, isIOSSafari } from '@/utils/viewport';
+import { cn } from '@/components/ui/utils';
 
 export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isSidebarCollapsed, isMobileMenuOpen, toggleSidebar, closeMobileMenu } = useResponsiveSidebar();
   const { activeId, handleNavigate } = useNavigation();
+  const [isIOS, setIsIOS] = useState(false);
+
+  // Detect iOS Safari on mount
+  useEffect(() => {
+    setIsIOS(isIOSSafari());
+  }, []);
 
   // Reset viewport zoom on mount (fixes iOS Safari auto-zoom after login)
   useEffect(() => {
@@ -34,12 +41,24 @@ export const MainLayout: React.FC = () => {
 
   return (
     <div 
-      className="flex h-screen w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden"
+      className={cn(
+        "flex h-screen w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden",
+        isIOS && "ios-layout-container"
+      )}
       style={{
         // Use dvh for iOS Safari dynamic viewport
         height: '100dvh',
         // Fallback for older browsers
         minHeight: '100vh',
+        // iOS Safari fix: use -webkit-fill-available
+        ...(isIOS && {
+          height: '-webkit-fill-available',
+          position: 'fixed' as const,
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }),
       }}
     >
       {/* Network Status Monitor - Global */}
@@ -68,10 +87,15 @@ export const MainLayout: React.FC = () => {
 
         {/* Scrollable Content Area */}
         <div 
-          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar"
+          className={cn(
+            "flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar",
+            isIOS && "ios-scroll-container"
+          )}
           style={{
             paddingLeft: 'var(--safe-area-inset-left)',
             paddingRight: 'var(--safe-area-inset-right)',
+            // iOS Safari fix: enable momentum scrolling
+            WebkitOverflowScrolling: 'touch',
           }}
         >
           {/* Main Content: Responsive padding */}

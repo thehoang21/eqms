@@ -139,6 +139,13 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      // iOS Safari fix: Skip if the target is the search input or focus is on search input
+      if (searchInputRef.current === event.target) {
+        return;
+      }
+      if (searchInputRef.current === document.activeElement) {
+        return;
+      }
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target as Node) &&
@@ -150,16 +157,30 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("touchstart", handleClickOutside);
+    // iOS Safari: Use touchend instead of touchstart to avoid conflicts with keyboard
+    document.addEventListener("touchend", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("touchend", handleClickOutside);
     };
   }, []);
 
   // Scroll/resize handler
   useEffect(() => {
+    // Track if search input is focused (for iOS keyboard handling)
+    let isSearchFocused = false;
+    
+    const handleSearchFocus = () => { isSearchFocused = true; };
+    const handleSearchBlur = () => { 
+      // Delay to allow for focus changes within dropdown
+      setTimeout(() => { isSearchFocused = false; }, 100);
+    };
+    
     const handleScrollOrResize = (e: Event) => {
+      // iOS Safari fix: Don't close when keyboard appears/disappears (causes resize)
+      if (isSearchFocused || searchInputRef.current === document.activeElement) {
+        return;
+      }
       if (dropdownRef.current && dropdownRef.current.contains(e.target as Node)) {
         return;
       }
@@ -167,11 +188,15 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     };
 
     if (isOpen) {
+      searchInputRef.current?.addEventListener('focus', handleSearchFocus);
+      searchInputRef.current?.addEventListener('blur', handleSearchBlur);
       window.addEventListener('scroll', handleScrollOrResize, true);
       window.addEventListener('resize', handleScrollOrResize);
     }
 
     return () => {
+      searchInputRef.current?.removeEventListener('focus', handleSearchFocus);
+      searchInputRef.current?.removeEventListener('blur', handleSearchBlur);
       window.removeEventListener('scroll', handleScrollOrResize, true);
       window.removeEventListener('resize', handleScrollOrResize);
     };
@@ -180,7 +205,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   // Auto focus search input
   useEffect(() => {
     if (isOpen && enableSearch && searchInputRef.current) {
-      setTimeout(() => searchInputRef.current?.focus(), 50);
+      // iOS Safari fix: Use requestAnimationFrame for smoother focus
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          searchInputRef.current?.focus({ preventScroll: true });
+        }, 100);
+      });
     }
   }, [isOpen, enableSearch]);
 
@@ -328,6 +358,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
               className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white"
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
+              onTouchEnd={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <Search className="mr-2 h-4 w-4 text-slate-400 shrink-0 opacity-50" />
               <input
@@ -338,6 +370,32 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
+                onTouchEnd={(e) => {
+                  e.stopPropagation();
+                  // iOS Safari fix: re-focus on touchend
+                  requestAnimationFrame(() => {
+                    searchInputRef.current?.focus();
+                  });
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  searchInputRef.current?.focus();
+                }}
+                onBlur={(e) => {
+                  // iOS Safari fix: prevent blur when tapping inside dropdown
+                  if (dropdownRef.current?.contains(e.relatedTarget as Node)) {
+                    e.preventDefault();
+                    requestAnimationFrame(() => {
+                      searchInputRef.current?.focus();
+                    });
+                  }
+                }}
+                inputMode="search"
+                enterKeyHint="search"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
               />
             </div>
           )}
