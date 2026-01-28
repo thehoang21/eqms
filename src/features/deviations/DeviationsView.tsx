@@ -27,7 +27,10 @@ import {
   DeviationCategory,
   DeviationSeverity,
 } from "./types";
-import { MobileCard, MobileCardList } from "@/components/ui/table/MobileCardView";
+import {
+  MobileCard,
+  MobileCardList,
+} from "@/components/ui/table/MobileCardView";
 
 // Mock Data
 const MOCK_DEVIATIONS: Deviation[] = [
@@ -35,7 +38,8 @@ const MOCK_DEVIATIONS: Deviation[] = [
     id: "1",
     deviationId: "DEV-2026-001",
     title: "Temperature Excursion in Cold Storage",
-    description: "Temperature exceeded 8°C for 45 minutes in cold storage area B",
+    description:
+      "Temperature exceeded 8°C for 45 minutes in cold storage area B",
     category: "Environmental",
     severity: "Major",
     status: "Under Investigation",
@@ -44,7 +48,8 @@ const MOCK_DEVIATIONS: Deviation[] = [
     department: "Warehouse",
     affectedProduct: "Vaccine Lot ABC-123",
     affectedBatch: "BATCH-2026-001",
-    immediateAction: "Product moved to backup cold storage, temperature monitoring increased",
+    immediateAction:
+      "Product moved to backup cold storage, temperature monitoring increased",
     investigationDeadline: "2026-01-31",
     assignedTo: "Dr. Sarah Johnson",
     createdAt: "2026-01-24T08:30:00",
@@ -85,8 +90,10 @@ const MOCK_DEVIATIONS: Deviation[] = [
     affectedBatch: "TAB-2026-003",
     immediateAction: "Production switched to tablet press #2",
     rootCause: "Worn compression rollers",
-    correctiveAction: "Rollers replaced and preventive maintenance schedule updated",
-    preventiveAction: "Implement weekly inspection checklist for all tablet presses",
+    correctiveAction:
+      "Rollers replaced and preventive maintenance schedule updated",
+    preventiveAction:
+      "Implement weekly inspection checklist for all tablet presses",
     investigationDeadline: "2026-01-20",
     assignedTo: "Maintenance Team",
     reviewer: "Production Manager",
@@ -183,17 +190,35 @@ export const DeviationsView: React.FC = () => {
     return MOCK_DEVIATIONS.filter((dev) => {
       const matchesSearch =
         dev.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        dev.deviationId.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        dev.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
+        dev.deviationId
+          .toLowerCase()
+          .includes(filters.searchQuery.toLowerCase()) ||
+        dev.description
+          .toLowerCase()
+          .includes(filters.searchQuery.toLowerCase());
 
-      const matchesCategory = filters.categoryFilter === "All" || dev.category === filters.categoryFilter;
-      const matchesSeverity = filters.severityFilter === "All" || dev.severity === filters.severityFilter;
-      const matchesStatus = filters.statusFilter === "All" || dev.status === filters.statusFilter;
+      const matchesCategory =
+        filters.categoryFilter === "All" ||
+        dev.category === filters.categoryFilter;
+      const matchesSeverity =
+        filters.severityFilter === "All" ||
+        dev.severity === filters.severityFilter;
+      const matchesStatus =
+        filters.statusFilter === "All" || dev.status === filters.statusFilter;
 
-      const matchesDateFrom = !filters.dateFrom || dev.reportedDate >= filters.dateFrom;
-      const matchesDateTo = !filters.dateTo || dev.reportedDate <= filters.dateTo;
+      const matchesDateFrom =
+        !filters.dateFrom || dev.reportedDate >= filters.dateFrom;
+      const matchesDateTo =
+        !filters.dateTo || dev.reportedDate <= filters.dateTo;
 
-      return matchesSearch && matchesCategory && matchesSeverity && matchesStatus && matchesDateFrom && matchesDateTo;
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesSeverity &&
+        matchesStatus &&
+        matchesDateFrom &&
+        matchesDateTo
+      );
     });
   }, [MOCK_DEVIATIONS, filters]);
 
@@ -204,7 +229,15 @@ export const DeviationsView: React.FC = () => {
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  const getStatusColor = (status: DeviationStatus): "draft" | "pendingReview" | "pendingApproval" | "approved" | "effective" | "archived" => {
+  const getStatusColor = (
+    status: DeviationStatus,
+  ):
+    | "draft"
+    | "pendingReview"
+    | "pendingApproval"
+    | "approved"
+    | "effective"
+    | "archived" => {
     switch (status) {
       case "Open":
         return "draft";
@@ -271,16 +304,20 @@ export const DeviationsView: React.FC = () => {
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
         {/* Row 1: Search + Category + Severity */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-9 gap-4 items-end">
-          <div className="xl:col-span-4">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+          <div className="xl:col-span-3">
+            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              Search
+            </label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by title, ID, or description..."
                 value={filters.searchQuery}
-                onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
-                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+                onChange={(e) =>
+                  setFilters({ ...filters, searchQuery: e.target.value })
+                }
+                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -289,16 +326,26 @@ export const DeviationsView: React.FC = () => {
             <Select
               label="Category"
               value={filters.categoryFilter}
-              onChange={(value) => setFilters({ ...filters, categoryFilter: value as DeviationCategory | "All" })}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  categoryFilter: value as DeviationCategory | "All",
+                })
+              }
               options={categoryOptions}
             />
           </div>
 
-          <div className="xl:col-span-2">
+          <div className="xl:col-span-3">
             <Select
               label="Severity"
               value={filters.severityFilter}
-              onChange={(value) => setFilters({ ...filters, severityFilter: value as DeviationSeverity | "All" })}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  severityFilter: value as DeviationSeverity | "All",
+                })
+              }
               options={severityOptions}
             />
           </div>
@@ -310,7 +357,12 @@ export const DeviationsView: React.FC = () => {
             <Select
               label="Status"
               value={filters.statusFilter}
-              onChange={(value) => setFilters({ ...filters, statusFilter: value as DeviationStatus | "All" })}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  statusFilter: value as DeviationStatus | "All",
+                })
+              }
               options={statusOptions}
             />
           </div>
@@ -342,7 +394,9 @@ export const DeviationsView: React.FC = () => {
             </div>
             <div>
               <p className="text-xs text-slate-600 font-medium">Total</p>
-              <p className="text-2xl font-bold text-slate-900">{MOCK_DEVIATIONS.length}</p>
+              <p className="text-2xl font-bold text-slate-900">
+                {MOCK_DEVIATIONS.length}
+              </p>
             </div>
           </div>
         </div>
@@ -355,7 +409,12 @@ export const DeviationsView: React.FC = () => {
             <div>
               <p className="text-xs text-slate-600 font-medium">Open</p>
               <p className="text-2xl font-bold text-slate-900">
-                {MOCK_DEVIATIONS.filter((d) => d.status === "Open" || d.status === "Under Investigation").length}
+                {
+                  MOCK_DEVIATIONS.filter(
+                    (d) =>
+                      d.status === "Open" || d.status === "Under Investigation",
+                  ).length
+                }
               </p>
             </div>
           </div>
@@ -369,7 +428,10 @@ export const DeviationsView: React.FC = () => {
             <div>
               <p className="text-xs text-slate-600 font-medium">Critical</p>
               <p className="text-2xl font-bold text-slate-900">
-                {MOCK_DEVIATIONS.filter((d) => d.severity === "Critical").length}
+                {
+                  MOCK_DEVIATIONS.filter((d) => d.severity === "Critical")
+                    .length
+                }
               </p>
             </div>
           </div>
@@ -413,7 +475,12 @@ export const DeviationsView: React.FC = () => {
               {
                 label: "Severity",
                 value: (
-                  <span className={cn("inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border", getSeverityColor(dev.severity))}>
+                  <span
+                    className={cn(
+                      "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border",
+                      getSeverityColor(dev.severity),
+                    )}
+                  >
                     {dev.severity}
                   </span>
                 ),
@@ -430,10 +497,13 @@ export const DeviationsView: React.FC = () => {
               },
               {
                 label: "Deadline",
-                value: new Date(dev.investigationDeadline).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                }),
+                value: new Date(dev.investigationDeadline).toLocaleDateString(
+                  "en-US",
+                  {
+                    month: "short",
+                    day: "numeric",
+                  },
+                ),
               },
             ]}
             actions={[
@@ -459,39 +529,80 @@ export const DeviationsView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">ID</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Title</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Category</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Severity</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Status</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Assigned To</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Deadline</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">Action</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  No.
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  ID
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Title
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Category
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Severity
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Status
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Assigned To
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Deadline
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
               {paginatedData.map((dev, index) => (
-                <tr key={dev.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap"><span className="font-mono text-slate-900">{dev.deviationId}</span></td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-medium max-w-xs truncate">{dev.title}</td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{dev.category}</td>
+                <tr
+                  key={dev.id}
+                  className="hover:bg-slate-50 transition-colors"
+                >
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
+                    {(currentPage - 1) * itemsPerPage + index + 1}
+                  </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className={cn("inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border", getSeverityColor(dev.severity))}>
+                    <span className="font-mono text-slate-900">
+                      {dev.deviationId}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-medium max-w-xs truncate">
+                    {dev.title}
+                  </td>
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                    {dev.category}
+                  </td>
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <span
+                      className={cn(
+                        "inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border",
+                        getSeverityColor(dev.severity),
+                      )}
+                    >
                       {dev.severity}
                     </span>
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <StatusBadge status={getStatusColor(dev.status)} />
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">{dev.assignedTo}</td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
-                    {new Date(dev.investigationDeadline).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    {dev.assignedTo}
+                  </td>
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
+                    {new Date(dev.investigationDeadline).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      },
+                    )}
                   </td>
                   <td className="py-3.5 px-4 text-sm text-center sticky right-0 bg-white z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] hover:bg-slate-50">
                     <button className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors">

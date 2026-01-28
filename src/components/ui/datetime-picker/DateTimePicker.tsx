@@ -418,7 +418,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           'flex items-center justify-between gap-2 w-full px-3 py-2 h-11 rounded-md text-sm transition-all duration-200',
           'border bg-white',
           isOpen
-            ? 'ring-2 ring-emerald-500 border-emerald-500'
+            ? 'ring-1 ring-emerald-500 border-emerald-500'
             : 'border-slate-200 hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500'
         )}
       >

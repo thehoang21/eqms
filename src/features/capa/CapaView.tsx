@@ -21,7 +21,10 @@ import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { cn } from "@/components/ui/utils";
 import { CAPA, CAPAFilters, CAPAType, CAPASource, CAPAStatus } from "./types";
-import { MobileCard, MobileCardList } from "@/components/ui/table/MobileCardView";
+import {
+  MobileCard,
+  MobileCardList,
+} from "@/components/ui/table/MobileCardView";
 
 // Mock Data
 const MOCK_CAPAS: CAPA[] = [
@@ -29,7 +32,8 @@ const MOCK_CAPAS: CAPA[] = [
     id: "1",
     capaId: "CAPA-2026-001",
     title: "Improve Temperature Monitoring System",
-    description: "Implement automated temperature monitoring for all cold storage areas",
+    description:
+      "Implement automated temperature monitoring for all cold storage areas",
     type: "Preventive",
     source: "Deviation",
     status: "Implementation",
@@ -39,8 +43,10 @@ const MOCK_CAPAS: CAPA[] = [
     relatedDeviationId: "DEV-2026-001",
     problemStatement: "Temperature excursions due to manual monitoring delays",
     rootCause: "Lack of real-time temperature monitoring and alerts",
-    correctiveAction: "Install automated temperature monitoring devices in all cold storage areas",
-    preventiveAction: "Implement 24/7 monitoring dashboard with SMS/email alerts for temperature deviations",
+    correctiveAction:
+      "Install automated temperature monitoring devices in all cold storage areas",
+    preventiveAction:
+      "Implement 24/7 monitoring dashboard with SMS/email alerts for temperature deviations",
     targetCompletionDate: "2026-03-15",
     assignedTo: "Facilities Team",
     reviewer: "QA Manager",
@@ -51,7 +57,8 @@ const MOCK_CAPAS: CAPA[] = [
     id: "2",
     capaId: "CAPA-2026-002",
     title: "Granulation Process Optimization",
-    description: "Revise granulation process to prevent moisture content issues",
+    description:
+      "Revise granulation process to prevent moisture content issues",
     type: "Corrective",
     source: "Deviation",
     status: "Verification",
@@ -59,10 +66,14 @@ const MOCK_CAPAS: CAPA[] = [
     initiatedDate: "2026-01-24",
     department: "Production",
     relatedDeviationId: "DEV-2026-002",
-    problemStatement: "Out of specification dissolution test due to granulation moisture",
-    rootCause: "Inadequate drying time and temperature control during granulation",
-    correctiveAction: "Update granulation SOP with specific moisture testing requirements and drying parameters",
-    preventiveAction: "Install inline moisture analyzer for real-time monitoring",
+    problemStatement:
+      "Out of specification dissolution test due to granulation moisture",
+    rootCause:
+      "Inadequate drying time and temperature control during granulation",
+    correctiveAction:
+      "Update granulation SOP with specific moisture testing requirements and drying parameters",
+    preventiveAction:
+      "Install inline moisture analyzer for real-time monitoring",
     targetCompletionDate: "2026-02-28",
     actualCompletionDate: "2026-01-22",
     assignedTo: "Production Manager",
@@ -85,9 +96,11 @@ const MOCK_CAPAS: CAPA[] = [
     department: "Maintenance",
     relatedDeviationId: "DEV-2026-003",
     problemStatement: "Tablet press failure due to worn compression rollers",
-    rootCause: "Insufficient preventive maintenance frequency and wear monitoring",
+    rootCause:
+      "Insufficient preventive maintenance frequency and wear monitoring",
     correctiveAction: "Replaced worn compression rollers on all tablet presses",
-    preventiveAction: "Implemented weekly visual inspection checklist and monthly compression force verification",
+    preventiveAction:
+      "Implemented weekly visual inspection checklist and monthly compression force verification",
     targetCompletionDate: "2026-01-30",
     actualCompletionDate: "2026-01-23",
     assignedTo: "Maintenance Team",
@@ -109,7 +122,8 @@ const MOCK_CAPAS: CAPA[] = [
     initiatedBy: "Procurement Manager",
     initiatedDate: "2026-01-25",
     department: "Supply Chain",
-    problemStatement: "Delayed COA receipt causing material quarantine and production delays",
+    problemStatement:
+      "Delayed COA receipt causing material quarantine and production delays",
     rootCause: "Manual COA tracking without automated reminders",
     targetCompletionDate: "2026-03-01",
     assignedTo: "IT & Procurement Teams",
@@ -127,10 +141,12 @@ const MOCK_CAPAS: CAPA[] = [
     initiatedBy: "Training Manager",
     initiatedDate: "2025-12-01",
     department: "Quality Assurance",
-    problemStatement: "Recurring documentation errors and incomplete batch records",
+    problemStatement:
+      "Recurring documentation errors and incomplete batch records",
     rootCause: "Insufficient training on GMP documentation requirements",
     correctiveAction: "Provided immediate training to all production operators",
-    preventiveAction: "Developed comprehensive GMP documentation training module with quarterly refreshers and competency assessments",
+    preventiveAction:
+      "Developed comprehensive GMP documentation training module with quarterly refreshers and competency assessments",
     targetCompletionDate: "2026-01-15",
     actualCompletionDate: "2026-01-10",
     assignedTo: "Training Department",
@@ -191,16 +207,30 @@ export const CAPAView: React.FC = () => {
       const matchesSearch =
         capa.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
         capa.capaId.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        capa.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
+        capa.description
+          .toLowerCase()
+          .includes(filters.searchQuery.toLowerCase());
 
-      const matchesType = filters.typeFilter === "All" || capa.type === filters.typeFilter;
-      const matchesSource = filters.sourceFilter === "All" || capa.source === filters.sourceFilter;
-      const matchesStatus = filters.statusFilter === "All" || capa.status === filters.statusFilter;
+      const matchesType =
+        filters.typeFilter === "All" || capa.type === filters.typeFilter;
+      const matchesSource =
+        filters.sourceFilter === "All" || capa.source === filters.sourceFilter;
+      const matchesStatus =
+        filters.statusFilter === "All" || capa.status === filters.statusFilter;
 
-      const matchesDateFrom = !filters.dateFrom || capa.initiatedDate >= filters.dateFrom;
-      const matchesDateTo = !filters.dateTo || capa.initiatedDate <= filters.dateTo;
+      const matchesDateFrom =
+        !filters.dateFrom || capa.initiatedDate >= filters.dateFrom;
+      const matchesDateTo =
+        !filters.dateTo || capa.initiatedDate <= filters.dateTo;
 
-      return matchesSearch && matchesType && matchesSource && matchesStatus && matchesDateFrom && matchesDateTo;
+      return (
+        matchesSearch &&
+        matchesType &&
+        matchesSource &&
+        matchesStatus &&
+        matchesDateFrom &&
+        matchesDateTo
+      );
     });
   }, [MOCK_CAPAS, filters]);
 
@@ -211,7 +241,15 @@ export const CAPAView: React.FC = () => {
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  const getStatusColor = (status: CAPAStatus): "draft" | "pendingReview" | "pendingApproval" | "approved" | "effective" | "archived" => {
+  const getStatusColor = (
+    status: CAPAStatus,
+  ):
+    | "draft"
+    | "pendingReview"
+    | "pendingApproval"
+    | "approved"
+    | "effective"
+    | "archived" => {
     switch (status) {
       case "Open":
       case "Under Investigation":
@@ -291,25 +329,34 @@ export const CAPAView: React.FC = () => {
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
         {/* Row 1: Search + Type + Source */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-9 gap-4 items-end">
-          <div className="xl:col-span-4">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+          <div className="xl:col-span-3">
+            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              Search
+            </label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by title, ID, or description..."
                 value={filters.searchQuery}
-                onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
-                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+                onChange={(e) =>
+                  setFilters({ ...filters, searchQuery: e.target.value })
+                }
+                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
           </div>
 
-          <div className="xl:col-span-2">
+          <div className="xl:col-span-3">
             <Select
               label="Type"
               value={filters.typeFilter}
-              onChange={(value) => setFilters({ ...filters, typeFilter: value as CAPAType | "All" })}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  typeFilter: value as CAPAType | "All",
+                })
+              }
               options={typeOptions}
             />
           </div>
@@ -318,7 +365,12 @@ export const CAPAView: React.FC = () => {
             <Select
               label="Source"
               value={filters.sourceFilter}
-              onChange={(value) => setFilters({ ...filters, sourceFilter: value as CAPASource | "All" })}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  sourceFilter: value as CAPASource | "All",
+                })
+              }
               options={sourceOptions}
             />
           </div>
@@ -330,7 +382,12 @@ export const CAPAView: React.FC = () => {
             <Select
               label="Status"
               value={filters.statusFilter}
-              onChange={(value) => setFilters({ ...filters, statusFilter: value as CAPAStatus | "All" })}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  statusFilter: value as CAPAStatus | "All",
+                })
+              }
               options={statusOptions}
             />
           </div>
@@ -362,7 +419,9 @@ export const CAPAView: React.FC = () => {
             </div>
             <div>
               <p className="text-xs text-slate-600 font-medium">Total CAPAs</p>
-              <p className="text-2xl font-bold text-slate-900">{MOCK_CAPAS.length}</p>
+              <p className="text-2xl font-bold text-slate-900">
+                {MOCK_CAPAS.length}
+              </p>
             </div>
           </div>
         </div>
@@ -375,7 +434,11 @@ export const CAPAView: React.FC = () => {
             <div>
               <p className="text-xs text-slate-600 font-medium">In Progress</p>
               <p className="text-2xl font-bold text-slate-900">
-                {MOCK_CAPAS.filter((c) => !["Closed", "Cancelled"].includes(c.status)).length}
+                {
+                  MOCK_CAPAS.filter(
+                    (c) => !["Closed", "Cancelled"].includes(c.status),
+                  ).length
+                }
               </p>
             </div>
           </div>
@@ -387,16 +450,20 @@ export const CAPAView: React.FC = () => {
               <Calendar className="h-5 w-5 text-amber-600" />
             </div>
             <div>
-              <p className="text-xs text-slate-600 font-medium">Due This Month</p>
+              <p className="text-xs text-slate-600 font-medium">
+                Due This Month
+              </p>
               <p className="text-2xl font-bold text-slate-900">
-                {MOCK_CAPAS.filter((c) => {
-                  const targetDate = new Date(c.targetCompletionDate);
-                  const now = new Date();
-                  return (
-                    targetDate.getMonth() === now.getMonth() &&
-                    targetDate.getFullYear() === now.getFullYear()
-                  );
-                }).length}
+                {
+                  MOCK_CAPAS.filter((c) => {
+                    const targetDate = new Date(c.targetCompletionDate);
+                    const now = new Date();
+                    return (
+                      targetDate.getMonth() === now.getMonth() &&
+                      targetDate.getFullYear() === now.getFullYear()
+                    );
+                  }).length
+                }
               </p>
             </div>
           </div>
@@ -436,7 +503,12 @@ export const CAPAView: React.FC = () => {
               {
                 label: "Type",
                 value: (
-                  <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border", getTypeColor(capa.type))}>
+                  <span
+                    className={cn(
+                      "inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium border",
+                      getTypeColor(capa.type),
+                    )}
+                  >
                     {getTypeIcon(capa.type)}
                     {capa.type}
                   </span>
@@ -458,11 +530,14 @@ export const CAPAView: React.FC = () => {
               },
               {
                 label: "Target Date",
-                value: new Date(capa.targetCompletionDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                }),
+                value: new Date(capa.targetCompletionDate).toLocaleDateString(
+                  "en-US",
+                  {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  },
+                ),
               },
             ]}
             actions={[
@@ -488,40 +563,81 @@ export const CAPAView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">CAPA ID</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Title</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Type</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Source</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Status</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Assigned To</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Target Date</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">Action</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  No.
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  CAPA ID
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Title
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Type
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Source
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Status
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Assigned To
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Target Date
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
               {paginatedData.map((capa, index) => (
-                <tr key={capa.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap"><span className="font-mono text-slate-900">{capa.capaId}</span></td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-medium max-w-xs truncate">{capa.title}</td>
+                <tr
+                  key={capa.id}
+                  className="hover:bg-slate-50 transition-colors"
+                >
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
+                    {(currentPage - 1) * itemsPerPage + index + 1}
+                  </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className={cn("inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border", getTypeColor(capa.type))}>
+                    <span className="font-mono text-slate-900">
+                      {capa.capaId}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-medium max-w-xs truncate">
+                    {capa.title}
+                  </td>
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <span
+                      className={cn(
+                        "inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border",
+                        getTypeColor(capa.type),
+                      )}
+                    >
                       {getTypeIcon(capa.type)}
                       {capa.type}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{capa.source}</td>
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                    {capa.source}
+                  </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <StatusBadge status={getStatusColor(capa.status)} />
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">{capa.assignedTo}</td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
-                    {new Date(capa.targetCompletionDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    {capa.assignedTo}
+                  </td>
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
+                    {new Date(capa.targetCompletionDate).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      },
+                    )}
                   </td>
                   <td className="py-3.5 px-4 text-sm text-center sticky right-0 bg-white z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] hover:bg-slate-50">
                     <button className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors">

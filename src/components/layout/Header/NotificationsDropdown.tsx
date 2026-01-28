@@ -280,16 +280,21 @@ const MobileDrawer: React.FC<{
 }> = ({ isOpen, onClose }) => {
   const [animationState, setAnimationState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed');
   const [shouldRender, setShouldRender] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState(0);
+  const [drawerHeight, setDrawerHeight] = useState(70); // Height in vh (percentage of viewport)
   const dragStartY = useRef(0);
+  const dragStartHeight = useRef(70);
   const drawerRef = useRef<HTMLDivElement>(null);
+  
+  // Min and max height constraints (in vh)
+  const MIN_HEIGHT = 30;
+  const MAX_HEIGHT = 100;
+  const CLOSE_THRESHOLD = 20; // Close drawer if dragged below this height
 
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
-      setIsExpanded(false);
+      setDrawerHeight(70); // Reset to default height
       // Start from below screen
       setAnimationState('closed');
       // Small delay then animate up
@@ -313,7 +318,6 @@ const MobileDrawer: React.FC<{
         const timer = setTimeout(() => {
           setShouldRender(false);
           setAnimationState('closed');
-          setIsExpanded(false);
         }, 350);
         // Restore body scroll
         document.body.style.overflow = '';
@@ -330,14 +334,21 @@ const MobileDrawer: React.FC<{
   const handleDragStart = (clientY: number) => {
     setIsDragging(true);
     dragStartY.current = clientY;
-    setDragOffset(0);
+    dragStartHeight.current = drawerHeight;
   };
 
   // Handle drag move
   const handleDragMove = (clientY: number) => {
     if (!isDragging) return;
-    const delta = dragStartY.current - clientY;
-    setDragOffset(delta);
+    
+    const viewportHeight = window.innerHeight;
+    const deltaY = dragStartY.current - clientY; // Positive when dragging up
+    const deltaVh = (deltaY / viewportHeight) * 100;
+    
+    let newHeight = dragStartHeight.current + deltaVh;
+    // Clamp between min and max
+    newHeight = Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, newHeight));
+    setDrawerHeight(newHeight);
   };
 
   // Handle drag end
@@ -345,20 +356,19 @@ const MobileDrawer: React.FC<{
     if (!isDragging) return;
     setIsDragging(false);
     
-    const threshold = 50; // pixels to trigger expand/collapse
-    
-    if (dragOffset > threshold && !isExpanded) {
-      // Dragged up enough → expand
-      setIsExpanded(true);
-    } else if (dragOffset < -threshold && isExpanded) {
-      // Dragged down enough → collapse
-      setIsExpanded(false);
-    } else if (dragOffset < -100 && !isExpanded) {
-      // Dragged down significantly when not expanded → close drawer
+    // Close if dragged too low
+    if (drawerHeight < CLOSE_THRESHOLD) {
       onClose();
+      return;
     }
     
-    setDragOffset(0);
+    // Snap to nearest comfortable height
+    if (drawerHeight < 40) {
+      setDrawerHeight(MIN_HEIGHT);
+    } else if (drawerHeight > 90) {
+      setDrawerHeight(MAX_HEIGHT);
+    }
+    // Otherwise keep current height
   };
 
   // Touch handlers
@@ -397,26 +407,12 @@ const MobileDrawer: React.FC<{
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, isExpanded]);
+  }, [isDragging]);
 
   if (!shouldRender) return null;
 
   const isVisible = animationState === 'opening' || animationState === 'open';
-  
-  // Calculate drawer height based on state
-  // Use dvh for dynamic viewport on iOS Safari
-  const getDrawerHeight = () => {
-    if (isExpanded) return '100dvh';
-    return '85dvh';
-  };
-
-  // Calculate current drag transform
-  const getDragTransform = () => {
-    if (!isDragging) return 0;
-    // Limit drag offset for visual feedback
-    const maxDrag = 100;
-    return Math.max(-maxDrag, Math.min(maxDrag, -dragOffset * 0.3));
-  };
+  const isFullHeight = drawerHeight >= 95;
 
   return createPortal(
     <div className="fixed inset-0 z-[100] md:hidden">
@@ -435,18 +431,16 @@ const MobileDrawer: React.FC<{
         ref={drawerRef}
         className={cn(
           "absolute bottom-0 left-0 right-0 bg-white shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.25)]",
-          isExpanded ? "rounded-none" : "rounded-t-3xl"
+          isFullHeight ? "rounded-none" : "rounded-t-2xl"
         )}
         style={{
-          height: getDrawerHeight(),
+          height: `${drawerHeight}dvh`,
           // Safe area for home indicator (bottom) and Dynamic Island (top when expanded)
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-          paddingTop: isExpanded ? 'env(safe-area-inset-top, 0px)' : '0',
+          paddingTop: isFullHeight ? 'env(safe-area-inset-top, 0px)' : '0',
           paddingLeft: 'env(safe-area-inset-left, 0px)',
           paddingRight: 'env(safe-area-inset-right, 0px)',
-          transform: isVisible 
-            ? `translateY(${getDragTransform()}px)` 
-            : 'translateY(100%)',
+          transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
           transition: isDragging 
             ? 'none' 
             : isVisible 
@@ -460,8 +454,8 @@ const MobileDrawer: React.FC<{
         {/* Drawer Handle - Draggable */}
         <div 
           className={cn(
-            "flex justify-center py-3 cursor-grab active:cursor-grabbing select-none",
-            isExpanded && "pt-4"
+            "flex justify-center py-3 cursor-grab active:cursor-grabbing select-none touch-none",
+            isFullHeight && "pt-4"
           )}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -471,21 +465,10 @@ const MobileDrawer: React.FC<{
           <div className={cn(
             "rounded-full transition-all duration-200",
             isDragging 
-              ? "w-18 h-1.5 bg-slate-400" 
-              : "w-16 h-1 bg-slate-300"
+              ? "w-20 h-1.5 bg-slate-400" 
+              : "w-12 h-1 bg-slate-300 hover:bg-slate-400 hover:w-16"
           )} />
         </div>
-
-        {/* Expand/Collapse indicator */}
-        {isDragging && (
-          <div className="absolute top-12 left-0 right-0 flex justify-center pointer-events-none">
-            <span className="text-xs text-slate-400 bg-white/80 px-3 py-1 rounded-full">
-              {dragOffset > 50 && !isExpanded && "↑ Release to expand"}
-              {dragOffset < -50 && isExpanded && "↓ Release to collapse"}
-              {dragOffset < -80 && !isExpanded && "↓ Release to close"}
-            </span>
-          </div>
-        )}
 
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-2 border-b border-slate-200">
@@ -503,12 +486,10 @@ const MobileDrawer: React.FC<{
         <div 
           className="overflow-y-auto overscroll-contain flex-1"
           style={{ 
-            // Use dvh for dynamic viewport height (iOS Safari)
-            height: isExpanded 
-              ? 'calc(100dvh - 140px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))' 
-              : 'calc(85dvh - 120px - env(safe-area-inset-bottom, 0px))',
+            // Dynamic height based on drawer height
+            height: `calc(${drawerHeight}dvh - 120px - ${isFullHeight ? 'env(safe-area-inset-top, 0px)' : '0px'} - env(safe-area-inset-bottom, 0px))`,
             WebkitOverflowScrolling: 'touch',
-            transition: 'height 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: isDragging ? 'none' : 'height 300ms cubic-bezier(0.16, 1, 0.3, 1)',
             overscrollBehavior: 'contain',
           }}
         >

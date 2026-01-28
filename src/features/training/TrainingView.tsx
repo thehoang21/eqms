@@ -23,8 +23,16 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { cn } from "@/components/ui/utils";
-import { TrainingRecord, TrainingFilters, TrainingStatus, TrainingType } from "./types";
-import { MobileCard, MobileCardList } from "@/components/ui/table/MobileCardView";
+import {
+  TrainingRecord,
+  TrainingFilters,
+  TrainingStatus,
+  TrainingType,
+} from "./types";
+import {
+  MobileCard,
+  MobileCardList,
+} from "@/components/ui/table/MobileCardView";
 
 // Mock Data
 const MOCK_TRAININGS: TrainingRecord[] = [
@@ -32,7 +40,8 @@ const MOCK_TRAININGS: TrainingRecord[] = [
     id: "1",
     trainingId: "TRN-2026-001",
     title: "GMP Basic Training",
-    description: "Introduction to Good Manufacturing Practice principles and requirements",
+    description:
+      "Introduction to Good Manufacturing Practice principles and requirements",
     type: "GMP",
     status: "Scheduled",
     instructor: "Dr. John Smith",
@@ -92,7 +101,8 @@ const MOCK_TRAININGS: TrainingRecord[] = [
     id: "4",
     trainingId: "TRN-2026-004",
     title: "ISO 9001:2015 Requirements",
-    description: "Understanding ISO 9001 quality management system requirements",
+    description:
+      "Understanding ISO 9001 quality management system requirements",
     type: "Compliance",
     status: "Scheduled",
     instructor: "Emma Wilson",
@@ -168,17 +178,34 @@ export const TrainingView: React.FC = () => {
   const filteredData = useMemo(() => {
     return MOCK_TRAININGS.filter((training) => {
       const matchesSearch =
-        training.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        training.trainingId.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        training.instructor.toLowerCase().includes(filters.searchQuery.toLowerCase());
+        training.title
+          .toLowerCase()
+          .includes(filters.searchQuery.toLowerCase()) ||
+        training.trainingId
+          .toLowerCase()
+          .includes(filters.searchQuery.toLowerCase()) ||
+        training.instructor
+          .toLowerCase()
+          .includes(filters.searchQuery.toLowerCase());
 
-      const matchesType = filters.typeFilter === "All" || training.type === filters.typeFilter;
-      const matchesStatus = filters.statusFilter === "All" || training.status === filters.statusFilter;
+      const matchesType =
+        filters.typeFilter === "All" || training.type === filters.typeFilter;
+      const matchesStatus =
+        filters.statusFilter === "All" ||
+        training.status === filters.statusFilter;
 
-      const matchesDateFrom = !filters.dateFrom || training.scheduledDate >= filters.dateFrom;
-      const matchesDateTo = !filters.dateTo || training.scheduledDate <= filters.dateTo;
+      const matchesDateFrom =
+        !filters.dateFrom || training.scheduledDate >= filters.dateFrom;
+      const matchesDateTo =
+        !filters.dateTo || training.scheduledDate <= filters.dateTo;
 
-      return matchesSearch && matchesType && matchesStatus && matchesDateFrom && matchesDateTo;
+      return (
+        matchesSearch &&
+        matchesType &&
+        matchesStatus &&
+        matchesDateFrom &&
+        matchesDateTo
+      );
     });
   }, [MOCK_TRAININGS, filters]);
 
@@ -191,7 +218,9 @@ export const TrainingView: React.FC = () => {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   // Status Badge Mapping
-  const getStatusColor = (status: TrainingStatus): "draft" | "pendingReview" | "approved" | "effective" | "archived" => {
+  const getStatusColor = (
+    status: TrainingStatus,
+  ): "draft" | "pendingReview" | "approved" | "effective" | "archived" => {
     switch (status) {
       case "Scheduled":
         return "pendingReview";
@@ -228,7 +257,9 @@ export const TrainingView: React.FC = () => {
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <IconSmartHome className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">Training Management</span>
+            <span className="text-slate-700 font-medium">
+              Training Management
+            </span>
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
@@ -257,26 +288,35 @@ export const TrainingView: React.FC = () => {
         {/* Row 1: Search + Type */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-4">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+          <div className="xl:col-span-3">
+            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              Search
+            </label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by title, ID, or instructor..."
                 value={filters.searchQuery}
-                onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
-                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+                onChange={(e) =>
+                  setFilters({ ...filters, searchQuery: e.target.value })
+                }
+                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
           </div>
 
           {/* Type Filter */}
-          <div className="xl:col-span-2">
+          <div className="xl:col-span-3">
             <Select
               label="Type"
               value={filters.typeFilter}
-              onChange={(value) => setFilters({ ...filters, typeFilter: value as TrainingType | "All" })}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  typeFilter: value as TrainingType | "All",
+                })
+              }
               options={typeOptions}
             />
           </div>
@@ -289,7 +329,12 @@ export const TrainingView: React.FC = () => {
             <Select
               label="Status"
               value={filters.statusFilter}
-              onChange={(value) => setFilters({ ...filters, statusFilter: value as TrainingStatus | "All" })}
+              onChange={(value) =>
+                setFilters({
+                  ...filters,
+                  statusFilter: value as TrainingStatus | "All",
+                })
+              }
               options={statusOptions}
             />
           </div>
@@ -324,8 +369,12 @@ export const TrainingView: React.FC = () => {
               <GraduationCap className="h-5 w-5 text-emerald-600" />
             </div>
             <div>
-              <p className="text-xs text-slate-600 font-medium">Total Trainings</p>
-              <p className="text-2xl font-bold text-slate-900">{MOCK_TRAININGS.length}</p>
+              <p className="text-xs text-slate-600 font-medium">
+                Total Trainings
+              </p>
+              <p className="text-2xl font-bold text-slate-900">
+                {MOCK_TRAININGS.length}
+              </p>
             </div>
           </div>
         </div>
@@ -352,7 +401,10 @@ export const TrainingView: React.FC = () => {
             <div>
               <p className="text-xs text-slate-600 font-medium">In Progress</p>
               <p className="text-2xl font-bold text-slate-900">
-                {MOCK_TRAININGS.filter((t) => t.status === "In-Progress").length}
+                {
+                  MOCK_TRAININGS.filter((t) => t.status === "In-Progress")
+                    .length
+                }
               </p>
             </div>
           </div>
@@ -410,11 +462,14 @@ export const TrainingView: React.FC = () => {
               },
               {
                 label: "Date",
-                value: new Date(training.scheduledDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                }),
+                value: new Date(training.scheduledDate).toLocaleDateString(
+                  "en-US",
+                  {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  },
+                ),
               },
               {
                 label: "Enrolled",
@@ -444,25 +499,48 @@ export const TrainingView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">No.</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Training ID</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Title</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Type</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Status</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Instructor</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Scheduled Date</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">Enrolled</th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">Action</th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  No.
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Training ID
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Title
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Type
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Status
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Instructor
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Scheduled Date
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Enrolled
+                </th>
+                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
               {paginatedData.map((training, index) => (
-                <tr key={training.id} className="hover:bg-slate-50 transition-colors">
+                <tr
+                  key={training.id}
+                  className="hover:bg-slate-50 transition-colors"
+                >
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
                     {(currentPage - 1) * itemsPerPage + index + 1}
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className="font-mono text-slate-900">{training.trainingId}</span>
+                    <span className="font-mono text-slate-900">
+                      {training.trainingId}
+                    </span>
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-medium">
                     {training.title}
@@ -480,11 +558,14 @@ export const TrainingView: React.FC = () => {
                     {training.instructor}
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
-                    {new Date(training.scheduledDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    {new Date(training.scheduledDate).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      },
+                    )}
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-2">
@@ -498,10 +579,12 @@ export const TrainingView: React.FC = () => {
                             training.enrolled >= training.capacity
                               ? "bg-emerald-500"
                               : training.enrolled >= training.capacity * 0.8
-                              ? "bg-amber-500"
-                              : "bg-cyan-500"
+                                ? "bg-amber-500"
+                                : "bg-cyan-500",
                           )}
-                          style={{ width: `${(training.enrolled / training.capacity) * 100}%` }}
+                          style={{
+                            width: `${(training.enrolled / training.capacity) * 100}%`,
+                          }}
                         />
                       </div>
                     </div>
