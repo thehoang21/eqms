@@ -58,7 +58,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           htmlFor={id}
           className={cn(
             'flex items-center justify-center w-5 h-5 rounded border-2 cursor-pointer transition-all',
-            'peer-focus:ring-2 peer-focus:ring-emerald-500 peer-focus:ring-offset-2',
+            'peer-focus:ring-1 peer-focus:ring-emerald-500 peer-focus:ring-offset-2',
             checked
               ? 'bg-emerald-600 border-emerald-600'
               : 'bg-white border-slate-300 hover:border-emerald-400',

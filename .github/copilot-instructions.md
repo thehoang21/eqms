@@ -315,7 +315,7 @@ const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElem
 - **Label:** `text-sm font-medium text-slate-700 mb-1.5 block`
 - **Input/Select height:** `h-11`
 - **Border:** `border border-slate-200 rounded-md`
-- **Focus state:** `focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500`
+- **Focus state:** `focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500`
 - **Placeholder:** `placeholder:text-slate-400`
 
 ### 5.3 Select Component (Custom Dropdown)

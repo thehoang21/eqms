@@ -96,7 +96,7 @@ export const Input: React.FC<InputProps> = ({
         error
           ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
           : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500',
-        'focus:outline-none focus:ring-2',
+        'focus:outline-none focus:ring-1',
         'placeholder:text-slate-400',
         'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-500',
         'read-only:bg-slate-50 read-only:cursor-default',
@@ -132,7 +132,7 @@ export const Textarea: React.FC<TextareaProps> = ({
         error
           ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
           : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500',
-        'focus:outline-none focus:ring-2',
+        'focus:outline-none focus:ring-1',
         'placeholder:text-slate-400',
         'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-500',
         className

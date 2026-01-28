@@ -361,7 +361,6 @@ export const BatchDocumentView: React.FC = () => {
               size="sm"
               className="flex items-center gap-1.5 md:gap-2 touch-manipulation"
             >
-              <X className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="text-xs md:text-sm">Cancel</span>
             </Button>
             <Button
@@ -370,7 +369,6 @@ export const BatchDocumentView: React.FC = () => {
               size="sm"
               className="flex items-center gap-1.5 md:gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300 touch-manipulation"
             >
-              <Save className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="text-xs md:text-sm">
                 {isSaving ? "Saving..." : "Save Draft"}
               </span>
@@ -386,7 +384,6 @@ export const BatchDocumentView: React.FC = () => {
               size="sm"
               className="flex items-center gap-1.5 md:gap-2 !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300 touch-manipulation"
             >
-              <Send className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="text-xs md:text-sm">
                 {isSubmitting ? "Submitting..." : "Submit"}
               </span>
@@ -623,7 +620,6 @@ export const BatchDocumentView: React.FC = () => {
                     size="sm"
                     className="flex items-center justify-center gap-1.5 touch-manipulation"
                   >
-                    <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4 rotate-180" />
                     <span className="text-xs md:text-sm">Previous</span>
                   </Button>
 
@@ -649,7 +645,6 @@ export const BatchDocumentView: React.FC = () => {
                       className="flex items-center justify-center gap-1.5 touch-manipulation"
                     >
                       <span className="text-xs md:text-sm">Next</span>
-                      <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                     </Button>
                   ) : (
                     <Button
@@ -660,7 +655,6 @@ export const BatchDocumentView: React.FC = () => {
                       className="flex items-center justify-center gap-1.5 touch-manipulation"
                     >
                       <span className="text-xs md:text-sm">Complete</span>
-                      <IconChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                     </Button>
                   )}
                 </div>

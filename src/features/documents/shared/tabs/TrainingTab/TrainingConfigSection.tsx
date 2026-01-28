@@ -115,7 +115,7 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
                                                 onUpdate({ passingScore: 10 });
                                             }
                                         }}
-                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                                     />
                                 </div>
                             </div>
@@ -127,7 +127,7 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
                                     min="1"
                                     value={config.maxAttempts}
                                     onChange={(e) => onUpdate({ maxAttempts: parseInt(e.target.value) || 1 })}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                                 />
                             </div>
                         </>
@@ -141,7 +141,7 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
                                 min="1"
                                 value={config.deadlineDays}
                                 onChange={(e) => onUpdate({ deadlineDays: parseInt(e.target.value) || 1 })}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                             />
                         </div>
                     </div>

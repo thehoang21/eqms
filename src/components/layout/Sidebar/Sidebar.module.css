@@ -2,6 +2,26 @@
    SIDEBAR COMPONENT STYLES - Mobile Optimized
    =================================== */
 
+/* Smooth scroll container for sidebar navigation */
+.sidebar-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  will-change: scroll-position;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* GPU acceleration for smoother animations */
+.sidebar-mobile {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 /* Hover menu portal styles */
 .hoverMenuPortal {
   position: fixed;

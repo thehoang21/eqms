@@ -395,7 +395,6 @@ export const TaskDetailDrawer: React.FC<{
                   size="sm"
                   className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
                 >
-                  <IconPlayerPlay className="mr-2 h-4 w-4" />
                   Start Review
                 </Button>
               ) : isRevisionApprovalTask ? (
@@ -404,12 +403,11 @@ export const TaskDetailDrawer: React.FC<{
                   size="sm"
                   className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20"
                 >
-                  <Eye className="mr-2 h-4 w-4" />
                   Review & Approve
                 </Button>
               ) : (
                 <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20">
-                  Process Task <ArrowRight className="ml-2 h-4 w-4" />
+                  Process Task
                 </Button>
               )}
             </>

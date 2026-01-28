@@ -374,7 +374,7 @@ const TaskFilters: React.FC<{
               placeholder="Search by ID, name or description..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="block w-full pl-9 sm:pl-10 pr-3 h-10 sm:h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm transition-all placeholder:text-slate-400"
+              className="block w-full pl-9 sm:pl-10 pr-3 h-10 sm:h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm transition-all placeholder:text-slate-400"
             />
           </div>
         </FilterCard.Item>

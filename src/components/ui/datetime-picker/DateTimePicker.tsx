@@ -419,7 +419,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           'border bg-white',
           isOpen
             ? 'ring-2 ring-emerald-500 border-emerald-500'
-            : 'border-slate-200 hover:border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500'
+            : 'border-slate-200 hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500'
         )}
       >
         <div className="flex items-center gap-2 truncate">
@@ -457,7 +457,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                     max="23"
                     value={String(time.hours).padStart(2, '0')}
                     onChange={(e) => handleTimeChange('hours', e.target.value)}
-                    className="w-12 h-8 rounded border border-slate-200 text-center text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                    className="w-12 h-8 rounded border border-slate-200 text-center text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                   />
                 </div>
                 <span className="text-slate-400">:</span>
@@ -468,7 +468,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
                     max="59"
                     value={String(time.minutes).padStart(2, '0')}
                     onChange={(e) => handleTimeChange('minutes', e.target.value)}
-                    className="w-12 h-8 rounded border border-slate-200 text-center text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                    className="w-12 h-8 rounded border border-slate-200 text-center text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                   />
                 </div>
               </div>

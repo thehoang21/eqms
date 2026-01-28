@@ -145,7 +145,7 @@ export const Radio: React.FC<RadioProps> = ({
           htmlFor={radioId}
           className={cn(
             'flex items-center justify-center w-5 h-5 rounded-full border-2 cursor-pointer transition-all',
-            'peer-focus:ring-2 peer-focus:ring-emerald-500 peer-focus:ring-offset-2',
+            'peer-focus:ring-1 peer-focus:ring-emerald-500 peer-focus:ring-offset-2',
             checked
               ? 'bg-white border-emerald-600'
               : 'bg-white border-slate-300 hover:border-emerald-400',
@@ -243,7 +243,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
       )}
       <div className={cn(
         variant === 'card' && layout === 'horizontal' 
-          ? 'grid grid-cols-2 gap-3'
+          ? 'grid grid-cols-1 sm:grid-cols-2 gap-3'
           : variant === 'card'
           ? 'space-y-3'
           : layout === 'horizontal'

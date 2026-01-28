@@ -852,7 +852,7 @@ export const DocumentReviewViewWithBatch: React.FC<DocumentReviewViewProps> = ({
                                                 value={newComment}
                                                 onChange={(e) => setNewComment(e.target.value)}
                                                 placeholder="Add a comment..."
-                                                className="flex-1 min-h-[80px] px-3 lg:px-4 py-2 lg:py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
+                                                className="flex-1 min-h-[80px] px-3 lg:px-4 py-2 lg:py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
                                             />
                                             <Button
                                                 onClick={handleAddComment}

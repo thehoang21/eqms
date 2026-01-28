@@ -250,7 +250,6 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
             variant="outline"
             className="whitespace-nowrap gap-2"
           >
-            <IconChevronLeft className="h-4 w-4" />
             Back
           </Button>
           </div>

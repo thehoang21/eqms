@@ -354,7 +354,7 @@ export const StandaloneRevisionView: React.FC = () => {
                     }}
                     placeholder="e.g., Updated testing procedures to comply with new regulatory requirements. Modified sections 3.2 and 4.5 to reflect current best practices..."
                     className={cn(
-                        "w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
+                        "w-full px-4 py-3 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
                         showError && (reasonForChange.length < 50)
                             ? "border-red-300 bg-red-50"
                             : "border-slate-200 bg-white"

@@ -248,22 +248,12 @@ export const RequestControlledCopyView: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                 <Button
-                  onClick={() => navigate(-1)}
-                  size="sm"
-                  variant="outline"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 rounded-md bg-white text-sm font-medium text-black hover:bg-slate-50 transition-colors shadow-sm"
-                >
-                  <IconChevronLeft className="h-4 w-4" />
-                  Back
-                </Button>
-                <Button
                   type="button"
                   variant="outline"
                   size="sm"
                   onClick={handleCancel}
                   className="flex items-center gap-1.5 md:gap-2 touch-manipulation"
                 >
-                  <X className="h-4 w-4" />
                   Cancel
                 </Button>
                 <Button
@@ -274,7 +264,6 @@ export const RequestControlledCopyView: React.FC = () => {
                   form="controlled-copy-form"
                   className="flex items-center gap-1.5 md:gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300 touch-manipulation"
                 >
-                  <Send className="h-4 w-4" />
                   Submit Request
                 </Button>
               </div>
@@ -503,7 +492,7 @@ export const RequestControlledCopyView: React.FC = () => {
                           }}
                           min={1}
                           max={50}
-                          className={`h-9 lg:h-11 w-20 lg:w-24 px-2 lg:px-3 py-2 border rounded-md text-xs lg:text-sm text-center font-medium focus:outline-none focus:ring-2 transition-colors ${
+                          className={`h-9 lg:h-11 w-20 lg:w-24 px-2 lg:px-3 py-2 border rounded-md text-xs lg:text-sm text-center font-medium focus:outline-none focus:ring-1 transition-colors ${
                             errors.quantity
                               ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                               : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
@@ -556,7 +545,7 @@ export const RequestControlledCopyView: React.FC = () => {
                         }}
                         placeholder="e.g., Replace damaged copy, New production line..."
                         rows={3}
-                        className={`w-full px-3 py-2 lg:py-2.5 border rounded-md text-xs lg:text-sm focus:outline-none focus:ring-2 transition-colors resize-none ${
+                        className={`w-full px-3 py-2 lg:py-2.5 border rounded-md text-xs lg:text-sm focus:outline-none focus:ring-1 transition-colors resize-none ${
                           errors.reason
                             ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                             : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'

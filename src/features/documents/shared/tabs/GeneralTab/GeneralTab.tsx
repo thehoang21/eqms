@@ -218,7 +218,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         value={formData.title}
                         onChange={(e) => setFormData({ title: e.target.value })}
                         placeholder="Enter document name"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     />
                 </div>
 
@@ -289,7 +289,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         value={formData.knowledgeBase}
                         onChange={(e) => setFormData({ knowledgeBase: e.target.value })}
                         placeholder="Enter knowledge base"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     />
                 </div>
 
@@ -300,7 +300,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         type="number"
                         value={formData.periodicReviewCycle}
                         onChange={(e) => setFormData({ periodicReviewCycle: parseInt(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     />
                 </div>
 
@@ -311,7 +311,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         type="number"
                         value={formData.periodicReviewNotification}
                         onChange={(e) => setFormData({ periodicReviewNotification: parseInt(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     />
                 </div>
 
@@ -360,7 +360,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
                         onChange={(e) => setFormData({ description: e.target.value })}
                         placeholder="Enter document description"
                         rows={4}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
                     />
                 </div>
 

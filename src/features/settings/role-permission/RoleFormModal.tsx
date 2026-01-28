@@ -60,7 +60,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
             onChange={(e) => onNameChange(e.target.value)}
             placeholder="e.g., Document Owner (Dept A)"
             className={cn(
-              "w-full h-11 px-3 text-sm border rounded-md focus:outline-none focus:ring-2 placeholder:text-slate-400",
+              "w-full h-11 px-3 text-sm border rounded-md focus:outline-none focus:ring-1 placeholder:text-slate-400",
               errors.name
                 ? "border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50/30"
                 : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
@@ -91,7 +91,7 @@ export const RoleFormModal: React.FC<RoleFormModalProps> = ({
             value={description}
             onChange={(e) => onDescriptionChange(e.target.value)}
             placeholder="Short description of this role"
-            className="w-full min-h-[96px] px-3 py-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+            className="w-full min-h-[96px] px-3 py-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
           />
         </div>
         <div>

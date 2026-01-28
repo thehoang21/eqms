@@ -228,13 +228,19 @@ export const NewRevisionView: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-                        <Button size="sm" variant="outline" onClick={() => setShowCancelModal(true)} className="border-red-600 text-red-600 hover:bg-red-50 shadow-sm gap-1.5">
-                            <X className="h-4 w-4" />
+                        <Button size="sm" variant="outline" onClick={() => setShowCancelModal(true)} className="flex items-center gap-2">
                             Cancel
                         </Button>
-                        <Button size="sm" onClick={handleSaveDraft} className="flex items-center gap-1.5 md:gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300 touch-manipulation">
-                            <Save className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                        <Button size="sm" variant="outline" onClick={handleSaveDraft} className="flex items-center gap-1.5 md:gap-2">
                             Save Draft
+                        </Button>
+                        <Button 
+                            size="sm" 
+                            onClick={handleSubmit}
+                            disabled={!reasonForChange.trim() || reasonForChange.length < 50}
+                            className="shadow-sm whitespace-nowrap"
+                        >
+                            Continue
                         </Button>
                     </div>
                 </div>
@@ -289,7 +295,7 @@ export const NewRevisionView: React.FC = () => {
             {/* Impact Analysis Table */}
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                 {/* Table Header */}
-                <div className="bg-slate-50 border-b border-slate-200 px-4 lg:px-6 py-3 lg:py-4">
+                <div className="bg-white border-b border-slate-200 px-4 lg:px-6 py-3 lg:py-4">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-0">
                         <div>
                             <h2 className="text-sm lg:text-base font-semibold text-slate-900">
@@ -398,7 +404,7 @@ export const NewRevisionView: React.FC = () => {
                                                 <button
                                                     onClick={() => handleToggleDecision(doc.id)}
                                                     className={cn(
-                                                        "relative inline-flex h-5 w-9 lg:h-6 lg:w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+                                                        "relative inline-flex h-5 w-9 lg:h-6 lg:w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:ring-offset-2",
                                                         isUpgrade ? "bg-emerald-500" : "bg-slate-300"
                                                     )}
                                                     role="switch"
@@ -426,6 +432,30 @@ export const NewRevisionView: React.FC = () => {
                     </table>
                 </div>
             </div>
+                        {/* Summary Footer */}
+            <div className="rounded-xl border border-slate-200 bg-white p-4 lg:p-6">
+                <div>
+                    <h3 className="text-xs lg:text-sm font-semibold text-slate-900 mb-1.5 lg:mb-2">
+                        Impact Analysis Summary
+                    </h3>
+                    <div className="flex flex-wrap items-center gap-3 lg:gap-4 text-xs lg:text-sm">
+                        <div className="flex items-center gap-2">
+                            <span className="text-slate-600">Total Linked Documents:</span>
+                            <span className="font-semibold text-slate-900">{MOCK_LINKED_DOCUMENTS.length}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-slate-600">To be Upgraded:</span>
+                            <span className="font-semibold text-emerald-600">{upgradeCount}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-slate-600">Keep Current:</span>
+                            <span className="font-semibold text-slate-600">
+                                {MOCK_LINKED_DOCUMENTS.length - upgradeCount}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {/* Reason for Change */}
             <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-4 lg:p-6">
@@ -434,7 +464,7 @@ export const NewRevisionView: React.FC = () => {
                         <label className="block text-xs lg:text-sm font-semibold text-slate-900 mb-1">
                             Reason for Change <span className="text-red-500">*</span>
                         </label>
-                        <p className="text-xs lg:text-sm text-slate-500 mb-2 lg:mb-3">
+                        <p className="text-xs lg:text-xs text-slate-500 mb-2">
                             Provide a detailed explanation for creating this revision and the impact on linked documents.
                         </p>
                     </div>
@@ -447,7 +477,7 @@ export const NewRevisionView: React.FC = () => {
                     }}
                     placeholder="e.g., Updated testing procedures to comply with new regulatory requirements. Forms FORM.0001.01 and FORM.0002.01 require updates to reflect new data fields..."
                     className={cn(
-                        "w-full px-3 lg:px-4 py-2 lg:py-3 border rounded-lg text-xs lg:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
+                        "w-full px-3 lg:px-4 py-2 lg:py-3 border rounded-lg text-xs lg:text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
                         showError && (reasonForChange.length < 50)
                             ? "border-red-300 bg-red-50"
                             : "border-slate-200 bg-white"
@@ -464,7 +494,7 @@ export const NewRevisionView: React.FC = () => {
                         }
                     </p>
                 )}
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between">
                     <p className={cn(
                         "text-xs",
                         reasonForChange.length < 50 ? "text-amber-600 font-medium" : "text-slate-500"
@@ -477,42 +507,6 @@ export const NewRevisionView: React.FC = () => {
                     )}>
                         {reasonForChange.length >= 50 ? "✓ Minimum met" : "Minimum 50 characters required"}
                     </p>
-                </div>
-            </div>
-
-            {/* Summary Footer */}
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 lg:p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-4">
-                    <div>
-                        <h3 className="text-xs lg:text-sm font-semibold text-slate-900 mb-1.5 lg:mb-2">
-                            Impact Analysis Summary
-                        </h3>
-                        <div className="flex flex-wrap items-center gap-3 lg:gap-4 text-xs lg:text-sm">
-                            <div className="flex items-center gap-2">
-                                <span className="text-slate-600">Total Linked Documents:</span>
-                                <span className="font-semibold text-slate-900">{MOCK_LINKED_DOCUMENTS.length}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-slate-600">To be Upgraded:</span>
-                                <span className="font-semibold text-emerald-600">{upgradeCount}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-slate-600">Keep Current:</span>
-                                <span className="font-semibold text-slate-600">
-                                    {MOCK_LINKED_DOCUMENTS.length - upgradeCount}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <Button 
-                        size="sm" 
-                        onClick={handleSubmit}
-                        disabled={!reasonForChange.trim() || reasonForChange.length < 50}
-                        className="shadow-sm whitespace-nowrap"
-                    >
-                        Continue
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
                 </div>
             </div>
 

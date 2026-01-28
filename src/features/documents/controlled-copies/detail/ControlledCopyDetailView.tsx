@@ -381,7 +381,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
           {/* Action buttons */}
           <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             <Button onClick={onBack} variant="outline" size="sm" className="gap-1.5 shadow-sm">
-              <ChevronLeft className="h-4 w-4" />
               Back
             </Button>
             <Button
@@ -390,7 +389,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
               size="sm"
               className="gap-1.5 shadow-sm hover:border-emerald-200 hover:text-emerald-700 hover:bg-emerald-50"
             >
-              <Eye className="h-4 w-4" />
               View Original
             </Button>
             <Button
@@ -399,7 +397,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
               size="sm"
               className="gap-1.5 shadow-sm"
             >
-              <Download className="h-4 w-4" />
               Download
             </Button>
             {controlledCopy.status === "Ready for Distribution" && (
@@ -409,7 +406,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
                 size="sm"
                 className="gap-1.5 shadow-sm"
               >
-                <IconShare3 className="h-4 w-4" />
                 Distribute
               </Button>
             )}

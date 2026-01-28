@@ -111,7 +111,7 @@ export const RestoreModal: React.FC<RestoreModalProps> = ({
                         onChange={(e) => setReason(e.target.value)}
                         placeholder="Provide a detailed reason for restoring this archived document..."
                         rows={4}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm resize-none"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm resize-none"
                         required
                     />
                     <p className="text-xs text-slate-500 mt-1">

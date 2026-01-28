@@ -262,7 +262,7 @@ export const Select: React.FC<SelectProps> = ({
             ? "bg-slate-50 cursor-not-allowed opacity-60"
             : isOpen
             ? "ring-2 ring-emerald-500 border-emerald-500"
-            : "hover:border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500",
+            : "hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
           triggerClassName
         )}
       >

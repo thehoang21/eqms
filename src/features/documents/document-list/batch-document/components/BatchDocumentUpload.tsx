@@ -730,8 +730,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                                                                 className="flex-1 lg:flex-initial justify-center gap-0 sm:gap-1 lg:gap-1.5 px-1.5 sm:px-3 h-8 sm:h-9"
                                                                 title="Set as parent document"
                                                             >
-                                                                <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                                                <span className="hidden sm:inline text-xs sm:text-sm">Set Parent</span>
+                                                                <span className="sm:inline text-xs sm:text-sm">Set Parent</span>
                                                             </Button>
                                                         )}
                                                         
@@ -742,8 +741,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                                                             className="flex-1 lg:flex-initial justify-center gap-0 sm:gap-1 lg:gap-1.5 px-1.5 sm:px-3 h-8 sm:h-9 text-slate-600 border-slate-300 hover:bg-slate-50 hover:border-slate-400"
                                                             title="Preview document"
                                                         >
-                                                            <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                                            <span className="hidden sm:inline text-xs sm:text-sm">Preview</span>
+                                                            <span className="sm:inline text-xs sm:text-sm">Preview</span>
                                                         </Button>
                                                         <Button
                                                             onClick={() => handleRemoveDocument(doc.id)}
@@ -752,8 +750,7 @@ export const BatchDocumentUpload: React.FC<BatchDocumentUploadProps> = ({
                                                             className="flex-1 lg:flex-initial justify-center gap-0 sm:gap-1 lg:gap-1.5 px-1.5 sm:px-3 h-8 sm:h-9 text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400"
                                                             title="Remove document"
                                                         >
-                                                            <IconTrash className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                                            <span className="hidden sm:inline text-xs sm:text-sm">Remove</span>
+                                                            <span className="sm:inline text-xs sm:text-sm">Remove</span>
                                                         </Button>
                                                     </div>
                                                 </div>

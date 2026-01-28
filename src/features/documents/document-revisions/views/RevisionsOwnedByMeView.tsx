@@ -159,7 +159,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
             placeholder="Search revisions..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full px-4 py-2 h-11 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="w-full px-4 py-2 h-11 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
           />
         </div>
 

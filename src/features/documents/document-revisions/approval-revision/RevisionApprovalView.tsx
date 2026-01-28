@@ -278,137 +278,34 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
             tabs={DEFAULT_WORKFLOW_TABS}
             activeTab={activeTab}
             onTabChange={setActiveTab}
+            headerActions={
+                canApprove ? (
+                    <>
+                        <Button
+                            onClick={handleReject}
+                            variant="outline"
+                            size="sm"
+                            disabled={isSubmitting}
+                            className="border-red-200 text-red-700 hover:bg-red-50"
+                        >
+                            <span className="text-xs sm:text-sm">Reject</span>
+                        </Button>
+                        <Button
+                            onClick={handleApprove}
+                            variant="default"
+                            size="sm"
+                            disabled={isSubmitting}
+                        >
+                            <span className="text-xs sm:text-sm">Complete Approve</span>
+                        </Button>
+                    </>
+                ) : undefined
+            }
         >
             {activeTab === "document" && (
                 <div className="space-y-6">
                     {/* PDF Preview Section - Read Only */}
                     <DocumentTab mode="view" />
-
-                    {/* Revision Info Banner */}
-                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-200 p-5">
-                        <div className="flex items-start gap-4">
-                            <div className="h-12 w-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </div>
-                            <div className="flex-1">
-                                <h3 className="text-base font-bold text-slate-900 mb-1">Document Revision</h3>
-                                <p className="text-sm text-slate-600">
-                                    This is revision <span className="font-semibold">{revision.version}</span> of the document.
-                                    Previous version: <span className="font-semibold">{revision.previousVersion}</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Approval Workflow Info */}
-                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div className="border-b border-slate-200 bg-slate-50 px-4 lg:px-6 py-3 lg:py-4">
-                            <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-3">
-                                <h3 className="text-base lg:text-lg font-bold text-slate-900">Approval Workflow</h3>
-                                <div className="inline-flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 bg-blue-50 border border-blue-200 rounded-lg w-fit">
-                                    <User className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-blue-600" />
-                                    <span className="text-xs lg:text-sm font-medium text-blue-700">Single Approver</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-4 lg:p-6">
-                            {(() => {
-                                const isCurrentApprover = approver.id === currentUserId;
-                                const isApproved = approver.status === 'approved';
-                                const isRejected = approver.status === 'rejected';
-
-                                return (
-                                    <div
-                                        className={cn(
-                                            "p-3 lg:p-4 rounded-lg border transition-all",
-                                            isCurrentApprover && approver.status === 'pending'
-                                                ? "bg-emerald-50 border-emerald-200"
-                                                : "bg-white border-slate-200"
-                                        )}
-                                    >
-                                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-                                            <div className="flex items-center gap-3 lg:gap-4">
-                                                <div className="h-9 w-9 lg:h-10 lg:w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
-                                                    {approver.name.charAt(0)}
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <div className="flex items-center gap-2 flex-wrap">
-                                                        <h4 className="font-medium text-sm lg:text-base text-slate-900 truncate">{approver.name}</h4>
-                                                        {isCurrentApprover && (
-                                                            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded shrink-0">
-                                                                You
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex items-center gap-1.5 lg:gap-2 text-xs text-slate-500 flex-wrap">
-                                                        <span className="truncate">{approver.role}</span>
-                                                        <span className="w-1 h-1 rounded-full bg-slate-300 shrink-0" />
-                                                        <span className="truncate">{approver.department}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center gap-2 flex-wrap lg:shrink-0">
-                                                {isApproved && (
-                                                    <div className="flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
-                                                        <CheckCircle className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-emerald-600" />
-                                                        <span className="text-xs lg:text-sm font-medium text-emerald-700">Approved</span>
-                                                    </div>
-                                                )}
-                                                {isRejected && (
-                                                    <div className="flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 bg-red-50 border border-red-200 rounded-lg">
-                                                        <XCircle className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-red-600" />
-                                                        <span className="text-xs lg:text-sm font-medium text-red-700">Rejected</span>
-                                                    </div>
-                                                )}
-                                                {approver.status === 'pending' && (
-                                                    <div className="flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 bg-amber-50 border border-amber-200 rounded-lg">
-                                                        <span className="text-xs lg:text-sm font-medium text-amber-700">Pending</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })()}
-                        </div>
-                    </div>
-
-                    {/* Approval Actions */}
-                    {canApprove && (
-                        <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-200 shadow-sm p-4 lg:p-6">
-                            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 lg:gap-4">
-                                <div className="flex-1">
-                                    <h3 className="text-base lg:text-lg font-bold text-slate-900 mb-1">Your Approval Action Required</h3>
-                                </div>
-                                <div className="flex items-center gap-2 lg:gap-3 lg:shrink-0">
-                                    <Button
-                                        onClick={handleReject}
-                                        variant="outline"
-                                        size="sm"
-                                        disabled={isSubmitting}
-                                        className="flex-1 lg:flex-initial border-red-200 text-red-700 hover:bg-red-50"
-                                    >
-                                        <ThumbsDown className="h-3.5 w-3.5 lg:h-4 lg:w-4 mr-1.5 lg:mr-2" />
-                                        <span className="text-xs lg:text-sm">Reject</span>
-                                    </Button>
-                                    <Button
-                                        onClick={handleApprove}
-                                        variant="default"
-                                        size="sm"
-                                        disabled={isSubmitting}
-                                        className="flex-1 lg:flex-initial"
-                                    >
-                                        <ThumbsUp className="h-3.5 w-3.5 lg:h-4 lg:w-4 mr-1.5 lg:mr-2" />
-                                        <span className="text-xs lg:text-sm">Approve</span>
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
 
                     {/* Comments Section */}
                     <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 lg:p-6">
@@ -457,7 +354,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                                         onChange={(e) => setNewComment(e.target.value)}
                                         placeholder="Add a comment..."
                                         rows={3}
-                                        className="flex-1 px-3 lg:px-4 py-2 lg:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
+                                        className="flex-1 px-3 lg:px-4 py-2 lg:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
                                     />
                                     <button
                                         onClick={handleAddComment}

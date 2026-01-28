@@ -105,7 +105,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
               type="text" 
               value={username} 
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
               placeholder="Enter your username"
             />
           </div>
@@ -116,7 +116,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
               placeholder="Enter your password"
             />
           </div>
@@ -126,16 +126,16 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
             <textarea 
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm min-h-[80px]"
+              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm min-h-[80px]"
               placeholder="e.g., Reviewed and approved for release..."
             />
           </div>
 
           {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
 
-          <div className="pt-2 flex gap-3">
-             <Button type="button" size='sm' variant="outline" className="w-full" onClick={onClose}>Cancel</Button>
-             <Button type="submit" size='sm' className="w-full">Sign</Button>
+          <div className="pt-2 flex justify-end gap-2">
+             <Button type="button" size='sm' variant="outline" onClick={onClose} className="min-w-[5rem]">Cancel</Button>
+             <Button type="submit" size='sm' className="min-w-[5rem]">Sign</Button>
           </div>
         </form>
       </div>

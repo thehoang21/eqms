@@ -316,6 +316,29 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
       tabs={DEFAULT_WORKFLOW_TABS}
       activeTab={activeTab}
       onTabChange={setActiveTab}
+      headerActions={
+        canReview ? (
+          <>
+            <Button
+              onClick={handleReject}
+              variant="outline"
+              size="sm"
+              disabled={isSubmitting}
+              className="border-red-200 text-red-700 hover:bg-red-50"
+            >
+              <span className="text-xs sm:text-sm">Reject</span>
+            </Button>
+            <Button
+              onClick={handleApprove}
+              variant="default"
+              size="sm"
+              disabled={isSubmitting}
+            >
+              <span className="text-xs sm:text-sm">Complete Review</span>
+            </Button>
+          </>
+        ) : undefined
+      }
     >
       {activeTab === "document" && (
         <div className="space-y-6">
@@ -532,41 +555,6 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
             </div>
           </div>
 
-          {/* Review Actions */}
-          {canReview && (
-            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 rounded-xl border border-emerald-200 shadow-sm p-4 lg:p-6">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 lg:gap-4">
-                <div className="flex-1">
-                  <h3 className="text-base lg:text-lg font-bold text-slate-900 mb-1">
-                    Your Review Action Required
-                  </h3>
-                </div>
-                <div className="flex items-center gap-2 lg:gap-3 lg:shrink-0">
-                  <Button
-                    onClick={handleReject}
-                    variant="outline"
-                    size="sm"
-                    disabled={isSubmitting}
-                    className="flex-1 lg:flex-initial border-red-200 text-red-700 hover:bg-red-50"
-                  >
-                    <ThumbsDown className="h-3.5 w-3.5 lg:h-4 lg:w-4 mr-1.5 lg:mr-2" />
-                    <span className="text-xs lg:text-sm">Reject</span>
-                  </Button>
-                  <Button
-                    onClick={handleApprove}
-                    variant="default"
-                    size="sm"
-                    disabled={isSubmitting}
-                    className="flex-1 lg:flex-initial"
-                  >
-                    <ThumbsUp className="h-3.5 w-3.5 lg:h-4 lg:w-4 mr-1.5 lg:mr-2" />
-                    <span className="text-xs lg:text-sm">Approve</span>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Comments Section */}
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 md:p-6">
             <h3 className="text-base md:text-lg font-bold text-slate-900 mb-3 md:mb-4 flex items-center gap-2">
@@ -627,7 +615,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
                     rows={3}
-                    className="flex-1 px-3 md:px-4 py-2 md:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
+                    className="flex-1 px-3 md:px-4 py-2 md:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
                   />
                   <button
                     onClick={handleAddComment}

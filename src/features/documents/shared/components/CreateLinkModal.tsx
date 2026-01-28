@@ -602,7 +602,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
                   type="text"
                   value={generatedLink}
                   readOnly
-                  className="flex-1 px-3 py-2 bg-white border border-emerald-200 rounded-md text-sm text-slate-700 font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="flex-1 px-3 py-2 bg-white border border-emerald-200 rounded-md text-sm text-slate-700 font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 />
                 <Button
                   onClick={handleCopyLink}

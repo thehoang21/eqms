@@ -51,6 +51,9 @@ interface DocumentWorkflowLayoutProps {
     breadcrumbs: BreadcrumbItem[];
     onBack: () => void;
     
+    // Header actions (optional - buttons next to Back)
+    headerActions?: React.ReactNode;
+    
     // Document info
     documentId: string;
     documentStatus: DocumentStatus;
@@ -254,7 +257,6 @@ const BatchNavigationBar: React.FC<BatchNavigationBarProps> = ({
                         disabled={isFirstDocument}
                         className="gap-2 min-h-[44px] md:min-h-[40px] min-w-[44px] md:min-w-[auto]"
                     >
-                        <ChevronLeft className="h-4 w-4" />
                         <span className="hidden md:inline">Previous</span>
                     </Button>
 
@@ -266,7 +268,6 @@ const BatchNavigationBar: React.FC<BatchNavigationBarProps> = ({
                             onClick={handleFinish}
                             className="gap-2 min-h-[44px] md:min-h-[40px] bg-emerald-600 hover:bg-emerald-700"
                         >
-                            <CheckCircle className="h-4 w-4" />
                             <span>Finish Batch</span>
                         </Button>
                     ) : (
@@ -276,7 +277,6 @@ const BatchNavigationBar: React.FC<BatchNavigationBarProps> = ({
                             onClick={handleNext}
                             className="gap-2 min-h-[44px] md:min-h-[40px] min-w-[44px] md:min-w-[auto] bg-emerald-600 hover:bg-emerald-700"
                         >
-                            <span className="hidden md:inline">Next</span>
                             <ChevronRightIcon className="h-4 w-4" />
                         </Button>
                     )}
@@ -291,6 +291,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
     title,
     breadcrumbs,
     onBack,
+    headerActions,
     documentId,
     documentStatus,
     statusSteps,
@@ -349,9 +350,9 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                         variant="outline"
                         className="gap-1.5 md:gap-2 px-3 sm:px-4 whitespace-nowrap self-start md:self-auto"
                     >
-                        <IconChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         <span className="text-xs sm:text-sm">Back</span>
                     </Button>
+                        {headerActions}
                     </div>
                 </div>
             </div>

@@ -193,7 +193,6 @@ export const NewTemplateView: React.FC = () => {
                             size="sm"
                             className="flex items-center gap-2"
                         >
-                            <X className="h-4 w-4" />
                             Cancel
                         </Button>
                         <Button
@@ -202,7 +201,6 @@ export const NewTemplateView: React.FC = () => {
                             size="sm"
                             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
                         >
-                            <Save className="h-4 w-4" />
                             {isSaving ? "Saving..." : "Save Draft"}
                         </Button>
                         <Button
@@ -211,7 +209,6 @@ export const NewTemplateView: React.FC = () => {
                             size="sm"
                             className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white"
                         >
-                            <Send className="h-4 w-4" />
                             {isSubmitting ? "Submitting..." : "Submit"}
                         </Button>
                     </div>

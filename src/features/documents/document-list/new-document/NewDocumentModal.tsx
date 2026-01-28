@@ -73,7 +73,7 @@ export const NewDocumentModal: React.FC<NewDocumentModalProps> = ({
                                 onClick={handleSelectSingle}
                                 className={cn(
                                     "group relative p-3 md:p-6 rounded-md md:rounded-xl border-2 transition-all duration-200",
-                                    "text-left focus:outline-none focus:ring-2 focus:ring-emerald-500",
+                                    "text-left focus:outline-none focus:ring-1 focus:ring-emerald-500",
                                     "touch-manipulation active:scale-98",
                                     "border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50"
                                 )}
@@ -101,7 +101,7 @@ export const NewDocumentModal: React.FC<NewDocumentModalProps> = ({
                                 onClick={handleSelectBatch}
                                 className={cn(
                                     "group relative p-3 md:p-6 rounded-md md:rounded-xl border-2 transition-all duration-200",
-                                    "text-left focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                    "text-left focus:outline-none focus:ring-1 focus:ring-blue-500",
                                     "touch-manipulation active:scale-98",
                                     "border-slate-200 hover:border-blue-500 hover:bg-blue-50/50"
                                 )}

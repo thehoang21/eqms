@@ -203,7 +203,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         type="email"
                                         value={formData.email}
                                         onChange={(e) => onInputChange('email', e.target.value)}
-                                        className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                        className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
                                         placeholder="Enter email"
                                     />
                                     <Button variant="ghost" size="icon-sm" className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit email">
@@ -220,7 +220,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         type="tel"
                                         value={formData.phone}
                                         onChange={(e) => onInputChange('phone', e.target.value)}
-                                        className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                        className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
                                         placeholder="Enter phone number"
                                     />
                                     <Button variant="ghost" size="icon-sm" className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit phone">

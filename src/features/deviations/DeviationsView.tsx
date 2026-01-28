@@ -280,7 +280,7 @@ export const DeviationsView: React.FC = () => {
                 placeholder="Search by title, ID, or description..."
                 value={filters.searchQuery}
                 onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
-                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
               />
             </div>
           </div>

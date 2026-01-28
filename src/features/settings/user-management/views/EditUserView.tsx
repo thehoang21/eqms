@@ -126,7 +126,6 @@ export const EditUserView: React.FC = () => {
               size="sm"
               className="whitespace-nowrap gap-2 self-start md:self-auto"
             >
-              <X className="h-4 w-4" />
               Cancel
             </Button>
             <Button
@@ -134,7 +133,6 @@ export const EditUserView: React.FC = () => {
               size="sm"
               className="whitespace-nowrap gap-2 self-start md:self-auto"
             >
-              <Save className="h-4 w-4" />
               Save Changes
             </Button>
           </div>
@@ -184,7 +182,7 @@ export const EditUserView: React.FC = () => {
                 onChange={(e) => handleInputChange("fullName", e.target.value)}
                 placeholder="Enter full name"
                 className={cn(
-                  "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500",
+                  "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
                   formErrors.fullName ? "border-red-300 bg-red-50" : "border-slate-200"
                 )}
               />
@@ -205,7 +203,7 @@ export const EditUserView: React.FC = () => {
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="email@example.com"
                   className={cn(
-                    "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500",
+                    "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
                     formErrors.email ? "border-red-300 bg-red-50" : "border-slate-200"
                   )}
                 />
@@ -225,7 +223,7 @@ export const EditUserView: React.FC = () => {
                   onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="+84..."
                   className={cn(
-                    "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500",
+                    "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
                     formErrors.phone ? "border-red-300 bg-red-50" : "border-slate-200"
                   )}
                 />

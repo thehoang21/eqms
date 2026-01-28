@@ -257,7 +257,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
               ? "text-emerald-700 bg-emerald-50"
               : isActive && level > 0
               ? "text-emerald-700 bg-emerald-50/50"
-              : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 active:bg-slate-100",
+              : "text-slate-600 hover:text-slate-900 active:bg-slate-100",
             (!isCollapsed && level === 0 && isActive) && "rounded-lg mx-2"
           )}
           style={{ 
@@ -268,7 +268,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           {/* Active indicator */}
           {level === 0 && isActive && !isCollapsed && (
             <div 
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-full bg-emerald-600"
+              className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-full bg-emerald-600"
             />
           )}
 
@@ -293,7 +293,10 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
               />
             )}
             {!Icon && level > 0 && !isCollapsed && (
-              <div className={cn("h-1.5 w-1.5 rounded-full", isActive ? "bg-emerald-600" : "bg-slate-300")} />
+              <div className={cn(
+                "h-1.5 w-1.5 rounded-full transition-colors duration-200",
+                isActive ? "bg-emerald-600" : "bg-slate-300 group-hover:bg-slate-900"
+              )} />
             )}
           </div>
 
@@ -377,7 +380,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         <button
           onClick={() => handleSubItemClick(item, hasChildren)}
           className={cn(
-            "w-full flex items-center gap-2 px-4 py-2.5 text-sm transition-colors",
+            "w-full flex items-center gap-2 px-4 py-2.5 text-sm transition-colors group",
             isActive
               ? "text-emerald-700 bg-emerald-50 font-semibold"
               : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
@@ -385,8 +388,8 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         >
           {level >= 2 && (
             <div className={cn(
-              "h-1.5 w-1.5 rounded-full shrink-0",
-              isActive ? "bg-emerald-600" : "bg-slate-300"
+              "h-1.5 w-1.5 rounded-full shrink-0 transition-colors duration-200",
+              isActive ? "bg-emerald-600" : "bg-slate-300 group-hover:bg-slate-900"
             )} />
           )}
           <span className={cn(
@@ -574,7 +577,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         {/* Navigation Menu */}
         <div 
           className={cn(
-            "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar",
+            "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar scroll-smooth",
             // Mobile: More padding for easier scrolling
             "pt-4 md:pt-3",
             // Extra padding bottom on mobile for browser UI (address bar, toolbar)
@@ -582,12 +585,15 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             "pb-32 md:pb-3"
           )}
           style={{
-            // Smooth scrolling on mobile
+            // Smooth scrolling on mobile with momentum
             WebkitOverflowScrolling: 'touch',
             // Hide scrollbar on mobile for cleaner look
             scrollbarWidth: 'thin',
             // Ensure scroll works properly
             overscrollBehavior: 'contain',
+            // GPU acceleration for smoother scrolling
+            willChange: 'scroll-position',
+            transform: 'translateZ(0)',
           }}
         >
           <nav className={cn(

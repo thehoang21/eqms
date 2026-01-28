@@ -530,7 +530,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                             size="sm"
                             className="gap-1.5 shadow-sm"
                         >
-                            <ChevronRight className="h-4 w-4 rotate-180" />
                             <span className="text-xs md:text-sm">Back</span>
                         </Button>
                         <Button
@@ -539,7 +538,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                             size="sm"
                             className="gap-1.5 shadow-sm"
                         >
-                            <X className="h-4 w-4" />
                             <span className="text-xs md:text-sm">Cancel</span>
                         </Button>
                         <Button
@@ -548,7 +546,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                             size="sm"
                             className="gap-1.5 shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
                         >
-                            <Save className="h-4 w-4" />
                             <span className="text-xs md:text-sm">{isSaving ? "Saving..." : "Save Draft"}</span>
                         </Button>
                         <Button
@@ -557,7 +554,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                             size="sm"
                             className="gap-1.5 shadow-sm !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300"
                         >
-                            <Send className="h-4 w-4" />
                             <span className="text-xs md:text-sm">{isSubmitting ? "Submitting..." : "Submit"}</span>
                         </Button>
                     </div>
@@ -816,7 +812,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                                     size="sm"
                                     className="flex items-center justify-center gap-1.5 touch-manipulation"
                                 >
-                                    <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4 rotate-180" />
                                     <span className="text-xs md:text-sm">Previous</span>
                                 </Button>
 
@@ -841,7 +836,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                                         className="flex items-center justify-center gap-1.5 touch-manipulation"
                                     >
                                         <span className="text-xs md:text-sm">Next</span>
-                                        <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                                     </Button>
                                 ) : (
                                     <Button
@@ -852,7 +846,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                                         className="flex items-center justify-center gap-1.5 touch-manipulation"
                                     >
                                         <span className="text-xs md:text-sm">Continue</span>
-                                        <IconChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
                                     </Button>
                                 )}
                             </div>

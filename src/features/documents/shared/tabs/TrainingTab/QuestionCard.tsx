@@ -143,7 +143,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                                 type="text"
                                 value={question.text}
                                 onChange={(e) => onUpdate({ text: e.target.value })}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white text-xs md:text-sm"
+                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white text-xs md:text-sm"
                                 placeholder="Enter your question here..."
                             />
                         </div>
@@ -251,7 +251,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                                             value={option.text}
                                             onChange={(e) => updateOption(option.id, { text: e.target.value })}
                                             className={cn(
-                                                "flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white text-xs md:text-sm",
+                                                "flex-1 px-3 py-2 border rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white text-xs md:text-sm",
                                                 option.isCorrect ? "border-emerald-200 bg-emerald-50/30" : "border-slate-200"
                                             )}
                                             placeholder="Option text..."
