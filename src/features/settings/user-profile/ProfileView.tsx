@@ -45,13 +45,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
 
     const [formData, setFormData] = useState(originalFormData);
 
+    // Editing state for contact fields
+    const [editingFields, setEditingFields] = useState({
+        email: false,
+        phone: false,
+    });
+
     // Check if there are any changes (email, phone, password, or avatar)
     const hasChanges = 
         formData.email !== originalFormData.email || 
         formData.phone !== originalFormData.phone ||
         passwordData.newPassword !== '' || 
         passwordData.confirmPassword !== '' ||
-        hasAvatarChanged;
+        hasAvatarChanged ||
+        editingFields.email ||
+        editingFields.phone;
 
     // Permissions state
     const [permissions] = useState({
@@ -73,6 +81,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
             setHasAvatarChanged(true);
         };
         reader.readAsDataURL(file);
+    };
+
+    const handleToggleEdit = (field: 'email' | 'phone') => {
+        setEditingFields(prev => ({ ...prev, [field]: !prev[field] }));
     };
 
     const handlePasswordChange = (field: 'newPassword' | 'confirmPassword', value: string) => {
@@ -142,13 +154,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
                 });
             }
             setHasAvatarChanged(false);
+            setEditingFields({ email: false, phone: false });
         }
     };
 
     const handleCancel = () => {
-        if (onBack) {
-            onBack();
-        }
+        // Reset form data to original
+        setFormData(originalFormData);
+        // Reset editing states
+        setEditingFields({ email: false, phone: false });
+        // Reset password fields
+        setPasswordData({ newPassword: '', confirmPassword: '' });
+        setPasswordErrors({ newPassword: '', confirmPassword: '' });
+        // Reset avatar
+        setAvatarPreview('');
+        setHasAvatarChanged(false);
     };
 
     return (
@@ -200,8 +220,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
                             formData={formData}
                             permissions={permissions}
                             avatarPreview={avatarPreview}
+                            editingFields={editingFields}
                             onInputChange={handleInputChange}
                             onAvatarChange={handleAvatarChange}
+                            onToggleEdit={handleToggleEdit}
                         />
                     )}
 

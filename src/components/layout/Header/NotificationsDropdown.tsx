@@ -253,7 +253,7 @@ const NotificationItem: React.FC<{
       )}
     >
       <div className="relative shrink-0">
-        <div className={cn("h-11 w-11 rounded-full flex items-center justify-center", notification.avatarBg)}>
+        <div className={cn("h-10 w-10 rounded-full flex items-center justify-center", notification.avatarBg)}>
           <AvatarIcon className={cn("h-5 w-5", notification.avatarColor)} />
         </div>
         <div className={cn(
@@ -264,7 +264,7 @@ const NotificationItem: React.FC<{
         </div>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-slate-900 leading-relaxed">
+        <p className="text-sm text-slate-900">
           {notification.title}
         </p>
         <p className="text-xs text-slate-500 mt-1">{notification.time}</p>
@@ -553,7 +553,7 @@ const DesktopDropdown: React.FC<{
       {/* Dropdown */}
       <div 
         ref={dropdownRef}
-        className="fixed w-96 max-w-md bg-white border border-slate-200 rounded-xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 z-[100]"
+        className="fixed w-80 bg-white border border-slate-200 rounded-xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 z-[100]"
         style={{
           top: `${buttonRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
           right: `${window.innerWidth - buttonRef.current?.getBoundingClientRect().right! - window.scrollX}px`
@@ -573,7 +573,7 @@ const DesktopDropdown: React.FC<{
         </div>
 
         {/* Notifications List */}
-        <div className="max-h-[360px] overflow-y-auto">
+        <div className="max-h-[280px] overflow-y-auto">
           {NOTIFICATIONS.map((notification, index) => (
             <NotificationItem
               key={notification.id}
@@ -587,7 +587,7 @@ const DesktopDropdown: React.FC<{
         {/* Footer */}
         <div className="border-t border-slate-200">
           <button 
-            className="w-full py-2 text-center text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            className="w-full py-2 text-center text-xs font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
             onClick={() => {
               console.log("View all notifications");
               onClose();

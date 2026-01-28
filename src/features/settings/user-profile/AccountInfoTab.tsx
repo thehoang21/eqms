@@ -24,16 +24,23 @@ interface AccountInfoTabProps {
         approveDocuments: boolean;
     };
     avatarPreview: string;
+    editingFields: {
+        email: boolean;
+        phone: boolean;
+    };
     onInputChange: (field: string, value: string) => void;
     onAvatarChange: (file: File) => void;
+    onToggleEdit: (field: 'email' | 'phone') => void;
 }
 
 export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
     formData,
     permissions,
     avatarPreview,
+    editingFields,
     onInputChange,
     onAvatarChange,
+    onToggleEdit,
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -203,10 +210,25 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         type="email"
                                         value={formData.email}
                                         onChange={(e) => onInputChange('email', e.target.value)}
-                                        className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                        disabled={!editingFields.email}
+                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-lg transition-all focus:outline-none ${
+                                            editingFields.email
+                                                ? 'border-emerald-500 bg-white ring-1 ring-emerald-500 focus:ring-emerald-500 focus:border-emerald-500'
+                                                : 'border-slate-300 bg-slate-50 text-slate-600 cursor-not-allowed'
+                                        }`}
                                         placeholder="Enter email"
                                     />
-                                    <Button variant="ghost" size="icon-sm" className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit email">
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon-sm" 
+                                        className={`absolute right-1 top-1/2 -translate-y-1/2 ${
+                                            editingFields.email 
+                                                ? 'text-emerald-600 bg-emerald-100 hover:bg-emerald-200' 
+                                                : 'text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50'
+                                        }`}
+                                        title={editingFields.email ? 'Editing email' : 'Edit email'}
+                                        onClick={() => onToggleEdit('email')}
+                                    >
                                         <Edit2 className="h-4 w-4" />
                                     </Button>
                                 </div>
@@ -220,10 +242,25 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         type="tel"
                                         value={formData.phone}
                                         onChange={(e) => onInputChange('phone', e.target.value)}
-                                        className="w-full px-3.5 py-2.5 pr-10 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                        disabled={!editingFields.phone}
+                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-lg transition-all focus:outline-none ${
+                                            editingFields.phone
+                                                ? 'border-emerald-500 bg-white ring-1 ring-emerald-500 focus:ring-emerald-500 focus:border-emerald-500'
+                                                : 'border-slate-300 bg-slate-50 text-slate-600 cursor-not-allowed'
+                                        }`}
                                         placeholder="Enter phone number"
                                     />
-                                    <Button variant="ghost" size="icon-sm" className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700" title="Edit phone">
+                                    <Button 
+                                        variant="ghost" 
+                                        size="icon-sm" 
+                                        className={`absolute right-1 top-1/2 -translate-y-1/2 ${
+                                            editingFields.phone 
+                                                ? 'text-emerald-600 bg-emerald-100 hover:bg-emerald-200' 
+                                                : 'text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50'
+                                        }`}
+                                        title={editingFields.phone ? 'Editing phone' : 'Edit phone'}
+                                        onClick={() => onToggleEdit('phone')}
+                                    >
                                         <Edit2 className="h-4 w-4" />
                                     </Button>
                                 </div>
