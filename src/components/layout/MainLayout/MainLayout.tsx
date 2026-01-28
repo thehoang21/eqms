@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar';
 import { Header } from '@/components/layout/Header/Header';
@@ -6,12 +6,24 @@ import { Footer } from '@/components/layout/Footer/Footer';
 import { NetworkStatusMonitor } from '@/components/NetworkStatusMonitor';
 import { useResponsiveSidebar } from './useResponsiveSidebar';
 import { useNavigation } from './useNavigation';
+import { resetViewportZoom, isIOSSafari } from '@/utils/viewport';
 
 export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isSidebarCollapsed, isMobileMenuOpen, toggleSidebar, closeMobileMenu } = useResponsiveSidebar();
   const { activeId, handleNavigate } = useNavigation();
+
+  // Reset viewport zoom on mount (fixes iOS Safari auto-zoom after login)
+  useEffect(() => {
+    if (isIOSSafari()) {
+      // Small delay to ensure the page has rendered
+      const timer = setTimeout(() => {
+        resetViewportZoom();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const handleLogout = () => {
     // Clear any auth tokens/session data here if needed

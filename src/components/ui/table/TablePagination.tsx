@@ -112,7 +112,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
               <>
                 <button
                   onClick={() => onPageChange(1)}
-                  className="h-8 w-8 text-sm font-medium rounded-md transition-all text-slate-700 hover:bg-slate-100"
+                  className="h-9 w-9 md:h-8 md:w-8 text-sm font-medium rounded-md transition-all text-slate-700 hover:bg-slate-100"
                 >
                   1
                 </button>
@@ -127,7 +127,8 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                 key={page}
                 onClick={() => onPageChange(page)}
                 className={cn(
-                  'h-8 w-8 text-sm font-medium rounded-md transition-all',
+                  // Larger touch targets for better mobile UX
+                  'h-9 w-9 md:h-8 md:w-8 text-sm font-medium rounded-md transition-all',
                   page === currentPage
                     ? 'bg-emerald-600 text-white'
                     : 'text-slate-700 hover:bg-slate-100'
@@ -144,7 +145,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                 )}
                 <button
                   onClick={() => onPageChange(totalPages)}
-                  className="h-8 w-8 text-sm font-medium rounded-md transition-all text-slate-700 hover:bg-slate-100"
+                  className="h-9 w-9 md:h-8 md:w-8 text-sm font-medium rounded-md transition-all text-slate-700 hover:bg-slate-100"
                 >
                   {totalPages}
                 </button>

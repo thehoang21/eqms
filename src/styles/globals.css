@@ -48,11 +48,6 @@ html, body {
     -webkit-overflow-scrolling: touch;
   }
   
-  /* Fix for iOS input zoom issue */
-  input, select, textarea {
-    font-size: 16px !important;
-  }
-  
   /* Prevent iOS text selection highlight */
   * {
     -webkit-tap-highlight-color: transparent;
@@ -62,6 +57,97 @@ html, body {
   button, input[type="button"], input[type="submit"] {
     -webkit-appearance: none;
     appearance: none;
+  }
+}
+
+/* ===================================
+   iOS SAFARI INPUT ZOOM FIX
+   iOS Safari auto-zooms when input font-size < 16px
+   Apply to ALL devices for consistency (no harm on desktop)
+   =================================== */
+
+/* Ensure all interactive form elements have 16px font-size on touch devices */
+@media screen and (max-width: 1024px) {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  input[type="time"],
+  select,
+  textarea {
+    font-size: 16px !important;
+    /* Prevent zoom on focus */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  /* Also apply to any element with contenteditable */
+  [contenteditable="true"] {
+    font-size: 16px !important;
+  }
+}
+
+/* iOS Safari specific - more aggressive fix */
+@supports (-webkit-touch-callout: none) {
+  input, select, textarea {
+    font-size: max(16px, 1rem) !important;
+  }
+  
+  /* Disable auto-zoom behavior */
+  input:focus, select:focus, textarea:focus {
+    font-size: 16px !important;
+  }
+}
+
+/* ===================================
+   MOBILE SIDEBAR & OVERLAY SCROLL FIX
+   Ensures sidebar content is fully scrollable on mobile
+   Prevents content from being hidden behind browser UI
+   =================================== */
+
+@media (max-width: 767px) {
+  /* Fix for mobile sidebar scroll - ensure content is not cut off */
+  .sidebar-mobile {
+    /* Use flexbox for proper height distribution */
+    display: flex !important;
+    flex-direction: column !important;
+    
+    /* Contain scroll within sidebar */
+    overflow: hidden !important;
+  }
+  
+  /* Navigation container must be scrollable */
+  .sidebar-mobile > div:last-of-type {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+  
+  /* Ensure proper touch scrolling on iOS */
+  .custom-scrollbar {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Hide scrollbar on mobile for cleaner look while maintaining scroll */
+  .custom-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  
+  .custom-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
@@ -90,6 +176,53 @@ html, body {
 .safe-area-y {
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ===================================
+   TOUCH TARGET UTILITIES
+   Minimum 44px touch targets for mobile accessibility
+   =================================== */
+
+/* Touch-friendly action buttons */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Responsive touch target - smaller on desktop */
+.touch-target-responsive {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@media (min-width: 768px) {
+  .touch-target-responsive {
+    min-height: unset;
+    min-width: unset;
+  }
+}
+
+/* ===================================
+   HEIGHT UTILITIES WITH DVH SUPPORT
+   Use dvh for iOS Safari dynamic viewport
+   =================================== */
+
+/* Full viewport height with dvh fallback */
+.h-screen-safe {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Min height with dvh */
+.min-h-screen-safe {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Max height with dvh */
+.max-h-screen-safe {
+  max-height: 100vh;
+  max-height: 100dvh;
 }
 
 .safe-area-all {

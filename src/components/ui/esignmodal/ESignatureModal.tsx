@@ -55,8 +55,23 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md border border-slate-200 animate-in zoom-in-95 duration-200 overflow-hidden">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200"
+      style={{
+        // iOS Safari safe area support
+        paddingTop: 'max(1rem, env(safe-area-inset-top, 1rem))',
+        paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 1rem))',
+        paddingLeft: 'max(1rem, env(safe-area-inset-left, 1rem))',
+        paddingRight: 'max(1rem, env(safe-area-inset-right, 1rem))',
+      }}
+    >
+      <div 
+        className="bg-white rounded-lg shadow-xl w-full max-w-md border border-slate-200 animate-in zoom-in-95 duration-200 overflow-hidden"
+        style={{
+          // Ensure modal doesn't exceed viewport on mobile
+          maxHeight: 'calc(100dvh - 2rem)',
+        }}
+      >
         
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">

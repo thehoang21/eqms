@@ -283,7 +283,12 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
               <Icon 
                 className={cn(
                   "h-5 w-5 transition-colors duration-200",
-                  isActive ? "text-emerald-700" : "text-slate-500 group-hover:text-slate-900"
+                  // Use custom iconColor if provided, otherwise use default colors
+                  isActive 
+                    ? "text-emerald-700" 
+                    : item.iconColor 
+                      ? `${item.iconColor} group-hover:opacity-80` 
+                      : "text-slate-500 group-hover:text-slate-900"
                 )} 
               />
             )}
@@ -453,7 +458,10 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           <div className="px-4 py-3 border-b border-slate-100 shrink-0">
             <div className="flex items-center gap-3">
               {hoverMenu.item.icon && (
-                <hoverMenu.item.icon className="h-5 w-5 text-slate-600" />
+                <hoverMenu.item.icon className={cn(
+                  "h-5 w-5",
+                  hoverMenu.item.iconColor || "text-slate-600"
+                )} />
               )}
               <span className="font-semibold text-sm text-slate-900 truncate">
                 {hoverMenu.item.label}
@@ -505,10 +513,10 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
         style={{
-          // Safe area for notch/Dynamic Island (top), home indicator (bottom), and landscape edges
+          // Safe area for notch/Dynamic Island (top) and landscape edges
+          // Bottom is NOT set here - handled by nav container padding for proper scroll
           paddingTop: 'env(safe-area-inset-top, 0px)',
           paddingLeft: 'env(safe-area-inset-left, 0px)',
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
           // Use dvh for iOS Safari
           height: '100dvh',
           minHeight: '100vh',
@@ -568,13 +576,18 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           className={cn(
             "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar",
             // Mobile: More padding for easier scrolling
-            "py-4 md:py-3"
+            "pt-4 md:pt-3",
+            // Extra padding bottom on mobile for browser UI (address bar, toolbar)
+            // Using pb-32 (128px) to ensure enough space for iOS Safari bottom bar
+            "pb-32 md:pb-3"
           )}
           style={{
             // Smooth scrolling on mobile
             WebkitOverflowScrolling: 'touch',
             // Hide scrollbar on mobile for cleaner look
             scrollbarWidth: 'thin',
+            // Ensure scroll works properly
+            overscrollBehavior: 'contain',
           }}
         >
           <nav className={cn(
@@ -583,6 +596,17 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           )}>
             {NAV_CONFIG.map((item) => renderMenuItem(item))}
           </nav>
+          
+          {/* Extra spacer at bottom for mobile to ensure last items are accessible */}
+          {/* This compensates for iOS Safari bottom bar and home indicator */}
+          <div 
+            className="md:hidden shrink-0" 
+            style={{ 
+              height: 'calc(env(safe-area-inset-bottom, 0px) + 60px)',
+              minHeight: '60px'
+            }} 
+            aria-hidden="true"
+          />
         </div>
       </aside>
     </>

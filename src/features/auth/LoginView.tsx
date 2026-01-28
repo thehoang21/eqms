@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
 import { cn } from "@/components/ui/utils";
+import { resetViewportZoom, blurActiveInput } from "@/utils/viewport";
 import logoImg from "@/assets/images/logo_nobg.png";
 import slide1 from "@/assets/images/slide-image/ipad1.webp";
 import slide2 from "@/assets/images/slide-image/ipad2.webp";
@@ -95,6 +96,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
       // Hard-coded credentials
       if (formData.username === "admin" && formData.password === "123456") {
         // Login successful
+        // Reset viewport zoom before navigation (fixes iOS Safari auto-zoom issue)
+        blurActiveInput();
+        resetViewportZoom();
+        
         if (onLogin) {
           onLogin(formData.username, formData.password, formData.rememberMe);
         } else {
