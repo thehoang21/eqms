@@ -3,10 +3,13 @@ import React from 'react';
 export const Footer: React.FC = () => {
   return (
     <footer 
-      className="sticky bottom-0 z-30 shrink-0 border-t border-slate-200 bg-white/95 backdrop-blur-sm shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)]"
+      className="shrink-0 border-t border-slate-200 bg-white/95 backdrop-blur-sm shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)]"
       style={{
-        paddingTop: 'max(0.5rem, env(safe-area-inset-top))',
-        paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))',
+        paddingTop: '0.5rem',
+        // Safe area for home indicator on iPhone X+ and navigation gestures
+        paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0.5rem))',
+        paddingLeft: 'env(safe-area-inset-left, 0px)',
+        paddingRight: 'env(safe-area-inset-right, 0px)',
       }}
     >
       <div className="max-w-[1920px] px-4 md:px-6 lg:px-8">

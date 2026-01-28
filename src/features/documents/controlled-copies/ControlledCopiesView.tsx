@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
+import { TablePagination } from "@/components/ui/table/TablePagination";
 import { CreateLinkModal } from "@/features/documents/shared/components";
 import { CancelDistributionModal } from "./components/CancelDistributionModal";
 import { DestructionTypeSelectionModal } from "./components/DestructionTypeSelectionModal";
@@ -240,51 +241,6 @@ const getStatusConfig = (status: ControlledCopyStatus) => {
     },
   };
   return configs[status] || configs["Ready for Distribution"];
-};
-
-// ==================== PAGINATION COMPONENT ====================
-
-const Pagination: React.FC<{
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-  onPageChange: (page: number) => void;
-}> = ({ currentPage, totalPages, totalItems, itemsPerPage, onPageChange }) => {
-  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
-  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-
-  return (
-    <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white">
-      <div className="text-xs md:text-sm text-slate-600">
-        Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
-        <span className="font-medium text-slate-900">{endItem}</span> of{" "}
-        <span className="font-medium text-slate-900">{totalItems}</span>
-        <span className="hidden sm:inline"> results</span>
-      </div>
-      <div className="flex items-center gap-1.5 md:gap-2">
-        <Button
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          variant="outline"
-          size="sm"
-          className="text-xs md:text-sm px-2.5 md:px-4"
-        >
-          <span className="hidden xs:inline">Previous</span>
-          <span className="xs:hidden">Prev</span>
-        </Button>
-        <Button
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          variant="outline"
-          size="sm"
-          className="text-xs md:text-sm px-2.5 md:px-4"
-        >
-          Next
-        </Button>
-      </div>
-    </div>
-  );
 };
 
 // ==================== DROPDOWN MENU COMPONENT ====================
@@ -937,7 +893,7 @@ export const ControlledCopiesView: React.FC = () => {
         </div>
 
         {filteredData.length > 0 && (
-          <Pagination
+          <TablePagination
             currentPage={currentPage}
             totalPages={totalPages}
             totalItems={filteredData.length}

@@ -22,6 +22,7 @@ import {
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { StatusBadge, StatusType } from "@/components/ui/statusbadge/StatusBadge";
+import { TablePagination } from "@/components/ui/table/TablePagination";
 import { cn } from "@/components/ui/utils";
 import { DocumentFilters } from "./../shared/components/DocumentFilters";
 import { DetailDocumentView } from "../document-detail/DetailDocumentView";
@@ -385,49 +386,6 @@ const formatDate = (dateStr: string) => {
     month: "short",
     day: "numeric",
   }).format(date);
-};
-
-// --- Pagination Component ---
-const Pagination: React.FC<{
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-  onPageChange: (page: number) => void;
-}> = ({ currentPage, totalPages, totalItems, itemsPerPage, onPageChange }) => {
-  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
-  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-  return (
-    <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white">
-      <div className="text-xs md:text-sm text-slate-600">
-        Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
-        <span className="font-medium text-slate-900">{endItem}</span> of{" "}
-        <span className="font-medium text-slate-900">{totalItems}</span>
-        <span className="hidden sm:inline"> results</span>
-      </div>
-      <div className="flex items-center gap-1.5 md:gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs md:text-sm px-2.5 md:px-4"
-          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-          disabled={currentPage === 1}
-        >
-          <span className="hidden xs:inline">Previous</span>
-          <span className="xs:hidden">Prev</span>
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs md:text-sm px-2.5 md:px-4"
-          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
-  );
 };
 
 // --- Dropdown Component ---
@@ -1233,7 +1191,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
         </div>
 
         {/* Pagination Footer */}
-        <Pagination
+        <TablePagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}

@@ -1,13 +1,28 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Bell, User, CheckCheck, FileText, AlertTriangle, MessageCircle, UserPlus, CheckCircle, ThumbsUp, DollarSign, Reply } from 'lucide-react';
+import { Bell, User, CheckCheck, FileText, AlertTriangle, MessageCircle, UserPlus, CheckCircle, ThumbsUp, DollarSign, Reply, X } from 'lucide-react';
 import { Button } from '../../ui/button/Button';
+import { cn } from '../../ui/utils';
 
 interface NotificationsDropdownProps {
   isOpen: boolean;
   onClose: () => void;
   onToggle: () => void;
 }
+
+// Hook to detect mobile screen
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  return isMobile;
+};
 
 // Mock notifications data
 const NOTIFICATIONS = [
@@ -112,41 +127,508 @@ const NOTIFICATIONS = [
     ),
     time: '5h ago',
     onClick: () => console.log("Navigate to comment")
+  },
+  {
+    id: '7',
+    type: 'review-request' as const,
+    avatar: User,
+    avatarBg: 'bg-rose-100',
+    avatarColor: 'text-rose-600',
+    badge: MessageCircle,
+    badgeBg: 'bg-rose-500',
+    title: (
+      <>
+        <span className="font-semibold">Lisa Chen</span> requested your review on{" "}
+        <span className="font-medium text-rose-600">CAPA-2023-078</span>
+      </>
+    ),
+    time: '6h ago',
+    onClick: () => console.log("Navigate to CAPA review")
+  },
+  {
+    id: '8',
+    type: 'document-update' as const,
+    avatar: FileText,
+    avatarBg: 'bg-indigo-100',
+    avatarColor: 'text-indigo-600',
+    badge: CheckCircle,
+    badgeBg: 'bg-indigo-500',
+    title: (
+      <>
+        <span className="font-semibold">Regulatory Team</span> published{" "}
+        <span className="font-medium text-indigo-600">SOP-REG-003</span>
+      </>
+    ),
+    time: '8h ago',
+    onClick: () => console.log("Navigate to document")
+  },
+  {
+    id: '9',
+    type: 'training-completion' as const,
+    avatar: User,
+    avatarBg: 'bg-teal-100',
+    avatarColor: 'text-teal-600',
+    badge: ThumbsUp,
+    badgeBg: 'bg-teal-500',
+    title: (
+      <>
+        <span className="font-semibold">David Brown</span> completed training on{" "}
+        <span className="font-medium">Deviation Handling</span>
+      </>
+    ),
+    time: '10h ago',
+    onClick: () => console.log("Navigate to training")
+  },
+  {
+    id: '10',
+    type: 'approval' as const,
+    avatar: User,
+    avatarBg: 'bg-orange-100',
+    avatarColor: 'text-orange-600',
+    badge: CheckCircle,
+    badgeBg: 'bg-orange-500',
+    title: (
+      <>
+        <span className="font-semibold">Maria Garcia</span> approved{" "}
+        <span className="font-medium text-orange-600">CHG-2023-156</span>
+      </>
+    ),
+    time: '12h ago',
+    onClick: () => console.log("Navigate to change control")
+  },
+  {
+    id: '11',
+    type: 'capa-assignment' as const,
+    avatar: AlertTriangle,
+    avatarBg: 'bg-red-100',
+    avatarColor: 'text-red-600',
+    badge: UserPlus,
+    badgeBg: 'bg-red-500',
+    title: (
+      <>
+        Urgent: You were assigned to{" "}
+        <span className="font-medium text-red-600">DEV-2023-234</span>
+      </>
+    ),
+    time: '1d ago',
+    onClick: () => console.log("Navigate to deviation")
+  },
+  {
+    id: '12',
+    type: 'document-update' as const,
+    avatar: FileText,
+    avatarBg: 'bg-sky-100',
+    avatarColor: 'text-sky-600',
+    badge: DollarSign,
+    badgeBg: 'bg-sky-500',
+    title: (
+      <>
+        <span className="font-semibold">Production Team</span> updated{" "}
+        <span className="font-medium text-sky-600">BP-PROD-045</span>
+      </>
+    ),
+    time: '1d ago',
+    onClick: () => console.log("Navigate to batch record")
   }
 ];
 
-export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ isOpen, onClose, onToggle }) => {
-  const notificationRef = useRef<HTMLButtonElement>(null);
-  const notificationDropdownRef = useRef<HTMLDivElement>(null);
+// Notification Item Component
+const NotificationItem: React.FC<{
+  notification: typeof NOTIFICATIONS[0];
+  isLast: boolean;
+  onClose: () => void;
+}> = ({ notification, isLast, onClose }) => {
+  const AvatarIcon = notification.avatar;
+  const BadgeIcon = notification.badge;
+  
+  return (
+    <button 
+      onClick={() => {
+        notification.onClick();
+        onClose();
+      }}
+      className={cn(
+        "w-full flex items-start gap-3 px-4 py-3.5 hover:bg-slate-50 active:bg-slate-100 transition-colors text-left",
+        !isLast && "border-b border-slate-100"
+      )}
+    >
+      <div className="relative shrink-0">
+        <div className={cn("h-11 w-11 rounded-full flex items-center justify-center", notification.avatarBg)}>
+          <AvatarIcon className={cn("h-5 w-5", notification.avatarColor)} />
+        </div>
+        <div className={cn(
+          "absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full flex items-center justify-center border-2 border-white",
+          notification.badgeBg
+        )}>
+          <BadgeIcon className="h-3 w-3 text-white" />
+        </div>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm text-slate-900 leading-relaxed">
+          {notification.title}
+        </p>
+        <p className="text-xs text-slate-500 mt-1">{notification.time}</p>
+      </div>
+    </button>
+  );
+};
 
-  // Close notifications dropdown when clicking outside
+// Mobile Bottom Drawer Component
+const MobileDrawer: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+}> = ({ isOpen, onClose }) => {
+  const [animationState, setAnimationState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed');
+  const [shouldRender, setShouldRender] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const dragStartY = useRef(0);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      setIsExpanded(false);
+      // Start from below screen
+      setAnimationState('closed');
+      // Small delay then animate up
+      const openTimer = setTimeout(() => {
+        setAnimationState('opening');
+      }, 10);
+      // Mark as fully open
+      const openedTimer = setTimeout(() => {
+        setAnimationState('open');
+      }, 450);
+      // Lock body scroll
+      document.body.style.overflow = 'hidden';
+      return () => {
+        clearTimeout(openTimer);
+        clearTimeout(openedTimer);
+      };
+    } else {
+      if (animationState !== 'closed') {
+        setAnimationState('closing');
+        // Wait for animation to complete before unmounting
+        const timer = setTimeout(() => {
+          setShouldRender(false);
+          setAnimationState('closed');
+          setIsExpanded(false);
+        }, 350);
+        // Restore body scroll
+        document.body.style.overflow = '';
+        return () => clearTimeout(timer);
+      }
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  // Handle drag start
+  const handleDragStart = (clientY: number) => {
+    setIsDragging(true);
+    dragStartY.current = clientY;
+    setDragOffset(0);
+  };
+
+  // Handle drag move
+  const handleDragMove = (clientY: number) => {
+    if (!isDragging) return;
+    const delta = dragStartY.current - clientY;
+    setDragOffset(delta);
+  };
+
+  // Handle drag end
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    
+    const threshold = 50; // pixels to trigger expand/collapse
+    
+    if (dragOffset > threshold && !isExpanded) {
+      // Dragged up enough → expand
+      setIsExpanded(true);
+    } else if (dragOffset < -threshold && isExpanded) {
+      // Dragged down enough → collapse
+      setIsExpanded(false);
+    } else if (dragOffset < -100 && !isExpanded) {
+      // Dragged down significantly when not expanded → close drawer
+      onClose();
+    }
+    
+    setDragOffset(0);
+  };
+
+  // Touch handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    handleDragStart(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    handleDragMove(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    handleDragEnd();
+  };
+
+  // Mouse handlers (for testing on desktop)
+  const handleMouseDown = (e: React.MouseEvent) => {
+    handleDragStart(e.clientY);
+  };
+
+  useEffect(() => {
+    if (!isDragging) return;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      handleDragMove(e.clientY);
+    };
+    
+    const handleMouseUp = () => {
+      handleDragEnd();
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, isExpanded]);
+
+  if (!shouldRender) return null;
+
+  const isVisible = animationState === 'opening' || animationState === 'open';
+  
+  // Calculate drawer height based on state
+  // Use dvh for dynamic viewport on iOS Safari
+  const getDrawerHeight = () => {
+    if (isExpanded) return '100dvh';
+    return '85dvh';
+  };
+
+  // Calculate current drag transform
+  const getDragTransform = () => {
+    if (!isDragging) return 0;
+    // Limit drag offset for visual feedback
+    const maxDrag = 100;
+    return Math.max(-maxDrag, Math.min(maxDrag, -dragOffset * 0.3));
+  };
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] md:hidden">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transition: `opacity ${isVisible ? '350ms' : '250ms'} cubic-bezier(0.4, 0, 0.2, 1)`,
+        }}
+        onClick={onClose}
+      />
+      
+      {/* Drawer */}
+      <div 
+        ref={drawerRef}
+        className={cn(
+          "absolute bottom-0 left-0 right-0 bg-white shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.25)]",
+          isExpanded ? "rounded-none" : "rounded-t-3xl"
+        )}
+        style={{
+          height: getDrawerHeight(),
+          // Safe area for home indicator (bottom) and Dynamic Island (top when expanded)
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+          paddingTop: isExpanded ? 'env(safe-area-inset-top, 0px)' : '0',
+          paddingLeft: 'env(safe-area-inset-left, 0px)',
+          paddingRight: 'env(safe-area-inset-right, 0px)',
+          transform: isVisible 
+            ? `translateY(${getDragTransform()}px)` 
+            : 'translateY(100%)',
+          transition: isDragging 
+            ? 'none' 
+            : isVisible 
+              ? 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), height 300ms cubic-bezier(0.16, 1, 0.3, 1), border-radius 200ms ease'
+              : 'transform 300ms cubic-bezier(0.4, 0, 0.6, 1)',
+          // iOS Safari optimization
+          WebkitBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden',
+        }}
+      >
+        {/* Drawer Handle - Draggable */}
+        <div 
+          className={cn(
+            "flex justify-center py-3 cursor-grab active:cursor-grabbing select-none",
+            isExpanded && "pt-4"
+          )}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+        >
+          <div className={cn(
+            "rounded-full transition-all duration-200",
+            isDragging 
+              ? "w-18 h-1.5 bg-slate-400" 
+              : "w-16 h-1 bg-slate-300"
+          )} />
+        </div>
+
+        {/* Expand/Collapse indicator */}
+        {isDragging && (
+          <div className="absolute top-12 left-0 right-0 flex justify-center pointer-events-none">
+            <span className="text-xs text-slate-400 bg-white/80 px-3 py-1 rounded-full">
+              {dragOffset > 50 && !isExpanded && "↑ Release to expand"}
+              {dragOffset < -50 && isExpanded && "↓ Release to collapse"}
+              {dragOffset < -80 && !isExpanded && "↓ Release to close"}
+            </span>
+          </div>
+        )}
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-2 border-b border-slate-200">
+          <h3 className="text-lg font-semibold text-slate-900">Notifications</h3>
+          <button 
+            className="flex items-center gap-1.5 py-2 hover:bg-slate-100 active:bg-slate-200 rounded-lg transition-colors"
+            onClick={() => console.log("Mark all as read")}
+          >
+            <CheckCheck className="h-4 w-4 text-emerald-600" />
+            <span className="text-xs font-medium text-emerald-600">Mark all read</span>
+          </button>
+        </div>
+
+        {/* Notifications List */}
+        <div 
+          className="overflow-y-auto overscroll-contain flex-1"
+          style={{ 
+            // Use dvh for dynamic viewport height (iOS Safari)
+            height: isExpanded 
+              ? 'calc(100dvh - 140px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))' 
+              : 'calc(85dvh - 120px - env(safe-area-inset-bottom, 0px))',
+            WebkitOverflowScrolling: 'touch',
+            transition: 'height 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+            overscrollBehavior: 'contain',
+          }}
+        >
+          {NOTIFICATIONS.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 px-4">
+              <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                <Bell className="h-8 w-8 text-slate-400" />
+              </div>
+              <p className="text-base font-medium text-slate-900">No notifications</p>
+              <p className="text-sm text-slate-500 mt-1">You're all caught up!</p>
+            </div>
+          ) : (
+            NOTIFICATIONS.map((notification, index) => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+                isLast={index === NOTIFICATIONS.length - 1}
+                onClose={onClose}
+              />
+            ))
+          )}
+        </div>
+
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+// Desktop Dropdown Component
+const DesktopDropdown: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  buttonRef: React.RefObject<HTMLDivElement>;
+}> = ({ isOpen, onClose, buttonRef }) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!isOpen) return;
     const handleClick = (e: MouseEvent) => {
       const target = e.target as Node;
-      // Check if click is outside both the button and the dropdown
-      if (notificationRef.current && !notificationRef.current.contains(target) &&
-          notificationDropdownRef.current && !notificationDropdownRef.current.contains(target)) {
+      if (buttonRef.current && !buttonRef.current.contains(target) &&
+          dropdownRef.current && !dropdownRef.current.contains(target)) {
         onClose();
       }
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, buttonRef]);
+
+  if (!isOpen) return null;
+
+  return createPortal(
+    <>
+      {/* Overlay */}
+      <div 
+        className="fixed inset-0 z-50"
+        onClick={onClose}
+      />
+      
+      {/* Dropdown */}
+      <div 
+        ref={dropdownRef}
+        className="fixed w-96 max-w-md bg-white border border-slate-200 rounded-xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 z-[100]"
+        style={{
+          top: `${buttonRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
+          right: `${window.innerWidth - buttonRef.current?.getBoundingClientRect().right! - window.scrollX}px`
+        }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+          <h3 className="text-base font-semibold text-slate-900">Notifications</h3>
+          <button 
+            className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-md transition-colors group"
+            onClick={() => console.log("Mark all as read")}
+            title="Mark all as read"
+          >
+            <CheckCheck className="h-4 w-4 text-slate-500 group-hover:text-emerald-600 transition-colors" />
+            <span className="text-xs font-medium text-slate-600 group-hover:text-emerald-600 transition-colors">Mark all as read</span>
+          </button>
+        </div>
+
+        {/* Notifications List */}
+        <div className="max-h-[360px] overflow-y-auto">
+          {NOTIFICATIONS.map((notification, index) => (
+            <NotificationItem
+              key={notification.id}
+              notification={notification}
+              isLast={index === NOTIFICATIONS.length - 1}
+              onClose={onClose}
+            />
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-slate-200">
+          <button 
+            className="w-full py-2 text-center text-sm font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            onClick={() => {
+              console.log("View all notifications");
+              onClose();
+            }}
+          >
+            View all notifications
+          </button>
+        </div>
+      </div>
+    </>,
+    document.body
+  );
+};
+
+export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ isOpen, onClose, onToggle }) => {
+  const notificationRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   return (
     <>
-      {/* Overlay */}
-      {isOpen && createPortal(
-        <div 
-          className="fixed inset-0 z-50"
-          onClick={onClose}
-        />,
-        document.body
-      )}
-
       {/* Notifications Button */}
-      <span ref={notificationRef} className="inline-block">
+      <div ref={notificationRef} className="inline-flex">
         <Button 
           variant="ghost" 
           size="icon" 
@@ -154,69 +636,20 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ is
           className="relative text-slate-600 hover:bg-slate-100 hover:text-emerald-600 transition-colors"
         >
           <Bell className="h-5 w-5 md:h-6 md:w-6" />
-          <span className="absolute top-2.5 right-2.5 h-2 w-2 bg-red-500 rounded-full border border-white shadow-sm"></span>
+          <span className="absolute top-2.5 right-2.5 h-2 w-2 bg-red-500 rounded-full border border-white shadow-sm" />
         </Button>
-      </span>
+      </div>
 
-      {/* Notifications Dropdown */}
-      {isOpen && createPortal(
-        <div 
-          ref={notificationDropdownRef}
-          className="fixed w-[calc(100vw-2rem)] sm:w-96 max-w-md bg-white border border-slate-200 rounded-lg shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 z-[100]"
-          style={{
-            top: `${notificationRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
-            right: window.innerWidth < 640 
-              ? '1rem'
-              : `${window.innerWidth - notificationRef.current?.getBoundingClientRect().right! - window.scrollX}px`
-          }}
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
-            <h3 className="text-base font-semibold text-slate-900">Notifications</h3>
-            <button 
-              className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-md transition-colors group"
-              onClick={() => console.log("Mark all as read")}
-              title="Mark all as read"
-            >
-              <CheckCheck className="h-4 w-4 text-slate-500 group-hover:text-emerald-600 transition-colors" />
-              <span className="text-xs font-medium text-slate-600 group-hover:text-emerald-600 transition-colors">Mark all as read</span>
-            </button>
-          </div>
+      {/* Mobile: Bottom Drawer */}
+      {isMobile && <MobileDrawer isOpen={isOpen} onClose={onClose} />}
 
-          {/* Notifications List - Max 4 items visible, scroll for more */}
-          <div className="max-h-[304px] overflow-y-auto">
-            {NOTIFICATIONS.map((notification, index) => {
-              const AvatarIcon = notification.avatar;
-              const BadgeIcon = notification.badge;
-              
-              return (
-                <button 
-                  key={notification.id}
-                  onClick={notification.onClick}
-                  className={`w-full flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors text-left ${
-                    index !== NOTIFICATIONS.length - 1 ? 'border-b border-slate-100' : ''
-                  }`}
-                >
-                  <div className="relative shrink-0">
-                    <div className={`h-10 w-10 rounded-full ${notification.avatarBg} flex items-center justify-center`}>
-                      <AvatarIcon className={`h-5 w-5 ${notification.avatarColor}`} />
-                    </div>
-                    <div className={`absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full ${notification.badgeBg} flex items-center justify-center border-2 border-white`}>
-                      <BadgeIcon className="h-3 w-3 text-white" />
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-slate-900">
-                      {notification.title}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-0.5">{notification.time}</p>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>,
-        document.body
+      {/* Desktop: Dropdown */}
+      {!isMobile && (
+        <DesktopDropdown 
+          isOpen={isOpen} 
+          onClose={onClose} 
+          buttonRef={notificationRef as React.RefObject<HTMLDivElement>}
+        />
       )}
     </>
   );

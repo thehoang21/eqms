@@ -1,19 +1,20 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Search,
   Calendar,
   Users,
-  ChevronDown,
   User,
-  Check,
   List,
   BarChart3,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
+import { Select } from '@/components/ui/select/Select';
+import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
+import { TablePagination } from '@/components/ui/table/TablePagination';
+import { FilterCard } from '@/components/ui/card/FilterCard';
 import { cn } from '@/components/ui/utils';
 import type { Task, ViewMode } from "./types";
-import { TaskTable, TaskCalendarView, TaskGanttView, TaskDetailDrawer } from "./components";
-import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
+import { TaskTable, TaskMobileList, TaskCalendarView, TaskGanttView, TaskDetailDrawer } from "./components";
 
 // --- Mock Data ---
 const MOCK_TASKS: Task[] = [
@@ -235,184 +236,14 @@ const MOCK_TASKS: Task[] = [
 
 // --- Components ---
 
-// 1. Searchable Combobox (High Fidelity)
+// 1. Task Filters using standard Select component
 interface SelectOption {
   label: string;
   value: string | number;
   icon?: React.ReactNode;
 }
-interface SearchableComboboxProps {
-  label?: string;
-  value: string | number;
-  onChange: (value: any) => void;
-  options: SelectOption[];
-  placeholder?: string;
-  searchPlaceholder?: string;
-  className?: string;
-  triggerClassName?: string;
-}
-const SearchableCombobox: React.FC<SearchableComboboxProps> = ({
-  label,
-  value,
-  onChange,
-  options,
-  placeholder = "Select...",
-  searchPlaceholder = "Search...",
-  className,
-  triggerClassName,
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const filteredOptions = options.filter((opt) =>
-    opt.label.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  const selectedOption = options.find((opt) => opt.value === value);
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-        setSearchQuery("");
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-  useEffect(() => {
-    if (isOpen && searchInputRef.current)
-      setTimeout(() => searchInputRef.current?.focus(), 50);
-  }, [isOpen]);
-  return (
-    <div ref={containerRef} className={cn("relative w-full", className)}>
-      {label && (
-        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-          {label}
-        </label>
-      )}
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          "flex w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200",
-          "placeholder:text-slate-400 focus:outline-none",
-          "h-11",
-          isOpen
-            ? "ring-2 ring-emerald-500 border-emerald-500"
-            : "hover:border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500",
-          triggerClassName
-        )}
-      >
-        <div className="flex items-center gap-2 truncate text-slate-900">
-          {selectedOption?.icon}
-          <span className={cn("truncate", !selectedOption && "text-slate-500")}>
-            {selectedOption ? selectedOption.label : placeholder}
-          </span>
-        </div>
-        <ChevronDown
-          className={cn(
-            "h-4 w-4 text-slate-400 transition-transform duration-200 shrink-0",
-            isOpen && "rotate-180"
-          )}
-        />
-      </button>
-      {isOpen && (
-        <div className="absolute z-50 mt-1 w-full rounded-md border border-slate-200 bg-white shadow-lg animate-in fade-in zoom-in-95 duration-100 overflow-hidden min-w-[200px] right-0 md:left-0">
-          <div className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white">
-            <Search className="mr-2 h-4 w-4 text-slate-400 shrink-0 opacity-50" />
-            <input
-              ref={searchInputRef}
-              className="flex h-6 w-full rounded-md bg-transparent py-1 text-sm outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder={searchPlaceholder}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div className="max-h-[300px] overflow-y-auto p-1 custom-scrollbar">
-            {filteredOptions.length === 0 ? (
-              <div className="py-6 text-center text-sm text-slate-500">
-                No results found.
-              </div>
-            ) : (
-              filteredOptions.map((option) => (
-                <div
-                  key={option.value}
-                  onClick={() => {
-                    onChange(option.value);
-                    setIsOpen(false);
-                    setSearchQuery("");
-                  }}
-                  className={cn(
-                    "relative flex w-full cursor-pointer select-none items-center rounded-sm py-3 px-4 text-sm outline-none transition-colors",
-                    value === option.value
-                      ? "bg-emerald-50 text-emerald-700 font-medium"
-                      : "text-slate-900 hover:bg-slate-50"
-                  )}
-                >
-                  <div className="flex items-center gap-2 flex-1 truncate">
-                    {option.icon}
-                    <span className="truncate">{option.label}</span>
-                  </div>
-                  {value === option.value && (
-                    <Check className="h-4 w-4 text-emerald-600 ml-2 shrink-0" />
-                  )}
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
-// 2. Pagination
-const Pagination: React.FC<{
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-  onPageChange: (page: number) => void;
-}> = ({ currentPage, totalPages, totalItems, itemsPerPage, onPageChange }) => {
-  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
-  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-  return (
-    <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white">
-      <div className="text-xs md:text-sm text-slate-600">
-        Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
-        <span className="font-medium text-slate-900">{endItem}</span> of{" "}
-        <span className="font-medium text-slate-900">{totalItems}</span>
-        <span className="hidden sm:inline"> results</span>
-      </div>
-      <div className="flex items-center gap-1.5 md:gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs md:text-sm px-2.5 md:px-4"
-          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-          disabled={currentPage === 1}
-        >
-          <span className="hidden xs:inline">Previous</span>
-          <span className="xs:hidden">Prev</span>
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs md:text-sm px-2.5 md:px-4"
-          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-// 3. Task Filters
+// 2. Task Filters
 const TaskFilters: React.FC<{
   search: string;
   setSearch: (val: string) => void;
@@ -527,10 +358,10 @@ const TaskFilters: React.FC<{
     },
   ];
   return (
-    <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 sm:gap-4 items-end">
+    <FilterCard>
+      <FilterCard.Row>
         {/* Row 1: Search, Module, Priority */}
-        <div className="xl:col-span-6 w-full">
+        <FilterCard.Item span={6}>
           <label className="text-sm font-medium text-slate-700 mb-1.5 block">
             Search
           </label>
@@ -546,63 +377,67 @@ const TaskFilters: React.FC<{
               className="block w-full pl-9 sm:pl-10 pr-3 h-10 sm:h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm transition-all placeholder:text-slate-400"
             />
           </div>
-        </div>
-        <div className="xl:col-span-3 w-full">
-          <SearchableCombobox
+        </FilterCard.Item>
+        <FilterCard.Item span={3}>
+          <Select
             label="Module"
             value={module}
             onChange={setModule}
             options={moduleOptions}
             searchPlaceholder="Filter module..."
+            enableSearch
           />
-        </div>
-        <div className="xl:col-span-3 w-full">
-          <SearchableCombobox
+        </FilterCard.Item>
+        <FilterCard.Item span={3}>
+          <Select
             label="Priority"
             value={priority}
             onChange={setPriority}
             options={priorityOptions}
             searchPlaceholder="Filter priority..."
+            enableSearch
           />
-        </div>
+        </FilterCard.Item>
 
         {/* Row 2: Status, Assignee, Date Range */}
-        <div className="xl:col-span-3 w-full">
-          <SearchableCombobox
+        <FilterCard.Item span={3}>
+          <Select
             label="Status"
             value={status}
             onChange={setStatus}
             options={statusOptions}
             searchPlaceholder="Filter status..."
+            enableSearch
           />
-        </div>
-        <div className="xl:col-span-3 w-full">
-          <SearchableCombobox
+        </FilterCard.Item>
+        <FilterCard.Item span={3}>
+          <Select
             label="Assignee"
             value={assignee}
             onChange={setAssignee}
             options={assigneeOptions}
             searchPlaceholder="Find user..."
+            enableSearch
           />
-        </div>
-        <div className="xl:col-span-3 w-full">
+        </FilterCard.Item>
+        <FilterCard.Item span={3}>
           <DateTimePicker
             label="From Date"
             value={fromDate}
             onChange={setFromDate}
             placeholder="Select start date..."
           />
-        </div>
-        <div className="xl:col-span-3 w-full">
+        </FilterCard.Item>
+        <FilterCard.Item span={3}>
           <DateTimePicker
             label="To Date"
             value={toDate}
             onChange={setToDate}
             placeholder="Select end date..."
           />
-        </div>
-      </div>
-    </div>
+        </FilterCard.Item>
+      </FilterCard.Row>
+    </FilterCard>
   );
 };
 
@@ -806,28 +641,52 @@ export const MyTasksView: React.FC = () => {
           <SkeletonLoader />
         ) : (
           <>
-            {/* List View (Table) */}
+            {/* List View (Table + Mobile Cards) */}
             {viewMode === "list" && (
-              <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
+              <>
                 {paginatedData.length > 0 ? (
                   <>
-                    <TaskTable
+                    {/* Mobile Card View - visible on small screens */}
+                    <TaskMobileList
                       tasks={paginatedData}
-                      onTaskClick={setSelectedTask}
                       startIndex={(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                      onTaskClick={setSelectedTask}
                     />
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      totalItems={totalItems}
-                      itemsPerPage={ITEMS_PER_PAGE}
-                      onPageChange={setCurrentPage}
-                    />
+                    
+                    {/* Desktop Table View - visible on md and up */}
+                    <div className="hidden md:block rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
+                      <TaskTable
+                        tasks={paginatedData}
+                        onTaskClick={setSelectedTask}
+                        startIndex={(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                      />
+                      <TablePagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={totalItems}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        onPageChange={setCurrentPage}
+                      />
+                    </div>
+                    
+                    {/* Mobile Pagination - visible on small screens */}
+                    <div className="md:hidden mt-4">
+                      <TablePagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={totalItems}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        onPageChange={setCurrentPage}
+                        className="rounded-xl border border-slate-200 shadow-sm"
+                      />
+                    </div>
                   </>
                 ) : (
-                  <EmptyState />
+                  <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <EmptyState />
+                  </div>
                 )}
-              </div>
+              </>
             )}
             {/* Calendar View */}
             {viewMode === "calendar" && (

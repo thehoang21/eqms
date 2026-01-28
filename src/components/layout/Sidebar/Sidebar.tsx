@@ -497,7 +497,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           // Desktop: Sticky positioning
           "md:sticky md:top-0 md:z-30 md:h-screen",
           // Width
-          isCollapsed ? "w-20" : "w-[280px] max-w-[85vw]",
+          isCollapsed ? "w-20" : "w-[250px] max-w-[85vw]",
           // Smooth transitions
           "transition-all duration-300 ease-out",
           // Mobile slide animation
@@ -505,9 +505,13 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
         style={{
-          paddingTop: 'var(--safe-area-inset-top)',
-          paddingLeft: 'var(--safe-area-inset-left)',
-          paddingBottom: 'var(--safe-area-inset-bottom)',
+          // Safe area for notch/Dynamic Island (top), home indicator (bottom), and landscape edges
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+          paddingLeft: 'env(safe-area-inset-left, 0px)',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+          // Use dvh for iOS Safari
+          height: '100dvh',
+          minHeight: '100vh',
         }}
       >
         {/* Header / Logo Area */}
@@ -516,7 +520,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             "flex items-center border-b border-slate-100 bg-white relative shrink-0",
             "transition-all duration-300 ease-in-out",
             // Mobile: Higher header with close button
-            "h-16 md:h-16",
+            "h-14 md:h-14",
             isCollapsed ? "justify-center px-0" : "justify-between px-5"
           )}
         >
@@ -527,7 +531,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           )}>
             <div className={cn(
               "flex items-center justify-center shrink-0",
-              isCollapsed ? "h-10 w-10" : "h-11 w-auto"
+              isCollapsed ? "h-10 w-10" : "h-9 w-auto"
             )}>
               <img
                 src={isCollapsed ? logoCollapsed : logoFull}

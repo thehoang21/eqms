@@ -4,6 +4,7 @@ import { cn } from "@/components/ui/utils";
 import { Select, SelectOption } from "@/components/ui/select/Select";
 import { Button } from "@/components/ui/button/Button";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
+import { TablePagination } from "@/components/ui/table/TablePagination";
 
 interface AuditEntry {
   id: string;
@@ -368,35 +369,13 @@ export const AuditTrailTab: React.FC = () => {
 
         {/* Pagination */}
         {filteredData.length > 0 && (
-          <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white">
-            <div className="text-xs md:text-sm text-slate-600">
-              Showing <span className="font-medium text-slate-900">{startItem}</span> to{" "}
-              <span className="font-medium text-slate-900">{endItem}</span> of{" "}
-              <span className="font-medium text-slate-900">{filteredData.length}</span>
-              <span className="hidden sm:inline"> results</span>
-            </div>
-            <div className="flex items-center gap-1.5 md:gap-2">
-              <Button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                variant="outline"
-                size="sm"
-                className="text-xs md:text-sm px-2.5 md:px-4"
-              >
-                <span className="hidden xs:inline">Previous</span>
-                <span className="xs:hidden">Prev</span>
-              </Button>
-              <Button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                variant="outline"
-                size="sm"
-                className="text-xs md:text-sm px-2.5 md:px-4"
-              >
-                Next
-              </Button>
-            </div>
-          </div>
+          <TablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredData.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+          />
         )}
       </div>
     </div>

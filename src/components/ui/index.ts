@@ -20,6 +20,7 @@ export * from './dropdown';
 export * from './modal';
 export * from './toast';
 export * from './statusbadge';
+export * from './badge';
 export * from './popover';
 
 // Signature & Auth

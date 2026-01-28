@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
+import { TablePagination } from "@/components/ui/table/TablePagination";
 import { cn } from "@/components/ui/utils";
 import {
   Deviation,
@@ -504,21 +505,13 @@ export const DeviationsView: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-white">
-          <div className="text-sm text-slate-600">
-            Showing <span className="font-medium text-slate-900">{(currentPage - 1) * itemsPerPage + 1}</span> to{" "}
-            <span className="font-medium text-slate-900">{Math.min(currentPage * itemsPerPage, filteredData.length)}</span> of{" "}
-            <span className="font-medium text-slate-900">{filteredData.length}</span> results
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>
-              Previous
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>
-              Next
-            </Button>
-          </div>
-        </div>
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredData.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

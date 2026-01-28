@@ -1,18 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { Calendar, CheckCircle2 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
+import { TaskStatusBadge, PriorityBadge, ModuleBadge } from '@/components/ui/badge';
 import { cn } from '@/components/ui/utils';
 import type { Task } from "../types";
 import {
-  getModuleBadgeStyle,
-  getModuleIcon,
-  isOverdue,
-  daysUntil,
-  getStatusBadgeStyle,
-  getPriorityColor,
   calculateDaysLeft,
   formatDate,
-  getPriorityBadgeStyle,
 } from "../utils";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
 
@@ -155,14 +149,7 @@ export const TaskTable: React.FC<{
 
                   {/* Module */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span
-                      className={cn(
-                        "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border",
-                        getModuleBadgeStyle(task.module)
-                      )}
-                    >
-                      {task.module}
-                    </span>
+                    <ModuleBadge module={task.module as any} />
                   </td>
 
                   {/* Assignee */}
@@ -205,14 +192,7 @@ export const TaskTable: React.FC<{
 
                   {/* Status */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span
-                      className={cn(
-                        "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border",
-                        getStatusBadgeStyle(task.status)
-                      )}
-                    >
-                      {task.status}
-                    </span>
+                    <TaskStatusBadge status={task.status as any} />
                   </td>
 
                   {/* Progress */}
@@ -248,14 +228,7 @@ export const TaskTable: React.FC<{
 
                   {/* Priority */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span
-                      className={cn(
-                        "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border",
-                        getPriorityBadgeStyle(task.priority)
-                      )}
-                    >
-                      {task.priority}
-                    </span>
+                    <PriorityBadge priority={task.priority as any} />
                   </td>
 
                   {/* Action (Sticky) */}

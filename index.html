@@ -27,11 +27,17 @@
 
     <!-- Theme Color -->
     <meta name="theme-color" content="#059669" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#059669" />
     <meta name="msapplication-navbutton-color" content="#059669" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
+    
+    <!-- iOS Safari & PWA Configuration -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="EQMS" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- Prevent phone number detection -->
+    <meta name="format-detection" content="telephone=no" />
 
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />

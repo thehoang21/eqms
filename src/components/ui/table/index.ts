@@ -1,8 +1,17 @@
 export { 
   ResponsiveTableContainer, 
-  ResponsiveTableWrapper
+  ResponsiveTableWrapper,
+  Table,
+  TableHeader,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableEmptyState
 } from './ResponsiveTable';
 export type { ResponsiveTableProps } from './ResponsiveTable';
+
+export { TablePagination } from './TablePagination';
+export type { TablePaginationProps } from './TablePagination';
 
 export { 
   MobileCard, 

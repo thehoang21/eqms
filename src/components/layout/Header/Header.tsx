@@ -38,11 +38,14 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
 
   return (
     <header 
-      className="h-14 md:h-16 lg:h-18 w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-sm shrink-0"
+      className="w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-sm shrink-0"
       style={{
-        paddingTop: 'var(--safe-area-inset-top)',
-        paddingLeft: 'var(--safe-area-inset-left)',
-        paddingRight: 'var(--safe-area-inset-right)',
+        // Safe area for notch and Dynamic Island
+        paddingTop: 'env(safe-area-inset-top, 0px)',
+        paddingLeft: 'env(safe-area-inset-left, 0px)',
+        paddingRight: 'env(safe-area-inset-right, 0px)',
+        // Min height includes safe area
+        minHeight: 'calc(3.5rem + env(safe-area-inset-top, 0px))',
       }}
     >
       
@@ -124,12 +127,12 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
               aria-label="User menu"
             >
               {/* Avatar */}
-              <div className="h-11 w-11 md:h-9 md:w-9 lg:h-10 lg:w-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
+              <div className="h-8 w-8 md:h-8 md:w-8 lg:h-10 lg:w-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
                 <User className="h-4 w-4 md:h-4.5 md:w-4.5 lg:h-5 lg:w-5" />
               </div>
               {/* User Info - Hidden on mobile and tablet */}
               <div className="hidden lg:block text-left pr-1">
-                <p className="text-sm font-semibold text-slate-700 leading-tight group-hover:text-slate-900">Dr. A. Smith</p>
+                <p className="text-sm font-semibold text-slate-700 leading-tight group-hover:text-slate-900">Nguyễn Thế Hoàng</p>
                 <p className="text-xs text-slate-500 leading-tight">QA Manager</p>
               </div>
             </button>

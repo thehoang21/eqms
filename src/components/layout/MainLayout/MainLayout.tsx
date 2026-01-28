@@ -21,7 +21,15 @@ export const MainLayout: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
+    <div 
+      className="flex h-screen w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden"
+      style={{
+        // Use dvh for iOS Safari dynamic viewport
+        height: '100dvh',
+        // Fallback for older browsers
+        minHeight: '100vh',
+      }}
+    >
       {/* Network Status Monitor - Global */}
       <NetworkStatusMonitor />
       
@@ -46,24 +54,24 @@ export const MainLayout: React.FC = () => {
           onLogout={handleLogout}
         />
 
-        {/* Scrollable Content Area with Footer */}
+        {/* Scrollable Content Area */}
         <div 
-          className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden custom-scrollbar"
+          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar"
           style={{
             paddingLeft: 'var(--safe-area-inset-left)',
             paddingRight: 'var(--safe-area-inset-right)',
           }}
         >
           {/* Main Content: Responsive padding */}
-          <main className="flex-1 w-full p-4 md:p-6 lg:p-8 pb-6">
+          <main className="w-full p-4 md:p-6 lg:p-8 pb-6">
             <div className="w-full max-w-[1920px] mx-auto space-y-4 md:space-y-6">
               <Outlet />
             </div>
           </main>
-
-          {/* Footer - Sticky at bottom of scroll container */}
-          <Footer />
         </div>
+
+        {/* Footer - Always visible */}
+        <Footer />
       </div>
     </div>
   );

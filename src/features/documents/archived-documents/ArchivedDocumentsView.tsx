@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button/Button';
+import { TablePagination } from '@/components/ui/table/TablePagination';
 import { cn } from '@/components/ui/utils';
 import { ArchivedDocumentFilters } from './components/ArchivedDocumentFilters';
 import { RestoreModal } from './components/RestoreModal';
@@ -346,39 +347,13 @@ export const ArchivedDocumentsView: React.FC = () => {
 
                 {/* Pagination */}
                 {filteredDocuments.length > 0 && (
-                    <div className="flex items-center justify-between border-t border-slate-200 bg-white px-4 md:px-6 py-3 md:py-4">
-                        <div className="text-xs md:text-sm text-slate-600">
-                            Showing <span className="font-medium text-slate-900">{startIndex + 1}</span> to{" "}
-                            <span className="font-medium text-slate-900">{Math.min(endIndex, filteredDocuments.length)}</span> of{" "}
-                            <span className="font-medium text-slate-900">{filteredDocuments.length}</span>
-                            <span className="hidden sm:inline"> results</span>
-                        </div>
-
-                        <div className="flex items-center gap-1.5 md:gap-2">
-                            <button
-                                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                                disabled={currentPage === 1}
-                                className={cn(
-                                    'text-xs md:text-sm px-2.5 md:px-4 h-9 font-medium rounded-md transition-all border border-slate-200',
-                                    currentPage === 1 ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
-                                )}
-                            >
-                                <span className="hidden xs:inline">Previous</span>
-                                <span className="xs:hidden">Prev</span>
-                            </button>
-
-                            <button
-                                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                                disabled={currentPage === totalPages}
-                                className={cn(
-                                    'text-xs md:text-sm px-2.5 md:px-4 h-9 font-medium rounded-md transition-all border border-slate-200',
-                                    currentPage === totalPages ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
-                                )}
-                            >
-                                Next
-                            </button>
-                        </div>
-                    </div>
+                    <TablePagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={filteredDocuments.length}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={setCurrentPage}
+                    />
                 )}
             </div>
 

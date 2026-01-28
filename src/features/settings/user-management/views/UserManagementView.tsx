@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { useToast } from "@/components/ui/toast";
+import { TablePagination } from "@/components/ui/table/TablePagination";
 import { cn } from "@/components/ui/utils";
 import { ResetPasswordModal } from "../components/ResetPasswordModal";
 import { User, UserRole, UserStatus, TableColumn } from "../types";
@@ -509,35 +510,13 @@ export const UserManagementView: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white">
-          <div className="text-xs md:text-sm text-slate-600">
-            Showing <span className="font-medium text-slate-900">{filteredUsers.length === 0 ? 0 : startIndex + 1}</span> to{" "}
-            <span className="font-medium text-slate-900">{Math.min(endIndex, filteredUsers.length)}</span> of{" "}
-            <span className="font-medium text-slate-900">{filteredUsers.length}</span>
-            <span className="hidden sm:inline"> results</span>
-          </div>
-          <div className="flex items-center gap-1.5 md:gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-xs md:text-sm px-2.5 md:px-4"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-            >
-              <span className="hidden xs:inline">Previous</span>
-              <span className="xs:hidden">Prev</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-xs md:text-sm px-2.5 md:px-4"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredUsers.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       {/* Dropdown Menu */}
