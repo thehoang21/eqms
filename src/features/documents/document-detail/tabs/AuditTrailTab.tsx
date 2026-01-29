@@ -368,7 +368,7 @@ export const AuditTrailTab: React.FC = () => {
                     </td>
 
                     {/* User */}
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-slate-900">
                           {entry.user.name}
@@ -383,7 +383,7 @@ export const AuditTrailTab: React.FC = () => {
                     </td>
 
                     {/* Action */}
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       <span className={cn(
                         "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border",
                         getActionBadge(entry.actionType)
@@ -393,13 +393,12 @@ export const AuditTrailTab: React.FC = () => {
                     </td>
 
                     {/* Changes */}
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       {entry.changes && entry.changes.length > 0 ? (
                         <button
                           onClick={() => openChangesModal(entry)}
                           className="flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 hover:underline"
                         >
-                          <Info className="h-4 w-4" />
                           {entry.changes.length} field{entry.changes.length > 1 ? 's' : ''} changed
                         </button>
                       ) : (
@@ -408,16 +407,16 @@ export const AuditTrailTab: React.FC = () => {
                     </td>
 
                     {/* Reason */}
-                    <td className="px-4 py-4 max-w-xs">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       {entry.reason ? (
-                        <p className="text-sm text-slate-700 line-clamp-2">{entry.reason}</p>
+                        <p className="text-sm text-slate-700">{entry.reason}</p>
                       ) : (
                         <span className="text-sm text-slate-400">—</span>
                       )}
                     </td>
 
                     {/* IP / Device */}
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       <div className="flex items-start gap-2">
                         <Monitor className="h-4 w-4 text-slate-400 flex-shrink-0 mt-0.5" />
                         <div>

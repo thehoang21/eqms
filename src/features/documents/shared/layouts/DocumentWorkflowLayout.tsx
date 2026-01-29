@@ -1,17 +1,12 @@
 import React, { useState } from "react";
 import {
     ChevronRight,
-    FileText,
     Clock,
     CheckCircle2,
     AlertCircle,
     Check,
     ArrowLeft,
     Home,
-    GraduationCap,
-    FileSignature,
-    History,
-    Info,
     ChevronLeft,
     ChevronRight as ChevronRightIcon,
     List,
@@ -42,7 +37,6 @@ interface BreadcrumbItem {
 interface TabItem {
     id: TabType;
     label: string;
-    icon: React.ComponentType<{ className?: string }>;
 }
 
 interface DocumentWorkflowLayoutProps {
@@ -101,11 +95,11 @@ const getStatusIcon = (status: DocumentStatus) => {
 
 // --- Default Tabs ---
 export const DEFAULT_WORKFLOW_TABS: TabItem[] = [
-    { id: "document", label: "Document", icon: FileText },
-    { id: "general", label: "General Information", icon: Info },
-    { id: "training", label: "Training", icon: GraduationCap },
-    { id: "signatures", label: "Signatures", icon: FileSignature },
-    { id: "audit", label: "Audit Trail", icon: History },
+    { id: "document", label: "Document" },
+    { id: "general", label: "General Information" },
+    { id: "training", label: "Training" },
+    { id: "signatures", label: "Signatures" },
+    { id: "audit", label: "Audit Trail" },
 ];
 
 // --- Batch Navigation Bar Component ---
@@ -421,7 +415,6 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                 <div className="border-b border-slate-200">
                     <div className="flex overflow-x-auto">
                         {tabs.map((tab) => {
-                            const Icon = tab.icon;
                             return (
                                 <button
                                     key={tab.id}
@@ -433,11 +426,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                                             : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                                     )}
                                 >
-                                    <Icon className={cn(
-                                        "h-4 w-4 shrink-0",
-                                        activeTab === tab.id ? "text-emerald-600" : "text-slate-400"
-                                    )} />
-                                    <span className="hidden md:inline">{tab.label}</span>
+                                    {tab.label}
                                 </button>
                             );
                         })}

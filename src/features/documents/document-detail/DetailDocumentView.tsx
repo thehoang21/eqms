@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import {
   ChevronRight,
-  FileText,
-  GraduationCap,
   Clock,
   CheckCircle2,
   AlertCircle,
-  History,
   Check,
-  FileSignature,
-  Info,
   ArrowLeft,
   Home,
 } from "lucide-react";
@@ -204,11 +199,11 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
   };
 
   const tabs = [
-    { id: "document" as TabType, label: "Document", icon: FileText },
-    { id: "general" as TabType, label: "General Information", icon: Info },
-    { id: "training" as TabType, label: "Training", icon: GraduationCap },
-    { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
-    { id: "audit" as TabType, label: "Audit Trail", icon: History },
+    { id: "document" as TabType, label: "Document" },
+    { id: "general" as TabType, label: "General Information" },
+    { id: "training" as TabType, label: "Training" },
+    { id: "signatures" as TabType, label: "Signatures" },
+    { id: "audit" as TabType, label: "Audit Trail" },
   ];
 
   return (
@@ -321,7 +316,6 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
         <div className="border-b border-slate-200">
           <div className="flex overflow-x-auto">
             {tabs.map((tab) => {
-              const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
@@ -333,15 +327,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
                       : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                   )}
                 >
-                  <Icon
-                    className={cn(
-                      "h-4 w-4 shrink-0",
-                      activeTab === tab.id
-                        ? "text-emerald-600"
-                        : "text-slate-400"
-                    )}
-                  />
-                  <span className="hidden md:inline">{tab.label}</span>
+                  {tab.label}
                 </button>
               );
             })}

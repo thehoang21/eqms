@@ -6,7 +6,6 @@ import {
   Calendar,
   MapPin,
   User,
-  FileText,
   Building2,
   Clock,
   CheckCircle2,
@@ -19,8 +18,6 @@ import {
   AlertTriangle,
   Check,
   Info,
-  FileSignature,
-  History,
   Send,
   AlertCircle,
 } from "lucide-react";
@@ -262,10 +259,10 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
   ];
   // Tabs configuration
   const tabs = [
-    { id: "document" as TabType, label: "Document Information", icon: FileText },
-    { id: "distribution" as TabType, label: "Distribution Information", icon: Building2 },
-    { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
-    { id: "audit" as TabType, label: "Audit Trail", icon: History },
+    { id: "document" as TabType, label: "Document Information" },
+    { id: "distribution" as TabType, label: "Distribution Information" },
+    { id: "signatures" as TabType, label: "Signatures" },
+    { id: "audit" as TabType, label: "Audit Trail" },
   ];
 
   const currentStepIndex = statusSteps.indexOf(controlledCopy.status);
@@ -489,7 +486,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         <div className="border-b border-slate-200">
           <div className="flex overflow-x-auto">
             {tabs.map((tab) => {
-              const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
@@ -501,15 +497,7 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
                       : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                   )}
                 >
-                  <Icon
-                    className={cn(
-                      "h-4 w-4 shrink-0",
-                      activeTab === tab.id
-                        ? "text-emerald-600"
-                        : "text-slate-400"
-                    )}
-                  />
-                  <span className="hidden md:inline">{tab.label}</span>
+                  {tab.label}
                 </button>
               );
             })}

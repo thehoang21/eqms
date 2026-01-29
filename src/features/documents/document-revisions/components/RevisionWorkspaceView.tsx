@@ -2,13 +2,8 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
     ChevronRight,
-    FileText,
-    Info,
     Save,
     X,
-    GraduationCap,
-    FileSignature,
-    History,
     GitBranch,
     Check,
     Send,
@@ -454,11 +449,11 @@ export const RevisionWorkspaceView: React.FC = () => {
     const currentStepIndex = 0; // Always "Draft" for new revisions
 
     const tabs = [
-        { id: "document" as TabType, label: "Document", icon: FileText },
-        { id: "general" as TabType, label: "General Information", icon: Info },
-        { id: "training" as TabType, label: "Training", icon: GraduationCap },
-        { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
-        { id: "audit" as TabType, label: "Audit Trail", icon: History },
+        { id: "document" as TabType, label: "Document" },
+        { id: "general" as TabType, label: "General Information" },
+        { id: "training" as TabType, label: "Training" },
+        { id: "signatures" as TabType, label: "Signatures" },
+        { id: "audit" as TabType, label: "Audit Trail" },
     ];
 
     if (workspaceDocuments.length === 0) {
@@ -724,7 +719,6 @@ export const RevisionWorkspaceView: React.FC = () => {
                 <div className="border-b border-slate-200">
                     <div className="flex overflow-x-auto">
                         {tabs.map((tab) => {
-                            const Icon = tab.icon;
                             return (
                                 <button
                                     key={tab.id}
@@ -736,15 +730,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                             : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                                     )}
                                 >
-                                    <Icon
-                                        className={cn(
-                                            "h-4 w-4 shrink-0",
-                                            activeTab === tab.id
-                                                ? "text-emerald-600"
-                                                : "text-slate-400"
-                                        )}
-                                    />
-                                    <span className="hidden md:inline">{tab.label}</span>
+                                    {tab.label}
                                 </button>
                             );
                         })}
