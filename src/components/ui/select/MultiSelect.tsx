@@ -82,6 +82,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const isInteractingWithSearchRef = useRef(false);
 
   // Listen for custom event to close other dropdowns
   useEffect(() => {
@@ -154,6 +155,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      // iOS Safari critical fix: Skip if user is interacting with search
+      if (isInteractingWithSearchRef.current) {
+        return;
+      }
+      
       const target = event.target as Node;
       
       // iOS Safari fix: Skip if clicking inside dropdown (including search input)
@@ -183,17 +189,13 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     if (isOpen) {
       // Use setTimeout to avoid catching the initial click that opened the dropdown
       const timer = setTimeout(() => {
+        // Only use mousedown for desktop - avoid touch events that conflict with iOS input
         document.addEventListener("mousedown", handleClickOutside);
-        document.addEventListener("touchstart", handleClickOutside, { passive: false });
-        // iOS Safari specific: Add touchend listener
-        document.addEventListener("touchend", handleClickOutside, { passive: false });
-      }, 50); // Increased timeout for iOS
+      }, 100); // Increased timeout for iOS
       
       return () => {
         clearTimeout(timer);
         document.removeEventListener("mousedown", handleClickOutside);
-        document.removeEventListener("touchstart", handleClickOutside);
-        document.removeEventListener("touchend", handleClickOutside);
       };
     }
   }, [isOpen]);
@@ -387,23 +389,50 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
       {/* Dropdown Portal */}
       {isOpen && createPortal(
-        <div 
-          ref={dropdownRef}
-          style={dropdownStyle}
-          className={cn(
-            "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden",
-            "animate-in fade-in duration-100",
-            dropdownStyle.bottom !== undefined 
-              ? "slide-in-from-bottom-2" 
-              : "slide-in-from-top-2 zoom-in-95"
-          )}
-        >
+        <>
+          {/* Invisible backdrop for iOS touch handling */}
+          <div 
+            className="fixed inset-0"
+            style={{ zIndex: 9998 }}
+            onTouchStart={(e) => {
+              if (!isInteractingWithSearchRef.current) {
+                setIsOpen(false);
+                setSearchQuery("");
+              }
+            }}
+            onClick={() => {
+              if (!isInteractingWithSearchRef.current) {
+                setIsOpen(false);
+                setSearchQuery("");
+              }
+            }}
+            aria-hidden="true"
+          />
+          <div 
+            ref={dropdownRef}
+            style={dropdownStyle}
+            className={cn(
+              "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden",
+              "animate-in fade-in duration-100",
+              dropdownStyle.bottom !== undefined 
+                ? "slide-in-from-bottom-2" 
+                : "slide-in-from-top-2 zoom-in-95"
+            )}
+          >
           {enableSearch && (
             <div 
               className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white"
               onMouseDown={(e) => e.stopPropagation()}
-              onTouchStart={(e) => e.stopPropagation()}
-              onTouchEnd={(e) => e.stopPropagation()}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+                isInteractingWithSearchRef.current = true;
+              }}
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                setTimeout(() => {
+                  isInteractingWithSearchRef.current = false;
+                }, 300);
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <Search className="mr-2 h-4 w-4 text-slate-400 shrink-0 opacity-50" />
@@ -415,30 +444,37 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onMouseDown={(e) => {
                   e.stopPropagation();
-                  // Focus immediately for better response
+                  isInteractingWithSearchRef.current = true;
                   searchInputRef.current?.focus();
                 }}
                 onTouchStart={(e) => {
-                  // Only stopPropagation, don't preventDefault - allow native iOS input handling
                   e.stopPropagation();
+                  isInteractingWithSearchRef.current = true;
                 }}
                 onTouchEnd={(e) => {
                   e.stopPropagation();
-                  // iOS Safari fix: Set selection for better cursor positioning
                   if (searchInputRef.current) {
+                    searchInputRef.current.focus();
                     const len = searchInputRef.current.value.length;
                     searchInputRef.current.setSelectionRange(len, len);
                   }
+                  setTimeout(() => {
+                    isInteractingWithSearchRef.current = false;
+                  }, 300);
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  // Direct focus without preventDefault
                   searchInputRef.current?.focus();
+                  setTimeout(() => {
+                    isInteractingWithSearchRef.current = false;
+                  }, 100);
                 }}
                 onFocus={(e) => {
                   e.stopPropagation();
+                  isInteractingWithSearchRef.current = true;
                 }}
                 onBlur={(e) => {
+                  isInteractingWithSearchRef.current = false;
                   // iOS Safari fix: prevent blur when tapping inside dropdown
                   const relatedTarget = e.relatedTarget as Node;
                   if (dropdownRef.current?.contains(relatedTarget)) {
@@ -506,7 +542,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
               })
             )}
           </div>
-        </div>,
+        </div>
+        </>,
         document.body
       )}
     </div>
