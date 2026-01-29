@@ -368,11 +368,11 @@ export const Select: React.FC<SelectProps> = ({
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => {
                 e.stopPropagation();
-                e.preventDefault();
+                // Don't preventDefault here - it blocks input interaction on iOS
               }}
               onTouchEnd={(e) => {
                 e.stopPropagation();
-                e.preventDefault();
+                // Don't preventDefault here - it blocks input interaction on iOS
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -383,30 +383,32 @@ export const Select: React.FC<SelectProps> = ({
                 placeholder={searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onMouseDown={(e) => e.stopPropagation()}
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                  // Force focus immediately on mousedown
+                  searchInputRef.current?.focus();
+                }}
                 onTouchStart={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
+                  // iOS Safari: Don't preventDefault, just stop propagation
+                  // Let the native touch behavior handle input focus
                 }}
                 onTouchEnd={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
-                  // iOS Safari fix: Force focus on touchend with delay
+                  // iOS Safari fix: Force focus on touchend
                   setTimeout(() => {
                     if (searchInputRef.current) {
                       searchInputRef.current.focus();
+                      // For iOS, also set selection to end
+                      const len = searchInputRef.current.value.length;
+                      searchInputRef.current.setSelectionRange(len, len);
                     }
-                  }, 100);
+                  }, 10);
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
-                  // Force focus on click
-                  setTimeout(() => {
-                    if (searchInputRef.current) {
-                      searchInputRef.current.focus();
-                    }
-                  }, 0);
+                  // Force focus on click - don't preventDefault for iOS
+                  searchInputRef.current?.focus();
                 }}
                 onFocus={(e) => {
                   e.stopPropagation();
@@ -429,9 +431,16 @@ export const Select: React.FC<SelectProps> = ({
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck={false}
+                // iOS specific: readOnly=false ensures input is editable
+                readOnly={false}
                 // iOS specific attributes
                 data-testid="search-input"
-                style={{ WebkitTapHighlightColor: 'transparent' }}
+                style={{ 
+                  WebkitTapHighlightColor: 'transparent',
+                  WebkitUserSelect: 'text',
+                  userSelect: 'text',
+                  touchAction: 'manipulation',
+                }}
               />
             </div>
           )}

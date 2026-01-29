@@ -402,14 +402,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             <div 
               className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white"
               onMouseDown={(e) => e.stopPropagation()}
-              onTouchStart={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-              }}
-              onTouchEnd={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-              }}
+              onTouchStart={(e) => e.stopPropagation()}
+              onTouchEnd={(e) => e.stopPropagation()}
               onClick={(e) => e.stopPropagation()}
             >
               <Search className="mr-2 h-4 w-4 text-slate-400 shrink-0 opacity-50" />
@@ -419,30 +413,27 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 placeholder={searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => {
+                onMouseDown={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
+                  // Focus immediately for better response
+                  searchInputRef.current?.focus();
+                }}
+                onTouchStart={(e) => {
+                  // Only stopPropagation, don't preventDefault - allow native iOS input handling
+                  e.stopPropagation();
                 }}
                 onTouchEnd={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
-                  // iOS Safari fix: Force focus on touchend with delay
-                  setTimeout(() => {
-                    if (searchInputRef.current) {
-                      searchInputRef.current.focus();
-                    }
-                  }, 100);
+                  // iOS Safari fix: Set selection for better cursor positioning
+                  if (searchInputRef.current) {
+                    const len = searchInputRef.current.value.length;
+                    searchInputRef.current.setSelectionRange(len, len);
+                  }
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  e.preventDefault();
-                  // Force focus on click
-                  setTimeout(() => {
-                    if (searchInputRef.current) {
-                      searchInputRef.current.focus();
-                    }
-                  }, 0);
+                  // Direct focus without preventDefault
+                  searchInputRef.current?.focus();
                 }}
                 onFocus={(e) => {
                   e.stopPropagation();
@@ -465,9 +456,15 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck={false}
+                readOnly={false}
                 // iOS specific attributes
                 data-testid="search-input"
-                style={{ WebkitTapHighlightColor: 'transparent' }}
+                style={{ 
+                  WebkitTapHighlightColor: 'transparent',
+                  touchAction: 'manipulation',
+                  WebkitUserSelect: 'text',
+                  userSelect: 'text',
+                }}
               />
             </div>
           )}
