@@ -26,7 +26,6 @@ import { TablePagination } from "@/components/ui/table/TablePagination";
 import { cn } from "@/components/ui/utils";
 import { DocumentFilters } from "./../shared/components/DocumentFilters";
 import { DetailDocumentView } from "../document-detail/DetailDocumentView";
-import { NewDocumentModal } from "../document-list/new-document/NewDocumentModal";
 import { CreateLinkModal } from "./../shared/components/CreateLinkModal";
 
 // --- Types ---
@@ -680,7 +679,6 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [selectedDocumentTab, setSelectedDocumentTab] = useState<string>("general");
   const [isLoading, setIsLoading] = useState(true);
-  const [isNewDocModalOpen, setIsNewDocModalOpen] = useState(false);
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedDocumentForLink, setSelectedDocumentForLink] = useState<Document | null>(null);
 
@@ -697,15 +695,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
   }, [viewType, config.defaultColumns]);
 
   const handleNewDocument = () => {
-    setIsNewDocModalOpen(true);
-  };
-
-  const handleSelectSingleDocument = () => {
     navigate("/documents/all/new");
-  };
-
-  const handleSelectBatchDocument = () => {
-    navigate("/documents/batch/new");
   };
 
   const handleViewDocument = (documentId: string, tab: string = "general") => {
@@ -1199,14 +1189,6 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           itemsPerPage={itemsPerPage}
         />
       </div>
-
-      {/* New Document Modal */}
-      <NewDocumentModal
-        isOpen={isNewDocModalOpen}
-        onClose={() => setIsNewDocModalOpen(false)}
-        onSelectSingle={handleSelectSingleDocument}
-        onSelectBatch={handleSelectBatchDocument}
-      />
 
       {/* Create Shareable Link Modal */}
       {selectedDocumentForLink && (

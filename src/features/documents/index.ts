@@ -71,8 +71,6 @@ export { DetailDocumentView } from './document-detail/DetailDocumentView';
 // Document Creation
 export { NewDocumentView } from './document-list/single-document/NewDocumentView';
 export { SingleDocumentView } from './document-list/single-document/SingleDocumentView';
-export { BatchDocumentView } from './document-list/batch-document/BatchDocumentView';
-export { NewDocumentModal } from './document-list/new-document/NewDocumentModal';
 
 // Document Review & Approval
 export { DocumentReviewView } from './document-list/review-document/DocumentReviewView';

@@ -500,15 +500,37 @@ const NotificationActionsDropdown: React.FC<{
     <>
       <div
         className="fixed inset-0 z-40 animate-in fade-in duration-150"
+        onTouchStart={(e) => {
+          // Allow scroll gestures to pass through
+          if (e.touches.length === 1) {
+            return;
+          }
+        }}
+        onTouchMove={(e) => {
+          // Allow scroll gestures to pass through
+          return;
+        }}
         onClick={(e) => {
           e.stopPropagation();
           onClose();
         }}
         aria-hidden="true"
+        style={{ 
+          // Allow scroll on touch devices
+          touchAction: 'auto',
+          // Make backdrop invisible but still clickable
+          backgroundColor: 'transparent'
+        }}
       />
       <div
-        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
         style={{ top: `${position.top}px`, left: `${position.left}px` }}
+        onTouchStart={(e) => {
+          e.stopPropagation();
+        }}
+        onTouchMove={(e) => {
+          e.stopPropagation();
+        }}
       >
         <div className="py-1">
           <button

@@ -21,7 +21,6 @@ export const ROUTES = {
     OWNED: '/documents/owned',
     ALL: '/documents/all',
     NEW: '/documents/all/new',
-    BATCH_NEW: '/documents/batch/new',
     DETAIL: (id: string) => `/documents/${id}`,
     REVIEW: (id: string) => `/documents/${id}/review`,
     APPROVAL: (id: string) => `/documents/${id}/approval`,

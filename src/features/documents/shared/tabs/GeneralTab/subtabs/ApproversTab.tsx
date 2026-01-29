@@ -15,6 +15,8 @@ interface ApproversTabProps {
     onCountChange?: (count: number) => void;
     isModalOpen?: boolean;
     onModalClose?: () => void;
+    approvers?: Approver[];
+    onApproversChange?: (approvers: Approver[]) => void;
 }
 
 // Mock Data for User Selection
@@ -172,10 +174,22 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
 export const ApproversTab: React.FC<ApproversTabProps> = ({ 
     onCountChange,
     isModalOpen: externalModalOpen,
-    onModalClose: externalModalClose
+    onModalClose: externalModalClose,
+    approvers: externalApprovers,
+    onApproversChange: externalOnApproversChange,
 }) => {
-    const [approvers, setApprovers] = useState<Approver[]>([]);
+    const [internalApprovers, setInternalApprovers] = useState<Approver[]>([]);
     const [internalModalOpen, setInternalModalOpen] = useState(false);
+
+    // Use external or internal state
+    const approvers = externalApprovers ?? internalApprovers;
+    const setApprovers = (newApprovers: Approver[]) => {
+        if (externalOnApproversChange) {
+            externalOnApproversChange(newApprovers);
+        } else {
+            setInternalApprovers(newApprovers);
+        }
+    };
 
     // Use external modal state if provided, otherwise use internal
     const isModalOpen = externalModalOpen !== undefined ? externalModalOpen : internalModalOpen;

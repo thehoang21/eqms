@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useLayoutEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, ChevronDown, Clock } from 'lucide-react';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { cn } from '../utils';
 import { Button } from '../button/Button';
 
@@ -31,7 +31,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   label,
   value,
   onChange,
-  placeholder = "Select date & time",
+  placeholder = "Select date",
 }) => {
   const pickerId = useId();
   const [isOpen, setIsOpen] = useState(false);
@@ -45,12 +45,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const [viewDate, setViewDate] = useState<Date>(() => 
     value ? new Date(value) : new Date()
   );
-  
-  const [time, setTime] = useState(() => {
-    const d = value ? new Date(value) : new Date();
-    if (!value) return { hours: 0, minutes: 0 };
-    return { hours: d.getHours(), minutes: d.getMinutes() };
-  });
 
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -143,7 +137,6 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       if (!isNaN(d.getTime())) {
         setSelectedDate(d);
         setViewDate(d);
-        setTime({ hours: d.getHours(), minutes: d.getMinutes() });
       }
     } else {
       setSelectedDate(null);
@@ -183,31 +176,13 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     setViewMode('calendar');
   };
 
-  const handleTimeChange = (type: 'hours' | 'minutes', val: string) => {
-    let num = parseInt(val);
-    if (isNaN(num)) return;
-    
-    if (type === 'hours') {
-      num = Math.max(0, Math.min(23, num));
-      setTime(prev => ({ ...prev, hours: num }));
-    } else {
-      num = Math.max(0, Math.min(59, num));
-      setTime(prev => ({ ...prev, minutes: num }));
-    }
-  };
-
   const handleApply = () => {
     if (selectedDate) {
-      const d = new Date(selectedDate);
-      d.setHours(time.hours);
-      d.setMinutes(time.minutes);
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const hours = String(time.hours).padStart(2, '0');
-      const minutes = String(time.minutes).padStart(2, '0');
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
       
-      onChange(`${year}-${month}-${day}T${hours}:${minutes}`);
+      onChange(`${year}-${month}-${day}`);
     }
     setIsOpen(false);
   };
@@ -408,13 +383,10 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     const d = new Date(value);
     if (isNaN(d.getTime())) return placeholder;
     
-    return d.toLocaleString('en-US', {
+    return d.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
+      year: 'numeric'
     });
   };
 
@@ -465,35 +437,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         >
           {renderCalendar()}
           
-          <div className="border-t border-slate-100 p-4 bg-slate-50/50">
-            <div className="flex items-center gap-2 mb-4">
-              <Clock className="h-4 w-4 text-slate-500" />
-              <span className="text-sm font-medium text-slate-700">Time</span>
-              <div className="flex items-center gap-1 ml-auto">
-                <div className="relative">
-                  <input
-                    type="number"
-                    min="0"
-                    max="23"
-                    value={String(time.hours).padStart(2, '0')}
-                    onChange={(e) => handleTimeChange('hours', e.target.value)}
-                    className="w-12 h-8 rounded border border-slate-200 text-center text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                  />
-                </div>
-                <span className="text-slate-400">:</span>
-                <div className="relative">
-                  <input
-                    type="number"
-                    min="0"
-                    max="59"
-                    value={String(time.minutes).padStart(2, '0')}
-                    onChange={(e) => handleTimeChange('minutes', e.target.value)}
-                    className="w-12 h-8 rounded border border-slate-200 text-center text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                  />
-                </div>
-              </div>
-            </div>
-
+          <div className="border-t border-slate-100 p-3 bg-slate-50/50">
             <div className="flex items-center justify-between gap-2">
               <Button 
                 variant="ghost" 

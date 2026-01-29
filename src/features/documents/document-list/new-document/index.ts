@@ -6,10 +6,6 @@
 
 // Document views
 export { NewDocumentView } from '../single-document/NewDocumentView';
-export { BatchDocumentView } from '../batch-document/BatchDocumentView';
-
-// Modal
-export { NewDocumentModal } from './NewDocumentModal';
 
 // Workflow layout (re-export from shared)
 export { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from '@/features/documents/shared/layouts';

@@ -162,7 +162,7 @@ export const Select: React.FC<SelectProps> = ({
         return;
       }
       
-      // Skip if search input is focused
+      // Skip if search input is focused (critical for iOS)
       if (searchInputRef.current === document.activeElement) {
         return;
       }
@@ -180,13 +180,16 @@ export const Select: React.FC<SelectProps> = ({
       // Use setTimeout to avoid catching the initial click that opened the dropdown
       const timer = setTimeout(() => {
         document.addEventListener("mousedown", handleClickOutside);
-        document.addEventListener("touchstart", handleClickOutside, { passive: true });
-      }, 10);
+        document.addEventListener("touchstart", handleClickOutside, { passive: false });
+        // iOS Safari specific: Add touchend listener
+        document.addEventListener("touchend", handleClickOutside, { passive: false });
+      }, 50); // Increased timeout for iOS
       
       return () => {
         clearTimeout(timer);
         document.removeEventListener("mousedown", handleClickOutside);
         document.removeEventListener("touchstart", handleClickOutside);
+        document.removeEventListener("touchend", handleClickOutside);
       };
     }
   }, [isOpen]);
@@ -227,12 +230,25 @@ export const Select: React.FC<SelectProps> = ({
   // Auto focus vào ô search khi mở
   useEffect(() => {
     if (isOpen && enableSearch && searchInputRef.current) {
-      // iOS Safari fix: Use requestAnimationFrame for smoother focus
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          searchInputRef.current?.focus({ preventScroll: true });
-        }, 100);
-      });
+      // iOS Safari fix: Use longer delay and multiple methods for smooth focus
+      const focusTimeout = setTimeout(() => {
+        if (searchInputRef.current && isOpen) {
+          // Try multiple approaches for iOS
+          searchInputRef.current.focus();
+          
+          // Additional iOS fix: trigger click to ensure keyboard shows
+          if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            requestAnimationFrame(() => {
+              if (searchInputRef.current) {
+                searchInputRef.current.click();
+                searchInputRef.current.focus();
+              }
+            });
+          }
+        }
+      }, 200); // Increased delay for iOS
+
+      return () => clearTimeout(focusTimeout);
     }
   }, [isOpen, enableSearch]);
 
@@ -350,8 +366,14 @@ export const Select: React.FC<SelectProps> = ({
             <div 
               className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white"
               onMouseDown={(e) => e.stopPropagation()}
-              onTouchStart={(e) => e.stopPropagation()}
-              onTouchEnd={(e) => e.stopPropagation()}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               <Search className="mr-2 h-4 w-4 text-slate-400 shrink-0 opacity-50" />
@@ -362,25 +384,43 @@ export const Select: React.FC<SelectProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
                 onTouchEnd={(e) => {
                   e.stopPropagation();
-                  // iOS Safari fix: re-focus on touchend
-                  requestAnimationFrame(() => {
-                    searchInputRef.current?.focus();
-                  });
+                  e.preventDefault();
+                  // iOS Safari fix: Force focus on touchend with delay
+                  setTimeout(() => {
+                    if (searchInputRef.current) {
+                      searchInputRef.current.focus();
+                    }
+                  }, 100);
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  searchInputRef.current?.focus();
+                  e.preventDefault();
+                  // Force focus on click
+                  setTimeout(() => {
+                    if (searchInputRef.current) {
+                      searchInputRef.current.focus();
+                    }
+                  }, 0);
+                }}
+                onFocus={(e) => {
+                  e.stopPropagation();
                 }}
                 onBlur={(e) => {
                   // iOS Safari fix: prevent blur when tapping inside dropdown
-                  if (dropdownRef.current?.contains(e.relatedTarget as Node)) {
+                  const relatedTarget = e.relatedTarget as Node;
+                  if (dropdownRef.current?.contains(relatedTarget)) {
                     e.preventDefault();
-                    requestAnimationFrame(() => {
-                      searchInputRef.current?.focus();
-                    });
+                    setTimeout(() => {
+                      if (searchInputRef.current) {
+                        searchInputRef.current.focus();
+                      }
+                    }, 0);
                   }
                 }}
                 inputMode="search"
@@ -389,6 +429,9 @@ export const Select: React.FC<SelectProps> = ({
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck={false}
+                // iOS specific attributes
+                data-testid="search-input"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               />
             </div>
           )}

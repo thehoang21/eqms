@@ -1,22 +1,8 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-    ChevronRight,
-    FileText,
-    Info,
-    Save,
-    X,
-    GraduationCap,
-    FileSignature,
-    History,
-    Check,
-    Send,
-    CheckCircle2,
-    AlertCircle,
-} from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
-import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { TrainingTab, SignaturesTab, AuditTab } from "@/features/documents/shared/tabs";
 import {
@@ -30,19 +16,40 @@ import { DocumentType } from "@/types/documentTypes";
 import { IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Active" | "Obsoleted" | "Closed - Cancelled";
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
+
+interface Reviewer {
+    id: string;
+    name: string;
+    role: string;
+    email: string;
+    department: string;
+    order: number;
+}
+
+interface Approver {
+    id: string;
+    name: string;
+    role: string;
+    email: string;
+    department: string;
+}
 
 export const NewDocumentView: React.FC = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<TabType>("document");
     const [isSaving, setIsSaving] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isESignOpen, setIsESignOpen] = useState(false);
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
     const [validationModalMessage, setValidationModalMessage] = useState<React.ReactNode>(null);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [showSaveModal, setShowSaveModal] = useState(false);
+    const [isSaved, setIsSaved] = useState(false); // Track if document has been saved
+    const [documentStatus, setDocumentStatus] = useState<DocumentStatus>("Draft"); // Track current document status
+
+    // Reviewers and Approvers state
+    const [reviewers, setReviewers] = useState<Reviewer[]>([]);
+    const [approvers, setApprovers] = useState<Approver[]>([]);
 
     // File state
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -56,15 +63,16 @@ export const NewDocumentView: React.FC = () => {
     // Form state
     const [formData, setFormData] = useState({
         title: "",
-        type: "Standard Operating Procedure" as DocumentType,
+        type: "" as DocumentType,
         author: [] as (string | number)[],
         businessUnit: "",
         department: "",
         knowledgeBase: "",
-        subType: "-- None --",
-        periodicReviewCycle: 24,
-        periodicReviewNotification: 14,
+        subType: "",
+        periodicReviewCycle: 0,
+        periodicReviewNotification: 0,
         language: "English",
+        reviewDate: "",
         description: "",
         isTemplate: false,
     });
@@ -81,6 +89,18 @@ export const NewDocumentView: React.FC = () => {
             }));
         }
     }, [uploadedFiles]);
+
+    // Auto-transition to Active when all conditions are met:
+    // 1. Document has been saved (isSaved = true)
+    // 2. All required fields are filled (missingRequiredFields.length === 0)
+    // 3. At least one file is uploaded
+    // 4. At least one reviewer is added
+    // 5. At least one approver is added
+    // Calculate current step index based on document status
+    const currentStepIndex = useMemo(() => {
+        const statusSteps: DocumentStatus[] = ["Draft", "Active", "Obsoleted", "Closed - Cancelled"];
+        return statusSteps.indexOf(documentStatus);
+    }, [documentStatus]);
 
     const missingRequiredFields = useMemo(() => {
         const missing: string[] = [];
@@ -104,23 +124,6 @@ export const NewDocumentView: React.FC = () => {
         formData.periodicReviewNotification,
     ]);
 
-    const validateOrWarn = () => {
-        if (missingRequiredFields.length === 0) return true;
-
-        setValidationModalMessage(
-            <div className="space-y-2">
-                <p>Please fill in all required fields before submitting:</p>
-                <ul className="list-disc pl-5 space-y-1">
-                    {missingRequiredFields.map((field) => (
-                        <li key={field}>{field}</li>
-                    ))}
-                </ul>
-            </div>
-        );
-        setIsValidationModalOpen(true);
-        return false;
-    };
-
     const handleCancel = () => {
         setIsCancelModalOpen(true);
     };
@@ -137,49 +140,48 @@ export const NewDocumentView: React.FC = () => {
     const handleConfirmSave = async () => {
         setIsSaving(true);
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Simulate API call with 3 second loading
+            await new Promise(resolve => setTimeout(resolve, 3000));
             
             // TODO: Integrate with API service
-            console.log("Document saved as draft:", formData);
+            console.log("Document saved:", formData);
             
             setIsSaving(false);
             setShowSaveModal(false);
-            navigate("/documents/all");
+            
+            if (!isSaved) {
+                // First save: just mark as saved to show additional options (Reviewers, Approvers buttons)
+                setIsSaved(true);
+            } else {
+                // Second save: transition to Active (only possible when reviewers and approvers are selected)
+                setDocumentStatus("Active");
+            }
         } catch (error) {
             console.error("Error saving document:", error);
             setIsSaving(false);
         }
     };
 
-    const handleSubmitForActive = () => {
-        if (!validateOrWarn()) return;
-        setIsESignOpen(true);
+    const handleObsolete = (reason: string) => {
+        // TODO: Integrate with API - save obsolete reason
+        console.log("Document obsoleted with reason:", reason);
+        setDocumentStatus("Obsoleted");
     };
 
-    const handleESignConfirm = async (reason: string) => {
-        setIsSubmitting(true);
-        try {
-            // TODO: Integrate with API service
-            console.log("Document submitted for activation:", { ...formData, eSignatureReason: reason });
-            setIsESignOpen(false);
-            navigate("/documents/all");
-        } catch (error) {
-            console.error("Error submitting document:", error);
-        } finally {
-            setIsSubmitting(false);
-        }
+    const handleBackToList = () => {
+        navigate("/documents/all");
     };
 
-    // Status workflow steps
-    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Pending Training", "Ready for Publishing", "Published", "Effective", "Archive"];
-    const currentStepIndex = 0; // Always "Draft" for new documents
+    // Status workflow steps - simplified for new document creation
+    const statusSteps: DocumentStatus[] = ["Draft", "Active", "Obsoleted", "Closed - Cancelled"];
+    // currentStepIndex is now calculated in useMemo above based on documentStatus
 
     const tabs = [
-        { id: "document" as TabType, label: "Document", icon: FileText },
-        { id: "general" as TabType, label: "General Information", icon: Info },
-        { id: "training" as TabType, label: "Training", icon: GraduationCap },
-        { id: "signatures" as TabType, label: "Signatures", icon: FileSignature },
-        { id: "audit" as TabType, label: "Audit Trail", icon: History },
+        { id: "document" as TabType, label: "Document" },
+        { id: "general" as TabType, label: "General Information" },
+        { id: "training" as TabType, label: "Training" },
+        { id: "signatures" as TabType, label: "Signatures" },
+        { id: "audit" as TabType, label: "Audit Trail" },
     ];
 
     return (
@@ -189,7 +191,7 @@ export const NewDocumentView: React.FC = () => {
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
                     <div className="flex-1 min-w-0">
                         <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-                            Single Document Creation
+                            New Document
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
                             <IconSmartHome className="h-4 w-4" />
@@ -207,7 +209,7 @@ export const NewDocumentView: React.FC = () => {
                                 <span className="md:hidden">...</span>
                             </button>
                             <span className="text-slate-400 mx-1">/</span>
-                            <span className="text-slate-700 font-medium">Single Document Creation</span>
+                            <span className="text-slate-700 font-medium">New Document</span>
                         </div>
                     </div>
 
@@ -223,19 +225,11 @@ export const NewDocumentView: React.FC = () => {
                         </Button>
                         <Button
                             onClick={handleSaveDraft}
-                            disabled={isSaving || isSubmitting || uploadedFiles.length === 0}
+                            disabled={isSaving || uploadedFiles.length === 0 || (isSaved && (reviewers.length === 0 || approvers.length === 0))}
                             size="sm"
                             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
                         >
-                            {isSaving ? "Saving..." : "Save Draft"}
-                        </Button>
-                        <Button
-                            onClick={handleSubmitForActive}
-                            disabled={isSaving || isSubmitting || uploadedFiles.length === 0 || missingRequiredFields.length > 0}
-                            size="sm"
-                            className="flex items-center gap-2 !bg-blue-600 hover:!bg-blue-700 text-white disabled:!bg-slate-300"
-                        >
-                            {isSubmitting ? "Submitting..." : "Submit"}
+                            {isSaving ? "Saving..." : "Save"}
                         </Button>
                     </div>
                 </div>
@@ -250,6 +244,14 @@ export const NewDocumentView: React.FC = () => {
                             const isCurrent = index === currentStepIndex;
                             const isFirst = index === 0;
                             const isLast = index === statusSteps.length - 1;
+                            
+                            // Special case: When status is "Obsoleted", show "Closed - Cancelled" as skipped (striped)
+                            const isObsoletedStatus = documentStatus === "Obsoleted";
+                            const isClosedCancelledStep = step === "Closed - Cancelled";
+                            const isSkipped = isObsoletedStatus && isClosedCancelledStep;
+                            
+                            // For Obsoleted status: Draft and Active are considered completed
+                            const showAsCompleted = isObsoletedStatus && (step === "Draft" || step === "Active");
 
                             return (
                                 <div
@@ -261,34 +263,41 @@ export const NewDocumentView: React.FC = () => {
                                 <div
                                     className={cn(
                                         "absolute inset-0 transition-all",
-                                        isCompleted
-                                            ? "bg-emerald-100"
-                                            : isCurrent
-                                                ? "bg-emerald-600"
-                                                : "bg-slate-100"
+                                        isSkipped
+                                            ? "" // Will use striped pattern
+                                            : isCompleted || showAsCompleted
+                                                ? "bg-emerald-100"
+                                                : isCurrent
+                                                    ? "bg-emerald-600"
+                                                    : "bg-slate-100"
                                     )}
                                     style={{
                                         clipPath: isFirst
                                             ? 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%)'
                                             : isLast
                                                 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%)'
-                                                : 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, 20px 50%)'
+                                                : 'polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, 20px 50%)',
+                                        ...(isSkipped ? {
+                                            background: 'repeating-linear-gradient(135deg, #e2e8f0, #e2e8f0 8px, #f1f5f9 8px, #f1f5f9 16px)'
+                                        } : {})
                                     }}
                                 />
 
                                 {/* Content */}
                                 <div className="relative z-10 flex items-center gap-2 px-6">
-                                    {isCompleted && (
+                                    {(isCompleted || showAsCompleted) && !isSkipped && (
                                         <Check className="h-4 w-4 text-emerald-600 shrink-0" />
                                     )}
                                     <span
                                         className={cn(
                                             "text-xs md:text-sm font-medium text-center",
-                                            isCurrent
-                                                ? "text-white"
-                                                : isCompleted
-                                                    ? "text-slate-700"
-                                                    : "text-slate-400"
+                                            isSkipped
+                                                ? "text-slate-400"
+                                                : isCurrent
+                                                    ? "text-white"
+                                                    : (isCompleted || showAsCompleted)
+                                                        ? "text-slate-700"
+                                                        : "text-slate-400"
                                         )}
                                     >
                                         {step}
@@ -305,7 +314,6 @@ export const NewDocumentView: React.FC = () => {
                 <div className="border-b border-slate-200">
                     <div className="flex overflow-x-auto">
                         {tabs.map((tab) => {
-                            const Icon = tab.icon;
                             return (
                                 <button
                                     key={tab.id}
@@ -317,13 +325,7 @@ export const NewDocumentView: React.FC = () => {
                                             : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                                     )}
                                 >
-                                    <Icon className={cn(
-                                        "h-4 w-4 shrink-0",
-                                        activeTab === tab.id
-                                            ? "text-emerald-600"
-                                            : "text-slate-400"
-                                    )} />
-                                    <span className="hidden md:inline">{tab.label}</span>
+                                    {tab.label}
                                 </button>
                             );
                         })}
@@ -338,6 +340,16 @@ export const NewDocumentView: React.FC = () => {
                             onFormChange={setFormData}
                             hideTemplateCheckbox={true}
                             suggestedDocumentCode={suggestedDocumentCode}
+                            isSaved={isSaved}
+                            onReviewersChange={setReviewers}
+                            onApproversChange={setApprovers}
+                            onCancel={handleCancel}
+                            onSave={handleSaveDraft}
+                            isSaving={isSaving}
+                            canSave={uploadedFiles.length > 0 && (!isSaved || (reviewers.length > 0 && approvers.length > 0))}
+                            onObsolete={handleObsolete}
+                            isObsoleted={documentStatus === "Obsoleted"}
+                            onBackToList={handleBackToList}
                         />
                     )}
 
@@ -370,27 +382,8 @@ export const NewDocumentView: React.FC = () => {
                     )}
                 </div>
             </div>
-                        {/* Modals */}
-            <ESignatureModal
-                isOpen={isESignOpen}
-                onClose={() => {
-                    if (isSubmitting) return;
-                    setIsESignOpen(false);
-                }}
-                onConfirm={handleESignConfirm}
-                actionTitle="Submit document for activation"
-            />
 
-            <AlertModal
-                isOpen={isValidationModalOpen}
-                onClose={() => setIsValidationModalOpen(false)}
-                type="warning"
-                title="Missing required information"
-                description={validationModalMessage}
-                confirmText="OK"
-                showCancel={false}
-            />
-
+            {/* Modals */}
             <AlertModal
                 isOpen={isCancelModalOpen}
                 onClose={() => setIsCancelModalOpen(false)}
@@ -417,10 +410,10 @@ export const NewDocumentView: React.FC = () => {
                 onClose={() => setShowSaveModal(false)}
                 onConfirm={handleConfirmSave}
                 type="confirm"
-                title="Save Document as Draft?"
+                title="Save Document?"
                 description={
                     <div className="space-y-3">
-                        <p>Are you sure you want to save this document as a draft?</p>
+                        <p>Are you sure you want to save this document?</p>
                         <div className="text-xs bg-slate-50 border border-slate-200 rounded-md p-3 space-y-1">
                             <p><span className="font-semibold">Document Name:</span> {formData.title || "(Not set)"}</p>
                             <p><span className="font-semibold">Type:</span> {formData.type}</p>
@@ -428,7 +421,7 @@ export const NewDocumentView: React.FC = () => {
                         </div>
                     </div>
                 }
-                confirmText="Save Draft"
+                confirmText="Save"
                 cancelText="Cancel"
                 isLoading={isSaving}
                 showCancel={true}

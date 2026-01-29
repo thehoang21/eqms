@@ -21,7 +21,6 @@ const DetailDocumentView = lazy(() => import('@/features/documents').then(m => (
 const ArchivedDocumentsView = lazy(() => import('@/features/documents').then(m => ({ default: m.ArchivedDocumentsView })));
 const DocumentsView = lazy(() => import('@/features/documents/document-list').then(m => ({ default: m.DocumentsView })));
 const NewDocumentView = lazy(() => import('@/features/documents/document-list/new-document').then(m => ({ default: m.NewDocumentView })));
-const BatchDocumentView = lazy(() => import('@/features/documents/document-list/new-document').then(m => ({ default: m.BatchDocumentView })));
 const DocumentReviewView = lazy(() => import('@/features/documents/document-list/review-document').then(m => ({ default: m.DocumentReviewView })));
 const DocumentApprovalView = lazy(() => import('@/features/documents/document-list/approval-document').then(m => ({ default: m.DocumentApprovalView })));
 
@@ -175,9 +174,6 @@ export const AppRoutes: React.FC = () => {
           <Route path="all" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
           <Route path="all/new" element={<Suspense fallback={<LoadingFallback />}><NewDocumentView /></Suspense>} />
           <Route path="archived" element={<Suspense fallback={<LoadingFallback />}><ArchivedDocumentsView /></Suspense>} />
-          
-          {/* Batch Operations */}
-          <Route path="batch/new" element={<Suspense fallback={<LoadingFallback />}><BatchDocumentView /></Suspense>} />
           
           {/* Document Detail & Actions */}
           <Route path=":id" element={<DetailDocumentViewWrapper />} />
