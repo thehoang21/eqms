@@ -154,31 +154,46 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      // iOS Safari fix: Skip if the target is the search input or focus is on search input
-      if (searchInputRef.current === event.target) {
+      const target = event.target as Node;
+      
+      // iOS Safari fix: Skip if clicking inside dropdown (including search input)
+      if (dropdownRef.current && dropdownRef.current.contains(target)) {
         return;
       }
+      
+      // Skip if the target is the search input
+      if (searchInputRef.current && searchInputRef.current.contains(target)) {
+        return;
+      }
+      
+      // Skip if search input is focused
       if (searchInputRef.current === document.activeElement) {
         return;
       }
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node) &&
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-        setSearchQuery("");
+      
+      // Skip if clicking on trigger container
+      if (containerRef.current && containerRef.current.contains(target)) {
+        return;
       }
+      
+      setIsOpen(false);
+      setSearchQuery("");
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    // iOS Safari: Use touchend instead of touchstart to avoid conflicts with keyboard
-    document.addEventListener("touchend", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchend", handleClickOutside);
-    };
-  }, []);
+    
+    if (isOpen) {
+      // Use setTimeout to avoid catching the initial click that opened the dropdown
+      const timer = setTimeout(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("touchstart", handleClickOutside, { passive: true });
+      }, 10);
+      
+      return () => {
+        clearTimeout(timer);
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("touchstart", handleClickOutside);
+      };
+    }
+  }, [isOpen]);
 
   // Xử lý scroll/resize window - đóng dropdown khi scroll bên ngoài
   useEffect(() => {
