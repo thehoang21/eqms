@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search } from 'lucide-react';
 import { cn } from '../utils'; // Đảm bảo đường dẫn này đúng trong project của bạn
@@ -70,12 +70,29 @@ export const Select: React.FC<SelectProps> = ({
   maxVisibleRows = 4, // 1. Mặc định hiển thị tối đa 4 dòng
   rowHeight = 44,    // 2. Chiều cao chuẩn mỗi dòng
 }) => {
+  const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Listen for custom event to close other dropdowns
+  useEffect(() => {
+    const handleCloseOtherDropdowns = (event: CustomEvent<{ openId: string }>) => {
+      if (event.detail.openId !== selectId && isOpen) {
+        setIsOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    window.addEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
+    return () => {
+      window.removeEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
+    };
+  }, [selectId, isOpen]);
 
   const filteredOptions = enableSearch
     ? options.filter((opt) =>
@@ -87,8 +104,8 @@ export const Select: React.FC<SelectProps> = ({
 
   // Recalculate position khi filtered options thay đổi (khi search)
   useEffect(() => {
-    if (isOpen && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
+    if (isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
       const safeMargin = 8; // Safe margin from viewport edges
@@ -103,23 +120,17 @@ export const Select: React.FC<SelectProps> = ({
       const spaceAbove = rect.top;
       const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
       
-      // Calculate horizontal position with safe margins
+      // Calculate horizontal position - always match trigger width
       let leftPosition = rect.left;
-      let dropdownWidth = rect.width;
+      const dropdownWidth = rect.width;
       
-      // On mobile/narrow screens, use viewport width with margins
-      if (viewportWidth < 640) { // sm breakpoint
-        dropdownWidth = Math.min(rect.width, viewportWidth - (safeMargin * 2));
-        leftPosition = Math.max(safeMargin, Math.min(rect.left, viewportWidth - dropdownWidth - safeMargin));
-      } else {
-        // Ensure dropdown doesn't overflow right edge
-        if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
-          leftPosition = viewportWidth - dropdownWidth - safeMargin;
-        }
-        // Ensure dropdown doesn't overflow left edge
-        if (leftPosition < safeMargin) {
-          leftPosition = safeMargin;
-        }
+      // Ensure dropdown doesn't overflow right edge
+      if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
+        leftPosition = viewportWidth - dropdownWidth - safeMargin;
+      }
+      // Ensure dropdown doesn't overflow left edge
+      if (leftPosition < safeMargin) {
+        leftPosition = safeMargin;
       }
       
       setDropdownStyle({
@@ -165,40 +176,36 @@ export const Select: React.FC<SelectProps> = ({
     };
   }, []);
 
-  // Xử lý scroll/resize window
+  // Xử lý scroll/resize window - đóng dropdown khi scroll bên ngoài
   useEffect(() => {
-    // Track if search input is focused (for iOS keyboard handling)
-    let isSearchFocused = false;
-    
-    const handleSearchFocus = () => { isSearchFocused = true; };
-    const handleSearchBlur = () => { 
-      // Delay to allow for focus changes within dropdown
-      setTimeout(() => { isSearchFocused = false; }, 100);
-    };
-    
-    const handleScrollOrResize = (e: Event) => {
-      // iOS Safari fix: Don't close when keyboard appears/disappears (causes resize)
-      if (isSearchFocused || searchInputRef.current === document.activeElement) {
-        return;
-      }
+    const handleScroll = (e: Event) => {
+      // Cho phép scroll bên trong dropdown
       if (dropdownRef.current && dropdownRef.current.contains(e.target as Node)) {
         return;
       }
-      if (isOpen) setIsOpen(false);
+      // Đóng dropdown khi scroll bên ngoài
+      if (isOpen) {
+        setIsOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    const handleResize = () => {
+      // Chỉ đóng khi resize nếu search không được focus (tránh iOS keyboard)
+      if (searchInputRef.current !== document.activeElement && isOpen) {
+        setIsOpen(false);
+        setSearchQuery("");
+      }
     };
 
     if (isOpen) {
-      searchInputRef.current?.addEventListener('focus', handleSearchFocus);
-      searchInputRef.current?.addEventListener('blur', handleSearchBlur);
-      window.addEventListener('scroll', handleScrollOrResize, true);
-      window.addEventListener('resize', handleScrollOrResize);
+      window.addEventListener('scroll', handleScroll, true);
+      window.addEventListener('resize', handleResize);
     }
 
     return () => {
-      searchInputRef.current?.removeEventListener('focus', handleSearchFocus);
-      searchInputRef.current?.removeEventListener('blur', handleSearchBlur);
-      window.removeEventListener('scroll', handleScrollOrResize, true);
-      window.removeEventListener('resize', handleScrollOrResize);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
     };
   }, [isOpen]);
 
@@ -217,8 +224,14 @@ export const Select: React.FC<SelectProps> = ({
   // Tính toán vị trí dropdown với smart positioning
   const handleToggle = () => {
     if (disabled) return;
-    if (!isOpen && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
+    
+    // If opening, dispatch event to close other dropdowns
+    if (!isOpen) {
+      window.dispatchEvent(new CustomEvent('select-dropdown-open', { detail: { openId: selectId } }));
+    }
+    
+    if (!isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
       const safeMargin = 8; // Safe margin from viewport edges
@@ -237,23 +250,17 @@ export const Select: React.FC<SelectProps> = ({
       // Quyết định mở lên trên hay xuống dưới
       const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
       
-      // Calculate horizontal position with safe margins
+      // Calculate horizontal position - always match trigger width
       let leftPosition = rect.left;
-      let dropdownWidth = rect.width;
+      const dropdownWidth = rect.width;
       
-      // On mobile/narrow screens, use viewport width with margins
-      if (viewportWidth < 640) { // sm breakpoint
-        dropdownWidth = Math.min(rect.width, viewportWidth - (safeMargin * 2));
-        leftPosition = Math.max(safeMargin, Math.min(rect.left, viewportWidth - dropdownWidth - safeMargin));
-      } else {
-        // Ensure dropdown doesn't overflow right edge
-        if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
-          leftPosition = viewportWidth - dropdownWidth - safeMargin;
-        }
-        // Ensure dropdown doesn't overflow left edge
-        if (leftPosition < safeMargin) {
-          leftPosition = safeMargin;
-        }
+      // Ensure dropdown doesn't overflow right edge
+      if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
+        leftPosition = viewportWidth - dropdownWidth - safeMargin;
+      }
+      // Ensure dropdown doesn't overflow left edge
+      if (leftPosition < safeMargin) {
+        leftPosition = safeMargin;
       }
       
       setDropdownStyle({
@@ -281,6 +288,7 @@ export const Select: React.FC<SelectProps> = ({
       
       {/* Trigger Button */}
       <button
+        ref={triggerRef}
         type="button"
         onClick={handleToggle}
         disabled={disabled}
@@ -316,7 +324,7 @@ export const Select: React.FC<SelectProps> = ({
           ref={dropdownRef}
           style={dropdownStyle}
           className={cn(
-            "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden min-w-[200px]",
+            "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden",
             "animate-in fade-in duration-100",
             dropdownStyle.bottom !== undefined 
               ? "slide-in-from-bottom-2" 

@@ -234,7 +234,7 @@ export const TaskDetailDrawer: React.FC<{
               </div>
             )}
 
-            <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-md p-5 shadow-sm">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-sm font-bold text-slate-700 uppercase tracking-wide">
                   Workflow Progress

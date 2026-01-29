@@ -1,8 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { Bell, User, CheckCheck, FileText, AlertTriangle, MessageCircle, UserPlus, CheckCircle, ThumbsUp, DollarSign, Reply, X } from 'lucide-react';
 import { Button } from '../../ui/button/Button';
 import { cn } from '../../ui/utils';
+import { ROUTES } from '@/app/routes.constants';
 
 interface NotificationsDropdownProps {
   isOpen: boolean;
@@ -277,7 +279,8 @@ const NotificationItem: React.FC<{
 const MobileDrawer: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-}> = ({ isOpen, onClose }) => {
+  onViewAll: () => void;
+}> = ({ isOpen, onClose, onViewAll }) => {
   const [animationState, setAnimationState] = useState<'closed' | 'opening' | 'open' | 'closing'>('closed');
   const [shouldRender, setShouldRender] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -513,6 +516,19 @@ const MobileDrawer: React.FC<{
           )}
         </div>
 
+        {/* Footer - View All */}
+        <div className="border-t border-slate-200 px-4" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 12px) + 12px)' }}>
+          <button 
+            className="w-full py-3 text-center text-sm font-medium text-emerald-600 hover:bg-emerald-50 active:bg-emerald-100 rounded-lg transition-colors"
+            onClick={() => {
+              onViewAll();
+              onClose();
+            }}
+          >
+            View all notifications
+          </button>
+        </div>
+
       </div>
     </div>,
     document.body
@@ -524,7 +540,8 @@ const DesktopDropdown: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   buttonRef: React.RefObject<HTMLDivElement>;
-}> = ({ isOpen, onClose, buttonRef }) => {
+  onViewAll: () => void;
+}> = ({ isOpen, onClose, buttonRef, onViewAll }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -589,7 +606,7 @@ const DesktopDropdown: React.FC<{
           <button 
             className="w-full py-2 text-center text-xs font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
             onClick={() => {
-              console.log("View all notifications");
+              onViewAll();
               onClose();
             }}
           >
@@ -605,6 +622,11 @@ const DesktopDropdown: React.FC<{
 export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ isOpen, onClose, onToggle }) => {
   const notificationRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+
+  const handleViewAllNotifications = () => {
+    navigate(ROUTES.NOTIFICATIONS);
+  };
 
   return (
     <>
@@ -622,7 +644,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ is
       </div>
 
       {/* Mobile: Bottom Drawer */}
-      {isMobile && <MobileDrawer isOpen={isOpen} onClose={onClose} />}
+      {isMobile && <MobileDrawer isOpen={isOpen} onClose={onClose} onViewAll={handleViewAllNotifications} />}
 
       {/* Desktop: Dropdown */}
       {!isMobile && (
@@ -630,6 +652,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ is
           isOpen={isOpen} 
           onClose={onClose} 
           buttonRef={notificationRef as React.RefObject<HTMLDivElement>}
+          onViewAll={handleViewAllNotifications}
         />
       )}
     </>

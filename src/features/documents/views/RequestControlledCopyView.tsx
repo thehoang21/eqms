@@ -360,7 +360,7 @@ export const RequestControlledCopyView: React.FC = () => {
                       {documentsToShow.map((doc: DocumentToPrint) => (
                         <div
                           key={doc.id}
-                          className="border border-slate-200 rounded-lg p-3 lg:p-4 hover:bg-slate-50 transition-colors"
+                          className="border border-slate-200 rounded-md p-3 lg:p-4 hover:bg-slate-50 transition-colors"
                         >
                           <div className="flex items-start gap-2 lg:gap-3">
                             <Checkbox

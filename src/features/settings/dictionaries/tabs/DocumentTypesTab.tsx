@@ -10,6 +10,7 @@ import {
   PowerOff,
   X,
   Save,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -84,17 +85,24 @@ const MOCK_DOCUMENT_TYPES: DocumentTypeItem[] = [
 
 export const DocumentTypesTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Inactive">("All");
+  const [statusFilter, setStatusFilter] = useState<
+    "All" | "Active" | "Inactive"
+  >("All");
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<DocumentTypeItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<DocumentTypeItem | null>(
+    null,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [mockData, setMockData] = useState<DocumentTypeItem[]>(MOCK_DOCUMENT_TYPES);
+  const [mockData, setMockData] =
+    useState<DocumentTypeItem[]>(MOCK_DOCUMENT_TYPES);
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+    {},
+  );
 
   const getButtonRef = (id: string) => {
     if (!buttonRefs.current[id]) {
@@ -107,7 +115,8 @@ export const DocumentTypesTab: React.FC = () => {
     return mockData.filter((item) => {
       const matchesSearch =
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+        (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false) ||
         item.shortCode.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus =
         statusFilter === "All" ||
@@ -117,7 +126,10 @@ export const DocumentTypesTab: React.FC = () => {
     });
   }, [mockData, searchQuery, statusFilter]);
 
-  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDropdownToggle = (
+    id: string,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     event.stopPropagation();
     if (openDropdownId === id) {
       setOpenDropdownId(null);
@@ -146,7 +158,7 @@ export const DocumentTypesTab: React.FC = () => {
 
   const handleToggleStatus = (item: DocumentTypeItem) => {
     setMockData((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, isActive: !i.isActive } : i))
+      prev.map((i) => (i.id === item.id ? { ...i, isActive: !i.isActive } : i)),
     );
     setOpenDropdownId(null);
   };
@@ -170,13 +182,16 @@ export const DocumentTypesTab: React.FC = () => {
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               Search
             </label>
-            <input
-              type="text"
-              placeholder="Search document types..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
-            />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search document types..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
           </div>
 
           {/* Status Filter */}
@@ -184,7 +199,9 @@ export const DocumentTypesTab: React.FC = () => {
             <Select
               label="Status"
               value={statusFilter}
-              onChange={(value) => setStatusFilter(value as "All" | "Active" | "Inactive")}
+              onChange={(value) =>
+                setStatusFilter(value as "All" | "Active" | "Inactive")
+              }
               options={[
                 { label: "All Status", value: "All" },
                 { label: "Active", value: "Active" },
@@ -243,10 +260,17 @@ export const DocumentTypesTab: React.FC = () => {
             <tbody className="divide-y divide-slate-200 bg-white">
               {filteredItems.length > 0 ? (
                 filteredItems.map((item, index) => (
-                  <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{index + 1}</td>
+                  <tr
+                    key={item.id}
+                    className="hover:bg-slate-50/80 transition-colors group"
+                  >
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      {index + 1}
+                    </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                      <span className="font-medium text-slate-900">{item.name}</span>
+                      <span className="font-medium text-slate-900">
+                        {item.name}
+                      </span>
                     </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                       <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -254,7 +278,9 @@ export const DocumentTypesTab: React.FC = () => {
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                      <span className="font-medium text-slate-900">{item.currentSequence}</span>
+                      <span className="font-medium text-slate-900">
+                        {item.currentSequence}
+                      </span>
                     </td>
                     <td className="py-3.5 px-4 text-sm text-slate-600 max-w-md truncate">
                       {item.description || "-"}
@@ -294,7 +320,9 @@ export const DocumentTypesTab: React.FC = () => {
                       <div className="bg-slate-50 p-4 rounded-full mb-3">
                         <FileType className="h-8 w-8 text-slate-400" />
                       </div>
-                      <p className="text-base font-medium text-slate-900">No items found</p>
+                      <p className="text-base font-medium text-slate-900">
+                        No items found
+                      </p>
                       <p className="text-sm mt-1">Try adjusting your search</p>
                     </div>
                   </td>
@@ -319,13 +347,18 @@ export const DocumentTypesTab: React.FC = () => {
             />
             <div
               className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-              style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
+              style={{
+                top: `${dropdownPosition.top}px`,
+                left: `${dropdownPosition.left}px`,
+              }}
             >
               <div className="py-1">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleEdit(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
@@ -336,12 +369,15 @@ export const DocumentTypesTab: React.FC = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleToggleStatus(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                 >
-                  {filteredItems.find((i) => i.id === openDropdownId)?.isActive ? (
+                  {filteredItems.find((i) => i.id === openDropdownId)
+                    ?.isActive ? (
                     <>
                       <PowerOff className="h-3.5 w-3.5" />
                       <span>Disable</span>
@@ -357,7 +393,9 @@ export const DocumentTypesTab: React.FC = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleDelete(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors"
@@ -368,7 +406,7 @@ export const DocumentTypesTab: React.FC = () => {
               </div>
             </div>
           </>,
-          document.body
+          document.body,
         )}
 
       {/* Add/Edit Modal */}
@@ -393,11 +431,13 @@ export const DocumentTypesTab: React.FC = () => {
         description={
           <div className="space-y-3">
             <p>
-              Are you sure you want to delete <strong>{selectedItem?.name}</strong>?
+              Are you sure you want to delete{" "}
+              <strong>{selectedItem?.name}</strong>?
             </p>
             <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
               <p className="text-amber-800">
-                <span className="font-semibold">⚠️ Warning:</span> This action cannot be undone.
+                <span className="font-semibold">⚠️ Warning:</span> This action
+                cannot be undone.
               </p>
             </div>
           </div>
@@ -419,7 +459,12 @@ interface DocumentTypeModalProps {
   isEdit: boolean;
 }
 
-const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({ isOpen, onClose, item, isEdit }) => {
+const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({
+  isOpen,
+  onClose,
+  item,
+  isEdit,
+}) => {
   const [formData, setFormData] = useState({
     name: item?.name || "",
     description: item?.description || "",
@@ -486,8 +531,10 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({ isOpen, onClose, 
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Enter name"
                 required
                 disabled={isSaving}
@@ -496,20 +543,27 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({ isOpen, onClose, 
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Short Code (3-4 characters)<span className="text-red-500 ml-1">*</span>
+                Short Code (3-4 characters)
+                <span className="text-red-500 ml-1">*</span>
               </label>
               <input
                 type="text"
                 value={formData.shortCode}
-                onChange={(e) => setFormData({ ...formData, shortCode: e.target.value.toUpperCase() })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    shortCode: e.target.value.toUpperCase(),
+                  })
+                }
                 maxLength={4}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="e.g., SOP, POL"
                 required
                 disabled={isSaving}
               />
               <p className="text-xs text-slate-500 mt-1">
-                This code will be used for auto-generating document numbers (e.g., SOP.0001.01)
+                This code will be used for auto-generating document numbers
+                (e.g., SOP.0001.01)
               </p>
             </div>
 
@@ -520,10 +574,15 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({ isOpen, onClose, 
               <input
                 type="number"
                 value={formData.currentSequence}
-                onChange={(e) => setFormData({ ...formData, currentSequence: parseInt(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    currentSequence: parseInt(e.target.value) || 0,
+                  })
+                }
                 min={0}
                 max={9999}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 required
                 disabled={isSaving}
               />
@@ -534,12 +593,16 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({ isOpen, onClose, 
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Description
+              </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 rows={3}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Enter description (optional)"
                 disabled={isSaving}
               />
@@ -549,14 +612,22 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({ isOpen, onClose, 
               <Checkbox
                 id="isActive"
                 checked={formData.isActive}
-                onChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                onChange={(checked) =>
+                  setFormData({ ...formData, isActive: checked })
+                }
                 label="Active"
                 disabled={isSaving}
               />
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
-              <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isSaving}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onClose}
+                disabled={isSaving}
+              >
                 Cancel
               </Button>
               <Button
@@ -572,6 +643,6 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({ isOpen, onClose, 
         </div>
       </div>
     </>,
-    document.body
+    document.body,
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search, X } from 'lucide-react';
 import { cn } from '../utils';
@@ -74,12 +74,29 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   rowHeight = 44,
   maxVisibleTags = 2,
 }) => {
+  const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Listen for custom event to close other dropdowns
+  useEffect(() => {
+    const handleCloseOtherDropdowns = (event: CustomEvent<{ openId: string }>) => {
+      if (event.detail.openId !== selectId && isOpen) {
+        setIsOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    window.addEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
+    return () => {
+      window.removeEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
+    };
+  }, [selectId, isOpen]);
 
   const filteredOptions = enableSearch
     ? options.filter((opt) =>
@@ -91,8 +108,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
   // Recalculate position khi filtered options thay đổi
   useEffect(() => {
-    if (isOpen && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
+    if (isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
       const safeMargin = 8;
@@ -107,19 +124,17 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       const spaceAbove = rect.top;
       const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
       
+      // Always match trigger width
       let leftPosition = rect.left;
-      let dropdownWidth = rect.width;
+      const dropdownWidth = rect.width;
       
-      if (viewportWidth < 640) {
-        dropdownWidth = Math.min(rect.width, viewportWidth - (safeMargin * 2));
-        leftPosition = Math.max(safeMargin, Math.min(rect.left, viewportWidth - dropdownWidth - safeMargin));
-      } else {
-        if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
-          leftPosition = viewportWidth - dropdownWidth - safeMargin;
-        }
-        if (leftPosition < safeMargin) {
-          leftPosition = safeMargin;
-        }
+      // Ensure dropdown doesn't overflow right edge
+      if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
+        leftPosition = viewportWidth - dropdownWidth - safeMargin;
+      }
+      // Ensure dropdown doesn't overflow left edge
+      if (leftPosition < safeMargin) {
+        leftPosition = safeMargin;
       }
       
       setDropdownStyle({
@@ -165,40 +180,36 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     };
   }, []);
 
-  // Scroll/resize handler
+  // Xử lý scroll/resize window - đóng dropdown khi scroll bên ngoài
   useEffect(() => {
-    // Track if search input is focused (for iOS keyboard handling)
-    let isSearchFocused = false;
-    
-    const handleSearchFocus = () => { isSearchFocused = true; };
-    const handleSearchBlur = () => { 
-      // Delay to allow for focus changes within dropdown
-      setTimeout(() => { isSearchFocused = false; }, 100);
-    };
-    
-    const handleScrollOrResize = (e: Event) => {
-      // iOS Safari fix: Don't close when keyboard appears/disappears (causes resize)
-      if (isSearchFocused || searchInputRef.current === document.activeElement) {
-        return;
-      }
+    const handleScroll = (e: Event) => {
+      // Cho phép scroll bên trong dropdown
       if (dropdownRef.current && dropdownRef.current.contains(e.target as Node)) {
         return;
       }
-      if (isOpen) setIsOpen(false);
+      // Đóng dropdown khi scroll bên ngoài
+      if (isOpen) {
+        setIsOpen(false);
+        setSearchQuery("");
+      }
+    };
+
+    const handleResize = () => {
+      // Chỉ đóng khi resize nếu search không được focus (tránh iOS keyboard)
+      if (searchInputRef.current !== document.activeElement && isOpen) {
+        setIsOpen(false);
+        setSearchQuery("");
+      }
     };
 
     if (isOpen) {
-      searchInputRef.current?.addEventListener('focus', handleSearchFocus);
-      searchInputRef.current?.addEventListener('blur', handleSearchBlur);
-      window.addEventListener('scroll', handleScrollOrResize, true);
-      window.addEventListener('resize', handleScrollOrResize);
+      window.addEventListener('scroll', handleScroll, true);
+      window.addEventListener('resize', handleResize);
     }
 
     return () => {
-      searchInputRef.current?.removeEventListener('focus', handleSearchFocus);
-      searchInputRef.current?.removeEventListener('blur', handleSearchBlur);
-      window.removeEventListener('scroll', handleScrollOrResize, true);
-      window.removeEventListener('resize', handleScrollOrResize);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
     };
   }, [isOpen]);
 
@@ -216,8 +227,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
   const handleToggle = () => {
     if (disabled) return;
-    if (!isOpen && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
+    
+    // If opening, dispatch event to close other dropdowns
+    if (!isOpen) {
+      window.dispatchEvent(new CustomEvent('select-dropdown-open', { detail: { openId: selectId } }));
+    }
+    
+    if (!isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
       const safeMargin = 8;
@@ -233,18 +250,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
       
       let leftPosition = rect.left;
-      let dropdownWidth = rect.width;
+      const dropdownWidth = rect.width; // Always match trigger width
       
-      if (viewportWidth < 640) {
-        dropdownWidth = Math.min(rect.width, viewportWidth - (safeMargin * 2));
-        leftPosition = Math.max(safeMargin, Math.min(rect.left, viewportWidth - dropdownWidth - safeMargin));
-      } else {
-        if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
-          leftPosition = viewportWidth - dropdownWidth - safeMargin;
-        }
-        if (leftPosition < safeMargin) {
-          leftPosition = safeMargin;
-        }
+      // Ensure dropdown stays within viewport
+      if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
+        leftPosition = viewportWidth - dropdownWidth - safeMargin;
+      }
+      if (leftPosition < safeMargin) {
+        leftPosition = safeMargin;
       }
       
       setDropdownStyle({
@@ -288,6 +301,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       
       {/* Trigger Button */}
       <button
+        ref={triggerRef}
         type="button"
         onClick={handleToggle}
         disabled={disabled}
@@ -346,7 +360,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           ref={dropdownRef}
           style={dropdownStyle}
           className={cn(
-            "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden min-w-[200px]",
+            "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden",
             "animate-in fade-in duration-100",
             dropdownStyle.bottom !== undefined 
               ? "slide-in-from-bottom-2" 

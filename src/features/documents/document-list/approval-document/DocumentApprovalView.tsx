@@ -413,7 +413,7 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                                         onChange={(e) => setNewComment(e.target.value)}
                                         placeholder="Add a comment..."
                                         rows={3}
-                                        className="flex-1 px-3 lg:px-4 py-2 lg:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
+                                        className="flex-1 px-3 lg:px-4 py-2 lg:py-2.5 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
                                     />
                                     <button
                                         onClick={handleAddComment}

@@ -176,7 +176,7 @@ export const AddUserView: React.FC = () => {
                     placeholder="0008"
                     maxLength={4}
                     className={cn(
-                      "w-full h-11 pl-[50px] pr-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors font-medium",
+                      "w-full h-11 pl-[50px] pr-4 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors font-medium",
                       formErrors.employeeId ? "border-red-300 bg-red-50" : "border-slate-200"
                     )}
                   />
@@ -200,7 +200,7 @@ export const AddUserView: React.FC = () => {
                   }}
                   placeholder="Nguyễn Thế Hoàng"
                   className={cn(
-                    "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors",
+                    "w-full h-11 px-4 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors",
                     formErrors.fullName ? "border-red-300 bg-red-50" : "border-slate-200"
                   )}
                 />
@@ -223,7 +223,7 @@ export const AddUserView: React.FC = () => {
                   }}
                   placeholder="john.doe@company.com"
                   className={cn(
-                    "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors",
+                    "w-full h-11 px-4 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors",
                     formErrors.email ? "border-red-300 bg-red-50" : "border-slate-200"
                   )}
                 />
@@ -246,7 +246,7 @@ export const AddUserView: React.FC = () => {
                   }}
                   placeholder="+1-555-0123"
                   className={cn(
-                    "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors",
+                    "w-full h-11 px-4 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors",
                     formErrors.phone ? "border-red-300 bg-red-50" : "border-slate-200"
                   )}
                 />

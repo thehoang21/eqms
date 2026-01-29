@@ -10,6 +10,7 @@ import {
   PowerOff,
   X,
   Save,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -116,8 +117,12 @@ const MOCK_DEPARTMENTS: DepartmentItem[] = [
 
 export const DepartmentsTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [businessUnitFilter, setBusinessUnitFilter] = useState<"All" | BusinessUnit>("All");
-  const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Inactive">("All");
+  const [businessUnitFilter, setBusinessUnitFilter] = useState<
+    "All" | BusinessUnit
+  >("All");
+  const [statusFilter, setStatusFilter] = useState<
+    "All" | "Active" | "Inactive"
+  >("All");
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [showAddModal, setShowAddModal] = useState(false);
@@ -127,7 +132,9 @@ export const DepartmentsTab: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mockData, setMockData] = useState<DepartmentItem[]>(MOCK_DEPARTMENTS);
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+    {},
+  );
 
   const getButtonRef = (id: string) => {
     if (!buttonRefs.current[id]) {
@@ -141,8 +148,11 @@ export const DepartmentsTab: React.FC = () => {
     return mockData.filter((item) => {
       const matchesSearch =
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
-      const matchesBusinessUnit = businessUnitFilter === "All" || item.businessUnit === businessUnitFilter;
+        (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false);
+      const matchesBusinessUnit =
+        businessUnitFilter === "All" ||
+        item.businessUnit === businessUnitFilter;
       const matchesStatus =
         statusFilter === "All" ||
         (statusFilter === "Active" && item.isActive) ||
@@ -151,7 +161,10 @@ export const DepartmentsTab: React.FC = () => {
     });
   }, [mockData, searchQuery, businessUnitFilter, statusFilter]);
 
-  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDropdownToggle = (
+    id: string,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     event.stopPropagation();
     if (openDropdownId === id) {
       setOpenDropdownId(null);
@@ -180,11 +193,11 @@ export const DepartmentsTab: React.FC = () => {
 
   const handleToggleStatus = async (item: DepartmentItem) => {
     console.log("Toggle status:", item.id, !item.isActive);
-    
+
     setMockData((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, isActive: !i.isActive } : i))
+      prev.map((i) => (i.id === item.id ? { ...i, isActive: !i.isActive } : i)),
     );
-    
+
     setOpenDropdownId(null);
   };
 
@@ -208,13 +221,16 @@ export const DepartmentsTab: React.FC = () => {
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               Search
             </label>
-            <input
-              type="text"
-              placeholder="Search departments..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
-            />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search departments..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
           </div>
 
           {/* Business Unit Filter */}
@@ -222,7 +238,9 @@ export const DepartmentsTab: React.FC = () => {
             <Select
               label="Business Unit"
               value={businessUnitFilter}
-              onChange={(value) => setBusinessUnitFilter(value as "All" | BusinessUnit)}
+              onChange={(value) =>
+                setBusinessUnitFilter(value as "All" | BusinessUnit)
+              }
               options={[
                 { label: "All Units", value: "All" },
                 { label: "Operation Unit", value: "Operation Unit" },
@@ -237,7 +255,9 @@ export const DepartmentsTab: React.FC = () => {
             <Select
               label="Status"
               value={statusFilter}
-              onChange={(value) => setStatusFilter(value as "All" | "Active" | "Inactive")}
+              onChange={(value) =>
+                setStatusFilter(value as "All" | "Active" | "Inactive")
+              }
               options={[
                 { label: "All Status", value: "All" },
                 { label: "Active", value: "Active" },
@@ -295,10 +315,17 @@ export const DepartmentsTab: React.FC = () => {
           <tbody className="divide-y divide-slate-200 bg-white">
             {filteredItems.length > 0 ? (
               filteredItems.map((item, index) => (
-                <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{index + 1}</td>
+                <tr
+                  key={item.id}
+                  className="hover:bg-slate-50/80 transition-colors group"
+                >
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                    {index + 1}
+                  </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className="font-medium text-slate-900">{item.name}</span>
+                    <span className="font-medium text-slate-900">
+                      {item.name}
+                    </span>
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
@@ -306,12 +333,14 @@ export const DepartmentsTab: React.FC = () => {
                     </span>
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className={cn(
-                      "inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border",
-                      item.businessUnit === "Operation Unit"
-                        ? "bg-purple-50 text-purple-700 border-purple-200"
-                        : "bg-cyan-50 text-cyan-700 border-cyan-200"
-                    )}>
+                    <span
+                      className={cn(
+                        "inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border",
+                        item.businessUnit === "Operation Unit"
+                          ? "bg-purple-50 text-purple-700 border-purple-200"
+                          : "bg-cyan-50 text-cyan-700 border-cyan-200",
+                      )}
+                    >
                       {item.businessUnit}
                     </span>
                   </td>
@@ -353,7 +382,9 @@ export const DepartmentsTab: React.FC = () => {
                     <div className="bg-slate-50 p-4 rounded-full mb-3">
                       <Building2 className="h-8 w-8 text-slate-400" />
                     </div>
-                    <p className="text-base font-medium text-slate-900">No departments found</p>
+                    <p className="text-base font-medium text-slate-900">
+                      No departments found
+                    </p>
                     <p className="text-sm mt-1">Try adjusting your search</p>
                   </div>
                 </td>
@@ -377,13 +408,18 @@ export const DepartmentsTab: React.FC = () => {
             />
             <div
               className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-              style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
+              style={{
+                top: `${dropdownPosition.top}px`,
+                left: `${dropdownPosition.left}px`,
+              }}
             >
               <div className="py-1">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleEdit(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
@@ -394,12 +430,15 @@ export const DepartmentsTab: React.FC = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleToggleStatus(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                 >
-                  {filteredItems.find((i) => i.id === openDropdownId)?.isActive ? (
+                  {filteredItems.find((i) => i.id === openDropdownId)
+                    ?.isActive ? (
                     <>
                       <PowerOff className="h-3.5 w-3.5" />
                       <span>Disable</span>
@@ -415,7 +454,9 @@ export const DepartmentsTab: React.FC = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleDelete(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors"
@@ -426,7 +467,7 @@ export const DepartmentsTab: React.FC = () => {
               </div>
             </div>
           </>,
-          document.body
+          document.body,
         )}
 
       {/* Add/Edit Modal */}
@@ -442,14 +483,22 @@ export const DepartmentsTab: React.FC = () => {
         onSave={(data) => {
           if (showEditModal && selectedItem) {
             setMockData((prev) =>
-              prev.map((i) => (i.id === selectedItem.id ? { ...i, ...data, modifiedDate: new Date().toISOString().split('T')[0] } : i))
+              prev.map((i) =>
+                i.id === selectedItem.id
+                  ? {
+                      ...i,
+                      ...data,
+                      modifiedDate: new Date().toISOString().split("T")[0],
+                    }
+                  : i,
+              ),
             );
           } else {
             const newItem: DepartmentItem = {
               id: String(mockData.length + 1),
               ...data,
-              createdDate: new Date().toISOString().split('T')[0],
-              modifiedDate: new Date().toISOString().split('T')[0],
+              createdDate: new Date().toISOString().split("T")[0],
+              modifiedDate: new Date().toISOString().split("T")[0],
             };
             setMockData((prev) => [...prev, newItem]);
           }
@@ -466,11 +515,13 @@ export const DepartmentsTab: React.FC = () => {
         description={
           <div className="space-y-3">
             <p>
-              Are you sure you want to delete <strong>{selectedItem?.name}</strong>?
+              Are you sure you want to delete{" "}
+              <strong>{selectedItem?.name}</strong>?
             </p>
             <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
               <p className="text-amber-800">
-                <span className="font-semibold">⚠️ Warning:</span> This action cannot be undone.
+                <span className="font-semibold">⚠️ Warning:</span> This action
+                cannot be undone.
               </p>
             </div>
           </div>
@@ -490,7 +541,13 @@ interface DepartmentModalProps {
   onClose: () => void;
   item: DepartmentItem | null;
   isEdit: boolean;
-  onSave: (data: { name: string; abbreviation: string; businessUnit: BusinessUnit; description: string; isActive: boolean }) => void;
+  onSave: (data: {
+    name: string;
+    abbreviation: string;
+    businessUnit: BusinessUnit;
+    description: string;
+    isActive: boolean;
+  }) => void;
 }
 
 const DepartmentModal: React.FC<DepartmentModalProps> = ({
@@ -569,8 +626,10 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Enter department name"
                 required
                 disabled={isSaving}
@@ -585,9 +644,14 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
               <input
                 type="text"
                 value={formData.abbreviation}
-                onChange={(e) => setFormData({ ...formData, abbreviation: e.target.value.toUpperCase() })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    abbreviation: e.target.value.toUpperCase(),
+                  })
+                }
                 maxLength={10}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="e.g., QA, PROD, R&D"
                 required
                 disabled={isSaving}
@@ -602,7 +666,12 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
               <Select
                 label="Business Unit"
                 value={formData.businessUnit}
-                onChange={(value) => setFormData({ ...formData, businessUnit: value as BusinessUnit })}
+                onChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    businessUnit: value as BusinessUnit,
+                  })
+                }
                 options={[
                   { label: "Operation Unit", value: "Operation Unit" },
                   { label: "Quality Unit", value: "Quality Unit" },
@@ -613,12 +682,16 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Description
+              </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 rows={3}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Enter description (optional)"
                 disabled={isSaving}
               />
@@ -629,7 +702,9 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
               <Checkbox
                 id="isActive"
                 checked={formData.isActive}
-                onChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                onChange={(checked) =>
+                  setFormData({ ...formData, isActive: checked })
+                }
                 label="Active"
                 disabled={isSaving}
               />
@@ -637,7 +712,13 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
 
             {/* Actions */}
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
-              <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isSaving}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onClose}
+                disabled={isSaving}
+              >
                 Cancel
               </Button>
               <Button
@@ -653,6 +734,6 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
         </div>
       </div>
     </>,
-    document.body
+    document.body,
   );
 };

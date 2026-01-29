@@ -691,7 +691,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                 Are you sure you want to save all documents in the workspace as
                                 drafts?
                             </p>
-                            <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
+                            <div className="text-xs bg-slate-50 border border-slate-200 rounded-md p-3 space-y-1">
                                 {state?.sourceDocument && (
                                     <p>
                                         <span className="font-semibold">Source Document:</span>{" "}

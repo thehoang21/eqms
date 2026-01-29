@@ -13,6 +13,9 @@ export const ROUTES = {
   // My Tasks
   MY_TASKS: '/my-tasks',
 
+  // Notifications
+  NOTIFICATIONS: '/notifications',
+
   // Documents
   DOCUMENTS: {
     OWNED: '/documents/owned',

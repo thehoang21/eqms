@@ -54,7 +54,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={employeeId}
                   readOnly
-                  className="flex-1 h-11 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-11 px-4 border border-slate-200 rounded-md text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <CopyButton text={employeeId} label="Employee ID" showToast={showToast} />
               </div>
@@ -70,7 +70,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={username}
                   readOnly
-                  className="flex-1 h-11 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-11 px-4 border border-slate-200 rounded-md text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <CopyButton text={username} label="Username" showToast={showToast} />
               </div>
@@ -86,7 +86,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={password}
                   readOnly
-                  className="flex-1 h-11 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-11 px-4 border border-slate-200 rounded-md text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <Button
                   onClick={onRegeneratePassword}

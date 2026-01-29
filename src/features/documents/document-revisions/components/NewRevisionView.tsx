@@ -477,7 +477,7 @@ export const NewRevisionView: React.FC = () => {
                     }}
                     placeholder="e.g., Updated testing procedures to comply with new regulatory requirements. Forms FORM.0001.01 and FORM.0002.01 require updates to reflect new data fields..."
                     className={cn(
-                        "w-full px-3 lg:px-4 py-2 lg:py-3 border rounded-lg text-xs lg:text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
+                        "w-full px-3 lg:px-4 py-2 lg:py-3 border rounded-md text-xs lg:text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
                         showError && (reasonForChange.length < 50)
                             ? "border-red-300 bg-red-50"
                             : "border-slate-200 bg-white"
@@ -520,7 +520,7 @@ export const NewRevisionView: React.FC = () => {
                 description={
                     <div className="space-y-3">
                         <p>Are you sure you want to save the current Impact Analysis as draft?</p>
-                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
+                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-md p-3 space-y-1">
                             <p><span className="font-semibold">Source Document:</span> {MOCK_SOURCE_DOCUMENT.code}</p>
                             <p><span className="font-semibold">Documents to Upgrade:</span> {upgradeCount} of {MOCK_LINKED_DOCUMENTS.length}</p>
                             {reasonForChange && (

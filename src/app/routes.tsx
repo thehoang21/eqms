@@ -13,6 +13,9 @@ import { UnderConstruction } from './UnderConstruction';
 const DashboardView = lazy(() => import('@/features/dashboard').then(m => ({ default: m.DashboardView })));
 const MyTasksView = lazy(() => import('@/features/my-tasks').then(m => ({ default: m.MyTasksView })));
 
+// Notifications
+const NotificationsView = lazy(() => import('@/features/notifications').then(m => ({ default: m.NotificationsView })));
+
 // Documents
 const DetailDocumentView = lazy(() => import('@/features/documents').then(m => ({ default: m.DetailDocumentView })));
 const ArchivedDocumentsView = lazy(() => import('@/features/documents').then(m => ({ default: m.ArchivedDocumentsView })));
@@ -163,6 +166,7 @@ export const AppRoutes: React.FC = () => {
         {/* ===== DASHBOARD & TASKS ===== */}
         <Route path="dashboard" element={<Suspense fallback={<LoadingFallback />}><DashboardView /></Suspense>} />
         <Route path="my-tasks" element={<Suspense fallback={<LoadingFallback />}><MyTasksView /></Suspense>} />
+        <Route path="notifications" element={<Suspense fallback={<LoadingFallback />}><NotificationsView /></Suspense>} />
         
         {/* ===== DOCUMENTS ===== */}
         <Route path="documents">

@@ -136,19 +136,19 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
-                                <input type="text" value={formData.fullName} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.fullName} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
-                                <input type="text" value={formData.username} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.username} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Employee ID</label>
-                                <input type="text" value={formData.employeeId} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.employeeId} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Nationality</label>
-                                <input type="text" value={formData.nationality} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.nationality} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                         </div>
                     </div>
@@ -159,15 +159,15 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Job Title</label>
-                                <input type="text" value={formData.jobTitle} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.jobTitle} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Department</label>
-                                <input type="text" value={formData.department} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.department} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">System Role</label>
-                                <input type="text" value={formData.systemRole} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.systemRole} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                         </div>
 
@@ -211,7 +211,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         value={formData.email}
                                         onChange={(e) => onInputChange('email', e.target.value)}
                                         disabled={!editingFields.email}
-                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-lg transition-all focus:outline-none ${
+                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-md transition-all focus:outline-none ${
                                             editingFields.email
                                                 ? 'border-emerald-500 bg-white ring-1 ring-emerald-500 focus:ring-emerald-500 focus:border-emerald-500'
                                                 : 'border-slate-300 bg-slate-50 text-slate-600 cursor-not-allowed'
@@ -243,7 +243,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         value={formData.phone}
                                         onChange={(e) => onInputChange('phone', e.target.value)}
                                         disabled={!editingFields.phone}
-                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-lg transition-all focus:outline-none ${
+                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-md transition-all focus:outline-none ${
                                             editingFields.phone
                                                 ? 'border-emerald-500 bg-white ring-1 ring-emerald-500 focus:ring-emerald-500 focus:border-emerald-500'
                                                 : 'border-slate-300 bg-slate-50 text-slate-600 cursor-not-allowed'

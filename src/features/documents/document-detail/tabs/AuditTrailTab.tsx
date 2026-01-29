@@ -472,7 +472,7 @@ export const AuditTrailTab: React.FC = () => {
               {selectedEntry.changes && selectedEntry.changes.length > 0 ? (
                 <div className="space-y-4">
                   {selectedEntry.changes.map((change, index) => (
-                    <div key={index} className="border border-slate-200 rounded-lg p-4">
+                    <div key={index} className="border border-slate-200 rounded-md p-4">
                       <div className="text-sm font-semibold text-slate-900 mb-3">
                         {change.field}
                       </div>

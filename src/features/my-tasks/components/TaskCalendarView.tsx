@@ -127,28 +127,30 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
 
         {/* Month and Year Selectors */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          <div className="flex-1 sm:flex-none sm:w-36">
-            <Select
-              value={selectedMonth.toString()}
-              onChange={(value) => setSelectedMonth(Number(value))}
-              options={monthNames.map((name, index) => ({
-                label: name,
-                value: index.toString()
-              }))}
-              placeholder="Select month"
-            />
-          </div>
-          
-          <div className="flex-1 sm:flex-none sm:w-24">
-            <Select
-              value={selectedYear.toString()}
-              onChange={(value) => setSelectedYear(Number(value))}
-              options={yearOptions.map((year) => ({
-                label: year.toString(),
-                value: year.toString()
-              }))}
-              placeholder="Select year"
-            />
+          <div className="flex items-center gap-2">
+            <div className="flex-1 sm:flex-none sm:w-36">
+              <Select
+                value={selectedMonth.toString()}
+                onChange={(value) => setSelectedMonth(Number(value))}
+                options={monthNames.map((name, index) => ({
+                  label: name,
+                  value: index.toString()
+                }))}
+                placeholder="Select month"
+              />
+            </div>
+            
+            <div className="flex-1 sm:flex-none sm:w-36">
+              <Select
+                value={selectedYear.toString()}
+                onChange={(value) => setSelectedYear(Number(value))}
+                options={yearOptions.map((year) => ({
+                  label: year.toString(),
+                  value: year.toString()
+                }))}
+                placeholder="Select year"
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-2 justify-between sm:justify-start">

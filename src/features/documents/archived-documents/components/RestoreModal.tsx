@@ -72,7 +72,7 @@ export const RestoreModal: React.FC<RestoreModalProps> = ({
         >
             <div className="space-y-4">
                 {/* Document Info */}
-                <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
+                <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-md">
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-medium text-slate-500">Document Code</span>
@@ -111,7 +111,7 @@ export const RestoreModal: React.FC<RestoreModalProps> = ({
                         onChange={(e) => setReason(e.target.value)}
                         placeholder="Provide a detailed reason for restoring this archived document..."
                         rows={4}
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm resize-none"
+                        className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm resize-none"
                         required
                     />
                     <p className="text-xs text-slate-500 mt-1">

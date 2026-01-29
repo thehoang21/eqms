@@ -400,7 +400,7 @@ export const RevisionReviewViewWithBatch: React.FC<RevisionReviewViewProps> = ({
                         >
                             <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-3">
                                 <h3 className="text-base lg:text-lg font-bold text-slate-900">Review Workflow</h3>
-                                <div className="inline-flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 bg-slate-50 border border-slate-200 rounded-lg w-fit">
+                                <div className="inline-flex items-center gap-1.5 lg:gap-2 px-2.5 lg:px-3 py-1 lg:py-1.5 bg-slate-50 border border-slate-200 rounded-md w-fit">
                                     {document.reviewFlowType === 'sequential' ? (
                                         <>
                                             <IconListNumbers className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-slate-600" />
@@ -670,7 +670,7 @@ export const RevisionReviewViewWithBatch: React.FC<RevisionReviewViewProps> = ({
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
                     rows={3}
-                    className="flex-1 px-3 lg:px-4 py-2 lg:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
+                    className="flex-1 px-3 lg:px-4 py-2 lg:py-2.5 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
                   />
                   <button
                     onClick={handleAddComment}

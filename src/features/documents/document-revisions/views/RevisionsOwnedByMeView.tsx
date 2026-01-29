@@ -1,4 +1,11 @@
-import React, { useState, useMemo, useRef, createRef, RefObject, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  createRef,
+  RefObject,
+  useEffect,
+} from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,19 +19,42 @@ import {
   FileText,
   User,
   Home,
+  Search,
 } from "lucide-react";
-import { Button } from '@/components/ui/button/Button';
-import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge';
-import { Checkbox } from '@/components/ui/checkbox/Checkbox';
-import { Select } from '@/components/ui/select/Select';
-import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';  
-import { TablePagination } from '@/components/ui/table/TablePagination';
-import { cn } from '@/components/ui/utils';
-import { IconInfoCircle, IconFileExport, IconSmartHome } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button/Button";
+import {
+  StatusBadge,
+  StatusType,
+} from "@/components/ui/statusbadge/StatusBadge";
+import { Checkbox } from "@/components/ui/checkbox/Checkbox";
+import { Select } from "@/components/ui/select/Select";
+import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
+import { TablePagination } from "@/components/ui/table/TablePagination";
+import { cn } from "@/components/ui/utils";
+import {
+  IconInfoCircle,
+  IconFileExport,
+  IconSmartHome,
+} from "@tabler/icons-react";
 
 // --- Types ---
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type DocumentType =
+  | "SOP"
+  | "Policy"
+  | "Form"
+  | "Report"
+  | "Specification"
+  | "Protocol";
+type DocumentStatus =
+  | "Draft"
+  | "Pending Review"
+  | "Pending Approval"
+  | "Approved"
+  | "Pending Training"
+  | "Ready for Publishing"
+  | "Published"
+  | "Effective"
+  | "Archive";
 
 interface TableColumn {
   id: string;
@@ -63,11 +93,17 @@ const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => ({
   id: `my-${i + 1}`,
   documentNumber: `SOP.${String(i + 1).padStart(4, "0")}.0${(i % 2) + 1}`,
   revisionNumber: `${Math.floor(i / 2) + 1}.${i % 2}`,
-  created: new Date(Date.now() - Math.random() * 10000000000).toISOString().split("T")[0],
+  created: new Date(Date.now() - Math.random() * 10000000000)
+    .toISOString()
+    .split("T")[0],
   revisionName: `My Revision ${i + 1}`,
   state: ["Draft", "Pending Review", "Approved"][i % 3] as DocumentStatus,
-  effectiveDate: new Date(Date.now() + Math.random() * 10000000000).toISOString().split("T")[0],
-  validUntil: new Date(Date.now() + Math.random() * 20000000000).toISOString().split("T")[0],
+  effectiveDate: new Date(Date.now() + Math.random() * 10000000000)
+    .toISOString()
+    .split("T")[0],
+  validUntil: new Date(Date.now() + Math.random() * 20000000000)
+    .toISOString()
+    .split("T")[0],
   documentName: `My Document ${i + 1}`,
   type: ["SOP", "Policy", "Form", "Report"][i % 4] as DocumentType,
   department: ["Quality Assurance", "Production", "R&D"][i % 3],
@@ -154,13 +190,16 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           <label className="block text-sm font-medium text-slate-700 mb-1.5">
             Search
           </label>
-          <input
-            type="text"
-            placeholder="Search revisions..."
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full px-4 py-2 h-11 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
-          />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search revisions..."
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+          </div>
         </div>
 
         {/* Status Filter */}
@@ -168,7 +207,9 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           <Select
             label="Status"
             value={statusFilter}
-            onChange={(value) => onStatusChange(value as DocumentStatus | "All")}
+            onChange={(value) =>
+              onStatusChange(value as DocumentStatus | "All")
+            }
             options={statusOptions}
           />
         </div>
@@ -253,7 +294,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
 
   // States
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<DocumentStatus | "All">("All");
+  const [statusFilter, setStatusFilter] = useState<DocumentStatus | "All">(
+    "All",
+  );
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
   const [createdFromDate, setCreatedFromDate] = useState("");
   const [createdToDate, setCreatedToDate] = useState("");
@@ -264,9 +307,15 @@ export const RevisionsOwnedByMeView: React.FC = () => {
   const [columns, setColumns] = useState<TableColumn[]>([...DEFAULT_COLUMNS]);
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    left: 0,
+    showAbove: false,
+  });
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+    {},
+  );
 
   const getButtonRef = (id: string) => {
     if (!buttonRefs.current[id]) {
@@ -282,11 +331,16 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     return MOCK_MY_REVISIONS.filter((revision) => {
       const matchesSearch =
         searchQuery === "" ||
-        revision.documentNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        revision.revisionName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        revision.documentNumber
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        revision.revisionName
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
         revision.documentName.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter === "All" || revision.state === statusFilter;
+      const matchesStatus =
+        statusFilter === "All" || revision.state === statusFilter;
       const matchesType = typeFilter === "All" || revision.type === typeFilter;
 
       const matchesCreatedDate =
@@ -301,9 +355,26 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         (!validFromDate || revision.validUntil >= validFromDate) &&
         (!validToDate || revision.validUntil <= validToDate);
 
-      return matchesSearch && matchesStatus && matchesType && matchesCreatedDate && matchesEffectiveDate && matchesValidDate;
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesType &&
+        matchesCreatedDate &&
+        matchesEffectiveDate &&
+        matchesValidDate
+      );
     });
-  }, [searchQuery, statusFilter, typeFilter, createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, validFromDate, validToDate]);
+  }, [
+    searchQuery,
+    statusFilter,
+    typeFilter,
+    createdFromDate,
+    createdToDate,
+    effectiveFromDate,
+    effectiveToDate,
+    validFromDate,
+    validToDate,
+  ]);
 
   // Pagination
   const totalPages = Math.ceil(filteredRevisions.length / itemsPerPage);
@@ -312,7 +383,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
   const paginatedRevisions = filteredRevisions.slice(startIndex, endIndex);
 
   // Visible columns
-  const visibleColumns = columns.filter((col) => col.visible).sort((a, b) => a.order - b.order);
+  const visibleColumns = columns
+    .filter((col) => col.visible)
+    .sort((a, b) => a.order - b.order);
 
   // Handlers
   const handleViewRevision = (id: string) => {
@@ -320,28 +393,31 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     navigate(`/documents/${id}`);
   };
 
-  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDropdownToggle = (
+    id: string,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     event.stopPropagation();
     if (openDropdownId === id) {
       setOpenDropdownId(null);
       return;
     }
-    
+
     const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-    
+
     // Menu dimensions (estimate max)
     const menuHeight = 150;
     const menuWidth = 200;
     const safeMargin = 8;
-    
+
     // Check available space
     const spaceBelow = window.innerHeight - rect.bottom;
     const spaceAbove = rect.top;
-    
+
     // Show above if not enough space below AND there's more space above
     const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
-    
+
     // Calculate vertical position
     let top: number;
     if (shouldShowAbove) {
@@ -349,28 +425,28 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     } else {
       top = rect.bottom + window.scrollY + 4;
     }
-    
+
     // Calculate horizontal position with safe margins
     const viewportWidth = window.innerWidth;
     let left = rect.right + window.scrollX - menuWidth;
-    
+
     // Ensure menu doesn't overflow right edge
     if (left + menuWidth > viewportWidth - safeMargin) {
       left = viewportWidth - menuWidth - safeMargin + window.scrollX;
     }
-    
+
     // Ensure menu doesn't overflow left edge
     if (left < safeMargin + window.scrollX) {
       left = safeMargin + window.scrollX;
     }
-    
+
     setDropdownPosition({ top, left, showAbove: shouldShowAbove });
     setOpenDropdownId(id);
   };
 
   const handleMenuAction = (action: string, id: string) => {
     setOpenDropdownId(null);
-    
+
     switch (action) {
       case "view":
         navigate(`/documents/${id}`);
@@ -389,12 +465,20 @@ export const RevisionsOwnedByMeView: React.FC = () => {
   };
 
   // Render column cell
-  const renderCell = (column: TableColumn, revision: Revision, index: number) => {
+  const renderCell = (
+    column: TableColumn,
+    revision: Revision,
+    index: number,
+  ) => {
     switch (column.id) {
       case "no":
         return startIndex + index + 1;
       case "documentNumber":
-        return <span className="font-medium text-emerald-600">{revision.documentNumber}</span>;
+        return (
+          <span className="font-medium text-emerald-600">
+            {revision.documentNumber}
+          </span>
+        );
       case "revisionNumber":
         return revision.revisionNumber;
       case "created":
@@ -438,7 +522,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
               <span className="hidden sm:inline">Document Revisions</span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <span className="text-slate-700 font-medium">Revisions Owned By Me</span>
+              <span className="text-slate-700 font-medium">
+                Revisions Owned By Me
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3 flex-wrap">
@@ -519,9 +605,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                       key={column.id}
                       className={cn(
                         "py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
-                        column.id === 'action' 
+                        column.id === "action"
                           ? "sticky right-0 bg-slate-50 text-center z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm"
-                          : "text-left"
+                          : "text-left",
                       )}
                     >
                       {column.label}
@@ -556,10 +642,13 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                           </button>
                         </td>
                       ) : (
-                        <td key={column.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                        <td
+                          key={column.id}
+                          className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700"
+                        >
                           {renderCell(column, revision, index)}
                         </td>
-                      )
+                      ),
                     )}
                   </tr>
                 ))}
@@ -595,7 +684,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
               style={{
                 top: `${dropdownPosition.top}px`,
                 left: `${dropdownPosition.left}px`,
-                transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none'
+                transform: dropdownPosition.showAbove
+                  ? "translateY(-100%)"
+                  : "none",
               }}
             >
               <div className="py-1">
@@ -632,7 +723,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
               </div>
             </div>
           </>,
-          document.body
+          document.body,
         )}
     </div>
   );

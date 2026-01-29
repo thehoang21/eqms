@@ -101,7 +101,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                             placeholder="Search by name, role, or department..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                            className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                             autoFocus
                         />
                     </div>
@@ -269,7 +269,7 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
     return (
         <div className="space-y-4">
             {reviewers.length > 0 && (
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
+                <div className="bg-slate-50 border border-slate-200 rounded-md p-4 space-y-3">
                     <div>
                         <label className="text-sm font-medium text-slate-700 block mb-2">Review Flow Type</label>
                         <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">

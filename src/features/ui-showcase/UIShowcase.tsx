@@ -223,7 +223,7 @@ export const UIShowcase: React.FC = () => {
               <FormField label="Full Name" required hint="Enter your legal name">
                 <input 
                   type="text" 
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -247,7 +247,7 @@ export const UIShowcase: React.FC = () => {
             <div className="space-y-4">
               <FormField label="Bio" layout="vertical">
                 <textarea 
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all min-h-[100px]"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all min-h-[100px]"
                   placeholder="Tell us about yourself..."
                   value={formData.bio}
                   onChange={(e) => setFormData({...formData, bio: e.target.value})}

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, ChevronDown, Clock } from 'lucide-react';
 import { cn } from '../utils';
@@ -33,6 +33,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   onChange,
   placeholder = "Select date & time",
 }) => {
+  const pickerId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'calendar' | 'month' | 'year'>('calendar');
   
@@ -54,6 +55,20 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const [popoverStyle, setPopoverStyle] = useState<React.CSSProperties>({ opacity: 0 });
+
+  // Listen for custom event to close other dropdowns
+  useEffect(() => {
+    const handleCloseOtherDropdowns = (event: CustomEvent<{ openId: string }>) => {
+      if (event.detail.openId !== pickerId && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
+    return () => {
+      window.removeEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
+    };
+  }, [pickerId, isOpen]);
 
   // Handle positioning
   useLayoutEffect(() => {
@@ -413,7 +428,12 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       <button
         ref={triggerRef}
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!isOpen) {
+            window.dispatchEvent(new CustomEvent('select-dropdown-open', { detail: { openId: pickerId } }));
+          }
+          setIsOpen(!isOpen);
+        }}
         className={cn(
           'flex items-center justify-between gap-2 w-full px-3 py-2 h-11 rounded-md text-sm transition-all duration-200',
           'border bg-white',

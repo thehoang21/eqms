@@ -421,7 +421,7 @@ export const NewDocumentView: React.FC = () => {
                 description={
                     <div className="space-y-3">
                         <p>Are you sure you want to save this document as a draft?</p>
-                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
+                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-md p-3 space-y-1">
                             <p><span className="font-semibold">Document Name:</span> {formData.title || "(Not set)"}</p>
                             <p><span className="font-semibold">Type:</span> {formData.type}</p>
                             <p><span className="font-semibold">Author:</span> {formData.author || "(Not set)"}</p>

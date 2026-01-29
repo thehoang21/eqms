@@ -165,7 +165,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                 <div
                                     key={uploadedFile.id}
                                     className={cn(
-                                        "relative group bg-white border rounded-lg p-3 transition-all cursor-pointer hover:shadow-md",
+                                        "relative group bg-white border rounded-md p-3 transition-all cursor-pointer hover:shadow-md",
                                         selectedFile === uploadedFile.file
                                             ? "border-emerald-500 ring-1 ring-emerald-500 bg-emerald-50/30"
                                             : "border-slate-200 hover:border-emerald-500/50",

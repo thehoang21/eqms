@@ -10,6 +10,7 @@ import {
   PowerOff,
   X,
   Save,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -72,17 +73,25 @@ const MOCK_STORAGE_LOCATIONS: StorageLocationItem[] = [
 
 export const StorageLocationsTab: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"All" | "Active" | "Inactive">("All");
+  const [statusFilter, setStatusFilter] = useState<
+    "All" | "Active" | "Inactive"
+  >("All");
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<StorageLocationItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<StorageLocationItem | null>(
+    null,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [mockData, setMockData] = useState<StorageLocationItem[]>(MOCK_STORAGE_LOCATIONS);
+  const [mockData, setMockData] = useState<StorageLocationItem[]>(
+    MOCK_STORAGE_LOCATIONS,
+  );
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+    {},
+  );
 
   const getButtonRef = (id: string) => {
     if (!buttonRefs.current[id]) {
@@ -96,7 +105,8 @@ export const StorageLocationsTab: React.FC = () => {
     return mockData.filter((item) => {
       const matchesSearch =
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+        (item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+          false);
       const matchesStatus =
         statusFilter === "All" ||
         (statusFilter === "Active" && item.isActive) ||
@@ -105,7 +115,10 @@ export const StorageLocationsTab: React.FC = () => {
     });
   }, [mockData, searchQuery, statusFilter]);
 
-  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDropdownToggle = (
+    id: string,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     event.stopPropagation();
     if (openDropdownId === id) {
       setOpenDropdownId(null);
@@ -134,11 +147,11 @@ export const StorageLocationsTab: React.FC = () => {
 
   const handleToggleStatus = async (item: StorageLocationItem) => {
     console.log("Toggle status:", item.id, !item.isActive);
-    
+
     setMockData((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, isActive: !i.isActive } : i))
+      prev.map((i) => (i.id === item.id ? { ...i, isActive: !i.isActive } : i)),
     );
-    
+
     setOpenDropdownId(null);
   };
 
@@ -162,13 +175,16 @@ export const StorageLocationsTab: React.FC = () => {
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               Search
             </label>
-            <input
-              type="text"
-              placeholder="Search storage locations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
-            />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search storage locations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
           </div>
 
           {/* Status Filter */}
@@ -176,7 +192,9 @@ export const StorageLocationsTab: React.FC = () => {
             <Select
               label="Status"
               value={statusFilter}
-              onChange={(value) => setStatusFilter(value as "All" | "Active" | "Inactive")}
+              onChange={(value) =>
+                setStatusFilter(value as "All" | "Active" | "Inactive")
+              }
               options={[
                 { label: "All Status", value: "All" },
                 { label: "Active", value: "Active" },
@@ -203,88 +221,97 @@ export const StorageLocationsTab: React.FC = () => {
       {/* Table Container */}
       <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-w-0 overflow-hidden">
         <div className="flex-1 overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-slate-50 border-b-2 border-slate-200 sticky top-0 z-10">
-            <tr>
-              <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
-                No.
-              </th>
-              <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
-                Name
-              </th>
-              <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
-                Description
-              </th>
-              <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
-                Status
-              </th>
-              <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
-                Modified Date
-              </th>
-              <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-200 bg-white">
-            {filteredItems.length > 0 ? (
-              filteredItems.map((item, index) => (
-                <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{index + 1}</td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className="font-medium text-slate-900">{item.name}</span>
-                  </td>
-                  <td className="py-3.5 px-4 text-sm text-slate-600 max-w-md truncate">
-                    {item.description || "-"}
-                  </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    {item.isActive ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
-                        Active
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-slate-50 text-slate-700 border-slate-200">
-                        Inactive
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
-                    {item.modifiedDate}
-                  </td>
-                  <td
-                    onClick={(e) => e.stopPropagation()}
-                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+          <table className="w-full">
+            <thead className="bg-slate-50 border-b-2 border-slate-200 sticky top-0 z-10">
+              <tr>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  No.
+                </th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Name
+                </th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Description
+                </th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Status
+                </th>
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                  Modified Date
+                </th>
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 bg-white">
+              {filteredItems.length > 0 ? (
+                filteredItems.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    className="hover:bg-slate-50/80 transition-colors group"
                   >
-                    <button
-                      ref={getButtonRef(item.id)}
-                      onClick={(e) => handleDropdownToggle(item.id, e)}
-                      className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      {index + 1}
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <span className="font-medium text-slate-900">
+                        {item.name}
+                      </span>
+                    </td>
+                    <td className="py-3.5 px-4 text-sm text-slate-600 max-w-md truncate">
+                      {item.description || "-"}
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      {item.isActive ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
+                          Active
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-slate-50 text-slate-700 border-slate-200">
+                          Inactive
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                      {item.modifiedDate}
+                    </td>
+                    <td
+                      onClick={(e) => e.stopPropagation()}
+                      className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                     >
-                      <MoreVertical className="h-4 w-4 text-slate-600" />
-                    </button>
+                      <button
+                        ref={getButtonRef(item.id)}
+                        onClick={(e) => handleDropdownToggle(item.id, e)}
+                        className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                      >
+                        <MoreVertical className="h-4 w-4 text-slate-600" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center">
+                    <div className="flex flex-col items-center justify-center text-slate-500">
+                      <div className="bg-slate-50 p-4 rounded-full mb-3">
+                        <MapPin className="h-8 w-8 text-slate-400" />
+                      </div>
+                      <p className="text-base font-medium text-slate-900">
+                        No storage locations found
+                      </p>
+                      <p className="text-sm mt-1">Try adjusting your search</p>
+                    </div>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} className="py-12 text-center">
-                  <div className="flex flex-col items-center justify-center text-slate-500">
-                    <div className="bg-slate-50 p-4 rounded-full mb-3">
-                      <MapPin className="h-8 w-8 text-slate-400" />
-                    </div>
-                    <p className="text-base font-medium text-slate-900">No storage locations found</p>
-                    <p className="text-sm mt-1">Try adjusting your search</p>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    {/* Dropdown Menu */}
-    {openDropdownId &&
+      {/* Dropdown Menu */}
+      {openDropdownId &&
         createPortal(
           <>
             <div
@@ -297,13 +324,18 @@ export const StorageLocationsTab: React.FC = () => {
             />
             <div
               className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-              style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
+              style={{
+                top: `${dropdownPosition.top}px`,
+                left: `${dropdownPosition.left}px`,
+              }}
             >
               <div className="py-1">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleEdit(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
@@ -314,12 +346,15 @@ export const StorageLocationsTab: React.FC = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleToggleStatus(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                 >
-                  {filteredItems.find((i) => i.id === openDropdownId)?.isActive ? (
+                  {filteredItems.find((i) => i.id === openDropdownId)
+                    ?.isActive ? (
                     <>
                       <PowerOff className="h-3.5 w-3.5" />
                       <span>Disable</span>
@@ -335,7 +370,9 @@ export const StorageLocationsTab: React.FC = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    const item = filteredItems.find((i) => i.id === openDropdownId)!;
+                    const item = filteredItems.find(
+                      (i) => i.id === openDropdownId,
+                    )!;
                     handleDelete(item);
                   }}
                   className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors"
@@ -346,7 +383,7 @@ export const StorageLocationsTab: React.FC = () => {
               </div>
             </div>
           </>,
-          document.body
+          document.body,
         )}
 
       {/* Add/Edit Modal */}
@@ -362,14 +399,22 @@ export const StorageLocationsTab: React.FC = () => {
         onSave={(data) => {
           if (showEditModal && selectedItem) {
             setMockData((prev) =>
-              prev.map((i) => (i.id === selectedItem.id ? { ...i, ...data, modifiedDate: new Date().toISOString().split('T')[0] } : i))
+              prev.map((i) =>
+                i.id === selectedItem.id
+                  ? {
+                      ...i,
+                      ...data,
+                      modifiedDate: new Date().toISOString().split("T")[0],
+                    }
+                  : i,
+              ),
             );
           } else {
             const newItem: StorageLocationItem = {
               id: String(mockData.length + 1),
               ...data,
-              createdDate: new Date().toISOString().split('T')[0],
-              modifiedDate: new Date().toISOString().split('T')[0],
+              createdDate: new Date().toISOString().split("T")[0],
+              modifiedDate: new Date().toISOString().split("T")[0],
             };
             setMockData((prev) => [...prev, newItem]);
           }
@@ -386,11 +431,13 @@ export const StorageLocationsTab: React.FC = () => {
         description={
           <div className="space-y-3">
             <p>
-              Are you sure you want to delete <strong>{selectedItem?.name}</strong>?
+              Are you sure you want to delete{" "}
+              <strong>{selectedItem?.name}</strong>?
             </p>
             <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
               <p className="text-amber-800">
-                <span className="font-semibold">⚠️ Warning:</span> This action cannot be undone.
+                <span className="font-semibold">⚠️ Warning:</span> This action
+                cannot be undone.
               </p>
             </div>
           </div>
@@ -410,7 +457,11 @@ interface StorageLocationModalProps {
   onClose: () => void;
   item: StorageLocationItem | null;
   isEdit: boolean;
-  onSave: (data: { name: string; description: string; isActive: boolean }) => void;
+  onSave: (data: {
+    name: string;
+    description: string;
+    isActive: boolean;
+  }) => void;
 }
 
 const StorageLocationModal: React.FC<StorageLocationModalProps> = ({
@@ -483,8 +534,10 @@ const StorageLocationModal: React.FC<StorageLocationModalProps> = ({
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Enter storage location name"
                 required
                 disabled={isSaving}
@@ -493,12 +546,16 @@ const StorageLocationModal: React.FC<StorageLocationModalProps> = ({
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Description
+              </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 rows={3}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Enter description (optional)"
                 disabled={isSaving}
               />
@@ -509,7 +566,9 @@ const StorageLocationModal: React.FC<StorageLocationModalProps> = ({
               <Checkbox
                 id="isActive"
                 checked={formData.isActive}
-                onChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                onChange={(checked) =>
+                  setFormData({ ...formData, isActive: checked })
+                }
                 label="Active"
                 disabled={isSaving}
               />
@@ -517,7 +576,13 @@ const StorageLocationModal: React.FC<StorageLocationModalProps> = ({
 
             {/* Actions */}
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
-              <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isSaving}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onClose}
+                disabled={isSaving}
+              >
                 Cancel
               </Button>
               <Button
@@ -533,6 +598,6 @@ const StorageLocationModal: React.FC<StorageLocationModalProps> = ({
         </div>
       </div>
     </>,
-    document.body
+    document.body,
   );
 };
