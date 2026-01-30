@@ -77,9 +77,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [inputMode, setInputMode] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const triggerInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const isInteractingWithSearchRef = useRef(false);
@@ -89,6 +91,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     const handleCloseOtherDropdowns = (event: CustomEvent<{ openId: string }>) => {
       if (event.detail.openId !== selectId && isOpen) {
         setIsOpen(false);
+        setInputMode(false);
         setSearchQuery("");
       }
     };
@@ -106,6 +109,27 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     : options;
 
   const selectedOptions = options.filter((opt) => value.includes(opt.value));
+
+  // Lock body scroll khi dropdown mở
+  useEffect(() => {
+    if (isOpen) {
+      const scrollY = window.scrollY;
+      const body = document.body;
+      
+      body.style.position = 'fixed';
+      body.style.top = `-${scrollY}px`;
+      body.style.width = '100%';
+      body.style.overflowY = 'scroll';
+      
+      return () => {
+        body.style.position = '';
+        body.style.top = '';
+        body.style.width = '';
+        body.style.overflowY = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isOpen]);
 
   // Recalculate position khi filtered options thay đổi
   useEffect(() => {
@@ -155,34 +179,18 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      // iOS Safari critical fix: Skip if user is interacting with search
-      if (isInteractingWithSearchRef.current) {
-        return;
-      }
-      
       const target = event.target as Node;
       
-      // iOS Safari fix: Skip if clicking inside dropdown (including search input)
       if (dropdownRef.current && dropdownRef.current.contains(target)) {
         return;
       }
       
-      // Skip if the target is the search input
-      if (searchInputRef.current && searchInputRef.current.contains(target)) {
-        return;
-      }
-      
-      // Skip if search input is focused (critical for iOS)
-      if (searchInputRef.current === document.activeElement) {
-        return;
-      }
-      
-      // Skip if clicking on trigger container
       if (containerRef.current && containerRef.current.contains(target)) {
         return;
       }
       
       setIsOpen(false);
+      setInputMode(false);
       setSearchQuery("");
     };
     
@@ -215,9 +223,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     };
 
     const handleResize = () => {
-      // Chỉ đóng khi resize nếu search không được focus (tránh iOS keyboard)
-      if (searchInputRef.current !== document.activeElement && isOpen) {
+      if (isOpen) {
         setIsOpen(false);
+        setInputMode(false);
         setSearchQuery("");
       }
     };
@@ -233,40 +241,31 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     };
   }, [isOpen]);
 
-  // Auto focus search input
+  // Auto focus trigger input khi vào input mode
   useEffect(() => {
-    if (isOpen && enableSearch && searchInputRef.current) {
-      // iOS Safari fix: Use longer delay and multiple methods for smooth focus
+    if (inputMode && enableSearch && triggerInputRef.current) {
       const focusTimeout = setTimeout(() => {
-        if (searchInputRef.current && isOpen) {
-          // Try multiple approaches for iOS
-          searchInputRef.current.focus();
-          
-          // Additional iOS fix: trigger click to ensure keyboard shows
-          if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-            requestAnimationFrame(() => {
-              if (searchInputRef.current) {
-                searchInputRef.current.click();
-                searchInputRef.current.focus();
-              }
-            });
-          }
+        if (triggerInputRef.current && inputMode) {
+          triggerInputRef.current.focus();
+          triggerInputRef.current.select();
         }
-      }, 200); // Increased delay for iOS
+      }, 100);
 
       return () => clearTimeout(focusTimeout);
     }
-  }, [isOpen, enableSearch]);
+  }, [inputMode, enableSearch]);
 
   const handleToggle = () => {
     if (disabled) return;
     
-    // If opening, dispatch event to close other dropdowns
-    if (!isOpen) {
-      window.dispatchEvent(new CustomEvent('select-dropdown-open', { detail: { openId: selectId } }));
-    }
+    window.dispatchEvent(new CustomEvent('select-dropdown-open', { detail: { openId: selectId } }));
     
-    if (!isOpen && triggerRef.current) {
+    if (!isOpen) {
+      if (enableSearch) {
+        setInputMode(true);
+      }
+      
+      if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
@@ -304,7 +303,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
           : `${Math.min(spaceBelow - 8, estimatedDropdownHeight)}px`,
       });
+      }
+    } else {
+      setInputMode(false);
+      setSearchQuery("");
     }
+    
     setIsOpen(!isOpen);
   };
 
@@ -332,60 +336,107 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         </label>
       )}
       
-      {/* Trigger Button */}
-      <button
-        ref={triggerRef}
-        type="button"
-        onClick={handleToggle}
-        disabled={disabled}
-        className={cn(
-          "flex w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200",
-          "placeholder:text-slate-400 focus:outline-none",
-          "min-h-[44px]",
-          disabled
-            ? "bg-slate-50 cursor-not-allowed opacity-60"
-            : isOpen
-            ? "ring-1 ring-emerald-500 border-emerald-500"
-            : "hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
-          triggerClassName
-        )}
-      >
-        <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
-          {selectedOptions.length === 0 ? (
-            <span className="text-slate-500">{placeholder}</span>
-          ) : (
-            <>
-              {visibleTags.map((option) => (
-                <span
-                  key={option.value}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200"
-                >
-                  {option.icon}
-                  <span className="truncate max-w-[120px]">{option.label}</span>
-                  <button
-                    type="button"
-                    onClick={(e) => handleRemoveTag(option.value, e)}
-                    className="hover:bg-emerald-100 rounded-sm p-0.5 transition-colors"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </span>
-              ))}
-              {remainingCount > 0 && (
-                <span className="text-xs text-slate-600 font-medium">
-                  +{remainingCount} more
-                </span>
+      {/* Trigger - Input or Button */}
+      <div className="relative">
+        {enableSearch && inputMode ? (
+          <div className="relative">
+            <input
+              ref={triggerInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (!isOpen) setIsOpen(true);
+              }}
+              onFocus={() => {
+                if (!isOpen) setIsOpen(true);
+              }}
+              onTouchStart={(e) => {
+                e.stopPropagation();
+              }}
+              placeholder={selectedOptions.length > 0 ? `${selectedOptions.length} selected` : placeholder}
+              disabled={disabled}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              className={cn(
+                "flex w-full items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200",
+                "placeholder:text-slate-400 focus:outline-none",
+                "h-11 pr-8",
+                disabled
+                  ? "bg-slate-50 cursor-not-allowed opacity-60"
+                  : "ring-1 ring-emerald-500 border-emerald-500",
+                triggerClassName
               )}
-            </>
-          )}
-        </div>
-        <ChevronDown
-          className={cn(
-            "h-4 w-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2",
-            isOpen && "rotate-180"
-          )}
-        />
-      </button>
+              style={{
+                WebkitTapHighlightColor: 'transparent',
+                touchAction: 'manipulation',
+              }}
+            />
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 text-slate-400 transition-transform duration-200 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none",
+                isOpen && "rotate-180"
+              )}
+            />
+          </div>
+        ) : (
+          <button
+            ref={triggerRef}
+            type="button"
+            onClick={handleToggle}
+            disabled={disabled}
+            className={cn(
+              "flex w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200",
+              "placeholder:text-slate-400 focus:outline-none",
+              "min-h-[44px]",
+              disabled
+                ? "bg-slate-50 cursor-not-allowed opacity-60"
+                : isOpen
+                ? "ring-1 ring-emerald-500 border-emerald-500"
+                : "hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              triggerClassName
+            )}
+          >
+            <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
+              {selectedOptions.length === 0 ? (
+                <span className="text-slate-500">{placeholder}</span>
+              ) : (
+                <>
+                  {visibleTags.map((option) => (
+                    <span
+                      key={option.value}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200"
+                    >
+                      {option.icon}
+                      <span className="truncate max-w-[120px]">{option.label}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => handleRemoveTag(option.value, e)}
+                        className="hover:bg-emerald-100 rounded-sm p-0.5 transition-colors"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  ))}
+                  {remainingCount > 0 && (
+                    <span className="text-xs text-slate-600 font-medium">
+                      +{remainingCount} more
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2",
+                isOpen && "rotate-180"
+              )}
+            />
+          </button>
+        )}
+      </div>
 
       {/* Dropdown Portal */}
       {isOpen && createPortal(
@@ -395,16 +446,16 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             className="fixed inset-0"
             style={{ zIndex: 9998 }}
             onTouchStart={(e) => {
-              if (!isInteractingWithSearchRef.current) {
-                setIsOpen(false);
-                setSearchQuery("");
-              }
+              e.preventDefault();
+              setIsOpen(false);
+              setInputMode(false);
+              setSearchQuery("");
             }}
-            onClick={() => {
-              if (!isInteractingWithSearchRef.current) {
-                setIsOpen(false);
-                setSearchQuery("");
-              }
+            onClick={(e) => {
+              e.preventDefault();
+              setIsOpen(false);
+              setInputMode(false);
+              setSearchQuery("");
             }}
             aria-hidden="true"
           />
@@ -419,92 +470,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 : "slide-in-from-top-2 zoom-in-95"
             )}
           >
-          {enableSearch && (
-            <div 
-              className="flex items-center border-b border-slate-100 px-3 pb-2 pt-3 bg-white"
-              onMouseDown={(e) => e.stopPropagation()}
-              onTouchStart={(e) => {
-                e.stopPropagation();
-                isInteractingWithSearchRef.current = true;
-              }}
-              onTouchEnd={(e) => {
-                e.stopPropagation();
-                setTimeout(() => {
-                  isInteractingWithSearchRef.current = false;
-                }, 300);
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Search className="mr-2 h-4 w-4 text-slate-400 shrink-0 opacity-50" />
-              <input
-                ref={searchInputRef}
-                className="flex h-6 w-full rounded-md bg-transparent py-1 text-sm outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-50"
-                placeholder={searchPlaceholder}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                  isInteractingWithSearchRef.current = true;
-                  searchInputRef.current?.focus();
-                }}
-                onTouchStart={(e) => {
-                  e.stopPropagation();
-                  isInteractingWithSearchRef.current = true;
-                }}
-                onTouchEnd={(e) => {
-                  e.stopPropagation();
-                  if (searchInputRef.current) {
-                    searchInputRef.current.focus();
-                    const len = searchInputRef.current.value.length;
-                    searchInputRef.current.setSelectionRange(len, len);
-                  }
-                  setTimeout(() => {
-                    isInteractingWithSearchRef.current = false;
-                  }, 300);
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  searchInputRef.current?.focus();
-                  setTimeout(() => {
-                    isInteractingWithSearchRef.current = false;
-                  }, 100);
-                }}
-                onFocus={(e) => {
-                  e.stopPropagation();
-                  isInteractingWithSearchRef.current = true;
-                }}
-                onBlur={(e) => {
-                  isInteractingWithSearchRef.current = false;
-                  // iOS Safari fix: prevent blur when tapping inside dropdown
-                  const relatedTarget = e.relatedTarget as Node;
-                  if (dropdownRef.current?.contains(relatedTarget)) {
-                    e.preventDefault();
-                    setTimeout(() => {
-                      if (searchInputRef.current) {
-                        searchInputRef.current.focus();
-                      }
-                    }, 0);
-                  }
-                }}
-                inputMode="search"
-                enterKeyHint="search"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck={false}
-                readOnly={false}
-                // iOS specific attributes
-                data-testid="search-input"
-                style={{ 
-                  WebkitTapHighlightColor: 'transparent',
-                  touchAction: 'manipulation',
-                  WebkitUserSelect: 'text',
-                  userSelect: 'text',
-                }}
-              />
-            </div>
-          )}
-          
           <div
             className="overflow-y-auto p-1 custom-scrollbar"
             style={{ 
@@ -522,7 +487,15 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   <div
                     key={option.value}
                     onClick={() => handleToggleOption(option.value)}
-                    style={{ height: rowHeight }}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleToggleOption(option.value);
+                    }}
+                    style={{ 
+                      height: rowHeight,
+                      WebkitTapHighlightColor: 'transparent',
+                    }}
                     className={cn(
                       "relative flex w-full cursor-pointer select-none items-center rounded-sm px-4 text-sm outline-none transition-colors",
                       isSelected

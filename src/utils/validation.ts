@@ -89,11 +89,19 @@ export function isValidFileSize(file: File, maxSizeInMB: number): boolean {
 }
 
 /**
- * Validate date format (YYYY-MM-DD)
+ * Validate date format (dd/MM/yyyy)
  */
 export function isValidDateFormat(date: string): boolean {
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  return dateRegex.test(date);
+  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+  if (!dateRegex.test(date)) return false;
+  
+  // Further validate day, month, year ranges
+  const [day, month, year] = date.split('/').map(Number);
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > 31) return false;
+  if (year < 1900 || year > 2100) return false;
+  
+  return true;
 }
 
 /**

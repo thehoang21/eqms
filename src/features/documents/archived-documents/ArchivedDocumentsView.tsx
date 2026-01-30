@@ -295,7 +295,11 @@ export const ArchivedDocumentsView: React.FC = () => {
                                             {doc.version}
                                         </td>
                                         <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
-                                            {new Date(doc.archivedDate).toLocaleDateString()}
+                                            {new Date(doc.archivedDate).toLocaleDateString("en-GB", {
+                                                day: "2-digit",
+                                                month: "2-digit",
+                                                year: "numeric",
+                                            })}
                                         </td>
                                         <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
                                             {doc.lastApprover}

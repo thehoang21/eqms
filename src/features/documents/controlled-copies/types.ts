@@ -22,12 +22,12 @@ export interface TableColumn {
 export interface ControlledCopy {
   id: string;
   documentNumber: string; // Số hiệu controlled copy
-  createdDate: string; // Ngày tạo (YYYY-MM-DD)
+  createdDate: string; // Ngày tạo (dd/MM/yyyy)
   createdTime: string; // Giờ tạo (HH:mm:ss)
   openedBy: string; // Người mở/tạo
   name: string; // Tên document
   status: ControlledCopyStatus; // Trạng thái
-  validUntil: string; // Hiệu lực đến (YYYY-MM-DD)
+  validUntil: string; // Hiệu lực đến (dd/MM/yyyy)
   document: string; // Document ID gốc
   distributionList?: string; // Danh sách phân phối
   

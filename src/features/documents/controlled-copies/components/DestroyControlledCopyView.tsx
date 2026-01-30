@@ -350,10 +350,10 @@ export const DestroyControlledCopyView: React.FC = () => {
               Distributed Date
             </label>
             <p className="text-sm text-slate-900 mt-1">
-              {new Date(controlledCopy.distributedDate).toLocaleDateString("en-US", {
+              {new Date(controlledCopy.distributedDate).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
                 year: "numeric",
-                month: "short",
-                day: "numeric",
               })}
             </p>
           </div>

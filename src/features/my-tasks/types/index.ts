@@ -22,7 +22,7 @@ export interface Task {
   description?: string;
   module: ModuleType;
   priority: Priority;
-  dueDate: string; // YYYY-MM-DD
+  dueDate: string; // dd/MM/yyyy
   status: TaskStatus;
   assignee: string;
   assigneeAvatar?: string;

@@ -5,22 +5,35 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'full
     return 'Invalid Date';
   }
 
-  const optionsMap: Record<'short' | 'long' | 'full', Intl.DateTimeFormatOptions> = {
-    short: { year: 'numeric', month: '2-digit', day: '2-digit' },
-    long: { year: 'numeric', month: 'short', day: 'numeric' },
-    full: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
-  };
-  const options = optionsMap[format];
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
 
-  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
+  if (format === 'short') {
+    return `${day}/${month}/${year}`;
+  }
+
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthLong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  if (format === 'long') {
+    return `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]} ${year}`;
+  }
+
+  // full format
+  return `${weekdays[dateObj.getDay()]}, ${dateObj.getDate()} ${monthLong[dateObj.getMonth()]} ${year}`;
 }
 
 /**
- * Format date to ISO string (YYYY-MM-DD)
+ * Format date to dd/MM/yyyy string
  */
 export function formatDateISO(date: Date | string): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj.toISOString().split('T')[0];
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 /**

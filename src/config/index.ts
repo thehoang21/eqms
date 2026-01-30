@@ -54,7 +54,7 @@ export const config = {
   // Date Formats
   dateFormats: {
     display: 'MMM DD, YYYY',
-    iso: 'YYYY-MM-DD',
+    iso: 'dd/MM/yyyy',
     full: 'MMMM DD, YYYY HH:mm:ss',
   },
 } as const;

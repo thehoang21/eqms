@@ -576,9 +576,9 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
                                 <div className="flex items-center gap-2">
                                   <span className="text-slate-500 w-16">Due Date:</span>
                                   <span className="text-white">
-                                    {new Date(task.dueDate).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
+                                    {new Date(task.dueDate).toLocaleDateString("en-GB", {
+                                      day: "2-digit",
+                                      month: "2-digit",
                                       year: "numeric"
                                     })}
                                   </span>

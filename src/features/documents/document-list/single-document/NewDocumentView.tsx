@@ -47,6 +47,11 @@ export const NewDocumentView: React.FC = () => {
     const [isSaved, setIsSaved] = useState(false); // Track if document has been saved
     const [documentStatus, setDocumentStatus] = useState<DocumentStatus>("Draft"); // Track current document status
 
+    // Auto-generated fields
+    const [documentNumber, setDocumentNumber] = useState<string>("");
+    const [createdDateTime, setCreatedDateTime] = useState<string>("");
+    const [openedBy, setOpenedBy] = useState<string>("");
+
     // Reviewers and Approvers state
     const [reviewers, setReviewers] = useState<Reviewer[]>([]);
     const [approvers, setApprovers] = useState<Approver[]>([]);
@@ -143,19 +148,31 @@ export const NewDocumentView: React.FC = () => {
             // Simulate API call with 3 second loading
             await new Promise(resolve => setTimeout(resolve, 3000));
             
-            // TODO: Integrate with API service
-            console.log("Document saved:", formData);
-            
-            setIsSaving(false);
-            setShowSaveModal(false);
-            
             if (!isSaved) {
-                // First save: just mark as saved to show additional options (Reviewers, Approvers buttons)
+                // First save (Next Step): Generate auto fields
+                const now = new Date();
+                const docNum = `DOC-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+                const created = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                
+                setDocumentNumber(docNum);
+                setCreatedDateTime(created);
+                setOpenedBy("Current User"); // TODO: Replace with actual logged-in user
                 setIsSaved(true);
+                
+                console.log("Document created:", {
+                    documentNumber: docNum,
+                    created,
+                    openedBy: "Current User",
+                    ...formData
+                });
             } else {
                 // Second save: transition to Active (only possible when reviewers and approvers are selected)
                 setDocumentStatus("Active");
+                console.log("Document saved:", formData);
             }
+            
+            setIsSaving(false);
+            setShowSaveModal(false);
         } catch (error) {
             console.error("Error saving document:", error);
             setIsSaving(false);
@@ -220,16 +237,23 @@ export const NewDocumentView: React.FC = () => {
                             variant="outline"
                             size="sm"
                             className="flex items-center gap-2"
+                            disabled={documentStatus === "Obsoleted"}
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleSaveDraft}
-                            disabled={isSaving || uploadedFiles.length === 0 || (isSaved && (reviewers.length === 0 || approvers.length === 0))}
+                            disabled={
+                                documentStatus === "Obsoleted" ||
+                                isSaving ||
+                                uploadedFiles.length === 0 ||
+                                missingRequiredFields.length > 0 ||
+                                (isSaved && (reviewers.length === 0 || approvers.length === 0))
+                            }
                             size="sm"
                             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
                         >
-                            {isSaving ? "Saving..." : "Save"}
+                            {isSaving ? (isSaved ? "Saving..." : "Processing...") : (isSaved ? "Save" : "Next Step")}
                         </Button>
                     </div>
                 </div>
@@ -341,12 +365,19 @@ export const NewDocumentView: React.FC = () => {
                             hideTemplateCheckbox={true}
                             suggestedDocumentCode={suggestedDocumentCode}
                             isSaved={isSaved}
+                            documentNumber={documentNumber}
+                            createdDateTime={createdDateTime}
+                            openedBy={openedBy}
                             onReviewersChange={setReviewers}
                             onApproversChange={setApprovers}
                             onCancel={handleCancel}
                             onSave={handleSaveDraft}
                             isSaving={isSaving}
-                            canSave={uploadedFiles.length > 0 && (!isSaved || (reviewers.length > 0 && approvers.length > 0))}
+                            canSave={
+                                uploadedFiles.length > 0 &&
+                                missingRequiredFields.length === 0 &&
+                                (!isSaved || (reviewers.length > 0 && approvers.length > 0))
+                            }
                             onObsolete={handleObsolete}
                             isObsoleted={documentStatus === "Obsoleted"}
                             onBackToList={handleBackToList}
@@ -364,6 +395,7 @@ export const NewDocumentView: React.FC = () => {
                             selectedFile={selectedFile}
                             onSelectFile={setSelectedFile}
                             maxFiles={1}
+                            isObsoleted={documentStatus === "Obsoleted"}
                             parentDocument={parentDocument}
                             onParentDocumentChange={setParentDocument}
                             relatedDocuments={relatedDocuments}
@@ -410,18 +442,13 @@ export const NewDocumentView: React.FC = () => {
                 onClose={() => setShowSaveModal(false)}
                 onConfirm={handleConfirmSave}
                 type="confirm"
-                title="Save Document?"
+                title={isSaved ? "Save Document?" : "Proceed to Next Step?"}
                 description={
                     <div className="space-y-3">
-                        <p>Are you sure you want to save this document?</p>
-                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-md p-3 space-y-1">
-                            <p><span className="font-semibold">Document Name:</span> {formData.title || "(Not set)"}</p>
-                            <p><span className="font-semibold">Type:</span> {formData.type}</p>
-                            <p><span className="font-semibold">Author:</span> {formData.author || "(Not set)"}</p>
-                        </div>
+                        <p>{isSaved ? "Are you sure you want to save this document?" : "This will create the document and generate Document Number. You can then add Reviewers and Approvers."}</p>
                     </div>
                 }
-                confirmText="Save"
+                confirmText={isSaved ? "Save" : "Next Step"}
                 cancelText="Cancel"
                 isLoading={isSaving}
                 showCancel={true}

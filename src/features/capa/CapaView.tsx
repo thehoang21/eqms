@@ -531,10 +531,10 @@ export const CAPAView: React.FC = () => {
               {
                 label: "Target Date",
                 value: new Date(capa.targetCompletionDate).toLocaleDateString(
-                  "en-US",
+                  "en-GB",
                   {
-                    month: "short",
-                    day: "numeric",
+                    day: "2-digit",
+                    month: "2-digit",
                     year: "numeric",
                   },
                 ),
@@ -631,10 +631,10 @@ export const CAPAView: React.FC = () => {
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
                     {new Date(capa.targetCompletionDate).toLocaleDateString(
-                      "en-US",
+                      "en-GB",
                       {
-                        month: "short",
-                        day: "numeric",
+                        day: "2-digit",
+                        month: "2-digit",
                         year: "numeric",
                       },
                     )}

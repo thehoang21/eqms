@@ -25,6 +25,8 @@ export interface DateTimePickerProps {
   onChange: (value: string) => void;
   /** Placeholder text */
   placeholder?: string;
+  /** Disabled state */
+  disabled?: boolean;
 }
 
 export const DateTimePicker: React.FC<DateTimePickerProps> = ({
@@ -32,18 +34,36 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   value,
   onChange,
   placeholder = "Select date",
+  disabled = false,
 }) => {
   const pickerId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'calendar' | 'month' | 'year'>('calendar');
   
+  // Helper function to parse date string (supports both dd/MM/yyyy and ISO formats)
+  const parseDate = (dateStr: string): Date | null => {
+    if (!dateStr) return null;
+    
+    // Try dd/MM/yyyy format first
+    const ddmmyyyyMatch = dateStr.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (ddmmyyyyMatch) {
+      const [, day, month, year] = ddmmyyyyMatch;
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      return isNaN(date.getTime()) ? null : date;
+    }
+    
+    // Try ISO format or other standard formats
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+  };
+
   // Initialize state from value or defaults
   const [selectedDate, setSelectedDate] = useState<Date | null>(() => 
-    value ? new Date(value) : null
+    value ? parseDate(value) : null
   );
   
   const [viewDate, setViewDate] = useState<Date>(() => 
-    value ? new Date(value) : new Date()
+    value ? parseDate(value) || new Date() : new Date()
   );
 
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -133,8 +153,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   // Sync with external value changes
   useEffect(() => {
     if (value) {
-      const d = new Date(value);
-      if (!isNaN(d.getTime())) {
+      const d = parseDate(value);
+      if (d) {
         setSelectedDate(d);
         setViewDate(d);
       }
@@ -178,11 +198,12 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
   const handleApply = () => {
     if (selectedDate) {
-      const year = selectedDate.getFullYear();
-      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
       const day = String(selectedDate.getDate()).padStart(2, '0');
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const year = selectedDate.getFullYear();
       
-      onChange(`${year}-${month}-${day}`);
+      // Return dd/MM/yyyy format
+      onChange(`${day}/${month}/${year}`);
     }
     setIsOpen(false);
   };
@@ -380,14 +401,14 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
   const formatDisplayValue = () => {
     if (!value) return placeholder;
-    const d = new Date(value);
-    if (isNaN(d.getTime())) return placeholder;
+    const d = parseDate(value);
+    if (!d) return placeholder;
     
-    return d.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    
+    return `${day}/${month}/${year}`;
   };
 
   return (
@@ -401,17 +422,21 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         ref={triggerRef}
         type="button"
         onClick={() => {
+          if (disabled) return;
           if (!isOpen) {
             window.dispatchEvent(new CustomEvent('select-dropdown-open', { detail: { openId: pickerId } }));
           }
           setIsOpen(!isOpen);
         }}
+        disabled={disabled}
         className={cn(
           'flex items-center justify-between gap-2 w-full px-3 py-2 h-11 rounded-md text-sm transition-all duration-200',
           'border bg-white',
-          isOpen
-            ? 'ring-1 ring-emerald-500 border-emerald-500'
-            : 'border-slate-200 hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500'
+          disabled
+            ? 'bg-slate-100 cursor-not-allowed opacity-60'
+            : isOpen
+              ? 'ring-1 ring-emerald-500 border-emerald-500'
+              : 'border-slate-200 hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500'
         )}
       >
         <div className="flex items-center gap-2 truncate">

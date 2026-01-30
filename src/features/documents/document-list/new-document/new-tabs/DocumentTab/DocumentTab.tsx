@@ -32,6 +32,7 @@ interface DocumentTabProps {
   selectedFile: File | null;
   onSelectFile: (file: File | null) => void;
   maxFiles?: number; // Maximum number of files allowed (undefined = unlimited)
+  isObsoleted?: boolean; // Disable all file operations when obsoleted
   // Optional extended props for document relationships
   parentDocument?: ParentDocument | null;
   onParentDocumentChange?: (doc: ParentDocument | null) => void;
@@ -47,6 +48,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
   selectedFile,
   onSelectFile,
   maxFiles,
+  isObsoleted = false,
   // Extended props (unused in this component but accepted for compatibility)
   parentDocument: _parentDocument,
   onParentDocumentChange: _onParentDocumentChange,
@@ -58,9 +60,9 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Check if max files limit is reached
+  // Check if max files limit is reached or document is obsoleted
   const isMaxFilesReached =
-    maxFiles !== undefined && uploadedFiles.length >= maxFiles;
+    isObsoleted || (maxFiles !== undefined && uploadedFiles.length >= maxFiles);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -245,10 +247,18 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleRemoveFile(uploadedFile.id);
+                              if (!isObsoleted) {
+                                handleRemoveFile(uploadedFile.id);
+                              }
                             }}
-                            className="p-1 hover:bg-red-50 rounded transition-colors"
-                            title="Remove"
+                            disabled={isObsoleted}
+                            className={cn(
+                              "p-1 rounded transition-colors",
+                              isObsoleted
+                                ? "cursor-not-allowed opacity-50"
+                                : "hover:bg-red-50"
+                            )}
+                            title={isObsoleted ? "Cannot remove file when obsoleted" : "Remove"}
                           >
                             <X className="h-3.5 w-3.5 text-slate-400 hover:text-red-600" />
                           </button>
@@ -318,16 +328,20 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                           : "text-slate-400"
                     )} />
                     <h4 className="text-base lg:text-lg font-semibold text-slate-900 mb-2">
-                      {isMaxFilesReached 
-                        ? `Maximum ${maxFiles} file${maxFiles > 1 ? 's' : ''} uploaded`
-                        : isDragging 
-                          ? "Drop files here" 
-                          : "Drop files here or click to browse"}
+                      {isObsoleted
+                        ? "Document is obsoleted"
+                        : isMaxFilesReached 
+                          ? `Maximum ${maxFiles} file${maxFiles! > 1 ? 's' : ''} uploaded`
+                          : isDragging 
+                            ? "Drop files here" 
+                            : "Drop files here or click to browse"}
                     </h4>
                     <p className="text-xs lg:text-sm text-slate-600 mb-4 lg:mb-6">
-                      {isMaxFilesReached
-                        ? "Remove existing file to upload a new one"
-                        : "Support for PDF, DOCX, DOC, and other document formats"}
+                      {isObsoleted
+                        ? "File upload is disabled for obsoleted documents"
+                        : isMaxFilesReached
+                          ? "Remove existing file to upload a new one"
+                          : "Support for PDF, DOCX, DOC, and other document formats"}
                     </p>
                     <input
                       ref={fileInputRef}

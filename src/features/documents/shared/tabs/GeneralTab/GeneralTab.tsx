@@ -110,6 +110,9 @@ interface GeneralTabProps {
   hideTemplateCheckbox?: boolean;
   suggestedDocumentCode?: string; // Suggested code from parent document
   isSaved?: boolean; // Whether the document has been saved - shows additional options when true
+  documentNumber?: string; // Auto-generated document number
+  createdDateTime?: string; // Auto-generated created date/time
+  openedBy?: string; // Auto-generated opened by user
   onReviewersChange?: (reviewers: Reviewer[]) => void; // Callback when reviewers are added/changed
   onApproversChange?: (approvers: Approver[]) => void; // Callback when approvers are added/changed
   // Action button callbacks - for duplicate buttons at bottom
@@ -130,6 +133,9 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
   hideTemplateCheckbox = false,
   suggestedDocumentCode = "",
   isSaved = true, // Default to true for backwards compatibility with existing views
+  documentNumber = "",
+  createdDateTime = "",
+  openedBy = "",
   onReviewersChange,
   onApproversChange,
   onCancel,
@@ -204,10 +210,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <input
             type="text"
-            value={""}
+            value={documentNumber}
             readOnly
-            className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
-            placeholder="Auto-generated after save"
+            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            placeholder="Auto-generated after Next Step"
           />
         </div>
 
@@ -218,10 +224,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <input
             type="text"
-            value={""}
+            value={createdDateTime}
             readOnly
-            className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
-            placeholder="Auto-generated after save"
+            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            placeholder="Auto-generated after Next Step"
           />
         </div>
 
@@ -232,10 +238,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <input
             type="text"
-            value={""}
+            value={openedBy}
             readOnly
-            className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
-            placeholder="Auto-generated after save"
+            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-md text-sm text-slate-700"
+            placeholder="Auto-generated after Next Step"
           />
         </div>
 
@@ -263,7 +269,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <MultiSelect
             value={formData.author}
-            onChange={(values) => setFormData({ author: values })}
+            onChange={(values) => !isObsoleted && setFormData({ author: values })}
             options={[
               { label: "Shani Rosenbilt", value: "Shani Rosenbilt" },
               { label: "John Smith", value: "John Smith" },
@@ -273,6 +279,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             enableSearch={true}
             placeholder="Select authors..."
             maxVisibleTags={2}
+            disabled={isObsoleted}
           />
         </div>
 
@@ -281,14 +288,18 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           <div className="flex items-center gap-3">
             <label
               htmlFor="isTemplate"
-              className="text-sm font-medium text-slate-700 cursor-pointer"
+              className={cn(
+                "text-sm font-medium text-slate-700",
+                !isObsoleted && "cursor-pointer"
+              )}
             >
               Is Template?
             </label>
             <Checkbox
               id="isTemplate"
               checked={formData.isTemplate}
-              onChange={(checked) => setFormData({ isTemplate: checked })}
+              onChange={(checked) => !isObsoleted && setFormData({ isTemplate: checked })}
+              disabled={isObsoleted}
             />
           </div>
         )}
@@ -300,7 +311,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <Select
             value={formData.businessUnit}
-            onChange={(value) => setFormData({ businessUnit: value })}
+            onChange={(value) => !isObsoleted && setFormData({ businessUnit: value })}
             options={[
               { label: "Operation Unit", value: "Operation Unit" },
               { label: "QA Unit", value: "QA Unit" },
@@ -308,6 +319,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               { label: "HR Unit", value: "HR Unit" },
             ]}
             enableSearch={true}
+            disabled={isObsoleted}
           />
         </div>
 
@@ -319,9 +331,13 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           <input
             type="text"
             value={formData.title}
-            onChange={(e) => setFormData({ title: e.target.value })}
+            onChange={(e) => !isObsoleted && setFormData({ title: e.target.value })}
             placeholder="Enter document name"
-            className="w-full h-11 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+            disabled={isObsoleted}
+            className={cn(
+              "w-full h-11 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              isObsoleted && "bg-slate-100 cursor-not-allowed"
+            )}
           />
         </div>
 
@@ -332,7 +348,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <Select
             value={formData.department}
-            onChange={(value) => setFormData({ department: value })}
+            onChange={(value) => !isObsoleted && setFormData({ department: value })}
             options={[
               {
                 label: "Human Resources & Administrator",
@@ -343,6 +359,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               { label: "Quality Assurance", value: "Quality Assurance" },
             ]}
             enableSearch={true}
+            disabled={isObsoleted}
           />
         </div>
 
@@ -354,9 +371,13 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           <input
             type="text"
             value={formData.knowledgeBase}
-            onChange={(e) => setFormData({ knowledgeBase: e.target.value })}
+            onChange={(e) => !isObsoleted && setFormData({ knowledgeBase: e.target.value })}
             placeholder="Enter knowledge base"
-            className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+            disabled={isObsoleted}
+            className={cn(
+              "w-full h-11 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              isObsoleted && "bg-slate-100 cursor-not-allowed"
+            )}
           />
         </div>
 
@@ -367,13 +388,14 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <Select
             value={formData.type}
-            onChange={(value) => setFormData({ type: value as DocumentType })}
+            onChange={(value) => !isObsoleted && setFormData({ type: value as DocumentType })}
             options={DOCUMENT_TYPES.map((type) => ({
               label: type,
               value: type,
             }))}
             enableSearch={true}
             placeholder="Select document type..."
+            disabled={isObsoleted}
           />
         </div>
 
@@ -382,7 +404,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           <label className="text-sm font-medium text-slate-700">Sub-Type</label>
           <Select
             value={formData.subType}
-            onChange={(value) => setFormData({ subType: value })}
+            onChange={(value) => !isObsoleted && setFormData({ subType: value })}
             options={[
               { label: "-- None --", value: "" },
               { label: "Template", value: "Template" },
@@ -391,6 +413,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             ]}
             enableSearch={true}
             placeholder="Select sub-type..."
+            disabled={isObsoleted}
           />
         </div>
 
@@ -404,12 +427,16 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             type="number"
             value={formData.periodicReviewCycle || ""}
             onChange={(e) =>
-              setFormData({
+              !isObsoleted && setFormData({
                 periodicReviewCycle: parseInt(e.target.value) || 0,
               })
             }
             placeholder="Enter review cycle in months"
-            className="w-full h-11 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+            disabled={isObsoleted}
+            className={cn(
+              "w-full h-11 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              isObsoleted && "bg-slate-100 cursor-not-allowed"
+            )}
           />
         </div>
 
@@ -423,19 +450,23 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             type="number"
             value={formData.periodicReviewNotification || ""}
             onChange={(e) =>
-              setFormData({
+              !isObsoleted && setFormData({
                 periodicReviewNotification: parseInt(e.target.value) || 0,
               })
             }
             placeholder="Enter notification days before review"
-            className="w-full h-11 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+            disabled={isObsoleted}
+            className={cn(
+              "w-full h-11 px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              isObsoleted && "bg-slate-100 cursor-not-allowed"
+            )}
           />
         </div>
 
         {/* Effective Date (read-only, auto-generated) */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-slate-700">
-            Effective Date (yyyy-MM-dd)
+            Effective Date (dd/MM/yyyy)
           </label>
           <input
             type="text"
@@ -448,7 +479,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
         {/* Valid Until (read-only, auto-generated) */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-slate-700">
-            Valid Until (yyyy-MM-dd)
+            Valid Until (dd/MM/yyyy)
           </label>
           <input
             type="text"
@@ -464,12 +495,13 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           <label className="text-sm font-medium text-slate-700">Language</label>
           <Select
             value={formData.language}
-            onChange={(value) => setFormData({ language: value })}
+            onChange={(value) => !isObsoleted && setFormData({ language: value })}
             options={[
               { label: "English", value: "English" },
               { label: "Vietnamese", value: "Vietnamese" },
             ]}
             enableSearch={false}
+            disabled={isObsoleted}
           />
         </div>
 
@@ -480,8 +512,9 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <DateTimePicker
             value={formData.reviewDate || ""}
-            onChange={(value) => setFormData({ reviewDate: value })}
+            onChange={(value) => !isObsoleted && setFormData({ reviewDate: value })}
             placeholder="Select review date"
+            disabled={isObsoleted}
           />
         </div>
 
@@ -492,10 +525,14 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </label>
           <textarea
             value={formData.description}
-            onChange={(e) => setFormData({ description: e.target.value })}
+            onChange={(e) => !isObsoleted && setFormData({ description: e.target.value })}
             placeholder="Enter document description"
             rows={4}
-            className="w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
+            disabled={isObsoleted}
+            className={cn(
+              "w-full px-3 py-2 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
+              isObsoleted && "bg-slate-100 cursor-not-allowed"
+            )}
           />
         </div>
 
@@ -503,8 +540,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           {!isSaved && (
             <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
               <p className="text-sm text-amber-800">
-                <span className="font-medium">💡 Tip:</span> Save the document
-                first to add Reviewers, Approvers, and Related Documents.
+                <span className="font-medium">💡 Tip:</span> Click "Next Step" to create the document and generate Document Number. You can then add Reviewers, Approvers, and Related Documents.
               </p>
             </div>
           )}
@@ -537,15 +573,15 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               </Button>
             )}
 
-            {/* Save button - always shown */}
+            {/* Save/Next Step button - always shown but disabled when obsoleted */}
             {onSave && (
               <Button
                 onClick={onSave}
-                disabled={!canSave || isSaving}
+                disabled={isObsoleted || !canSave || isSaving}
                 size="sm"
                 className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
               >
-                {isSaving ? "Saving..." : "Save"}
+                {isSaving ? (isSaved ? "Saving..." : "Processing...") : (isSaved ? "Save" : "Next Step")}
               </Button>
             )}
 
