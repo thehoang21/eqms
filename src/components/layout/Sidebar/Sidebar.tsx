@@ -46,6 +46,12 @@ interface HoverMenuState {
   expandedSubItems: string[];
 }
 
+interface TooltipState {
+  isVisible: boolean;
+  label: string;
+  position: { top: number; left: number };
+}
+
 export const Sidebar: React.FC<SidebarProps> = React.memo(({
   isCollapsed,
   activeId,
@@ -60,6 +66,11 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
     item: null,
     position: { top: 0, left: 0, showAbove: false },
     expandedSubItems: []
+  });
+  const [tooltip, setTooltip] = useState<TooltipState>({
+    isVisible: false,
+    label: '',
+    position: { top: 0, left: 0 }
   });
 
   // Auto-expand parent items when activeId changes
@@ -221,6 +232,26 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
     }
   }, [isCollapsed, onNavigate, onClose]);
 
+  // Handle tooltip show
+  const handleTooltipShow = useCallback((label: string, event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!isCollapsed) return;
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltip({
+      isVisible: true,
+      label,
+      position: {
+        top: rect.top + rect.height / 2,
+        left: rect.right + 8
+      }
+    });
+  }, [isCollapsed]);
+
+  // Handle tooltip hide
+  const handleTooltipHide = useCallback(() => {
+    setTooltip(prev => ({ ...prev, isVisible: false }));
+  }, []);
+
   // Memoized menu item renderer
   const renderMenuItem = useCallback((item: NavItem, level: number = 0) => {
     const hasChildren = Boolean(item.children?.length);
@@ -247,6 +278,8 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
               handleItemClick(item);
             }
           }}
+          onMouseEnter={(e) => level === 0 && handleTooltipShow(item.label, e)}
+          onMouseLeave={handleTooltipHide}
           className={cn(
             "w-full flex items-center group relative overflow-visible z-10 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/20",
             `transition-all duration-200 ease-in-out`,
@@ -351,7 +384,27 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         )}
       </div>
     );
-  }, [expandedItems, activeId, isCollapsed, toggleExpand, handleItemClick , handleMenuItemClick, hoverMenu.isOpen, hoverMenu.item, setHoverMenu, onNavigate, onClose]);
+  }, [expandedItems, activeId, isCollapsed, toggleExpand, handleItemClick, handleMenuItemClick, handleTooltipShow, handleTooltipHide, hoverMenu.isOpen, hoverMenu.item, setHoverMenu, onNavigate, onClose]);
+
+  // Tooltip portal component
+  const TooltipPortal = () => {
+    if (!tooltip.isVisible || !isCollapsed) return null;
+
+    return createPortal(
+      <div
+        className="fixed z-[60] px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-md whitespace-nowrap pointer-events-none shadow-lg animate-in fade-in duration-150"
+        style={{
+          top: `${tooltip.position.top}px`,
+          left: `${tooltip.position.left}px`,
+          transform: 'translateY(-50%)',
+        }}
+      >
+        {tooltip.label}
+        <div className="absolute right-full top-1/2 -translate-y-1/2 border-[6px] border-transparent border-r-slate-900" />
+      </div>,
+      document.body
+    );
+  };
 
   // Handle hover menu sub-item click
   const handleSubItemClick = useCallback((item: NavItem, hasChildren: boolean) => {
@@ -484,6 +537,9 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
 
   return (
     <>
+      {/* Tooltip Portal */}
+      <TooltipPortal />
+
       {/* Hover Menu Portal */}
       <HoverMenuPortal />
 

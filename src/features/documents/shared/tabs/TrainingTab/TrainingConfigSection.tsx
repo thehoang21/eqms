@@ -1,5 +1,5 @@
 import React from "react";
-import { Settings, BookOpen, ClipboardCheck } from "lucide-react";
+import { Settings, BookOpen, ClipboardCheck, HelpCircle } from "lucide-react";
 import { TrainingConfig } from "./types";
 import { cn } from '@/components/ui/utils';
 
@@ -134,13 +134,22 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Due Date (Days)</label>
+                        <div className="relative group inline-block">
+                            <label className="text-sm font-medium text-slate-700 inline-flex items-center gap-1.5 cursor-help">
+                                Training Period (Days)
+                            </label>
+                            {/* Tooltip */}
+                            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 absolute bottom-full left-0 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg shadow-lg z-50 w-64 pointer-events-none">
+                                Training Period duration after which the Document Revision will automatically progress to the Ready for Publishing status
+                                <div className="absolute top-full left-4 -mt-1 border-4 border-transparent border-t-slate-900"></div>
+                            </div>
+                        </div>
                         <div className="relative">
                             <input
                                 type="number"
                                 min="1"
-                                value={config.deadlineDays}
-                                onChange={(e) => onUpdate({ deadlineDays: parseInt(e.target.value) || 1 })}
+                                value={config.trainingPeriodDays}
+                                onChange={(e) => onUpdate({ trainingPeriodDays: parseInt(e.target.value) || 1 })}
                                 className="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                             />
                         </div>

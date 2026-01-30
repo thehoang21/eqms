@@ -1,58 +1,26 @@
 import React, { useState, useEffect, useRef, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search } from 'lucide-react';
-import { cn } from '../utils'; // Đảm bảo đường dẫn này đúng trong project của bạn
+import { cn } from '../utils';
 
-/**
- * Option type for Select component
- */
 export interface SelectOption {
   label: string;
   value: string | number;
   icon?: React.ReactNode;
 }
 
-/**
- * Custom Select component with search functionality and portal rendering
- * 
- * @example
- * ```tsx
- * <Select
- *   label="Status"
- *   value={status}
- *   onChange={setStatus}
- *   options={[
- *     { label: "Draft", value: "draft" },
- *     { label: "Active", value: "active" }
- *   ]}
- *   enableSearch
- * />
- * ```
- */
 export interface SelectProps {
-  /** Label displayed above select */
   label?: string;
-  /** Current selected value */
   value: string | number;
-  /** Callback when value changes */
   onChange: (value: any) => void;
-  /** Array of selectable options */
   options: SelectOption[];
-  /** Placeholder text when no value selected */
   placeholder?: string;
-  /** Placeholder for search input */
   searchPlaceholder?: string;
-  /** Additional CSS classes */
   className?: string;
-  /** CSS classes for trigger button */
   triggerClassName?: string;
-  /** Enable search functionality */
   enableSearch?: boolean;
-  /** Disable the select */
   disabled?: boolean;
-  /** Maximum visible rows in dropdown (default: 4) */
   maxVisibleRows?: number;
-  /** Height of each row in pixels (default: 44) */
   rowHeight?: number;
 }
 
@@ -67,36 +35,18 @@ export const Select: React.FC<SelectProps> = ({
   triggerClassName,
   enableSearch = true,
   disabled = false,
-  maxVisibleRows = 4, // 1. Mặc định hiển thị tối đa 4 dòng
-  rowHeight = 44,    // 2. Chiều cao chuẩn mỗi dòng
+  maxVisibleRows = 5,
+  rowHeight = 40,
 }) => {
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [inputMode, setInputMode] = useState(false);
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+  const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const triggerInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const isInteractingWithSearchRef = useRef(false);
-
-  // Listen for custom event to close other dropdowns
-  useEffect(() => {
-    const handleCloseOtherDropdowns = (event: CustomEvent<{ openId: string }>) => {
-      if (event.detail.openId !== selectId && isOpen) {
-        setIsOpen(false);
-        setInputMode(false);
-        setSearchQuery("");
-      }
-    };
-
-    window.addEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
-    return () => {
-      window.removeEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
-    };
-  }, [selectId, isOpen]);
 
   const filteredOptions = enableSearch
     ? options.filter((opt) =>
@@ -106,222 +56,111 @@ export const Select: React.FC<SelectProps> = ({
 
   const selectedOption = options.find((opt) => opt.value === value);
 
-  // Lock body scroll khi dropdown mở
-  useEffect(() => {
-    if (isOpen) {
-      const scrollY = window.scrollY;
-      const body = document.body;
-      
-      body.style.position = 'fixed';
-      body.style.top = `-${scrollY}px`;
-      body.style.width = '100%';
-      body.style.overflowY = 'scroll';
-      
-      return () => {
-        body.style.position = '';
-        body.style.top = '';
-        body.style.width = '';
-        body.style.overflowY = '';
-        window.scrollTo(0, scrollY);
-      };
-    }
-  }, [isOpen]);
-
-  // Recalculate position khi filtered options thay đổi (khi search)
-  useEffect(() => {
-    if (isOpen && triggerRef.current) {
+  // Calculate dropdown position
+  const updatePosition = () => {
+    if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
-      const safeMargin = 8; // Safe margin from viewport edges
-      
-      const searchHeight = enableSearch ? 50 : 0;
-      const estimatedDropdownHeight = Math.min(
-        filteredOptions.length * rowHeight,
-        maxVisibleRows * rowHeight
-      ) + searchHeight + 8;
-      
-      const spaceBelow = viewportHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
-      
-      // Calculate horizontal position - always match trigger width
-      let leftPosition = rect.left;
-      const dropdownWidth = rect.width;
-      
-      // Ensure dropdown doesn't overflow right edge
-      if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
-        leftPosition = viewportWidth - dropdownWidth - safeMargin;
-      }
-      // Ensure dropdown doesn't overflow left edge
-      if (leftPosition < safeMargin) {
-        leftPosition = safeMargin;
-      }
-      
-      setDropdownStyle({
-        position: 'fixed',
-        top: shouldOpenUpward ? undefined : rect.bottom + 4,
-        bottom: shouldOpenUpward ? viewportHeight - rect.top + 4 : undefined,
-        left: leftPosition,
-        width: dropdownWidth,
-        zIndex: 9999,
-        maxHeight: shouldOpenUpward 
-          ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
-          : `${Math.min(spaceBelow - 8, estimatedDropdownHeight)}px`,
+      setPosition({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
       });
     }
-  }, [isOpen, filteredOptions.length, enableSearch, rowHeight, maxVisibleRows]);
+  };
 
-  // Xử lý click ra ngoài để đóng dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      const target = event.target as Node;
-      
-      if (dropdownRef.current && dropdownRef.current.contains(target)) {
-        return;
-      }
-      
-      if (containerRef.current && containerRef.current.contains(target)) {
-        return;
-      }
-      
-      setIsOpen(false);
-      setInputMode(false);
-      setSearchQuery("");
-    };
-    
-    if (isOpen) {
-      // Use setTimeout to avoid catching the initial click that opened the dropdown
-      const timer = setTimeout(() => {
-        // Only use mousedown for desktop - avoid touch events that conflict with iOS input
-        document.addEventListener("mousedown", handleClickOutside);
-      }, 100); // Increased timeout for iOS
-      
-      return () => {
-        clearTimeout(timer);
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
-  }, [isOpen]);
+  // Handle open/close
+  const handleOpen = () => {
+    if (disabled) return;
+    updatePosition();
+    setIsOpen(true);
+    setSearchQuery("");
+  };
 
-  // Xử lý scroll/resize window - đóng dropdown khi scroll bên ngoài
+  const handleClose = () => {
+    setIsOpen(false);
+    setSearchQuery("");
+  };
+
+  const handleSelect = (optionValue: string | number) => {
+    onChange(optionValue);
+    handleClose();
+  };
+
+  // Close on click outside
   useEffect(() => {
-    const handleScroll = (e: Event) => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-      
-      // Cho phép scroll bên trong dropdown
-      if (dropdownRef.current) {
-        // Kiểm tra xem scroll có xảy ra trong dropdown không
-        if (dropdownRef.current === target || dropdownRef.current.contains(target)) {
-          return;
-        }
+      if (
+        containerRef.current?.contains(target) ||
+        dropdownRef.current?.contains(target)
+      ) {
+        return;
       }
-      
-      // Đóng dropdown khi scroll bên ngoài (window scroll hoặc scroll trong element khác)
-      if (isOpen) {
-        setIsOpen(false);
-        setInputMode(false);
-        setSearchQuery("");
-      }
+      handleClose();
     };
 
-    const handleResize = () => {
-      if (isOpen) {
-        setIsOpen(false);
-        setInputMode(false);
-        setSearchQuery("");
-      }
-    };
-
-    if (isOpen) {
-      // Chỉ lắng nghe scroll trên window, không capture
-      window.addEventListener('scroll', handleScroll, false);
-      window.addEventListener('resize', handleResize);
-    }
+    // Delay to avoid catching the opening click
+    const timer = setTimeout(() => {
+      document.addEventListener('mousedown', handleClickOutside);
+    }, 10);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll, false);
-      window.removeEventListener('resize', handleResize);
+      clearTimeout(timer);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
 
-  // Auto focus trigger input khi vào input mode
+  // Focus search input when opened
   useEffect(() => {
-    if (inputMode && enableSearch && triggerInputRef.current) {
-      const focusTimeout = setTimeout(() => {
-        if (triggerInputRef.current && inputMode) {
-          triggerInputRef.current.focus();
-          triggerInputRef.current.select();
-        }
+    if (isOpen && enableSearch && searchInputRef.current) {
+      const timer = setTimeout(() => {
+        searchInputRef.current?.focus();
       }, 100);
-
-      return () => clearTimeout(focusTimeout);
+      return () => clearTimeout(timer);
     }
-  }, [inputMode, enableSearch]);
+  }, [isOpen, enableSearch]);
 
-  // Tính toán vị trí dropdown với smart positioning
-  const handleToggle = () => {
-    if (disabled) return;
-    
-    window.dispatchEvent(new CustomEvent('select-dropdown-open', { detail: { openId: selectId } }));
-    
-    if (!isOpen) {
-      if (enableSearch) {
-        setInputMode(true);
+  // Update position on scroll/resize
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleScrollOrResize = () => {
+      updatePosition();
+    };
+
+    window.addEventListener('scroll', handleScrollOrResize, true);
+    window.addEventListener('resize', handleScrollOrResize);
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollOrResize, true);
+      window.removeEventListener('resize', handleScrollOrResize);
+    };
+  }, [isOpen]);
+
+  // Close other dropdowns
+  useEffect(() => {
+    const handleCloseOthers = (e: CustomEvent<{ id: string }>) => {
+      if (e.detail.id !== selectId && isOpen) {
+        handleClose();
       }
-      
-      if (triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
-      const safeMargin = 8; // Safe margin from viewport edges
-      
-      // Tính toán ước lượng chiều cao dropdown
-      const searchHeight = enableSearch ? 50 : 0; // Search input + padding
-      const estimatedDropdownHeight = Math.min(
-        filteredOptions.length * rowHeight,
-        maxVisibleRows * rowHeight
-      ) + searchHeight + 8; // +8 for padding
-      
-      // Kiểm tra có đủ không gian phía dưới không
-      const spaceBelow = viewportHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      
-      // Quyết định mở lên trên hay xuống dưới
-      const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
-      
-      // Calculate horizontal position - always match trigger width
-      let leftPosition = rect.left;
-      const dropdownWidth = rect.width;
-      
-      // Ensure dropdown doesn't overflow right edge
-      if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
-        leftPosition = viewportWidth - dropdownWidth - safeMargin;
-      }
-      // Ensure dropdown doesn't overflow left edge
-      if (leftPosition < safeMargin) {
-        leftPosition = safeMargin;
-      }
-      
-      setDropdownStyle({
-        position: 'fixed',
-        top: shouldOpenUpward ? undefined : rect.bottom + 4,
-        bottom: shouldOpenUpward ? viewportHeight - rect.top + 4 : undefined,
-        left: leftPosition,
-        width: dropdownWidth,
-        zIndex: 9999,
-        maxHeight: shouldOpenUpward 
-          ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
-          : `${Math.min(spaceBelow - 8, estimatedDropdownHeight)}px`,
-      });
-      }
+    };
+    window.addEventListener('select-open' as any, handleCloseOthers);
+    return () => window.removeEventListener('select-open' as any, handleCloseOthers);
+  }, [selectId, isOpen]);
+
+  const handleTriggerClick = () => {
+    if (isOpen) {
+      handleClose();
     } else {
-      setInputMode(false);
-      setSearchQuery("");
+      window.dispatchEvent(new CustomEvent('select-open', { detail: { id: selectId } }));
+      handleOpen();
     }
-    
-    setIsOpen(!isOpen);
   };
+
+  const searchHeight = enableSearch ? 56 : 0;
+  const dropdownMaxHeight = maxVisibleRows * rowHeight + searchHeight + 8;
 
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
@@ -330,176 +169,99 @@ export const Select: React.FC<SelectProps> = ({
           {label}
         </label>
       )}
-      
-      {/* Trigger - Input or Button */}
-      <div className="relative">
-        {enableSearch && inputMode ? (
-          <div className="relative">
-            <input
-              ref={triggerInputRef}
-              type="text"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                if (!isOpen) setIsOpen(true);
-              }}
-              onFocus={() => {
-                if (!isOpen) setIsOpen(true);
-              }}
-              onTouchStart={(e) => {
-                e.stopPropagation();
-              }}
-              placeholder={selectedOption?.label || placeholder}
-              disabled={disabled}
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              className={cn(
-                "flex w-full items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-base md:text-sm transition-all duration-200",
-                "placeholder:text-slate-400 focus:outline-none",
-                "h-11 pr-8",
-                disabled
-                  ? "bg-slate-50 cursor-not-allowed opacity-60"
-                  : "ring-1 ring-emerald-500 border-emerald-500",
-                triggerClassName
-              )}
-              style={{
-                WebkitTapHighlightColor: 'transparent',
-                touchAction: 'manipulation',
-              }}
-            />
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 text-slate-400 transition-transform duration-200 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none",
-                isOpen && "rotate-180"
-              )}
-            />
-          </div>
-        ) : (
-          <button
-            ref={triggerRef}
-            type="button"
-            onClick={handleToggle}
-            disabled={disabled}
-            className={cn(
-              "flex w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200",
-              "placeholder:text-slate-400 focus:outline-none",
-              "h-11",
-              disabled
-                ? "bg-slate-50 cursor-not-allowed opacity-60"
-                : isOpen
-                ? "ring-1 ring-emerald-500 border-emerald-500"
-                : "hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
-              triggerClassName
-            )}
-          >
-            <div className="flex items-center gap-2 truncate text-slate-900">
-              {selectedOption?.icon}
-              <span className={cn("truncate", !selectedOption && "text-slate-500")}>
-                {selectedOption ? selectedOption.label : placeholder}
-              </span>
-            </div>
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 text-slate-400 transition-transform duration-200 shrink-0",
-                isOpen && "rotate-180"
-              )}
-            />
-          </button>
-        )}
-      </div>
 
-      {/* Dropdown Portal */}
+      {/* Trigger */}
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={handleTriggerClick}
+        disabled={disabled}
+        className={cn(
+          "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2.5 text-sm transition-colors",
+          "h-11 min-h-[44px]",
+          disabled
+            ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200"
+            : isOpen
+            ? "border-emerald-500 ring-2 ring-emerald-500/20"
+            : "border-slate-300 hover:border-slate-400",
+          triggerClassName
+        )}
+      >
+        <span className={cn("truncate", selectedOption ? "text-slate-900" : "text-slate-500")}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 text-slate-400 transition-transform shrink-0 ml-2",
+            isOpen && "rotate-180"
+          )}
+        />
+      </button>
+
+      {/* Dropdown */}
       {isOpen && createPortal(
-        <>
-          {/* Invisible backdrop for iOS touch handling */}
+        <div
+          ref={dropdownRef}
+          className="fixed bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150"
+          style={{
+            top: position.top,
+            left: position.left,
+            width: position.width,
+            zIndex: 50,
+            maxHeight: dropdownMaxHeight,
+          }}
+        >
+          {/* Search */}
+          {enableSearch && (
+            <div className="p-2 border-b border-slate-100">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={searchPlaceholder}
+                  className="w-full h-10 pl-9 pr-3 text-[16px] sm:text-sm bg-slate-50 border border-slate-200 rounded-md outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Options */}
           <div 
-            className="fixed inset-0"
-            style={{ zIndex: 9998 }}
-            onMouseDown={(e) => {
-              // Chỉ đóng khi click trực tiếp vào backdrop
-              if (e.target === e.currentTarget) {
-                setIsOpen(false);
-                setInputMode(false);
-                setSearchQuery("");
-              }
-            }}
-            onTouchStart={(e) => {
-              // Chỉ đóng khi touch trực tiếp vào backdrop
-              if (e.target === e.currentTarget) {
-                e.preventDefault();
-                setIsOpen(false);
-                setInputMode(false);
-                setSearchQuery("");
-              }
-            }}
-            aria-hidden="true"
-          />
-          <div 
-            ref={dropdownRef}
-            style={dropdownStyle}
-            className={cn(
-              "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden",
-              "animate-in fade-in duration-100",
-              dropdownStyle.bottom !== undefined 
-                ? "slide-in-from-bottom-2" 
-                : "slide-in-from-top-2 zoom-in-95"
-            )}
-            onTouchStart={(e) => {
-              // Ngăn backdrop xử lý touch events cho dropdown
-              e.stopPropagation();
-            }}
-            onClick={(e) => {
-              // Ngăn backdrop xử lý click events cho dropdown
-              e.stopPropagation();
-            }}
-          >
-          <div
-            className="overflow-y-auto p-1 custom-scrollbar"
-            style={{ 
-              maxHeight: `${maxVisibleRows * rowHeight}px`,
-              WebkitOverflowScrolling: 'touch' as any // Enable momentum scrolling on iOS
-            }}
+            className="overflow-y-auto overscroll-contain"
+            style={{ maxHeight: maxVisibleRows * rowHeight }}
           >
             {filteredOptions.length === 0 ? (
-              <div className="py-6 text-center text-sm text-slate-500">
-                No results found.
+              <div className="py-8 text-center text-sm text-slate-500">
+                No results found
               </div>
             ) : (
               filteredOptions.map((option) => (
-                <div
+                <button
                   key={option.value}
-                  onClick={() => {
-                    onChange(option.value);
-                    setIsOpen(false);
-                    setInputMode(false);
-                    setSearchQuery("");
-                  }}
-                  style={{ 
-                    height: rowHeight,
-                    WebkitTapHighlightColor: 'transparent',
-                  }} 
+                  type="button"
+                  onClick={() => handleSelect(option.value)}
                   className={cn(
-                    "relative flex w-full cursor-pointer select-none items-center rounded-sm px-4 text-sm outline-none transition-colors",
-                    value === option.value
-                      ? "bg-emerald-50 text-emerald-700 font-medium"
-                      : "text-slate-900 hover:bg-slate-50"
+                    "flex w-full items-center px-3 text-sm transition-colors",
+                    "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
+                    value === option.value && "bg-emerald-50 text-emerald-700"
                   )}
+                  style={{ height: rowHeight }}
                 >
-                  <div className="flex items-center gap-2 flex-1 truncate">
-                    {option.icon}
-                    <span className="truncate">{option.label}</span>
-                  </div>
+                  <span className="flex-1 text-left truncate">{option.label}</span>
                   {value === option.value && (
-                    <Check className="h-4 w-4 text-emerald-600 ml-2 shrink-0" />
+                    <Check className="h-4 w-4 text-emerald-600 shrink-0 ml-2" />
                   )}
-                </div>
+                </button>
               ))
             )}
           </div>
-        </div>
-        </>,
+        </div>,
         document.body
       )}
     </div>

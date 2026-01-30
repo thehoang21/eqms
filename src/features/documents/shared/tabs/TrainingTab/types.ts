@@ -21,6 +21,6 @@ export interface TrainingConfig {
     trainingType: TrainingType;
     passingScore: number;
     maxAttempts: number;
-    deadlineDays: number;
+    trainingPeriodDays: number;
     questions: Question[];
 }

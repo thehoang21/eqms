@@ -13,7 +13,7 @@ export const TrainingTab: React.FC = () => {
         trainingType: "test_certification",
         passingScore: 7,
         maxAttempts: 3,
-        deadlineDays: 7,
+        trainingPeriodDays: 7,
         questions: []
     });
 

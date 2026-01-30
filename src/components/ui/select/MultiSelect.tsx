@@ -3,59 +3,25 @@ import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search, X } from 'lucide-react';
 import { cn } from '../utils';
 
-/**
- * Option type for MultiSelect component
- */
 export interface MultiSelectOption {
   label: string;
   value: string | number;
   icon?: React.ReactNode;
 }
 
-/**
- * Custom MultiSelect component with search functionality and portal rendering
- * Allows selecting multiple options
- * 
- * @example
- * ```tsx
- * <MultiSelect
- *   label="Authors"
- *   value={authors}
- *   onChange={setAuthors}
- *   options={[
- *     { label: "John Doe", value: "john" },
- *     { label: "Jane Smith", value: "jane" }
- *   ]}
- *   enableSearch
- * />
- * ```
- */
 export interface MultiSelectProps {
-  /** Label displayed above select */
   label?: string;
-  /** Current selected values (array) */
   value: (string | number)[];
-  /** Callback when values change */
   onChange: (values: (string | number)[]) => void;
-  /** Array of selectable options */
   options: MultiSelectOption[];
-  /** Placeholder text when no value selected */
   placeholder?: string;
-  /** Placeholder for search input */
   searchPlaceholder?: string;
-  /** Additional CSS classes */
   className?: string;
-  /** CSS classes for trigger button */
   triggerClassName?: string;
-  /** Enable search functionality */
   enableSearch?: boolean;
-  /** Disable the select */
   disabled?: boolean;
-  /** Maximum visible rows in dropdown (default: 4) */
   maxVisibleRows?: number;
-  /** Height of each row in pixels (default: 44) */
   rowHeight?: number;
-  /** Maximum number of tags to show before "+X more" (default: 2) */
   maxVisibleTags?: number;
 }
 
@@ -70,37 +36,19 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   triggerClassName,
   enableSearch = true,
   disabled = false,
-  maxVisibleRows = 4,
-  rowHeight = 44,
+  maxVisibleRows = 5,
+  rowHeight = 40,
   maxVisibleTags = 2,
 }) => {
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [inputMode, setInputMode] = useState(false);
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+  const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const triggerInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const isInteractingWithSearchRef = useRef(false);
-
-  // Listen for custom event to close other dropdowns
-  useEffect(() => {
-    const handleCloseOtherDropdowns = (event: CustomEvent<{ openId: string }>) => {
-      if (event.detail.openId !== selectId && isOpen) {
-        setIsOpen(false);
-        setInputMode(false);
-        setSearchQuery("");
-      }
-    };
-
-    window.addEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
-    return () => {
-      window.removeEventListener('select-dropdown-open' as any, handleCloseOtherDropdowns);
-    };
-  }, [selectId, isOpen]);
 
   const filteredOptions = enableSearch
     ? options.filter((opt) =>
@@ -109,215 +57,32 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     : options;
 
   const selectedOptions = options.filter((opt) => value.includes(opt.value));
+  const visibleTags = selectedOptions.slice(0, maxVisibleTags);
+  const remainingCount = selectedOptions.length - maxVisibleTags;
 
-  // Lock body scroll khi dropdown mở
-  useEffect(() => {
-    if (isOpen) {
-      const scrollY = window.scrollY;
-      const body = document.body;
-      
-      body.style.position = 'fixed';
-      body.style.top = `-${scrollY}px`;
-      body.style.width = '100%';
-      body.style.overflowY = 'scroll';
-      
-      return () => {
-        body.style.position = '';
-        body.style.top = '';
-        body.style.width = '';
-        body.style.overflowY = '';
-        window.scrollTo(0, scrollY);
-      };
-    }
-  }, [isOpen]);
-
-  // Recalculate position khi filtered options thay đổi
-  useEffect(() => {
-    if (isOpen && triggerRef.current) {
+  // Calculate dropdown position
+  const updatePosition = () => {
+    if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
-      const safeMargin = 8;
-      
-      const searchHeight = enableSearch ? 50 : 0;
-      const estimatedDropdownHeight = Math.min(
-        filteredOptions.length * rowHeight,
-        maxVisibleRows * rowHeight
-      ) + searchHeight + 8;
-      
-      const spaceBelow = viewportHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
-      
-      // Always match trigger width
-      let leftPosition = rect.left;
-      const dropdownWidth = rect.width;
-      
-      // Ensure dropdown doesn't overflow right edge
-      if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
-        leftPosition = viewportWidth - dropdownWidth - safeMargin;
-      }
-      // Ensure dropdown doesn't overflow left edge
-      if (leftPosition < safeMargin) {
-        leftPosition = safeMargin;
-      }
-      
-      setDropdownStyle({
-        position: 'fixed',
-        top: shouldOpenUpward ? undefined : rect.bottom + 4,
-        bottom: shouldOpenUpward ? viewportHeight - rect.top + 4 : undefined,
-        left: leftPosition,
-        width: dropdownWidth,
-        zIndex: 9999,
-        maxHeight: shouldOpenUpward 
-          ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
-          : `${Math.min(spaceBelow - 8, estimatedDropdownHeight)}px`,
+      setPosition({
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
       });
     }
-  }, [isOpen, filteredOptions.length, enableSearch, rowHeight, maxVisibleRows]);
+  };
 
-  // Click outside handler
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      const target = event.target as Node;
-      
-      if (dropdownRef.current && dropdownRef.current.contains(target)) {
-        return;
-      }
-      
-      if (containerRef.current && containerRef.current.contains(target)) {
-        return;
-      }
-      
-      setIsOpen(false);
-      setInputMode(false);
-      setSearchQuery("");
-    };
-    
-    if (isOpen) {
-      // Use setTimeout to avoid catching the initial click that opened the dropdown
-      const timer = setTimeout(() => {
-        // Only use mousedown for desktop - avoid touch events that conflict with iOS input
-        document.addEventListener("mousedown", handleClickOutside);
-      }, 100); // Increased timeout for iOS
-      
-      return () => {
-        clearTimeout(timer);
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }
-  }, [isOpen]);
-
-  // Xử lý scroll/resize window - đóng dropdown khi scroll bên ngoài
-  useEffect(() => {
-    const handleScroll = (e: Event) => {
-      const target = e.target as Node;
-      
-      // Cho phép scroll bên trong dropdown
-      if (dropdownRef.current) {
-        // Kiểm tra xem scroll có xảy ra trong dropdown không
-        if (dropdownRef.current === target || dropdownRef.current.contains(target)) {
-          return;
-        }
-      }
-      
-      // Đóng dropdown khi scroll bên ngoài (window scroll hoặc scroll trong element khác)
-      if (isOpen) {
-        setIsOpen(false);
-        setInputMode(false);
-        setSearchQuery("");
-      }
-    };
-
-    const handleResize = () => {
-      if (isOpen) {
-        setIsOpen(false);
-        setInputMode(false);
-        setSearchQuery("");
-      }
-    };
-
-    if (isOpen) {
-      // Chỉ lắng nghe scroll trên window, không capture
-      window.addEventListener('scroll', handleScroll, false);
-      window.addEventListener('resize', handleResize);
-    }
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll, false);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [isOpen]);
-
-  // Auto focus trigger input khi vào input mode
-  useEffect(() => {
-    if (inputMode && enableSearch && triggerInputRef.current) {
-      const focusTimeout = setTimeout(() => {
-        if (triggerInputRef.current && inputMode) {
-          triggerInputRef.current.focus();
-          triggerInputRef.current.select();
-        }
-      }, 100);
-
-      return () => clearTimeout(focusTimeout);
-    }
-  }, [inputMode, enableSearch]);
-
-  const handleToggle = () => {
+  // Handle open/close
+  const handleOpen = () => {
     if (disabled) return;
-    
-    window.dispatchEvent(new CustomEvent('select-dropdown-open', { detail: { openId: selectId } }));
-    
-    if (!isOpen) {
-      if (enableSearch) {
-        setInputMode(true);
-      }
-      
-      if (triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
-      const safeMargin = 8;
-      
-      const searchHeight = enableSearch ? 50 : 0;
-      const estimatedDropdownHeight = Math.min(
-        filteredOptions.length * rowHeight,
-        maxVisibleRows * rowHeight
-      ) + searchHeight + 8;
-      
-      const spaceBelow = viewportHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      const shouldOpenUpward = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
-      
-      let leftPosition = rect.left;
-      const dropdownWidth = rect.width; // Always match trigger width
-      
-      // Ensure dropdown stays within viewport
-      if (leftPosition + dropdownWidth > viewportWidth - safeMargin) {
-        leftPosition = viewportWidth - dropdownWidth - safeMargin;
-      }
-      if (leftPosition < safeMargin) {
-        leftPosition = safeMargin;
-      }
-      
-      setDropdownStyle({
-        position: 'fixed',
-        top: shouldOpenUpward ? undefined : rect.bottom + 4,
-        bottom: shouldOpenUpward ? viewportHeight - rect.top + 4 : undefined,
-        left: leftPosition,
-        width: dropdownWidth,
-        zIndex: 9999,
-        maxHeight: shouldOpenUpward 
-          ? `${Math.min(spaceAbove - 8, estimatedDropdownHeight)}px`
-          : `${Math.min(spaceBelow - 8, estimatedDropdownHeight)}px`,
-      });
-      }
-    } else {
-      setInputMode(false);
-      setSearchQuery("");
-    }
-    
-    setIsOpen(!isOpen);
+    updatePosition();
+    setIsOpen(true);
+    setSearchQuery("");
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setSearchQuery("");
   };
 
   const handleToggleOption = (optionValue: string | number) => {
@@ -333,8 +98,81 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     onChange(value.filter(v => v !== optionValue));
   };
 
-  const visibleTags = selectedOptions.slice(0, maxVisibleTags);
-  const remainingCount = selectedOptions.length - maxVisibleTags;
+  // Close on click outside
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        containerRef.current?.contains(target) ||
+        dropdownRef.current?.contains(target)
+      ) {
+        return;
+      }
+      handleClose();
+    };
+
+    // Delay to avoid catching the opening click
+    const timer = setTimeout(() => {
+      document.addEventListener('mousedown', handleClickOutside);
+    }, 10);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Focus search input when opened
+  useEffect(() => {
+    if (isOpen && enableSearch && searchInputRef.current) {
+      const timer = setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, enableSearch]);
+
+  // Update position on scroll/resize
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleScrollOrResize = () => {
+      updatePosition();
+    };
+
+    window.addEventListener('scroll', handleScrollOrResize, true);
+    window.addEventListener('resize', handleScrollOrResize);
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollOrResize, true);
+      window.removeEventListener('resize', handleScrollOrResize);
+    };
+  }, [isOpen]);
+
+  // Close other dropdowns
+  useEffect(() => {
+    const handleCloseOthers = (e: CustomEvent<{ id: string }>) => {
+      if (e.detail.id !== selectId && isOpen) {
+        handleClose();
+      }
+    };
+    window.addEventListener('select-open' as any, handleCloseOthers);
+    return () => window.removeEventListener('select-open' as any, handleCloseOthers);
+  }, [selectId, isOpen]);
+
+  const handleTriggerClick = () => {
+    if (isOpen) {
+      handleClose();
+    } else {
+      window.dispatchEvent(new CustomEvent('select-open', { detail: { id: selectId } }));
+      handleOpen();
+    }
+  };
+
+  const searchHeight = enableSearch ? 56 : 0;
+  const dropdownMaxHeight = maxVisibleRows * rowHeight + searchHeight + 8;
 
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
@@ -343,197 +181,125 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           {label}
         </label>
       )}
-      
-      {/* Trigger - Input or Button */}
-      <div className="relative">
-        {enableSearch && inputMode ? (
-          <div className="relative">
-            <input
-              ref={triggerInputRef}
-              type="text"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                if (!isOpen) setIsOpen(true);
-              }}
-              onFocus={() => {
-                if (!isOpen) setIsOpen(true);
-              }}
-              onTouchStart={(e) => {
-                e.stopPropagation();
-              }}
-              placeholder={selectedOptions.length > 0 ? `${selectedOptions.length} selected` : placeholder}
-              disabled={disabled}
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              className={cn(
-                "flex w-full items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-base md:text-sm transition-all duration-200",
-                "placeholder:text-slate-400 focus:outline-none",
-                "h-11 pr-8",
-                disabled
-                  ? "bg-slate-50 cursor-not-allowed opacity-60"
-                  : "ring-1 ring-emerald-500 border-emerald-500",
-                triggerClassName
-              )}
-              style={{
-                WebkitTapHighlightColor: 'transparent',
-                touchAction: 'manipulation',
-              }}
-            />
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 text-slate-400 transition-transform duration-200 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none",
-                isOpen && "rotate-180"
-              )}
-            />
-          </div>
-        ) : (
-          <button
-            ref={triggerRef}
-            type="button"
-            onClick={handleToggle}
-            disabled={disabled}
-            className={cn(
-              "flex w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200",
-              "placeholder:text-slate-400 focus:outline-none",
-              "min-h-[44px]",
-              disabled
-                ? "bg-slate-50 cursor-not-allowed opacity-60"
-                : isOpen
-                ? "ring-1 ring-emerald-500 border-emerald-500"
-                : "hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
-              triggerClassName
-            )}
-          >
-            <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
-              {selectedOptions.length === 0 ? (
-                <span className="text-slate-500">{placeholder}</span>
-              ) : (
-                <>
-                  {visibleTags.map((option) => (
-                    <span
-                      key={option.value}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200"
-                    >
-                      {option.icon}
-                      <span className="truncate max-w-[120px]">{option.label}</span>
-                      <button
-                        type="button"
-                        onClick={(e) => handleRemoveTag(option.value, e)}
-                        className="hover:bg-emerald-100 rounded-sm p-0.5 transition-colors"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  ))}
-                  {remainingCount > 0 && (
-                    <span className="text-xs text-slate-600 font-medium">
-                      +{remainingCount} more
-                    </span>
-                  )}
-                </>
-              )}
-            </div>
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2",
-                isOpen && "rotate-180"
-              )}
-            />
-          </button>
-        )}
-      </div>
 
-      {/* Dropdown Portal */}
+      {/* Trigger */}
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={handleTriggerClick}
+        disabled={disabled}
+        className={cn(
+          "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm transition-colors",
+          "min-h-[44px]",
+          disabled
+            ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200"
+            : isOpen
+            ? "border-emerald-500 ring-2 ring-emerald-500/20"
+            : "border-slate-300 hover:border-slate-400",
+          triggerClassName
+        )}
+      >
+        <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
+          {selectedOptions.length === 0 ? (
+            <span className="text-slate-500">{placeholder}</span>
+          ) : (
+            <>
+              {visibleTags.map((option) => (
+                <span
+                  key={option.value}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200"
+                >
+                  <span className="truncate max-w-[100px]">{option.label}</span>
+                  <button
+                    type="button"
+                    onClick={(e) => handleRemoveTag(option.value, e)}
+                    className="hover:bg-emerald-100 rounded p-0.5"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+              {remainingCount > 0 && (
+                <span className="text-xs text-slate-500">+{remainingCount} more</span>
+              )}
+            </>
+          )}
+        </div>
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 text-slate-400 transition-transform shrink-0 ml-2",
+            isOpen && "rotate-180"
+          )}
+        />
+      </button>
+
+      {/* Dropdown */}
       {isOpen && createPortal(
-        <>
-          {/* Invisible backdrop for iOS touch handling */}
+        <div
+          ref={dropdownRef}
+          className="fixed bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150"
+          style={{
+            top: position.top,
+            left: position.left,
+            width: position.width,
+            zIndex: 50,
+            maxHeight: dropdownMaxHeight,
+          }}
+        >
+          {/* Search */}
+          {enableSearch && (
+            <div className="p-2 border-b border-slate-100">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={searchPlaceholder}
+                  className="w-full h-10 pl-9 pr-3 text-[16px] sm:text-sm bg-slate-50 border border-slate-200 rounded-md outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Options */}
           <div 
-            className="fixed inset-0"
-            style={{ zIndex: 9998 }}
-            onMouseDown={(e) => {
-              // Chỉ đóng khi click trực tiếp vào backdrop
-              if (e.target === e.currentTarget) {
-                setIsOpen(false);
-                setInputMode(false);
-                setSearchQuery("");
-              }
-            }}
-            onTouchStart={(e) => {
-              // Chỉ đóng khi touch trực tiếp vào backdrop
-              if (e.target === e.currentTarget) {
-                e.preventDefault();
-                setIsOpen(false);
-                setInputMode(false);
-                setSearchQuery("");
-              }
-            }}
-            aria-hidden="true"
-          />
-          <div 
-            ref={dropdownRef}
-            style={dropdownStyle}
-            className={cn(
-              "rounded-md border border-slate-200 bg-white shadow-lg overflow-hidden",
-              "animate-in fade-in duration-100",
-              dropdownStyle.bottom !== undefined 
-                ? "slide-in-from-bottom-2" 
-                : "slide-in-from-top-2 zoom-in-95"
-            )}
-            onTouchStart={(e) => {
-              // Ngăn backdrop xử lý touch events cho dropdown
-              e.stopPropagation();
-            }}
-            onClick={(e) => {
-              // Ngăn backdrop xử lý click events cho dropdown
-              e.stopPropagation();
-            }}
-          >
-          <div
-            className="overflow-y-auto p-1 custom-scrollbar"
-            style={{ 
-              maxHeight: `${maxVisibleRows * rowHeight}px`,
-              WebkitOverflowScrolling: 'touch' as any // Enable momentum scrolling on iOS
-            }}
+            className="overflow-y-auto overscroll-contain"
+            style={{ maxHeight: maxVisibleRows * rowHeight }}
           >
             {filteredOptions.length === 0 ? (
-              <div className="py-6 text-center text-sm text-slate-500">
-                No results found.
+              <div className="py-8 text-center text-sm text-slate-500">
+                No results found
               </div>
             ) : (
               filteredOptions.map((option) => {
                 const isSelected = value.includes(option.value);
                 return (
-                  <div
+                  <button
                     key={option.value}
+                    type="button"
                     onClick={() => handleToggleOption(option.value)}
-                    style={{ 
-                      height: rowHeight,
-                      WebkitTapHighlightColor: 'transparent',
-                    }}
                     className={cn(
-                      "relative flex w-full cursor-pointer select-none items-center rounded-sm px-4 text-sm outline-none transition-colors",
-                      isSelected
-                        ? "bg-emerald-50 text-emerald-700 font-medium"
-                        : "text-slate-900 hover:bg-slate-50"
+                      "flex w-full items-center px-3 text-sm transition-colors",
+                      "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
+                      isSelected && "bg-emerald-50 text-emerald-700"
                     )}
+                    style={{ height: rowHeight }}
                   >
-                    <div className="flex items-center gap-2 flex-1 truncate">
-                      {option.icon}
-                      <span className="truncate">{option.label}</span>
-                    </div>
+                    <span className="flex-1 text-left truncate">{option.label}</span>
                     {isSelected && (
-                      <Check className="h-4 w-4 text-emerald-600 ml-2 shrink-0" />
+                      <Check className="h-4 w-4 text-emerald-600 shrink-0 ml-2" />
                     )}
-                  </div>
+                  </button>
                 );
               })
             )}
           </div>
-        </div>
-        </>,
+        </div>,
         document.body
       )}
     </div>
