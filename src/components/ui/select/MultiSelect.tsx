@@ -211,13 +211,20 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   // Xử lý scroll/resize window - đóng dropdown khi scroll bên ngoài
   useEffect(() => {
     const handleScroll = (e: Event) => {
+      const target = e.target as Node;
+      
       // Cho phép scroll bên trong dropdown
-      if (dropdownRef.current && dropdownRef.current.contains(e.target as Node)) {
-        return;
+      if (dropdownRef.current) {
+        // Kiểm tra xem scroll có xảy ra trong dropdown không
+        if (dropdownRef.current === target || dropdownRef.current.contains(target)) {
+          return;
+        }
       }
-      // Đóng dropdown khi scroll bên ngoài
+      
+      // Đóng dropdown khi scroll bên ngoài (window scroll hoặc scroll trong element khác)
       if (isOpen) {
         setIsOpen(false);
+        setInputMode(false);
         setSearchQuery("");
       }
     };
@@ -231,12 +238,13 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     };
 
     if (isOpen) {
-      window.addEventListener('scroll', handleScroll, true);
+      // Chỉ lắng nghe scroll trên window, không capture
+      window.addEventListener('scroll', handleScroll, false);
       window.addEventListener('resize', handleResize);
     }
 
     return () => {
-      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('scroll', handleScroll, false);
       window.removeEventListener('resize', handleResize);
     };
   }, [isOpen]);
@@ -361,7 +369,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
               autoCapitalize="off"
               spellCheck={false}
               className={cn(
-                "flex w-full items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200",
+                "flex w-full items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-base md:text-sm transition-all duration-200",
                 "placeholder:text-slate-400 focus:outline-none",
                 "h-11 pr-8",
                 disabled
@@ -445,17 +453,22 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           <div 
             className="fixed inset-0"
             style={{ zIndex: 9998 }}
-            onTouchStart={(e) => {
-              e.preventDefault();
-              setIsOpen(false);
-              setInputMode(false);
-              setSearchQuery("");
+            onMouseDown={(e) => {
+              // Chỉ đóng khi click trực tiếp vào backdrop
+              if (e.target === e.currentTarget) {
+                setIsOpen(false);
+                setInputMode(false);
+                setSearchQuery("");
+              }
             }}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsOpen(false);
-              setInputMode(false);
-              setSearchQuery("");
+            onTouchStart={(e) => {
+              // Chỉ đóng khi touch trực tiếp vào backdrop
+              if (e.target === e.currentTarget) {
+                e.preventDefault();
+                setIsOpen(false);
+                setInputMode(false);
+                setSearchQuery("");
+              }
             }}
             aria-hidden="true"
           />
@@ -469,11 +482,20 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 ? "slide-in-from-bottom-2" 
                 : "slide-in-from-top-2 zoom-in-95"
             )}
+            onTouchStart={(e) => {
+              // Ngăn backdrop xử lý touch events cho dropdown
+              e.stopPropagation();
+            }}
+            onClick={(e) => {
+              // Ngăn backdrop xử lý click events cho dropdown
+              e.stopPropagation();
+            }}
           >
           <div
             className="overflow-y-auto p-1 custom-scrollbar"
             style={{ 
-              maxHeight: `${maxVisibleRows * rowHeight}px` 
+              maxHeight: `${maxVisibleRows * rowHeight}px`,
+              WebkitOverflowScrolling: 'touch' as any // Enable momentum scrolling on iOS
             }}
           >
             {filteredOptions.length === 0 ? (
@@ -487,11 +509,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   <div
                     key={option.value}
                     onClick={() => handleToggleOption(option.value)}
-                    onTouchEnd={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleToggleOption(option.value);
-                    }}
                     style={{ 
                       height: rowHeight,
                       WebkitTapHighlightColor: 'transparent',
