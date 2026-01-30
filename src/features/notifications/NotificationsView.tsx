@@ -977,7 +977,7 @@ export const NotificationsView: React.FC = () => {
             size="sm"
             onClick={handleMarkAllAsRead}
             disabled={counts.unread === 0}
-            className="whitespace-nowrap gap-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200"
+            className="whitespace-nowrap gap-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
           >
             <CheckCheck className="h-4 w-4" />
             Mark all as read
