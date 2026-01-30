@@ -38,7 +38,7 @@ interface Approver {
 
 export const NewDocumentView: React.FC = () => {
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState<TabType>("document");
+    const [activeTab, setActiveTab] = useState<TabType>("general");
     const [isSaving, setIsSaving] = useState(false);
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
     const [validationModalMessage, setValidationModalMessage] = useState<React.ReactNode>(null);
@@ -69,7 +69,8 @@ export const NewDocumentView: React.FC = () => {
     const [formData, setFormData] = useState({
         title: "",
         type: "" as DocumentType,
-        author: [] as (string | number)[],
+        author: "",
+        coAuthors: [] as (string | number)[],
         businessUnit: "",
         department: "",
         knowledgeBase: "",
@@ -81,19 +82,6 @@ export const NewDocumentView: React.FC = () => {
         description: "",
         isTemplate: false,
     });
-
-    // Auto-populate Document Name from uploaded file
-    useEffect(() => {
-        if (uploadedFiles.length > 0 && !formData.title.trim()) {
-            const firstFile = uploadedFiles[0];
-            // Extract filename without extension
-            const fileNameWithoutExt = firstFile.file.name.replace(/\.[^/.]+$/, "");
-            setFormData((prev) => ({
-                ...prev,
-                title: fileNameWithoutExt,
-            }));
-        }
-    }, [uploadedFiles]);
 
     // Auto-transition to Active when all conditions are met:
     // 1. Document has been saved (isSaved = true)
@@ -194,8 +182,8 @@ export const NewDocumentView: React.FC = () => {
     // currentStepIndex is now calculated in useMemo above based on documentStatus
 
     const tabs = [
-        { id: "document" as TabType, label: "Document" },
         { id: "general" as TabType, label: "General Information" },
+        { id: "document" as TabType, label: "Document" },
         { id: "training" as TabType, label: "Training" },
         { id: "signatures" as TabType, label: "Signatures" },
         { id: "audit" as TabType, label: "Audit Trail" },

@@ -185,7 +185,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
           className={cn(
-            'h-9 px-4 text-sm font-medium rounded-md transition-all border border-slate-200',
+            'h-9 px-4 text-sm font-medium rounded-lg transition-all border border-slate-200',
             currentPage === 1 ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
           )}
         >
@@ -196,7 +196,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
           className={cn(
-            'h-9 px-4 text-sm font-medium rounded-md transition-all border border-slate-200',
+            'h-9 px-4 text-sm font-medium rounded-lg transition-all border border-slate-200',
             currentPage === totalPages ? 'bg-slate-50 text-slate-400 cursor-not-allowed' : 'bg-white text-slate-700 hover:bg-slate-50 active:scale-95'
           )}
         >

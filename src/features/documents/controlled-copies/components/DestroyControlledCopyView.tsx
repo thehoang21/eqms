@@ -400,7 +400,7 @@ export const DestroyControlledCopyView: React.FC = () => {
                 value={formData.destructionMethod}
                 onChange={(e) => handleInputChange("destructionMethod", e.target.value)}
                 placeholder="e.g., Paper shredding, Incineration, etc."
-                className={`w-full h-11 px-4 border rounded-md text-sm focus:outline-none focus:ring-1 transition-colors ${
+                className={`w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 transition-colors ${
                   errors.destructionMethod
                     ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                     : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
@@ -423,7 +423,7 @@ export const DestroyControlledCopyView: React.FC = () => {
                   value={formData.destructedBy}
                   onChange={(e) => handleInputChange("destructedBy", e.target.value)}
                   placeholder="Enter executor name"
-                  className={`w-full h-11 pl-10 pr-4 border rounded-md text-sm focus:outline-none focus:ring-1 transition-colors ${
+                  className={`w-full h-11 pl-10 pr-4 border rounded-lg text-sm focus:outline-none focus:ring-1 transition-colors ${
                     errors.destructedBy
                       ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                       : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
@@ -447,7 +447,7 @@ export const DestroyControlledCopyView: React.FC = () => {
                   value={formData.destructionSupervisor}
                   onChange={(e) => handleInputChange("destructionSupervisor", e.target.value)}
                   placeholder="Enter supervisor name"
-                  className={`w-full h-11 pl-10 pr-4 border rounded-md text-sm focus:outline-none focus:ring-1 transition-colors ${
+                  className={`w-full h-11 pl-10 pr-4 border rounded-lg text-sm focus:outline-none focus:ring-1 transition-colors ${
                     errors.destructionSupervisor
                       ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                       : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
@@ -496,7 +496,7 @@ export const DestroyControlledCopyView: React.FC = () => {
                       ? "border-slate-200 bg-slate-50 cursor-not-allowed"
                       : errors.evidenceFile
                       ? "border-red-300 bg-red-50 hover:bg-red-100"
-                      : "border-slate-300 bg-slate-50 hover:bg-slate-100"
+                      : "border-slate-200 bg-slate-50 hover:bg-slate-100"
                   }`}
                 >
                   {isUploading ? (

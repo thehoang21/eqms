@@ -580,7 +580,7 @@ const DesktopDropdown: React.FC<{
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
           <h3 className="text-base font-semibold text-slate-900">Notifications</h3>
           <button 
-            className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-md transition-colors group"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-lg transition-colors group"
             onClick={() => console.log("Mark all as read")}
             title="Mark all as read"
           >

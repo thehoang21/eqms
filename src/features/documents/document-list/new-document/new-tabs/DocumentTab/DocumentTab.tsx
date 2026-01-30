@@ -184,7 +184,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 <div
                   key={uploadedFile.id}
                   className={cn(
-                    "relative group bg-white border rounded-md p-3 transition-all cursor-pointer hover:shadow-md",
+                    "relative group bg-white border rounded-lg p-3 transition-all cursor-pointer hover:shadow-md",
                     selectedFile === uploadedFile.file
                       ? "border-emerald-500 ring-1 ring-emerald-500 bg-emerald-50/30"
                       : "border-slate-200 hover:border-emerald-500/50",
@@ -312,7 +312,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                       ? "border-slate-200 bg-slate-50 opacity-50 cursor-not-allowed"
                       : isDragging 
                         ? "border-emerald-500 bg-emerald-50 scale-[1.02]" 
-                        : "border-slate-300 bg-white hover:border-slate-400"
+                        : "border-slate-200 bg-white hover:border-slate-400"
                   )}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}

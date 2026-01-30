@@ -354,7 +354,7 @@ export const UserManagementView: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by name, username, email..."
-                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -429,7 +429,7 @@ export const UserManagementView: React.FC = () => {
                 {visibleColumns.map((col) => (
                   <th
                     key={col.id}
-                    className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left"
+                    className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap"
                   >
                     {col.label}
                   </th>
@@ -498,7 +498,7 @@ export const UserManagementView: React.FC = () => {
                     <button
                       ref={getButtonRef(user.id)}
                       onClick={(e) => handleDropdownToggle(user.id, e)}
-                      className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                      className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
                     >
                       <MoreVertical className="h-4 w-4 text-slate-600" />
                     </button>
@@ -531,7 +531,7 @@ export const UserManagementView: React.FC = () => {
             {/* Menu */}
             <div
               className={cn(
-                "fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl",
+                "fixed z-50 min-w-[180px] rounded-lg border border-slate-200 bg-white shadow-xl",
                 dropdownPosition.showAbove
                   ? "animate-in fade-in slide-in-from-bottom-2 duration-200"
                   : "animate-in fade-in slide-in-from-top-2 duration-200"

@@ -143,7 +143,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                                 type="text"
                                 value={question.text}
                                 onChange={(e) => onUpdate({ text: e.target.value })}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white text-xs md:text-sm"
+                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white text-xs md:text-sm"
                                 placeholder="Enter your question here..."
                             />
                         </div>
@@ -154,7 +154,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                                 step="0.01"
                                 value={question.points}
                                 readOnly
-                                className="w-full px-3 py-2 border border-slate-200 rounded-md bg-slate-100 text-slate-500 cursor-not-allowed outline-none text-xs md:text-sm"
+                                className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed outline-none text-xs md:text-sm"
                                 title="Points are auto-calculated based on total questions"
                             />
                         </div>
@@ -178,7 +178,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                                 </button>
                             </div>
                         ) : (
-                            <label className="flex items-center justify-center gap-1.5 md:gap-2 px-3 md:px-4 py-2.5 md:py-3 border-2 border-dashed border-slate-300 rounded-lg hover:border-emerald-400 hover:bg-emerald-50/50 transition-all cursor-pointer w-full sm:w-fit">
+                            <label className="flex items-center justify-center gap-1.5 md:gap-2 px-3 md:px-4 py-2.5 md:py-3 border-2 border-dashed border-slate-200 rounded-lg hover:border-emerald-400 hover:bg-emerald-50/50 transition-all cursor-pointer w-full sm:w-fit">
                                 <ImageIcon className="h-4 w-4 md:h-5 md:w-5 text-slate-400" />
                                 <span className="text-xs md:text-sm font-medium text-slate-600">Upload Image</span>
                                 <input
@@ -251,7 +251,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                                             value={option.text}
                                             onChange={(e) => updateOption(option.id, { text: e.target.value })}
                                             className={cn(
-                                                "flex-1 px-3 py-2 border rounded-md focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white text-xs md:text-sm",
+                                                "flex-1 px-3 py-2 border rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white text-xs md:text-sm",
                                                 option.isCorrect ? "border-emerald-200 bg-emerald-50/30" : "border-slate-200"
                                             )}
                                             placeholder="Option text..."

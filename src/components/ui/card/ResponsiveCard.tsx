@@ -35,7 +35,7 @@ export const Card: React.FC<CardProps> = ({
         'bg-white rounded-xl border border-slate-200 shadow-sm',
         paddingClasses[padding],
         // Hover effect
-        hover && 'transition-all hover:shadow-md hover:border-slate-300 hover:scale-[1.01]',
+        hover && 'transition-all hover:shadow-md hover:border-slate-200 hover:scale-[1.01]',
         className
       )}
     >

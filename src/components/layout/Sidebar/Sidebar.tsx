@@ -353,7 +353,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             <div
               onClick={(e) => toggleExpand(item.id, e)}
               className={cn(
-                "rounded-md ml-auto flex items-center justify-center h-6 w-6 transition-all duration-200"
+                "rounded-lg ml-auto flex items-center justify-center h-6 w-6 transition-all duration-200"
               )}
             >
               <ChevronRight 
@@ -392,7 +392,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
 
     return createPortal(
       <div
-        className="fixed z-[60] px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-md whitespace-nowrap pointer-events-none shadow-lg animate-in fade-in duration-150"
+        className="fixed z-[60] px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg whitespace-nowrap pointer-events-none shadow-lg animate-in fade-in duration-150"
         style={{
           top: `${tooltip.position.top}px`,
           left: `${tooltip.position.left}px`,
@@ -450,7 +450,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             level >= 2 ? "ml-0" : "ml-3"
           )}>{item.label}</span>
           {hasChildren && (
-            <div className="rounded-md flex items-center justify-center h-6 w-6 transition-all duration-200 shrink-0">
+            <div className="rounded-lg flex items-center justify-center h-6 w-6 transition-all duration-200 shrink-0">
               <ChevronRight 
                 className={cn(
                   "h-4 w-4 text-slate-400 transition-transform duration-300 ease-out",

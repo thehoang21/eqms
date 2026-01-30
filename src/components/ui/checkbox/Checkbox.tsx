@@ -61,7 +61,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
             'peer-focus:ring-1 peer-focus:ring-emerald-500 peer-focus:ring-offset-2',
             checked
               ? 'bg-emerald-600 border-emerald-600'
-              : 'bg-white border-slate-300 hover:border-emerald-400',
+              : 'bg-white border-slate-200 hover:border-emerald-400',
             disabled && 'opacity-50 cursor-not-allowed'
           )}
         >

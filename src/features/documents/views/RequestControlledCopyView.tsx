@@ -360,7 +360,7 @@ export const RequestControlledCopyView: React.FC = () => {
                       {documentsToShow.map((doc: DocumentToPrint) => (
                         <div
                           key={doc.id}
-                          className="border border-slate-200 rounded-md p-3 lg:p-4 hover:bg-slate-50 transition-colors"
+                          className="border border-slate-200 rounded-lg p-3 lg:p-4 hover:bg-slate-50 transition-colors"
                         >
                           <div className="flex items-start gap-2 lg:gap-3">
                             <Checkbox
@@ -473,7 +473,7 @@ export const RequestControlledCopyView: React.FC = () => {
                               }
                             }
                           }}
-                          className="h-9 w-9 lg:h-11 lg:w-11 rounded-md border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="h-9 w-9 lg:h-11 lg:w-11 rounded-lg border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={quantity <= 1}
                         >
                           <span className="text-base lg:text-lg font-medium text-slate-700">−</span>
@@ -492,7 +492,7 @@ export const RequestControlledCopyView: React.FC = () => {
                           }}
                           min={1}
                           max={50}
-                          className={`h-9 lg:h-11 w-20 lg:w-24 px-2 lg:px-3 py-2 border rounded-md text-xs lg:text-sm text-center font-medium focus:outline-none focus:ring-1 transition-colors ${
+                          className={`h-9 lg:h-11 w-20 lg:w-24 px-2 lg:px-3 py-2 border rounded-lg text-xs lg:text-sm text-center font-medium focus:outline-none focus:ring-1 transition-colors ${
                             errors.quantity
                               ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                               : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
@@ -509,7 +509,7 @@ export const RequestControlledCopyView: React.FC = () => {
                               }
                             }
                           }}
-                          className="h-9 w-9 lg:h-11 lg:w-11 rounded-md border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="h-9 w-9 lg:h-11 lg:w-11 rounded-lg border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={quantity >= 50}
                         >
                           <span className="text-base lg:text-lg font-medium text-slate-700">+</span>
@@ -545,7 +545,7 @@ export const RequestControlledCopyView: React.FC = () => {
                         }}
                         placeholder="e.g., Replace damaged copy, New production line..."
                         rows={3}
-                        className={`w-full px-3 py-2 lg:py-2.5 border rounded-md text-xs lg:text-sm focus:outline-none focus:ring-1 transition-colors resize-none ${
+                        className={`w-full px-3 py-2 lg:py-2.5 border rounded-lg text-xs lg:text-sm focus:outline-none focus:ring-1 transition-colors resize-none ${
                           errors.reason
                             ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                             : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'

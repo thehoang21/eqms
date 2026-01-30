@@ -35,7 +35,7 @@ export const RelatedDocumentsTab: React.FC<RelatedDocumentsTabProps> = ({
                     {relatedDocuments.map((doc) => (
                         <div
                             key={doc.id}
-                            className="flex items-center justify-between p-3 border border-slate-200 rounded-md hover:bg-slate-50 transition-colors group"
+                            className="flex items-center justify-between p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors group"
                         >
                             <div className="flex items-center gap-3 flex-1">
                                 <Network className="h-5 w-5 text-emerald-600 flex-shrink-0" />

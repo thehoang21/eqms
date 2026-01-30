@@ -180,7 +180,7 @@ import { cn } from "@/components/ui/utils";
 
 ### 3.2 Table Header (thead)
 - **Classes:** `bg-slate-50 border-b border-slate-200` (hoặc `bg-slate-50/80` nếu sticky)
-- **th cells:** `py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left`
+- **th cells:** `py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap`
 - **Sticky header (optional):** Thêm `sticky top-0 z-30 backdrop-blur-sm`
 
 ### 3.3 Table Body (tbody)
@@ -210,7 +210,7 @@ import { cn } from "@/components/ui/utils";
       e.stopPropagation();
       handleAction(e);
     }}
-    className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+    className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
   >
     <MoreVertical className="h-4 w-4 text-slate-600" />
   </button>
@@ -314,7 +314,7 @@ const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElem
 ### 5.2 Form Components (Input, Select)
 - **Label:** `text-sm font-medium text-slate-700 mb-1.5 block`
 - **Input/Select height:** `h-11`
-- **Border:** `border border-slate-200 rounded-md`
+- **Border:** `border border-slate-200 rounded-lg`
 - **Focus state:** `focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500`
 - **Placeholder:** `placeholder:text-slate-400`
 

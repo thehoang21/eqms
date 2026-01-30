@@ -127,7 +127,7 @@ export const MultiDocumentUpload: React.FC<MultiDocumentUploadProps> = ({
                                 "relative border-2 rounded-xl transition-all duration-200",
                                 isDragging && "border-emerald-500 bg-emerald-50 scale-[1.02]",
                                 hasFile && "border-emerald-200 bg-emerald-50/50",
-                                !hasFile && !isDragging && "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm"
+                                !hasFile && !isDragging && "border-slate-200 bg-white hover:border-slate-200 hover:shadow-sm"
                             )}
                             onDragOver={(e) => handleDragOver(e, slot.id)}
                             onDragLeave={handleDragLeave}

@@ -130,7 +130,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
               "placeholder-slate-400 focus:outline-none",
               isSearchFocused 
                 ? "bg-white ring-2 ring-emerald-500/50 border-emerald-500 shadow-lg shadow-emerald-500/5" 
-                : "bg-slate-50 border-slate-200 hover:bg-white hover:border-slate-300 text-slate-700"
+                : "bg-slate-50 border-slate-200 hover:bg-white hover:border-slate-200 text-slate-700"
             )}
             placeholder="Search documents, deviations, tasks..."
             onFocus={() => setIsSearchFocused(true)}
@@ -157,9 +157,9 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
                   </div>
                   <button 
                     onClick={() => handleRecentItemClick("SOP-QA-001")}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-md transition-colors text-left group"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
                   >
-                    <div className="h-8 w-8 rounded-md bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
+                    <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
                       <FileText className="h-4 w-4 text-blue-600" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -169,9 +169,9 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
                   </button>
                   <button 
                     onClick={() => handleRecentItemClick("SOP-QA-005")}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-md transition-colors text-left group"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
                   >
-                    <div className="h-8 w-8 rounded-md bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
+                    <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
                       <FileText className="h-4 w-4 text-emerald-600" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -181,9 +181,9 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
                   </button>
                   <button 
                     onClick={() => handleRecentItemClick("DEV-2023-089")}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-md transition-colors text-left group"
+                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
                   >
-                    <div className="h-8 w-8 rounded-md bg-red-50 flex items-center justify-center shrink-0 group-hover:bg-red-100 transition-colors">
+                    <div className="h-8 w-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0 group-hover:bg-red-100 transition-colors">
                       <AlertTriangle className="h-4 w-4 text-red-600" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -204,9 +204,9 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
                           <button
                             key={navItem.id}
                             onClick={() => handleNavItemClick(navItem.path!)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-md transition-colors text-left group"
+                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
                           >
-                            <div className="h-8 w-8 rounded-md bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
+                            <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
                               {Icon && <Icon className="h-4 w-4 text-emerald-600" />}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -230,9 +230,9 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
                 </div>
                 <button 
                   onClick={() => handleRecentItemClick("SOP-QA-001")}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-md transition-colors text-left group"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
                 >
-                  <div className="h-8 w-8 rounded-md bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
+                  <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
                     <FileText className="h-4 w-4 text-blue-600" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -242,9 +242,9 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
                 </button>
                 <button 
                   onClick={() => handleRecentItemClick("DEV-2023-089")}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-md transition-colors text-left group"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
                 >
-                  <div className="h-8 w-8 rounded-md bg-red-50 flex items-center justify-center shrink-0 group-hover:bg-red-100 transition-colors">
+                  <div className="h-8 w-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0 group-hover:bg-red-100 transition-colors">
                     <AlertTriangle className="h-4 w-4 text-red-600" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -261,7 +261,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
                     console.log("Navigate to System Configuration");
                     setIsSearchFocused(false);
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-md transition-colors text-left group"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
                 >
                   <Settings className="h-4 w-4 text-slate-400 ml-2 group-hover:text-slate-600 transition-colors" />
                   <span>System Configuration</span>

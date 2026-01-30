@@ -183,7 +183,7 @@ export const Select: React.FC<SelectProps> = ({
             ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200"
             : isOpen
             ? "border-emerald-500 ring-2 ring-emerald-500/20"
-            : "border-slate-300 hover:border-slate-400",
+            : "border-slate-200 hover:border-slate-400",
           triggerClassName
         )}
       >
@@ -222,7 +222,7 @@ export const Select: React.FC<SelectProps> = ({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={searchPlaceholder}
-                  className="w-full h-10 pl-9 pr-3 text-[16px] sm:text-sm bg-slate-50 border border-slate-200 rounded-md outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  className="w-full h-10 pl-9 pr-3 text-[16px] sm:text-sm bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                   autoComplete="off"
                   autoCorrect="off"
                   autoCapitalize="off"

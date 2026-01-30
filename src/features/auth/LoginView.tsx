@@ -358,7 +358,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         "focus:outline-none focus:ring-4",
                         errors.username
                           ? "border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-500/10"
-                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10",
+                          : "border-slate-200 bg-white hover:border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10",
                       )}
                       placeholder="Enter your username or email"
                       disabled={isLoading}
@@ -393,7 +393,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         "focus:outline-none focus:ring-4",
                         errors.password
                           ? "border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-500/10"
-                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10",
+                          : "border-slate-200 bg-white hover:border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10",
                       )}
                       placeholder="Enter your password"
                       disabled={isLoading}

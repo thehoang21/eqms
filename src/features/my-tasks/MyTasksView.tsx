@@ -374,7 +374,7 @@ const TaskFilters: React.FC<{
               placeholder="Search by ID, name or description..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="block w-full pl-9 sm:pl-10 pr-3 h-10 sm:h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm transition-all placeholder:text-slate-400"
+              className="block w-full pl-9 sm:pl-10 pr-3 h-10 sm:h-11 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm transition-all placeholder:text-slate-400"
             />
           </div>
         </FilterCard.Item>
@@ -581,7 +581,7 @@ export const MyTasksView: React.FC = () => {
           <button
             onClick={() => setViewMode("list")}
             className={cn(
-              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap flex-1 sm:flex-none justify-center",
+              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap flex-1 sm:flex-none justify-center",
               viewMode === "list"
                 ? "bg-white text-emerald-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
@@ -593,7 +593,7 @@ export const MyTasksView: React.FC = () => {
           <button
             onClick={() => setViewMode("calendar")}
             className={cn(
-              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap flex-1 sm:flex-none justify-center",
+              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap flex-1 sm:flex-none justify-center",
               viewMode === "calendar"
                 ? "bg-white text-emerald-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
@@ -605,7 +605,7 @@ export const MyTasksView: React.FC = () => {
           <button
             onClick={() => setViewMode("gantt")}
             className={cn(
-              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap flex-1 sm:flex-none justify-center",
+              "flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap flex-1 sm:flex-none justify-center",
               viewMode === "gantt"
                 ? "bg-white text-emerald-700 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"

@@ -428,7 +428,7 @@ export const RolePermissionView: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search roles..."
-                  className="w-full h-10 pl-10 pr-4 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full h-10 pl-10 pr-4 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -457,7 +457,7 @@ export const RolePermissionView: React.FC = () => {
                     </h3>
                     <div className="flex items-center gap-1.5 shrink-0">
                       <span className={cn(
-                        "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border",
+                        "inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium border",
                         role.type === "custom"
                           ? "bg-amber-50 text-amber-700 border-amber-200"
                           : "bg-slate-50 text-slate-700 border-slate-200"
@@ -492,7 +492,7 @@ export const RolePermissionView: React.FC = () => {
                     >
                       <button
                         onClick={() => openEditModal(role.id)}
-                        className="inline-flex items-center justify-center h-7 w-7 rounded-md hover:bg-slate-200 transition-colors"
+                        className="inline-flex items-center justify-center h-7 w-7 rounded-lg hover:bg-slate-200 transition-colors"
                         aria-label="Edit role"
                       >
                         <Edit3 className="h-3.5 w-3.5 text-slate-600" />
@@ -501,7 +501,7 @@ export const RolePermissionView: React.FC = () => {
                         onClick={() => openDeleteModal(role.id)}
                         disabled={role.type === "system"}
                         className={cn(
-                          "inline-flex items-center justify-center h-7 w-7 rounded-md transition-colors",
+                          "inline-flex items-center justify-center h-7 w-7 rounded-lg transition-colors",
                           role.type === "system"
                             ? "cursor-not-allowed opacity-30"
                             : "hover:bg-red-50"
@@ -564,7 +564,7 @@ export const RolePermissionView: React.FC = () => {
                     value={permissionSearch}
                     onChange={(e) => setPermissionSearch(e.target.value)}
                     placeholder="Search permissions..."
-                    className="w-full h-9 pl-9 pr-4 text-sm bg-white border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-9 pl-9 pr-4 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                </div>
                <Button 

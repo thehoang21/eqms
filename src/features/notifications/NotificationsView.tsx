@@ -340,7 +340,7 @@ const NotificationTabs: React.FC<{
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
           className={cn(
-            "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
+            "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
             activeTab === tab.id
               ? "bg-white text-slate-900 shadow-sm"
               : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
@@ -437,7 +437,7 @@ const NotificationFilters: React.FC<{
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search notifications..."
-              className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+              className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
             />
           </div>
         </div>
@@ -692,7 +692,7 @@ const NotificationRow: React.FC<{
       >
         <button
           onClick={handleDropdownToggle}
-          className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+          className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
         >
           <MoreVertical className="h-4 w-4 text-slate-600" />
         </button>
@@ -760,7 +760,7 @@ const NotificationCard: React.FC<{
         "p-4 rounded-xl border cursor-pointer transition-all duration-200 active:scale-[0.99]",
         notification.status === "unread"
           ? "bg-emerald-50/50 border-emerald-200 shadow-sm"
-          : "bg-white border-slate-200 hover:border-slate-300"
+          : "bg-white border-slate-200 hover:border-slate-200"
       )}
     >
       {/* Header: Icon + Title + Action */}
@@ -793,7 +793,7 @@ const NotificationCard: React.FC<{
             </p>
             <button
               onClick={handleDropdownToggle}
-              className="shrink-0 p-1.5 -mr-1.5 -mt-1 rounded-md hover:bg-slate-100 active:bg-slate-200 transition-colors"
+              className="shrink-0 p-1.5 -mr-1.5 -mt-1 rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors"
             >
               <MoreVertical className="h-4 w-4 text-slate-500" />
             </button>
@@ -1052,22 +1052,22 @@ export const NotificationsView: React.FC = () => {
                 <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center w-14">
                   No.
                 </th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Notification
                 </th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left hidden md:table-cell">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                   Module
                 </th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left hidden lg:table-cell">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                   Related Item
                 </th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left hidden md:table-cell">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                   Priority
                 </th>
-                <th className="py-3.5 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left hidden sm:table-cell">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden sm:table-cell">
                   Time
                 </th>
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>

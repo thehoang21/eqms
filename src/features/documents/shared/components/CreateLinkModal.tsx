@@ -308,7 +308,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
         {/* Body */}
         <div className="px-4 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 overflow-y-auto flex-1">
           {/* Document Info */}
-          <div className="bg-slate-50 border border-slate-200 rounded-md p-4">
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
             <div className="flex items-start gap-3">
               <div className="flex items-center justify-center w-8 h-8 rounded bg-emerald-100 flex-shrink-0">
                 <Link2 className="h-4 w-4 text-emerald-600" />
@@ -332,7 +332,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
                   setRecipientType("users");
                   setGeneratedLink("");
                 }}
-                className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all ${
+                className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
                   recipientType === "users"
                     ? "bg-white text-slate-900 shadow-sm"
                     : "text-slate-600 hover:text-slate-900"
@@ -345,7 +345,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
                   setRecipientType("department");
                   setGeneratedLink("");
                 }}
-                className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all ${
+                className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${
                   recipientType === "department"
                     ? "bg-white text-slate-900 shadow-sm"
                     : "text-slate-600 hover:text-slate-900"
@@ -366,7 +366,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
               {/* Input with Chips and Dropdown */}
               <div className="relative">
                 <div 
-                  className="min-h-[44px] border border-slate-200 rounded-md bg-white px-3 py-2 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all cursor-text"
+                  className="min-h-[44px] border border-slate-200 rounded-lg bg-white px-3 py-2 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all cursor-text"
                   onClick={() => setIsDropdownOpen(true)}
                 >
                   {/* Selected User Chips */}
@@ -419,14 +419,14 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
                     />
                     
                     {/* Dropdown Menu */}
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-md shadow-lg z-[70] max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg z-[70] max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
                       {filteredUsers.length > 0 ? (
                         <div className="p-2 space-y-1">
                           {filteredUsers.map((user) => (
                             <div
                               key={user.value}
                               onClick={() => handleToggleUser(user.value)}
-                              className="flex items-start gap-3 p-2.5 rounded-md hover:bg-slate-50 cursor-pointer transition-colors"
+                              className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
                             >
                               <Checkbox
                                 checked={selectedUsers.includes(user.value)}
@@ -466,7 +466,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
               {/* Input with Chips and Dropdown */}
               <div className="relative">
                 <div 
-                  className="min-h-[44px] border border-slate-200 rounded-md bg-white px-3 py-2 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all cursor-text"
+                  className="min-h-[44px] border border-slate-200 rounded-lg bg-white px-3 py-2 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all cursor-text"
                   onClick={() => setIsDepartmentDropdownOpen(true)}
                 >
                   {/* Selected Department Chips */}
@@ -519,14 +519,14 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
                     />
                     
                     {/* Dropdown Menu */}
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-md shadow-lg z-[70] max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg z-[70] max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
                       {filteredDepartments.length > 0 ? (
                         <div className="p-2 space-y-1">
                           {filteredDepartments.map((dept) => (
                             <div
                               key={dept.value}
                               onClick={() => handleToggleDepartment(dept.value)}
-                              className="flex items-start gap-3 p-2.5 rounded-md hover:bg-slate-50 cursor-pointer transition-colors"
+                              className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
                             >
                               <Checkbox
                                 checked={selectedDepartments.includes(dept.value)}
@@ -602,7 +602,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
                   type="text"
                   value={generatedLink}
                   readOnly
-                  className="flex-1 px-3 py-2 bg-white border border-emerald-200 rounded-md text-sm text-slate-700 font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  className="flex-1 px-3 py-2 bg-white border border-emerald-200 rounded-lg text-sm text-slate-700 font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 />
                 <Button
                   onClick={handleCopyLink}

@@ -266,7 +266,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
               <button
                 onClick={() => setTimelineView("month")}
                 className={cn(
-                  "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
+                  "px-3 py-1.5 text-xs font-medium rounded-lg transition-all",
                   timelineView === "month"
                     ? "bg-white text-emerald-700 shadow-sm"
                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
@@ -277,7 +277,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
               <button
                 onClick={() => setTimelineView("day")}
                 className={cn(
-                  "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
+                  "px-3 py-1.5 text-xs font-medium rounded-lg transition-all",
                   timelineView === "day"
                     ? "bg-white text-emerald-700 shadow-sm"
                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
@@ -316,7 +316,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
                     <ChevronRight className="h-4 w-4 text-slate-600" />
                   )}
                   <span className={cn(
-                    "inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border",
+                    "inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium border",
                     getModuleBadgeStyle(module as any)
                   )}>
                     {(() => {
@@ -461,7 +461,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
                 >
                   <div className="relative h-full">
                     <div className="absolute inset-0 w-0.5 bg-emerald-500 shadow-sm" />
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-30">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg shadow-md whitespace-nowrap z-30">
                       TODAY
                     </div>
                   </div>

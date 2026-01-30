@@ -52,7 +52,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 We're sorry for the inconvenience. Please try refreshing the page.
               </p>
               {this.state.error && (
-                <details className="text-left text-sm bg-slate-50 p-4 rounded-md mb-4">
+                <details className="text-left text-sm bg-slate-50 p-4 rounded-lg mb-4">
                   <summary className="cursor-pointer font-semibold text-slate-700 mb-2">
                     Error Details
                   </summary>

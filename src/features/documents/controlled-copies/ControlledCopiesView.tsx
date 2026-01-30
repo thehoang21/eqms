@@ -281,7 +281,7 @@ const DropdownMenu: React.FC<{
         aria-hidden="true"
       />
       <div
-        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
@@ -750,7 +750,7 @@ export const ControlledCopiesView: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Document #, Name, Document ID..."
-                  className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
             </div>
@@ -804,13 +804,13 @@ export const ControlledCopiesView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left w-16">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-16">
                   No.
                 </th>
                 {DEFAULT_COLUMNS.filter((c) => c.visible).map((col) => (
                   <th
                     key={col.id}
-                    className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-left"
+                    className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap"
                   >
                     {col.label}
                   </th>
@@ -879,7 +879,7 @@ export const ControlledCopiesView: React.FC = () => {
                         <button
                           ref={getButtonRef(copy.id)}
                           onClick={(e) => handleDropdownToggle(copy.id, e)}
-                          className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                          className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
                         >
                           <MoreVertical className="h-4 w-4 text-slate-600" />
                         </button>

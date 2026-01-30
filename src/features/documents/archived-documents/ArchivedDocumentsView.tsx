@@ -373,7 +373,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                         aria-hidden="true"
                     />
                     <div 
-                        className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+                        className="fixed z-50 min-w-[180px] rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
                         style={{ top: `${dropdownPosition.top}px`, left: `${dropdownPosition.left}px` }}
                     >
                         <div className="py-1">

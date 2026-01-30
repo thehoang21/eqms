@@ -32,7 +32,7 @@ type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 export const NewTemplateView: React.FC = () => {
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState<TabType>("document");
+    const [activeTab, setActiveTab] = useState<TabType>("general");
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isESignOpen, setIsESignOpen] = useState(false);
@@ -48,7 +48,8 @@ export const NewTemplateView: React.FC = () => {
     const [formData, setFormData] = useState<GeneralTabFormData>({
         title: "",
         type: "SOP" as DocumentType,
-        author: [] as (string | number)[],
+        author: "",
+        coAuthors: [] as (string | number)[],
         businessUnit: "",
         department: "",
         knowledgeBase: "",
@@ -56,6 +57,7 @@ export const NewTemplateView: React.FC = () => {
         periodicReviewCycle: 24,
         periodicReviewNotification: 14,
         language: "English",
+        reviewDate: "",
         description: "",
         isTemplate: true, // Always true for template creation
     });
@@ -146,8 +148,8 @@ export const NewTemplateView: React.FC = () => {
     const currentStepIndex = 0; // Always "Draft" for new templates
 
     const tabs = [
-        { id: "document" as TabType, label: "Document" },
         { id: "general" as TabType, label: "General Information" },
+        { id: "document" as TabType, label: "Document" },
         { id: "training" as TabType, label: "Training" },
         { id: "signatures" as TabType, label: "Signatures" },
         { id: "audit" as TabType, label: "Audit Trail" },

@@ -105,7 +105,7 @@ export const ActionDropdown: React.FC<ActionDropdownProps> = ({
         onClick={handleTriggerClick}
         disabled={disabled}
         className={cn(
-          'inline-flex items-center justify-center rounded-md transition-colors',
+          'inline-flex items-center justify-center rounded-lg transition-colors',
           'hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500',
           'active:scale-95',
           SIZE_CLASSES[size],

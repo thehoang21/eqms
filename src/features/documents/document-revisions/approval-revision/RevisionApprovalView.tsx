@@ -160,7 +160,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
     const [newComment, setNewComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [activeTab, setActiveTab] = useState<TabType>("document");
+    const [activeTab, setActiveTab] = useState<TabType>("general");
     const [showESignModal, setShowESignModal] = useState(false);
     const [eSignAction, setESignAction] = useState<'approve' | 'reject'>('approve');
     
@@ -168,7 +168,8 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const [formData, setFormData] = useState<FormData>({
         title: revision.title,
         type: revision.type as DocType,
-        author: [revision.author], // Convert string to array for GeneralTabFormData
+        author: revision.author,
+        coAuthors: [],
         businessUnit: revision.businessUnit,
         department: revision.department,
         knowledgeBase: revision.knowledgeBase,
@@ -176,6 +177,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
         periodicReviewCycle: revision.periodicReviewCycle,
         periodicReviewNotification: revision.periodicReviewNotification,
         language: revision.language,
+        reviewDate: "",
         description: revision.description,
         isTemplate: revision.isTemplate,
     });
@@ -353,7 +355,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                                         onChange={(e) => setNewComment(e.target.value)}
                                         placeholder="Add a comment..."
                                         rows={3}
-                                        className="flex-1 px-3 lg:px-4 py-2 lg:py-2.5 border border-slate-200 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
+                                        className="flex-1 px-3 lg:px-4 py-2 lg:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
                                     />
                                     <button
                                         onClick={handleAddComment}

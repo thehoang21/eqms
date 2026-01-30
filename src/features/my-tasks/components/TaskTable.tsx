@@ -74,40 +74,40 @@ export const TaskTable: React.FC<{
         <table className="w-full min-w-[1800px] md:min-w-[2000px] xl:min-w-[2200px]">
           <thead className="bg-slate-50/80 border-b-2 border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
             <tr>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 No.
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Task ID
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Task Name
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Module
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Assignee
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Reporter
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Days Left
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Status
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Progress
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Due Date
               </th>
-              <th className="py-3.5 px-4 text-xs font-semibold text-slate-700 uppercase tracking-wider whitespace-nowrap text-left">
+              <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Priority
               </th>
-              <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+              <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                 Action
               </th>
             </tr>

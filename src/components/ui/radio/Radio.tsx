@@ -83,8 +83,8 @@ export const Radio: React.FC<RadioProps> = ({
           'relative flex items-start p-4 border-2 rounded-lg cursor-pointer transition-all',
           checked
             ? 'border-emerald-500 bg-emerald-50/50 ring-1 ring-emerald-500/20'
-            : 'border-slate-300 bg-white hover:border-emerald-400',
-          disabled && 'opacity-50 cursor-not-allowed hover:border-slate-300',
+            : 'border-slate-200 bg-white hover:border-emerald-400',
+          disabled && 'opacity-50 cursor-not-allowed hover:border-slate-200',
           className
         )}
       >
@@ -116,7 +116,7 @@ export const Radio: React.FC<RadioProps> = ({
             'ml-4 h-5 w-5 rounded-full border-2 flex items-center justify-center transition-colors shrink-0',
             checked
               ? 'border-emerald-600 bg-emerald-600'
-              : 'border-slate-300 bg-white'
+              : 'border-slate-200 bg-white'
           )}
         >
           {checked && (
@@ -148,7 +148,7 @@ export const Radio: React.FC<RadioProps> = ({
             'peer-focus:ring-1 peer-focus:ring-emerald-500 peer-focus:ring-offset-2',
             checked
               ? 'bg-white border-emerald-600'
-              : 'bg-white border-slate-300 hover:border-emerald-400',
+              : 'bg-white border-slate-200 hover:border-emerald-400',
             disabled && 'opacity-50 cursor-not-allowed'
           )}
         >

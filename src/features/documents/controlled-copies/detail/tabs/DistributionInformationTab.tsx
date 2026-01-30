@@ -25,7 +25,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.location || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
@@ -36,7 +36,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.locationCode || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-mono text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-mono text-slate-700"
             />
           </div>
         </div>
@@ -56,7 +56,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.distributionList || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
@@ -67,7 +67,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.department || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
@@ -78,7 +78,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.recipientName || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
@@ -89,7 +89,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.distributedBy || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
@@ -100,7 +100,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.distributedDate || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
         </div>
@@ -120,7 +120,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.requestedBy || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
@@ -131,7 +131,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               type="text"
               value={controlledCopy.requestDate || ""}
               readOnly
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
           <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4">
@@ -142,7 +142,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
               value={controlledCopy.reason || ""}
               readOnly
               rows={3}
-              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-md text-sm text-slate-700 resize-none"
+              className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 resize-none"
             />
           </div>
         </div>

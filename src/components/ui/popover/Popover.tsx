@@ -150,7 +150,7 @@ export const Popover: React.FC<PopoverProps> = ({
         type="button"
         onClick={handleToggle}
         className={cn(
-          'p-2 hover:bg-slate-100 rounded-md transition-colors',
+          'p-2 hover:bg-slate-100 rounded-lg transition-colors',
           triggerClassName
         )}
       >

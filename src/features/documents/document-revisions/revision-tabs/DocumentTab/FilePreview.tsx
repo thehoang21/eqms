@@ -138,7 +138,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
 
     if (!file) {
         return (
-            <div className="h-full flex items-center justify-center bg-slate-50 rounded-xl border-2 border-dashed border-slate-300">
+            <div className="h-full flex items-center justify-center bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
                 <div className="text-center p-6 md:p-8">
                     <FileIcon className="h-12 w-12 md:h-16 md:w-16 text-slate-300 mx-auto mb-3 md:mb-4" />
                     <p className="text-slate-500 font-medium text-sm md:text-base">No file selected</p>

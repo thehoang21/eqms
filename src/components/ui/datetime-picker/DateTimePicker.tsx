@@ -234,7 +234,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
               key={m}
               onClick={() => handleMonthSelect(idx)}
               className={cn(
-                "h-10 rounded-md text-sm font-medium hover:bg-slate-100 transition-colors",
+                "h-10 rounded-lg text-sm font-medium hover:bg-slate-100 transition-colors",
                 viewDate.getMonth() === idx ? "bg-emerald-50 text-emerald-600" : "text-slate-700"
               )}
             >
@@ -287,7 +287,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
               key={y}
               onClick={() => handleYearSelect(y)}
               className={cn(
-                "h-10 rounded-md text-sm font-medium hover:bg-slate-100 transition-colors",
+                "h-10 rounded-lg text-sm font-medium hover:bg-slate-100 transition-colors",
                 viewDate.getFullYear() === y ? "bg-emerald-50 text-emerald-600" : "text-slate-700"
               )}
             >
@@ -430,13 +430,13 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         }}
         disabled={disabled}
         className={cn(
-          'flex items-center justify-between gap-2 w-full px-3 py-2 h-11 rounded-md text-sm transition-all duration-200',
+          'flex items-center justify-between gap-2 w-full px-3 py-2 h-11 rounded-lg text-sm transition-all duration-200',
           'border bg-white',
           disabled
             ? 'bg-slate-100 cursor-not-allowed opacity-60'
             : isOpen
               ? 'ring-1 ring-emerald-500 border-emerald-500'
-              : 'border-slate-200 hover:border-slate-300 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500'
+              : 'border-slate-200 hover:border-slate-200 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500'
         )}
       >
         <div className="flex items-center gap-2 truncate">

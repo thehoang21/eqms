@@ -30,7 +30,7 @@ type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 export const SingleDocumentView: React.FC = () => {
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState<TabType>("document");
+    const [activeTab, setActiveTab] = useState<TabType>("general");
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isESignOpen, setIsESignOpen] = useState(false);
@@ -52,7 +52,8 @@ export const SingleDocumentView: React.FC = () => {
     const [formData, setFormData] = useState({
         title: "",
         type: "" as DocumentType,
-        author: [] as (string | number)[],
+        author: "",
+        coAuthors: [] as (string | number)[],
         businessUnit: "",
         department: "",
         knowledgeBase: "",
@@ -64,19 +65,6 @@ export const SingleDocumentView: React.FC = () => {
         description: "",
         isTemplate: false,
     });
-
-    // Auto-populate Document Name from uploaded file
-    useEffect(() => {
-        if (uploadedFiles.length > 0 && !formData.title.trim()) {
-            const firstFile = uploadedFiles[0];
-            // Extract filename without extension
-            const fileNameWithoutExt = firstFile.file.name.replace(/\.[^/.]+$/, "");
-            setFormData((prev) => ({
-                ...prev,
-                title: fileNameWithoutExt,
-            }));
-        }
-    }, [uploadedFiles]);
 
     const missingRequiredFields = useMemo(() => {
         const missing: string[] = [];
@@ -171,8 +159,8 @@ export const SingleDocumentView: React.FC = () => {
     const currentStepIndex = 0; // Always "Draft" for new documents
 
     const tabs = [
-        { id: "document" as TabType, label: "Document" },
         { id: "general" as TabType, label: "General Information" },
+        { id: "document" as TabType, label: "Document" },
         { id: "training" as TabType, label: "Training" },
         { id: "signatures" as TabType, label: "Signatures" },
         { id: "audit" as TabType, label: "Audit Trail" },
@@ -410,7 +398,7 @@ export const SingleDocumentView: React.FC = () => {
                 description={
                     <div className="space-y-3">
                         <p>Are you sure you want to save this document as a draft?</p>
-                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-md p-3 space-y-1">
+                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
                             <p><span className="font-semibold">Document Name:</span> {formData.title || "(Not set)"}</p>
                             <p><span className="font-semibold">Type:</span> {formData.type}</p>
                             <p><span className="font-semibold">Author:</span> {formData.author || "(Not set)"}</p>

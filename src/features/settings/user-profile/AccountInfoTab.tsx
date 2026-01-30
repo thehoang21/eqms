@@ -91,7 +91,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <button
                             onClick={handleAvatarClick}
                             type="button"
-                            className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 rounded-full bg-white border-2 border-slate-300 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200 cursor-pointer"
+                            className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 rounded-full bg-white border-2 border-slate-200 shadow-md flex items-center justify-center hover:bg-emerald-50 hover:border-emerald-500 transition-all duration-200 cursor-pointer"
                             title="Change avatar"
                         >
                             <Camera className="h-4 w-4 sm:h-4.5 sm:w-4.5 lg:h-5 lg:w-5 text-slate-700" strokeWidth={2} />
@@ -136,19 +136,19 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
-                                <input type="text" value={formData.fullName} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.fullName} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
-                                <input type="text" value={formData.username} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.username} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Employee ID</label>
-                                <input type="text" value={formData.employeeId} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.employeeId} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Nationality</label>
-                                <input type="text" value={formData.nationality} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.nationality} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                         </div>
                     </div>
@@ -159,15 +159,15 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Job Title</label>
-                                <input type="text" value={formData.jobTitle} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.jobTitle} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Department</label>
-                                <input type="text" value={formData.department} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.department} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">System Role</label>
-                                <input type="text" value={formData.systemRole} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-md bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.systemRole} disabled className="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                         </div>
 
@@ -211,10 +211,10 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         value={formData.email}
                                         onChange={(e) => onInputChange('email', e.target.value)}
                                         disabled={!editingFields.email}
-                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-md transition-all focus:outline-none ${
+                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-lg transition-all focus:outline-none ${
                                             editingFields.email
                                                 ? 'border-emerald-500 bg-white ring-1 ring-emerald-500 focus:ring-emerald-500 focus:border-emerald-500'
-                                                : 'border-slate-300 bg-slate-50 text-slate-600 cursor-not-allowed'
+                                                : 'border-slate-200 bg-slate-50 text-slate-600 cursor-not-allowed'
                                         }`}
                                         placeholder="Enter email"
                                     />
@@ -243,10 +243,10 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                         value={formData.phone}
                                         onChange={(e) => onInputChange('phone', e.target.value)}
                                         disabled={!editingFields.phone}
-                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-md transition-all focus:outline-none ${
+                                        className={`w-full px-3.5 py-2.5 pr-10 text-sm border rounded-lg transition-all focus:outline-none ${
                                             editingFields.phone
                                                 ? 'border-emerald-500 bg-white ring-1 ring-emerald-500 focus:ring-emerald-500 focus:border-emerald-500'
-                                                : 'border-slate-300 bg-slate-50 text-slate-600 cursor-not-allowed'
+                                                : 'border-slate-200 bg-slate-50 text-slate-600 cursor-not-allowed'
                                         }`}
                                         placeholder="Enter phone number"
                                     />

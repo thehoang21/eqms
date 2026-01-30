@@ -91,7 +91,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
 
         {/* Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md flex gap-3">
+          <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex gap-3">
              <AlertCircle className="h-5 w-5 text-yellow-600 shrink-0" />
              <p className="text-sm text-yellow-800">
                You are about to <span className="font-bold">{actionTitle}</span>. 
@@ -105,7 +105,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
               type="text" 
               value={username} 
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
               placeholder="Enter your username"
             />
           </div>
@@ -116,7 +116,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm"
               placeholder="Enter your password"
             />
           </div>
@@ -126,7 +126,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
             <textarea 
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm min-h-[80px]"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm min-h-[80px]"
               placeholder="e.g., Reviewed and approved for release..."
             />
           </div>

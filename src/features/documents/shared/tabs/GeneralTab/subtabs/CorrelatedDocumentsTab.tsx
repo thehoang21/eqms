@@ -31,7 +31,7 @@ export const CorrelatedDocumentsTab: React.FC<CorrelatedDocumentsTabProps> = ({
             {parentDocument ? (
                 <div className="space-y-2">
                     <div
-                        className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-md hover:border-emerald-300 hover:shadow-sm transition-all group"
+                        className="flex items-center gap-3 p-4 bg-white border border-slate-200 rounded-lg hover:border-emerald-300 hover:shadow-sm transition-all group"
                     >
                         <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
                             <Link className="h-5 w-5 text-emerald-600" />

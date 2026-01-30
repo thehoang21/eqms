@@ -68,10 +68,10 @@ export const CancelDistributionModal: React.FC<CancelDistributionModalProps> = (
             onChange={(e) => handleReasonChange(e.target.value)}
             placeholder="Describe the reason for cancellation..."
             rows={3}
-            className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none transition-colors ${
+            className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none transition-colors ${
               errors.cancellationReason
                 ? "border-red-300 focus:ring-red-500 focus:border-red-500"
-                : "border-slate-300"
+                : "border-slate-200"
             }`}
           />
           {errors.cancellationReason && (

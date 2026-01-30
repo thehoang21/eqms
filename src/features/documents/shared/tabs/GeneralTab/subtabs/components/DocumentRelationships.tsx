@@ -341,7 +341,7 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
                 </div>
                 <button
                   onClick={() => handleParentChange("")}
-                  className="p-1 hover:bg-blue-100 rounded-md transition-colors flex-shrink-0"
+                  className="p-1 hover:bg-blue-100 rounded-lg transition-colors flex-shrink-0"
                   title="Remove"
                 >
                   <X className="h-3.5 w-3.5 text-blue-700" />
@@ -378,11 +378,11 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full h-10 pl-9 pr-3 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 pl-9 pr-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
 
-            <div className="border border-slate-300 rounded-md bg-slate-50 flex-1 min-h-[320px] max-h-[320px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-slate-50 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
+            <div className="border border-slate-200 rounded-lg bg-slate-50 flex-1 min-h-[320px] max-h-[320px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-slate-50 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
               {filteredAvailableDocs.length > 0 ? (
                 <div className="divide-y divide-slate-200">
                   {filteredAvailableDocs.map((doc) => (
@@ -415,7 +415,7 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
             <button
               onClick={handleMoveToSelected}
               disabled={selectedAvailableIds.length === 0}
-              className="p-2 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-2 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               title="Move to selected"
             >
               <ChevronRight className="h-5 w-5 text-slate-600" />
@@ -423,7 +423,7 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
             <button
               onClick={handleMoveToAvailable}
               disabled={selectedDocIds.length === 0}
-              className="p-2 border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-2 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               title="Move to available"
             >
               <ChevronLeft className="h-5 w-5 text-slate-600" />
@@ -438,7 +438,7 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
 
             <div className="h-10 mb-3"></div>
 
-            <div className="border border-slate-300 rounded-md bg-slate-50 flex-1 min-h-[320px] max-h-[320px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-slate-50 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
+            <div className="border border-slate-200 rounded-lg bg-slate-50 flex-1 min-h-[320px] max-h-[320px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-slate-50 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
               {tempRelatedDocuments.length > 0 ? (
                 <div className="divide-y divide-slate-200">
                   {tempRelatedDocuments.map((doc) => (

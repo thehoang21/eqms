@@ -103,7 +103,7 @@ export const MobileCard: React.FC<MobileCardProps> = ({
               }}
               disabled={action.disabled}
               className={cn(
-                "flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium transition-all",
+                "flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all",
                 action.variant === "destructive" && "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 active:scale-95",
                 action.variant === "outline" && "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 active:scale-95",
                 action.variant === "ghost" && "bg-transparent text-slate-600 hover:bg-slate-100 active:scale-95",
@@ -169,7 +169,7 @@ export const MobileCardEmptyState: React.FC<MobileCardEmptyStateProps> = ({
       {action && (
         <button
           onClick={action.onClick}
-          className="mt-4 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700 active:scale-95 transition-all"
+          className="mt-4 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 active:scale-95 transition-all"
         >
           {action.label}
         </button>

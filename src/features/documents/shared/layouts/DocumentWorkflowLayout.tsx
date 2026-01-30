@@ -95,8 +95,8 @@ const getStatusIcon = (status: DocumentStatus) => {
 
 // --- Default Tabs ---
 export const DEFAULT_WORKFLOW_TABS: TabItem[] = [
-    { id: "document", label: "Document" },
     { id: "general", label: "General Information" },
+    { id: "document", label: "Document" },
     { id: "training", label: "Training" },
     { id: "signatures", label: "Signatures" },
     { id: "audit", label: "Audit Trail" },

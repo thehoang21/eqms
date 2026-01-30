@@ -11,6 +11,7 @@ import {
     AlertCircle,
     Home,
     Layers,
+    FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
@@ -58,7 +59,8 @@ interface WorkspaceDocument {
     formData: {
         title: string;
         type: DocumentType;
-        author: (string | number)[];
+        author: string;
+        coAuthors: (string | number)[];
         businessUnit: string;
         department: string;
         knowledgeBase: string;
@@ -66,6 +68,7 @@ interface WorkspaceDocument {
         periodicReviewCycle: number;
         periodicReviewNotification: number;
         language: string;
+        reviewDate: string;
         description: string;
         isTemplate: boolean;
     };
@@ -96,7 +99,7 @@ export const RevisionWorkspaceView: React.FC = () => {
     const location = useLocation();
     const state = location.state as LocationState;
 
-    const [activeTab, setActiveTab] = useState<TabType>("document");
+    const [activeTab, setActiveTab] = useState<TabType>("general");
     const [currentDocIndex, setCurrentDocIndex] = useState(0);
     const [uploadedFiles, setUploadedFiles] = useState<{
         [documentId: string]: File | null;
@@ -134,7 +137,8 @@ export const RevisionWorkspaceView: React.FC = () => {
                         formData: {
                             title: state.sourceDocument.name,
                             type: (state.sourceDocument.type || "SOP") as DocumentType,
-                            author: [],
+                            author: "",
+                            coAuthors: [],
                             businessUnit: "",
                             department: "",
                             knowledgeBase: "",
@@ -142,6 +146,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                             periodicReviewCycle: 24,
                             periodicReviewNotification: 14,
                             language: "English",
+                            reviewDate: "",
                             description: "",
                             isTemplate: false,
                         },
@@ -163,7 +168,8 @@ export const RevisionWorkspaceView: React.FC = () => {
                         formData: {
                             title: state.sourceDocument.name,
                             type: (state.sourceDocument.type || "SOP") as DocumentType,
-                            author: [],
+                            author: "",
+                            coAuthors: [],
                             businessUnit: "",
                             department: "",
                             knowledgeBase: "",
@@ -171,6 +177,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                             periodicReviewCycle: 24,
                             periodicReviewNotification: 14,
                             language: "English",
+                            reviewDate: "",
                             description: "",
                             isTemplate: false,
                         },
@@ -191,7 +198,8 @@ export const RevisionWorkspaceView: React.FC = () => {
                                 formData: {
                                     title: doc.name,
                                     type: "SOP" as DocumentType,
-                                    author: [],
+                                    author: "",
+                                    coAuthors: [],
                                     businessUnit: "",
                                     department: "",
                                     knowledgeBase: "",
@@ -199,6 +207,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                     periodicReviewCycle: 24,
                                     periodicReviewNotification: 14,
                                     language: "English",
+                                    reviewDate: "",
                                     description: "",
                                     isTemplate: false,
                                 },
@@ -238,9 +247,7 @@ export const RevisionWorkspaceView: React.FC = () => {
         if (!currentDocument) return false;
         const formData = currentDocument.formData;
 
-        const hasAuthor = Array.isArray(formData.author)
-            ? formData.author.length > 0
-            : Boolean(String(formData.author ?? "").trim());
+        const hasAuthor = Boolean(String(formData.author ?? "").trim());
 
         return !!(
             String(formData.title ?? "").trim() &&
@@ -259,9 +266,7 @@ export const RevisionWorkspaceView: React.FC = () => {
         const missing: string[] = [];
         const formData = currentDocument.formData;
 
-        const hasAuthor = Array.isArray(formData.author)
-            ? formData.author.length > 0
-            : Boolean(String(formData.author ?? "").trim());
+        const hasAuthor = Boolean(String(formData.author ?? "").trim());
 
         if (!String(formData.title ?? "").trim()) missing.push("Document Name");
         if (!String(formData.type ?? "").trim()) missing.push("Document Type");
@@ -449,8 +454,8 @@ export const RevisionWorkspaceView: React.FC = () => {
     const currentStepIndex = 0; // Always "Draft" for new revisions
 
     const tabs = [
-        { id: "document" as TabType, label: "Document" },
         { id: "general" as TabType, label: "General Information" },
+        { id: "document" as TabType, label: "Document" },
         { id: "training" as TabType, label: "Training" },
         { id: "signatures" as TabType, label: "Signatures" },
         { id: "audit" as TabType, label: "Audit Trail" },
@@ -504,12 +509,12 @@ export const RevisionWorkspaceView: React.FC = () => {
                             <div className="mt-2 text-sm text-slate-600">
                                 <span className="font-medium">Source:</span> {state.sourceDocument.code} - {state.sourceDocument.name}
                                 {state.isStandalone && (
-                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
                                         Standalone
                                     </span>
                                 )}
                                 {!state.isStandalone && workspaceDocuments.length > 1 && (
-                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
                                         {workspaceDocuments.length} Documents
                                     </span>
                                 )}
@@ -686,7 +691,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                 Are you sure you want to save all documents in the workspace as
                                 drafts?
                             </p>
-                            <div className="text-xs bg-slate-50 border border-slate-200 rounded-md p-3 space-y-1">
+                            <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
                                 {state?.sourceDocument && (
                                     <p>
                                         <span className="font-semibold">Source Document:</span>{" "}

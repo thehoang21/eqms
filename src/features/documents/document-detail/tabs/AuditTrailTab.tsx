@@ -220,7 +220,7 @@ export const AuditTrailTab: React.FC = () => {
                   setCurrentPage(1);
                 }}
                 placeholder="Search by user or action..."
-                className="block w-full pl-10 pr-3 h-11 border border-slate-200 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
+                className="block w-full pl-10 pr-3 h-11 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -471,7 +471,7 @@ export const AuditTrailTab: React.FC = () => {
               {selectedEntry.changes && selectedEntry.changes.length > 0 ? (
                 <div className="space-y-4">
                   {selectedEntry.changes.map((change, index) => (
-                    <div key={index} className="border border-slate-200 rounded-md p-4">
+                    <div key={index} className="border border-slate-200 rounded-lg p-4">
                       <div className="text-sm font-semibold text-slate-900 mb-3">
                         {change.field}
                       </div>

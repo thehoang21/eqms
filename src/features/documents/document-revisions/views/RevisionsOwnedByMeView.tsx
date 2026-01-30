@@ -197,7 +197,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
               placeholder="Search revisions..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
         </div>
@@ -635,7 +635,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                               e.stopPropagation();
                               handleDropdownToggle(revision.id, e);
                             }}
-                            className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-slate-100 transition-colors"
+                            className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
                             aria-label="More actions"
                           >
                             <MoreVertical className="h-4 w-4 text-slate-600" />
@@ -680,7 +680,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
               aria-hidden="true"
             />
             <div
-              className="fixed z-50 min-w-[180px] rounded-md border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+              className="fixed z-50 min-w-[180px] rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
               style={{
                 top: `${dropdownPosition.top}px`,
                 left: `${dropdownPosition.left}px`,
