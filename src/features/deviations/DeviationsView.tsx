@@ -156,7 +156,7 @@ export const DeviationsView: React.FC = () => {
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const categoryOptions = [
     { label: "All Categories", value: "All" },
@@ -623,6 +623,7 @@ export const DeviationsView: React.FC = () => {
           totalItems={filteredData.length}
           itemsPerPage={itemsPerPage}
           onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
         />
       </div>
     </div>

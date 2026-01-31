@@ -232,8 +232,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedTemplateForLink, setSelectedTemplateForLink] = useState<Template | null>(null);
   const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
-
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Filter templates
   const filteredTemplates = useMemo(() => {
@@ -483,6 +482,7 @@ export const TemplateLibraryView: React.FC<TemplateLibraryViewProps> = ({
           totalItems={filteredTemplates.length}
           itemsPerPage={itemsPerPage}
           onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
         />
       </div>
 

@@ -146,8 +146,7 @@ export const UserManagementView: React.FC = () => {
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, userId: "", userName: "" });
   const [statusModal, setStatusModal] = useState({ isOpen: false, userId: "", action: "" as "activate" | "deactivate" });
   const [resetPasswordModal, setResetPasswordModal] = useState({ isOpen: false, userId: "", userName: "", password: "" });
-
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
 
   const getButtonRef = (id: string) => {
@@ -516,6 +515,7 @@ export const UserManagementView: React.FC = () => {
           totalItems={filteredUsers.length}
           itemsPerPage={itemsPerPage}
           onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
         />
       </div>
 

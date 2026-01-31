@@ -432,7 +432,7 @@ export const ControlledCopiesView: React.FC = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Dropdown state
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -898,6 +898,8 @@ export const ControlledCopiesView: React.FC = () => {
             totalPages={totalPages}
             totalItems={filteredData.length}
             itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={setItemsPerPage}
             onPageChange={setCurrentPage}
           />
         )}

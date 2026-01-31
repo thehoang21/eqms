@@ -500,7 +500,7 @@ export const MyTasksView: React.FC = () => {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Simulate loading on filter change
   useEffect(() => {
@@ -561,10 +561,10 @@ export const MyTasksView: React.FC = () => {
 
   // Pagination Logic
   const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginatedData = filteredData.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   return (
@@ -649,7 +649,7 @@ export const MyTasksView: React.FC = () => {
                     {/* Mobile Card View - visible on small screens */}
                     <TaskMobileList
                       tasks={paginatedData}
-                      startIndex={(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                      startIndex={(currentPage - 1) * itemsPerPage + 1}
                       onTaskClick={setSelectedTask}
                     />
                     
@@ -658,14 +658,15 @@ export const MyTasksView: React.FC = () => {
                       <TaskTable
                         tasks={paginatedData}
                         onTaskClick={setSelectedTask}
-                        startIndex={(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                        startIndex={(currentPage - 1) * itemsPerPage + 1}
                       />
                       <TablePagination
                         currentPage={currentPage}
                         totalPages={totalPages}
                         totalItems={totalItems}
-                        itemsPerPage={ITEMS_PER_PAGE}
+                        itemsPerPage={itemsPerPage}
                         onPageChange={setCurrentPage}
+                        onItemsPerPageChange={setItemsPerPage}
                       />
                     </div>
                     
@@ -675,8 +676,9 @@ export const MyTasksView: React.FC = () => {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         totalItems={totalItems}
-                        itemsPerPage={ITEMS_PER_PAGE}
+                        itemsPerPage={itemsPerPage}
                         onPageChange={setCurrentPage}
+                        onItemsPerPageChange={setItemsPerPage}
                         className="rounded-xl border border-slate-200 shadow-sm"
                       />
                     </div>

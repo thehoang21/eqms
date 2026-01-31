@@ -79,6 +79,9 @@ export const ROUTES = {
   // Risk Management
   RISK: '/risk-management',
 
+  // Report
+  REPORT: '/report',
+
   // Audit Trail
   AUDIT_TRAIL: '/audit-trail',
 

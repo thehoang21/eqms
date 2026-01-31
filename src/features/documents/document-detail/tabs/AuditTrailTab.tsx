@@ -149,7 +149,7 @@ export const AuditTrailTab: React.FC = () => {
   const [selectedEntry, setSelectedEntry] = useState<AuditEntry | null>(null);
   const [showChangesModal, setShowChangesModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const filteredData = mockAuditData.filter(entry => {
     const matchesAction = selectedAction === "all" || entry.actionType === selectedAction;
@@ -443,6 +443,7 @@ export const AuditTrailTab: React.FC = () => {
           totalItems={filteredData.length}
           itemsPerPage={itemsPerPage}
           onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
         />
       </div>
 

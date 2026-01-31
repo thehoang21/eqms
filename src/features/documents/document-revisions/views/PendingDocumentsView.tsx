@@ -356,8 +356,7 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
   const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
-
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Get config based on viewType
   const config = useMemo(() => {
@@ -658,6 +657,8 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
           totalPages={totalPages}
           totalItems={filteredRevisions.length}
           itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
           onPageChange={setCurrentPage}
         />
       </div>

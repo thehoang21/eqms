@@ -109,7 +109,7 @@ export const ArchivedDocumentsView: React.FC = () => {
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     // Mock user role - in production, this would come from auth context
     const userRole = 'Admin'; // or 'QA Manager', 'Quality Assurance', 'User'
@@ -357,6 +357,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                         totalItems={filteredDocuments.length}
                         itemsPerPage={itemsPerPage}
                         onPageChange={setCurrentPage}
+                        onItemsPerPageChange={setItemsPerPage}
                     />
                 )}
             </div>

@@ -41,7 +41,7 @@ export const Select: React.FC<SelectProps> = ({
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [position, setPosition] = useState({ top: 0, left: 0, width: 0, showAbove: false });
   
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -60,10 +60,23 @@ export const Select: React.FC<SelectProps> = ({
   const updatePosition = () => {
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      
+      // Estimate dropdown height
+      const searchHeight = enableSearch ? 56 : 0;
+      const maxHeight = maxVisibleRows * rowHeight + searchHeight + 8;
+      const estimatedDropdownHeight = maxHeight;
+      
+      // Determine if dropdown should open above or below
+      const shouldShowAbove = spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow;
+      
       setPosition({
-        top: rect.bottom + 4,
+        top: shouldShowAbove ? rect.top - 4 : rect.bottom + 4,
         left: rect.left,
         width: rect.width,
+        showAbove: shouldShowAbove,
       });
     }
   };
@@ -204,10 +217,11 @@ export const Select: React.FC<SelectProps> = ({
           ref={dropdownRef}
           className="fixed bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150"
           style={{
-            top: position.top,
+            top: position.showAbove ? 'auto' : position.top,
+            bottom: position.showAbove ? `${window.innerHeight - position.top}px` : 'auto',
             left: position.left,
             width: position.width,
-            zIndex: 50,
+            zIndex: 9999,
             maxHeight: dropdownMaxHeight,
           }}
         >

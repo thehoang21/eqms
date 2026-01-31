@@ -863,7 +863,7 @@ export const NotificationsView: React.FC = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Notification data (in real app, this would come from API)
   const [notifications, setNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
@@ -1038,6 +1038,7 @@ export const NotificationsView: React.FC = () => {
               onPageChange={setCurrentPage}
               itemsPerPage={itemsPerPage}
               totalItems={filteredNotifications.length}
+              onItemsPerPageChange={setItemsPerPage}
             />
           </div>
         )}
@@ -1103,6 +1104,7 @@ export const NotificationsView: React.FC = () => {
             onPageChange={setCurrentPage}
             itemsPerPage={itemsPerPage}
             totalItems={filteredNotifications.length}
+            onItemsPerPageChange={setItemsPerPage}
           />
         )}
       </div>

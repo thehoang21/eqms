@@ -54,6 +54,7 @@ const RolePermissionView = lazy(() => import('@/features/settings/role-permissio
 const TrainingView = lazy(() => import('@/features/training').then(m => ({ default: m.TrainingView })));
 const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
+const ReportView = lazy(() => import('@/features/report').then(m => ({ default: m.ReportView })));
 
 // Dev Tools
 const UIShowcase = lazy(() => import('@/features/ui-showcase/UIShowcase').then(m => ({ default: m.UIShowcase })));
@@ -246,6 +247,9 @@ export const AppRoutes: React.FC = () => {
         
         {/* ===== RISK MANAGEMENT ===== */}
         <Route path="risk-management" element={<UnderConstruction />} />
+        
+        {/* ===== REPORT ===== */}
+        <Route path="report" element={<Suspense fallback={<LoadingFallback />}><ReportView /></Suspense>} />
         
         {/* ===== AUDIT TRAIL SYSTEM ===== */}
         <Route path="audit-trail" element={<UnderConstruction />} />

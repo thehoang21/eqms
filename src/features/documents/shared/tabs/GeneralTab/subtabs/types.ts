@@ -3,11 +3,11 @@
 // Document Revisions
 export interface Revision {
     id: string;
-    version: string;
-    date: string;
-    author: string;
-    changes: string;
-    status: string;
+    revisionNumber: string;
+    created: string;
+    openedBy: string;
+    revisionName: string;
+    state: "draft" | "pendingReview" | "approved" | "effective" | "obsolete";
 }
 
 // Document Relationships

@@ -681,8 +681,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedDocumentForLink, setSelectedDocumentForLink] = useState<Document | null>(null);
-
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Update authorFilter when viewType changes
   useEffect(() => {
@@ -1187,6 +1186,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           onPageChange={setCurrentPage}
           totalItems={filteredDocuments.length}
           itemsPerPage={itemsPerPage}
+          onItemsPerPageChange={setItemsPerPage}
         />
       </div>
 

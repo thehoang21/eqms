@@ -323,8 +323,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     }
     return buttonRefs.current[id];
   };
-
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Filtered data
   const filteredRevisions = useMemo(() => {
@@ -662,6 +661,8 @@ export const RevisionsOwnedByMeView: React.FC = () => {
             totalPages={totalPages}
             totalItems={filteredRevisions.length}
             itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={setItemsPerPage}
             onPageChange={setCurrentPage}
           />
         </div>

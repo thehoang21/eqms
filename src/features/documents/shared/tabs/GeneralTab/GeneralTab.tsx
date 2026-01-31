@@ -1,87 +1,11 @@
-import React, { useState } from "react";
-import {
-  Calendar,
-  FileText,
-  UserPlus,
-  UserCheck,
-  BookOpen,
-  Copy,
-  LinkIcon,
-  Plus,
-} from "lucide-react";
+import React from "react";
+import { LinkIcon } from "lucide-react";
 import { Select } from "@/components/ui/select/Select";
 import { MultiSelect } from "@/components/ui/select/MultiSelect";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
-import { Button } from "@/components/ui/button/Button";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
-import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { cn } from "@/components/ui/utils";
-import {
-  DocumentRevisionsTab,
-  ReviewersTab,
-  ApproversTab,
-  ControlledCopiesTab,
-  RelatedDocumentsTab,
-  CorrelatedDocumentsTab,
-} from "./subtabs";
-import type { Revision } from "./subtabs/types";
 import { DocumentType, DOCUMENT_TYPES } from "@/types/documentTypes";
-import {
-  DocumentRelationships,
-  ParentDocument,
-  RelatedDocument as RelationshipDocument,
-} from "./subtabs";
-
-type SubTabId =
-  | "revisions"
-  | "reviewers"
-  | "approvers"
-  | "copies"
-  | "related"
-  | "correlated";
-
-type ReviewFlowType = "sequential" | "parallel";
-
-interface Reviewer {
-  id: string;
-  name: string;
-  role: string;
-  email: string;
-  department: string;
-  order: number;
-}
-
-interface Approver {
-  id: string;
-  name: string;
-  role: string;
-  email: string;
-  department: string;
-}
-
-interface Knowledge {
-  id: string;
-  title: string;
-  category: string;
-}
-
-interface ControlledCopy {
-  id: string;
-  location: string;
-  custodian: string;
-}
-
-interface RelatedDocument {
-  id: string;
-  documentNumber: string;
-  title: string;
-  type: string;
-}
-
-interface SubTab {
-  id: SubTabId;
-  label: string;
-}
 
 // Export FormData interface to be reused by parent components
 export interface GeneralTabFormData {
@@ -110,21 +34,10 @@ interface GeneralTabProps {
   isTemplateMode?: boolean;
   hideTemplateCheckbox?: boolean;
   suggestedDocumentCode?: string; // Suggested code from parent document
-  isSaved?: boolean; // Whether the document has been saved - shows additional options when true
   documentNumber?: string; // Auto-generated document number
   createdDateTime?: string; // Auto-generated created date/time
   openedBy?: string; // Auto-generated opened by user
-  onReviewersChange?: (reviewers: Reviewer[]) => void; // Callback when reviewers are added/changed
-  onApproversChange?: (approvers: Approver[]) => void; // Callback when approvers are added/changed
-  // Action button callbacks - for duplicate buttons at bottom
-  onCancel?: () => void;
-  onSave?: () => void;
-  isSaving?: boolean;
-  canSave?: boolean;
-  // Obsolete functionality
-  onObsolete?: (reason: string) => void;
   isObsoleted?: boolean;
-  onBackToList?: () => void;
 }
 
 export const GeneralTab: React.FC<GeneralTabProps> = ({
@@ -133,73 +46,14 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
   isTemplateMode = false,
   hideTemplateCheckbox = false,
   suggestedDocumentCode = "",
-  isSaved = true, // Default to true for backwards compatibility with existing views
   documentNumber = "",
   createdDateTime = "",
   openedBy = "",
-  onReviewersChange,
-  onApproversChange,
-  onCancel,
-  onSave,
-  isSaving = false,
-  canSave = true,
-  onObsolete,
   isObsoleted = false,
-  onBackToList,
 }) => {
-  const [activeSubtab, setActiveSubtab] = useState<SubTabId>("revisions");
-  const [isReviewerModalOpen, setIsReviewerModalOpen] = useState(false);
-  const [isApproverModalOpen, setIsApproverModalOpen] = useState(false);
-  const [isRelatedModalOpen, setIsRelatedModalOpen] = useState(false);
-  const [isCorrelatedModalOpen, setIsCorrelatedModalOpen] = useState(false);
-  const [isObsoleteModalOpen, setIsObsoleteModalOpen] = useState(false);
-
-  // Subtab States - persisted across tab switches
-  const [revisions, setRevisions] = useState<Revision[]>([]);
-  const [reviewers, setReviewers] = useState<Reviewer[]>([]);
-  const [reviewFlowType, setReviewFlowType] =
-    useState<ReviewFlowType>("parallel");
-  const [approvers, setApprovers] = useState<Approver[]>([]);
-  const [knowledges, setKnowledges] = useState<Knowledge[]>([]);
-  const [controlledCopies, setControlledCopies] = useState<ControlledCopy[]>(
-    [],
-  );
-  const [relatedDocuments, setRelatedDocuments] = useState<RelatedDocument[]>(
-    [],
-  );
-
-  // Document Relationships State
-  const [parentDocument, setParentDocument] = useState<ParentDocument | null>(
-    null,
-  );
-  const [relationshipDocs, setRelationshipDocs] = useState<
-    RelationshipDocument[]
-  >([]);
-
-  // Notify parent when reviewers change
-  const handleReviewersChange = (newReviewers: Reviewer[]) => {
-    setReviewers(newReviewers);
-    onReviewersChange?.(newReviewers);
-  };
-
-  // Notify parent when approvers change
-  const handleApproversChange = (newApprovers: Approver[]) => {
-    setApprovers(newApprovers);
-    onApproversChange?.(newApprovers);
-  };
-
   const setFormData = (data: Partial<FormData>) => {
     onFormChange({ ...formData, ...data });
   };
-
-  const subtabs: SubTab[] = [
-    { id: "revisions", label: "Document Revisions" },
-    { id: "reviewers", label: "Reviewers" },
-    { id: "approvers", label: "Approvers" },
-    { id: "copies", label: "Controlled Copies" },
-    { id: "related", label: "Related Documents" },
-    { id: "correlated", label: "Correlated Documents" },
-  ];
 
   return (
     <div className="space-y-4 md:space-y-5">
@@ -584,229 +438,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             )}
           />
         </div>
-
-        <div className="flex flex-col gap-1.5 md:col-span-2">
-          {!isSaved && (
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <p className="text-sm text-amber-800">
-                <span className="font-medium">💡 Tip:</span> Click "Next Step"
-                to create the document and generate Document Number. You can
-                then add Reviewers, Approvers, and Related Documents.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Cancel & Save Buttons - Always shown when callbacks are provided */}
-        {(onCancel || onSave || onBackToList) && (
-          <div className="flex flex-wrap items-center gap-3 md:col-span-2">
-            {/* Back to List button - shown when obsoleted */}
-            {isObsoleted && onBackToList && (
-              <Button
-                onClick={onBackToList}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                Back to List
-              </Button>
-            )}
-
-            {/* Cancel button - hidden when obsoleted */}
-            {!isObsoleted && onCancel && (
-              <Button
-                onClick={onCancel}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                Cancel
-              </Button>
-            )}
-
-            {/* Save/Next Step button - always shown but disabled when obsoleted */}
-            {onSave && (
-              <Button
-                onClick={onSave}
-                disabled={isObsoleted || !canSave || isSaving}
-                size="sm"
-                className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
-              >
-                {isSaving
-                  ? isSaved
-                    ? "Saving..."
-                    : "Processing..."
-                  : isSaved
-                    ? "Save"
-                    : "Next Step"}
-              </Button>
-            )}
-
-            {/* Obsolete button - hidden when obsoleted, only show after saved */}
-            {!isObsoleted && isSaved && onObsolete && (
-              <Button
-                onClick={() => setIsObsoleteModalOpen(true)}
-                size="sm"
-                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white"
-              >
-                Obsolete
-              </Button>
-            )}
-
-            {/* Divider - only show when saved and not obsoleted */}
-            {isSaved && !isObsoleted && (onCancel || onSave) && (
-              <div className="hidden sm:block w-px h-8 bg-slate-200 mx-1" />
-            )}
-
-            {/* Other action buttons - only show after saved and not obsoleted */}
-            {isSaved && !isObsoleted && (
-              <>
-                <Button
-                  onClick={() => {
-                    setActiveSubtab("reviewers");
-                    setIsReviewerModalOpen(true);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
-                >
-                  Reviewers
-                </Button>
-                <Button
-                  onClick={() => {
-                    setActiveSubtab("approvers");
-                    setIsApproverModalOpen(true);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
-                >
-                  Approvers
-                </Button>
-                <Button
-                  onClick={() => {
-                    setActiveSubtab("related");
-                    setIsRelatedModalOpen(true);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
-                >
-                  Select Related Documents
-                  {relationshipDocs.length > 0 && (
-                    <span className="ml-2 text-xs opacity-70">
-                      ({relationshipDocs.length})
-                    </span>
-                  )}
-                </Button>
-                <Button
-                  onClick={() => {
-                    setActiveSubtab("correlated");
-                    setIsCorrelatedModalOpen(true);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
-                >
-                  Select Correlated Documents
-                  {parentDocument && (
-                    <span className="ml-2 text-xs opacity-70">(1)</span>
-                  )}
-                </Button>
-              </>
-            )}
-          </div>
-        )}
       </div>
-
-      {/* E-Signature Modal for Obsolete */}
-      <ESignatureModal
-        isOpen={isObsoleteModalOpen}
-        onClose={() => setIsObsoleteModalOpen(false)}
-        onConfirm={(reason) => {
-          setIsObsoleteModalOpen(false);
-          onObsolete?.(reason);
-        }}
-        actionTitle="Obsolete Document"
-      />
-
-      {/* DocumentRelationships Modals - Only render when saved */}
-      {isSaved && (
-        <DocumentRelationships
-          parentDocument={parentDocument}
-          onParentDocumentChange={setParentDocument}
-          relatedDocuments={relationshipDocs}
-          onRelatedDocumentsChange={setRelationshipDocs}
-          documentType={formData.type}
-          isRelatedModalOpen={isRelatedModalOpen}
-          onRelatedModalClose={() => setIsRelatedModalOpen(false)}
-          isCorrelatedModalOpen={isCorrelatedModalOpen}
-          onCorrelatedModalClose={() => setIsCorrelatedModalOpen(false)}
-        />
-      )}
-
-      {/* Subtabs Card - Only show after saved */}
-      {isSaved && (
-        <div className="mt-6 border rounded-xl bg-white shadow-sm overflow-hidden">
-          {/* Subtab Navigation */}
-          <div className="border-b border-slate-200 bg-white">
-            <div className="flex overflow-x-auto">
-              {subtabs.map((subtab) => {
-                return (
-                  <button
-                    key={subtab.id}
-                    onClick={() => setActiveSubtab(subtab.id)}
-                    className={cn(
-                      "flex items-center gap-1.5 md:gap-2 px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium transition-colors whitespace-nowrap border-b-2",
-                      activeSubtab === subtab.id
-                        ? "border-emerald-600 text-emerald-600"
-                        : "border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-200",
-                    )}
-                  >
-                    {subtab.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Subtab Content */}
-          <div className="p-4 md:p-6">
-            {activeSubtab === "revisions" && <DocumentRevisionsTab />}
-            {activeSubtab === "reviewers" && (
-              <ReviewersTab
-                reviewers={reviewers}
-                onReviewersChange={handleReviewersChange}
-                reviewFlowType={reviewFlowType}
-                onReviewFlowTypeChange={setReviewFlowType}
-                isModalOpen={isReviewerModalOpen}
-                onModalClose={() => setIsReviewerModalOpen(false)}
-              />
-            )}
-            {activeSubtab === "approvers" && (
-              <ApproversTab
-                approvers={approvers}
-                onApproversChange={handleApproversChange}
-                isModalOpen={isApproverModalOpen}
-                onModalClose={() => setIsApproverModalOpen(false)}
-              />
-            )}
-            {activeSubtab === "copies" && <ControlledCopiesTab />}
-            {activeSubtab === "related" && (
-              <RelatedDocumentsTab
-                relatedDocuments={relationshipDocs}
-                onRelatedDocumentsChange={setRelationshipDocs}
-              />
-            )}
-            {activeSubtab === "correlated" && (
-              <CorrelatedDocumentsTab
-                parentDocument={parentDocument}
-                onParentDocumentChange={setParentDocument}
-              />
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

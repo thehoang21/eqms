@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '../button/Button';
+import { Select } from '../select/Select';
 import { cn } from '../utils';
 
 /**
@@ -14,6 +15,7 @@ import { cn } from '../utils';
  *   totalItems={100}
  *   itemsPerPage={10}
  *   onPageChange={(page) => setCurrentPage(page)}
+ *   onItemsPerPageChange={(value) => setItemsPerPage(value)}
  * />
  * ```
  */
@@ -28,6 +30,8 @@ export interface TablePaginationProps {
   itemsPerPage: number;
   /** Callback when page changes */
   onPageChange: (page: number) => void;
+  /** Callback when items per page changes */
+  onItemsPerPageChange?: (itemsPerPage: number) => void;
   /** Additional CSS classes */
   className?: string;
   /** Show "Showing X-Y of Z results" text */
@@ -36,6 +40,10 @@ export interface TablePaginationProps {
   showPageNumbers?: boolean;
   /** Maximum page number buttons to display */
   maxPageButtons?: number;
+  /** Show items per page selector */
+  showItemsPerPageSelector?: boolean;
+  /** Available options for items per page */
+  itemsPerPageOptions?: number[];
 }
 
 export const TablePagination: React.FC<TablePaginationProps> = ({
@@ -44,10 +52,13 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   totalItems,
   itemsPerPage,
   onPageChange,
+  onItemsPerPageChange,
   className,
   showItemCount = true,
   showPageNumbers = false,
   maxPageButtons = 5,
+  showItemsPerPageSelector = true,
+  itemsPerPageOptions = [10, 20, 50, 100],
 }) => {
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
@@ -76,20 +87,44 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white',
+        'flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white',
         className
       )}
     >
-      {/* Item count */}
-      {showItemCount && (
-        <div className="text-xs md:text-sm text-slate-600">
-          Showing{' '}
-          <span className="font-medium text-slate-900">{startItem}</span> to{' '}
-          <span className="font-medium text-slate-900">{endItem}</span> of{' '}
-          <span className="font-medium text-slate-900">{totalItems}</span>
-          <span className="hidden sm:inline"> results</span>
-        </div>
-      )}
+      {/* Left section: Item count + Items per page selector */}
+      <div className="flex items-center gap-3 md:gap-4">
+        {/* Item count */}
+        {showItemCount && (
+          <div className="text-xs md:text-sm text-slate-600">
+            Showing{' '}
+            <span className="font-medium text-slate-900">{startItem}</span> to{' '}
+            <span className="font-medium text-slate-900">{endItem}</span> of{' '}
+            <span className="font-medium text-slate-900">{totalItems}</span>
+            <span className="hidden sm:inline"> results</span>
+          </div>
+        )}
+
+        {/* Items per page selector */}
+        {showItemsPerPageSelector && onItemsPerPageChange && (
+          <div className="flex items-center gap-2">
+            <span className="text-xs md:text-sm text-slate-600 whitespace-nowrap">Show:</span>
+            <Select
+              value={itemsPerPage}
+              onChange={(value) => {
+                onItemsPerPageChange(Number(value));
+                onPageChange(1); // Reset to first page when changing items per page
+              }}
+              options={itemsPerPageOptions.map((option) => ({
+                label: option.toString(),
+                value: option,
+              }))}
+              className="w-20"
+              triggerClassName="h-8 text-xs md:text-sm"
+              enableSearch={false}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Navigation buttons */}
       <div className="flex items-center gap-1.5 md:gap-2">

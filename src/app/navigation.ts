@@ -25,6 +25,7 @@ import {
   Palette,
   BookText,
   ListTodo,
+  FileBarChart,
 } from "lucide-react";
 import {
   IconAlertTriangle,
@@ -160,6 +161,12 @@ export const NAV_CONFIG: NavItem[] = [
     label: "Risk Management",
     icon: TextSearch,
     path: "/risk-management",
+  },
+  {
+    id: "report",
+    label: "Report",
+    icon: FileBarChart,
+    path: "/report",
   },
   {
     id: "audit-trail",
