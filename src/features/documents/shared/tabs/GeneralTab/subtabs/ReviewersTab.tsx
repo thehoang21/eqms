@@ -313,57 +313,90 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
             )}
 
             {reviewers.length > 0 ? (
-                <div className="grid grid-cols-1 gap-3">
-                    {reviewers
-                        .sort((a, b) => a.order - b.order)
-                        .map((reviewer, index) => (
-                        <div 
-                            key={reviewer.id} 
-                            draggable={reviewFlowType === 'sequential'}
-                            onDragStart={(e) => reviewFlowType === 'sequential' && handleDragStart(e, index)}
-                            onDragEnd={handleDragEnd}
-                            onDragOver={(e) => reviewFlowType === 'sequential' && handleDragOver(e)}
-                            onDrop={(e) => reviewFlowType === 'sequential' && handleDrop(e, index)}
-                            className={`bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-all ${
-                                reviewFlowType === 'sequential' ? 'cursor-move' : ''
-                            }`}
-                        >
-                            <div className="p-4 flex items-center gap-4">
-                                {reviewFlowType === 'sequential' && (
-                                    <div className="flex items-center gap-2 shrink-0">
-                                        <GripVertical className="h-5 w-5 text-slate-400" />
-                                        <div className="h-8 w-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold">
-                                            {index + 1}
-                                        </div>
-                                    </div>
-                                )}
-                                <div className="h-10 w-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0">
-                                    {reviewer.name.charAt(0)}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-0.5">
-                                        <h4 className="font-medium text-slate-900 truncate">{reviewer.name}</h4>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-xs text-slate-500">
-                                        <span className="flex items-center gap-1">
-                                            <ShieldCheck className="h-3 w-3" />
-                                            {reviewer.role}
-                                        </span>
-                                        <span className="w-1 h-1 rounded-full bg-slate-300" />
-                                        <span>{reviewer.department}</span>
-                                    </div>
-                                    <div className="text-xs text-slate-400 mt-0.5">{reviewer.email}</div>
-                                </div>
-                                <button
-                                    onClick={() => removeReviewer(reviewer.id)}
-                                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                    title="Remove reviewer"
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-16">
+                                        No.
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        User
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        Email
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        Position
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        Sequence
+                                    </th>
+                                    <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-24">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-200 bg-white">
+                                {reviewers
+                                    .sort((a, b) => a.order - b.order)
+                                    .map((reviewer, index) => (
+                                        <tr
+                                            key={reviewer.id}
+                                            draggable={reviewFlowType === 'sequential'}
+                                            onDragStart={(e) => reviewFlowType === 'sequential' && handleDragStart(e, index)}
+                                            onDragEnd={handleDragEnd}
+                                            onDragOver={(e) => reviewFlowType === 'sequential' && handleDragOver(e)}
+                                            onDrop={(e) => reviewFlowType === 'sequential' && handleDrop(e, index)}
+                                            className={`hover:bg-slate-50/80 transition-colors ${
+                                                reviewFlowType === 'sequential' ? 'cursor-move' : ''
+                                            } ${draggedIndex === index ? 'opacity-40' : ''}`}
+                                        >
+                                            <td className="py-3.5 px-4 text-sm text-slate-500 whitespace-nowrap">
+                                                {index + 1}
+                                            </td>
+                                            <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                                <div className="flex items-center gap-3">
+                                                    <div>
+                                                        <div className="font-medium text-slate-900">{reviewer.name}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                                {reviewer.email}
+                                            </td>
+                                            <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                                {reviewer.role}
+                                            </td>
+                                            <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                                {reviewFlowType === 'sequential' ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <GripVertical className="h-4 w-4 text-slate-400" />
+                                                        <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
+                                                            {reviewer.order}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-slate-400">-</span>
+                                                )}
+                                            </td>
+                                            <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                                                <Button
+                                                    onClick={() => removeReviewer(reviewer.id)}
+                                                    variant="ghost"
+                                                    size="icon-sm"
+                                                    className="text-slate-400 hover:text-red-500 hover:bg-red-50"
+                                                    title="Remove reviewer"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             ) : (
                 <div 

@@ -14,16 +14,14 @@ import {
     RelatedDocumentsTab,
     CorrelatedDocumentsTab,
     DocumentRelationships,
-    type ParentDocument as RelationshipParentDocument,
-    type RelatedDocument as RelationshipDocument,
+    type ParentDocument,
+    type RelatedDocument,
     type Revision,
 } from "@/features/documents/shared/tabs/GeneralTab/subtabs";
 import {
     GeneralTab,
     DocumentTab,
     type UploadedFile,
-    type ParentDocument,
-    type RelatedDocument,
 } from "@/features/documents/document-list/new-document/new-tabs";
 import { DocumentType } from "@/types/documentTypes";
 import { IconSmartHome } from "@tabler/icons-react";
@@ -71,7 +69,35 @@ export const NewDocumentView: React.FC = () => {
     const [isCorrelatedModalOpen, setIsCorrelatedModalOpen] = useState(false);
     const [revisions, setRevisions] = useState<Revision[]>([]);
     const [reviewFlowType, setReviewFlowType] = useState<ReviewFlowType>("parallel");
-    const [relationshipDocs, setRelationshipDocs] = useState<RelationshipDocument[]>([]);
+    // Initial mock data for testing
+    const [relationshipDocs, setRelationshipDocs] = useState<RelatedDocument[]>([
+        {
+            id: "1",
+            documentNumber: "DOC-2024-002",
+            created: "2024-01-10",
+            openedBy: "John Doe",
+            documentName: "Quality Control Procedures",
+            state: "effective",
+            documentType: "SOP",
+            department: "Quality Assurance",
+            authorCoAuthor: "John Doe, Jane Smith",
+            effectiveDate: "2024-02-01",
+            validUntil: "2025-02-01"
+        },
+        {
+            id: "2",
+            documentNumber: "DOC-2024-003",
+            created: "2024-01-15",
+            openedBy: "Jane Smith",
+            documentName: "Manufacturing Guidelines",
+            state: "approved",
+            documentType: "WI",
+            department: "Production",
+            authorCoAuthor: "Jane Smith",
+            effectiveDate: "2024-03-01",
+            validUntil: "2025-03-01"
+        }
+    ]);
 
     // Auto-generated fields
     const [documentNumber, setDocumentNumber] = useState<string>("");
@@ -87,8 +113,20 @@ export const NewDocumentView: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     // Document Relationships state
-    const [parentDocument, setParentDocument] = useState<ParentDocument | null>(null);
-    const [relatedDocuments, setRelatedDocuments] = useState<RelatedDocument[]>([]);
+    // Initial mock data for testing
+    const [parentDocument, setParentDocument] = useState<ParentDocument | null>({
+        id: "1",
+        documentNumber: "DOC-2024-005",
+        created: "2024-01-05",
+        openedBy: "Alice Brown",
+        documentName: "Equipment Maintenance Schedule",
+        state: "effective",
+        documentType: "Schedule",
+        department: "Maintenance",
+        authorCoAuthor: "Alice Brown",
+        effectiveDate: "2024-01-15",
+        validUntil: "2025-01-15"
+    });
     const [suggestedDocumentCode, setSuggestedDocumentCode] = useState<string>("");
 
     // Form state
@@ -399,8 +437,8 @@ export const NewDocumentView: React.FC = () => {
                             isObsoleted={documentStatus === "Obsoleted"}
                             parentDocument={parentDocument}
                             onParentDocumentChange={setParentDocument}
-                            relatedDocuments={relatedDocuments}
-                            onRelatedDocumentsChange={setRelatedDocuments}
+                            relatedDocuments={relationshipDocs}
+                            onRelatedDocumentsChange={setRelationshipDocs}
                             documentType={formData.type}
                             onSuggestedCodeChange={setSuggestedDocumentCode}
                         />

@@ -12,6 +12,7 @@ import { Select } from "@/components/ui/select/Select";
 import { Button } from "@/components/ui/button/Button";
 import { FormModal } from "@/components/ui/modal/FormModal";
 import { cn } from "@/components/ui/utils";
+import { ParentDocument, RelatedDocument } from "../types";
 
 // Mock data - Replace with API call
 const MOCK_EFFECTIVE_DOCUMENTS = [
@@ -68,18 +69,6 @@ const MOCK_ALL_DOCUMENTS = [
     status: "Effective",
   },
 ];
-
-export interface ParentDocument {
-  id: string;
-  title: string;
-  type: string;
-}
-
-export interface RelatedDocument {
-  id: string;
-  title: string;
-  type: string;
-}
 
 interface DocumentRelationshipsProps {
   parentDocument: ParentDocument | null;
@@ -177,8 +166,16 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
       if (selected) {
         setTempParentDocument({
           id: selected.id,
-          title: selected.title,
-          type: selected.type,
+          documentNumber: selected.id,
+          created: "2024-01-10",
+          openedBy: "John Doe",
+          documentName: selected.title,
+          state: "effective",
+          documentType: selected.type,
+          department: "Quality Assurance",
+          authorCoAuthor: "John Doe",
+          effectiveDate: "2024-02-01",
+          validUntil: "2025-02-01"
         });
       }
     }
@@ -205,8 +202,16 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
     );
     const newRelatedDocs: RelatedDocument[] = docsToAdd.map((doc) => ({
       id: doc.id,
-      title: doc.title,
-      type: doc.type,
+      documentNumber: doc.id,
+      created: "2024-01-10",
+      openedBy: "John Doe",
+      documentName: doc.title,
+      state: "effective" as const,
+      documentType: doc.type,
+      department: "Quality Assurance",
+      authorCoAuthor: "John Doe",
+      effectiveDate: "2024-02-01",
+      validUntil: "2025-02-01"
     }));
     setTempRelatedDocuments([...tempRelatedDocuments, ...newRelatedDocs]);
     setSelectedAvailableIds([]);
@@ -226,7 +231,19 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
     if (doc) {
       setTempRelatedDocuments([
         ...tempRelatedDocuments,
-        { id: doc.id, title: doc.title, type: doc.type },
+        { 
+          id: doc.id, 
+          documentNumber: doc.id,
+          created: "2024-01-10",
+          openedBy: "John Doe",
+          documentName: doc.title,
+          state: "effective" as const,
+          documentType: doc.type,
+          department: "Quality Assurance",
+          authorCoAuthor: "John Doe",
+          effectiveDate: "2024-02-01",
+          validUntil: "2025-02-01"
+        },
       ]);
     }
   };
@@ -295,7 +312,7 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
 
   return (
     <>
-      {/* Parent Document Modal */}
+      {/* Correlated Document Modal */}
       <FormModal
         isOpen={isParentModalOpen}
         onClose={handleCancelCorrelated}
@@ -326,11 +343,11 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1 flex-wrap">
                     <span className="text-sm font-bold text-blue-900">
-                      {tempParentDocument.id}
+                      {tempParentDocument.documentNumber}
                     </span>
                   </div>
                   <p className="text-sm text-blue-800 line-clamp-2">
-                    {tempParentDocument.title}
+                    {tempParentDocument.documentName}
                   </p>
                   <div className="flex items-center gap-1 mt-1 text-xs text-blue-700">
                     <Check className="h-3.5 w-3.5 flex-shrink-0" />
@@ -453,7 +470,7 @@ export const DocumentRelationships: React.FC<DocumentRelationshipsProps> = ({
                       )}
                     >
                       <div className="font-base text-slate-900">
-                        {doc.id} - {doc.title}
+                        {doc.documentNumber} - {doc.documentName}
                       </div>
                     </div>
                   ))}

@@ -232,47 +232,75 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
     return (
         <div className="space-y-4">
             {approvers.length > 0 ? (
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div className="p-4 flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg font-bold shrink-0 ring-4 ring-emerald-50">
-                            {approvers[0].name.charAt(0)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-0.5">
-                                <h4 className="font-semibold text-slate-900 truncate">{approvers[0].name}</h4>
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                    Approver
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-3 text-sm text-slate-500">
-                                <span className="flex items-center gap-1.5">
-                                    <ShieldCheck className="h-3.5 w-3.5" />
-                                    {approvers[0].role}
-                                </span>
-                                <span className="w-1 h-1 rounded-full bg-slate-300" />
-                                <span>{approvers[0].department}</span>
-                            </div>
-                            <div className="text-xs text-slate-400 mt-1">{approvers[0].email}</div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button
-                                onClick={handleModalOpen}
-                                variant="ghost"
-                                size="sm"
-                                className="text-slate-600 hover:text-emerald-600 hover:bg-emerald-50"
-                            >
-                                Change
-                            </Button>
-                            <Button
-                                onClick={removeApprover}
-                                variant="ghost"
-                                size="icon-sm"
-                                className="text-slate-400 hover:text-red-500 hover:bg-red-50"
-                                title="Remove approver"
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
-                        </div>
+                <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-16">
+                                        No.
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        User
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        Email
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        Position
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        Role
+                                    </th>
+                                    <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-24">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-200 bg-white">
+                                {approvers.map((approver, index) => (
+                                    <tr key={approver.id} className="hover:bg-slate-50/80 transition-colors">
+                                        <td className="py-3.5 px-4 text-sm text-slate-500 whitespace-nowrap">
+                                            {index + 1}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-8 w-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">
+                                                    {approver.name.charAt(0)}
+                                                </div>
+                                                <div>
+                                                    <div className="font-medium text-slate-900">{approver.name}</div>
+                                                    <div className="text-xs text-slate-500">{approver.department}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                            {approver.email}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                            {approver.role}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                                <CheckCircle className="h-3 w-3 mr-1" />
+                                                Approver
+                                            </span>
+                                        </td>
+                                        <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                                            <Button
+                                                onClick={removeApprover}
+                                                variant="ghost"
+                                                size="icon-sm"
+                                                className="text-slate-400 hover:text-red-500 hover:bg-red-50"
+                                                title="Remove approver"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             ) : (

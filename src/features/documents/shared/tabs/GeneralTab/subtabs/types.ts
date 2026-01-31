@@ -13,14 +13,30 @@ export interface Revision {
 // Document Relationships
 export interface ParentDocument {
     id: string;
-    title: string;
-    type: string;
+    documentNumber: string;
+    created: string;
+    openedBy: string;
+    documentName: string;
+    state: "draft" | "pendingReview" | "approved" | "effective" | "obsolete";
+    documentType: string;
+    department: string;
+    authorCoAuthor: string;
+    effectiveDate: string;
+    validUntil: string;
 }
 
 export interface RelatedDocument {
     id: string;
-    title: string;
-    type: string;
+    documentNumber: string;
+    created: string;
+    openedBy: string;
+    documentName: string;
+    state: "draft" | "pendingReview" | "approved" | "effective" | "obsolete";
+    documentType: string;
+    department: string;
+    authorCoAuthor: string;
+    effectiveDate: string;
+    validUntil: string;
 }
 
 // Reviewers & Approvers
@@ -46,11 +62,14 @@ export type ReviewFlowType = 'sequential' | 'parallel';
 // Controlled Copies
 export interface ControlledCopy {
     id: string;
-    location: string;
-    recipient: string;
+    controlledCopiesName: string;
     copyNumber: string;
-    status: string;
-    dateIssued: string;
+    created: string;
+    state: "draft" | "pendingReview" | "approved" | "effective" | "obsolete";
+    openedBy: string;
+    validUntil: string;
+    documentRevision: string;
+    documentNumber: string;
 }
 
 // Knowledge Base

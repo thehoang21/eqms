@@ -1,75 +1,218 @@
-import React from "react";
-import { Link as LinkIcon, X, ExternalLink, Network } from "lucide-react";
-
-interface RelatedDocument {
-    id: string;
-    title: string;
-    type: string;
-}
+import React, { useState, useMemo } from "react";
+import { Search } from "lucide-react";
+import { TablePagination } from "@/components/ui/table/TablePagination";
+import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
+import { RelatedDocument } from "./types";
 
 interface RelatedDocumentsTabProps {
     relatedDocuments: RelatedDocument[];
     onRelatedDocumentsChange: (docs: RelatedDocument[]) => void;
 }
 
+// Mock data
+const MOCK_RELATED_DOCUMENTS: RelatedDocument[] = [
+    {
+        id: "1",
+        documentNumber: "DOC-2024-002",
+        created: "2024-01-10",
+        openedBy: "John Doe",
+        documentName: "Quality Control Procedures",
+        state: "effective",
+        documentType: "SOP",
+        department: "Quality Assurance",
+        authorCoAuthor: "John Doe, Jane Smith",
+        effectiveDate: "2024-02-01",
+        validUntil: "2025-02-01"
+    },
+    {
+        id: "2",
+        documentNumber: "DOC-2024-003",
+        created: "2024-01-15",
+        openedBy: "Jane Smith",
+        documentName: "Manufacturing Guidelines",
+        state: "approved",
+        documentType: "WI",
+        department: "Production",
+        authorCoAuthor: "Jane Smith",
+        effectiveDate: "2024-03-01",
+        validUntil: "2025-03-01"
+    },
+    {
+        id: "3",
+        documentNumber: "DOC-2024-004",
+        created: "2024-01-20",
+        openedBy: "Bob Johnson",
+        documentName: "Safety Protocol",
+        state: "pendingReview",
+        documentType: "Policy",
+        department: "Safety",
+        authorCoAuthor: "Bob Johnson, Alice Brown",
+        effectiveDate: "2024-04-01",
+        validUntil: "2025-04-01"
+    }
+];
+
 export const RelatedDocumentsTab: React.FC<RelatedDocumentsTabProps> = ({ 
     relatedDocuments, 
     onRelatedDocumentsChange 
 }) => {
-    const handleRemoveDocument = (id: string) => {
-        onRelatedDocumentsChange(relatedDocuments.filter(d => d.id !== id));
-    };
+    const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+
+    // Use props data (relatedDocuments from parent state)
+    const documents = relatedDocuments;
+
+    // Filter documents based on search
+    const filteredDocuments = useMemo(() => {
+        if (!searchQuery.trim()) return documents;
+
+        const query = searchQuery.toLowerCase();
+        return documents.filter(
+            (doc) =>
+                doc.documentNumber.toLowerCase().includes(query) ||
+                doc.documentName.toLowerCase().includes(query) ||
+                doc.openedBy.toLowerCase().includes(query) ||
+                doc.department.toLowerCase().includes(query) ||
+                doc.authorCoAuthor.toLowerCase().includes(query)
+        );
+    }, [searchQuery, documents]);
+
+    // Pagination
+    const totalPages = Math.ceil(filteredDocuments.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentDocuments = filteredDocuments.slice(startIndex, endIndex);
 
     return (
         <div className="space-y-4">
-            {/* Header */}
-            <div>
-                <p className="text-sm text-slate-600">
-                    Link related documents that reference or depend on this document
-                </p>
+            {/* Search Bar */}
+            <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <input
+                        type="text"
+                        placeholder="Search by document number, name, opened by, department, or author..."
+                        value={searchQuery}
+                        onChange={(e) => {
+                            setSearchQuery(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                        className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                    />
+                </div>
             </div>
 
-            {/* Related Documents List */}
-            {relatedDocuments.length > 0 ? (
-                <div className="space-y-2">
-                    {relatedDocuments.map((doc) => (
-                        <div
-                            key={doc.id}
-                            className="flex items-center justify-between p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors group"
-                        >
-                            <div className="flex items-center gap-3 flex-1">
-                                <Network className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-2">
-                                        <p className="text-sm font-medium text-slate-900">{doc.id}</p>
-                                        <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                                            {doc.type}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-slate-600 mt-0.5">{doc.title}</p>
-                                </div>
-                                <button
-                                    className="p-2 hover:bg-slate-100 rounded transition-colors opacity-0 group-hover:opacity-100"
-                                    title="Open document"
-                                >
-                                    <ExternalLink className="h-4 w-4 text-slate-600" />
-                                </button>
-                            </div>
-                            <button
-                                onClick={() => handleRemoveDocument(doc.id)}
-                                className="p-1 hover:bg-slate-200 rounded transition-colors ml-2"
-                            >
-                                <X className="h-4 w-4 text-slate-600" />
-                            </button>
-                        </div>
-                    ))}
+            {/* Table */}
+            <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="w-full">
+                        <thead className="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    No.
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Document Number
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Created
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Opened by
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Document Name
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    State
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Document Type
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Department
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Author/Co-Author
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Effective Date
+                                </th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    Valid Until
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200 bg-white">
+                            {currentDocuments.length === 0 ? (
+                                <tr>
+                                    <td colSpan={11} className="py-12 text-center text-slate-500">
+                                        <p className="text-sm">No related documents found</p>
+                                    </td>
+                                </tr>
+                            ) : (
+                                currentDocuments.map((doc, index) => (
+                                    <tr
+                                        key={doc.id}
+                                        className="hover:bg-slate-50/80 transition-colors"
+                                    >
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {startIndex + index + 1}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap font-medium text-slate-900">
+                                            {doc.documentNumber}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {doc.created}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {doc.openedBy}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {doc.documentName}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                            <StatusBadge status={doc.state} />
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {doc.documentType}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {doc.department}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {doc.authorCoAuthor}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {doc.effectiveDate}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                            {doc.validUntil}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
-            ) : (
-                <div className="text-center py-8 text-slate-500">
-                    <Network className="h-8 w-8 text-slate-300 mx-auto mb-2" />
-                    <p className="text-sm">No related documents added yet</p>
-                </div>
-            )}
+
+                {/* Pagination */}
+                {filteredDocuments.length > 0 && (
+                    <TablePagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={filteredDocuments.length}
+                        itemsPerPage={itemsPerPage}
+                        onPageChange={setCurrentPage}
+                        onItemsPerPageChange={(value) => {
+                            setItemsPerPage(value);
+                            setCurrentPage(1);
+                        }}
+                        showPageNumbers={false}
+                    />
+                )}
+            </div>
         </div>
     );
 };
