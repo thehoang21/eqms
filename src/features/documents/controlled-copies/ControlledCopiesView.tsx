@@ -900,7 +900,6 @@ export const ControlledCopiesView: React.FC = () => {
             itemsPerPage={itemsPerPage}
             onPageChange={setCurrentPage}
             onItemsPerPageChange={setItemsPerPage}
-            onPageChange={setCurrentPage}
           />
         )}
       </div>
