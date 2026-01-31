@@ -8,6 +8,8 @@ export interface NavItem {
   iconColor?: string;
   children?: NavItem[];
   path?: string; // Route path for navigation
+  /** Show horizontal divider after this item */
+  showDividerAfter?: boolean;
 }
 
 export interface BreadcrumbItem {

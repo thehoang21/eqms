@@ -262,15 +262,16 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
     const paddingLeft = isCollapsed ? 0 : (level === 0 ? BASE_PADDING : (level * LEVEL_PADDING + BASE_PADDING));
 
     return (
-      <div key={item.id} className="w-full relative">
-        {!isCollapsed && level > 0 && (
-          <div 
-            className="absolute left-4 top-0 bottom-0 border-l border-slate-200 w-px" 
-            style={{ left: `${level * LEVEL_PADDING}px` }}
-          />
-        )}
+      <>
+        <div key={item.id} className="w-full relative">
+          {!isCollapsed && level > 0 && (
+            <div 
+              className="absolute left-4 top-0 bottom-0 border-l border-slate-200 w-px" 
+              style={{ left: `${level * LEVEL_PADDING}px` }}
+            />
+          )}
 
-        <button
+          <button
           onClick={(e) => {
             if (isCollapsed && hasChildren) {
               handleMenuItemClick(item, e);
@@ -336,12 +337,12 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           {/* Label */}
           <div 
             className={cn(
-              "overflow-hidden whitespace-nowrap transition-all duration-200",
-              isCollapsed ? "max-w-0 opacity-0 ml-0" : "max-w-[200px] opacity-100 ml-3"
+              "overflow-hidden transition-all duration-200 flex-1",
+              isCollapsed ? "max-w-0 opacity-0 ml-0" : "opacity-100 ml-3"
             )}
           >
             <span className={cn(
-              "truncate block text-sm",
+              "block text-sm text-left break-words leading-tight",
               isActive ? "font-semibold text-emerald-700" : "font-medium"
             )}>
               {item.label}
@@ -382,7 +383,18 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             </div>
           </div>
         )}
-      </div>
+        </div>
+        
+        {/* Divider after item if specified */}
+        {level === 0 && item.showDividerAfter && (
+          <div className={cn(
+            "my-4",
+            isCollapsed ? "mx-3" : "mx-4"
+          )}>
+            <div className="h-px bg-slate-200" />
+          </div>
+        )}
+      </>
     );
   }, [expandedItems, activeId, isCollapsed, toggleExpand, handleItemClick, handleMenuItemClick, handleTooltipShow, handleTooltipHide, hoverMenu.isOpen, hoverMenu.item, setHoverMenu, onNavigate, onClose]);
 
@@ -446,7 +458,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             )} />
           )}
           <span className={cn(
-            "flex-1 text-left",
+            "flex-1 text-left break-words leading-tight",
             level >= 2 ? "ml-0" : "ml-3"
           )}>{item.label}</span>
           {hasChildren && (
@@ -519,7 +531,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
                   hoverMenu.item.iconColor || "text-slate-600"
                 )} />
               )}
-              <span className="font-semibold text-sm text-slate-900 truncate">
+              <span className="font-semibold text-sm text-slate-900 text-left break-words leading-tight">
                 {hoverMenu.item.label}
               </span>
             </div>
