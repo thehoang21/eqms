@@ -1,12 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {
-  Eye,
-  EyeOff,
-  ChevronLeft,
-  ArrowRight,
-  Shield,
-  CheckCircle2,
-} from "lucide-react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
 import { cn } from "@/components/ui/utils";
@@ -16,20 +10,113 @@ import slide1 from "@/assets/images/slide-image/ipad1.webp";
 import slide2 from "@/assets/images/slide-image/ipad2.webp";
 import slide3 from "@/assets/images/slide-image/ipad3.webp";
 import slide4 from "@/assets/images/slide-image/ipad4.webp";
-import { IconArrowLeft } from "@tabler/icons-react";
+
+// ============================================================================
+// CONSTANTS & CONFIGURATION
+// ============================================================================
+
+const CAROUSEL_INTERVAL = 2000; // 2 seconds per slide
+const MIN_PASSWORD_LENGTH = 6;
+const LOGIN_SIMULATION_DELAY = 1500; // 1.5 seconds
+
+const SLIDE_IMAGES = [slide1, slide2, slide3, slide4] as const;
+
+const DEMO_CREDENTIALS = {
+  username: "admin",
+  password: "123456",
+} as const;
+
+const ERROR_MESSAGES = {
+  USERNAME_REQUIRED: "Username or email is required",
+  PASSWORD_REQUIRED: "Password is required",
+  PASSWORD_TOO_SHORT: `Password must be at least ${MIN_PASSWORD_LENGTH} characters`,
+  INVALID_CREDENTIALS: "Invalid username or password. Please try again.",
+} as const;
+
+// ============================================================================
+// TYPES
+// ============================================================================
 
 interface LoginViewProps {
   onLogin?: (username: string, password: string, rememberMe: boolean) => void;
 }
 
+interface FormData {
+  username: string;
+  password: string;
+  rememberMe: boolean;
+}
+
+interface FormErrors {
+  username: string;
+  password: string;
+}
+
+// ============================================================================
+// VALIDATION HELPERS
+// ============================================================================
+
+/**
+ * Validates login form data
+ * @param data - Form data to validate
+ * @returns Object containing validation errors (empty strings if no errors)
+ */
+const validateLoginForm = (data: FormData): FormErrors => {
+  const errors: FormErrors = {
+    username: "",
+    password: "",
+  };
+
+  if (!data.username.trim()) {
+    errors.username = ERROR_MESSAGES.USERNAME_REQUIRED;
+  }
+
+  if (!data.password) {
+    errors.password = ERROR_MESSAGES.PASSWORD_REQUIRED;
+  } else if (data.password.length < MIN_PASSWORD_LENGTH) {
+    errors.password = ERROR_MESSAGES.PASSWORD_TOO_SHORT;
+  }
+
+  return errors;
+};
+
+/**
+ * Checks if form has any validation errors
+ * @param errors - Form errors object
+ * @returns true if form is valid (no errors)
+ */
+const isFormValid = (errors: FormErrors): boolean => {
+  return !errors.username && !errors.password;
+};
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
+/**
+ * LoginView Component
+ * Full-page login interface with splash screen, carousel, and form validation
+ * 
+ * @component
+ * @example
+ * ```tsx
+ * <LoginView onLogin={(username, password, rememberMe) => {
+ *   // Handle successful login
+ * }} />
+ * ```
+ */
 export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
-  const [formData, setFormData] = useState({
+  // ========================================================================
+  // STATE
+  // ========================================================================
+
+  const [formData, setFormData] = useState<FormData>({
     username: "",
     password: "",
     rememberMe: false,
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({
+  const [errors, setErrors] = useState<FormErrors>({
     username: "",
     password: "",
   });
@@ -38,106 +125,137 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showSplash, setShowSplash] = useState(true);
 
-  const slides = [slide1, slide2, slide3, slide4];
+  // ========================================================================
+  // MEMOIZED VALUES
+  // ========================================================================
+
+  const hasFormErrors = useMemo(() => !isFormValid(errors), [errors]);
+
+  // ========================================================================
+  // EFFECTS
+  // ========================================================================
 
   // Auto-play carousel
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 2000); // Change slide every 2 seconds
+      setCurrentSlide((prev) => (prev + 1) % SLIDE_IMAGES.length);
+    }, CAROUSEL_INTERVAL);
 
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, []);
 
-  const handleInputChange = (field: "username" | "password", value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: "" }));
-    setLoginError("");
-  };
+  // ========================================================================
+  // EVENT HANDLERS
+  // ========================================================================
 
-  const validateForm = () => {
-    const newErrors = {
-      username: "",
-      password: "",
-    };
-    let isValid = true;
+  const handleInputChange = useCallback(
+    (field: keyof Pick<FormData, "username" | "password">, value: string) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
+      setLoginError("");
+    },
+    []
+  );
 
-    if (!formData.username.trim()) {
-      newErrors.username = "Username or email is required";
-      isValid = false;
-    }
+  const handleRememberMeChange = useCallback((checked: boolean) => {
+    setFormData((prev) => ({ ...prev, rememberMe: checked }));
+  }, []);
 
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-      isValid = false;
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-      isValid = false;
-    }
+  const handleTogglePassword = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
 
-    setErrors(newErrors);
-    return isValid;
-  };
+  const handleCloseSplash = useCallback(() => {
+    setShowSplash(false);
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginError("");
+  const handleOpenSplash = useCallback(() => {
+    setShowSplash(true);
+  }, []);
 
-    if (!validateForm()) {
-      return;
-    }
+  const handleSlideChange = useCallback((index: number) => {
+    setCurrentSlide(index);
+  }, []);
 
-    setIsLoading(true);
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoginError("");
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
+      // Validate form
+      const validationErrors = validateLoginForm(formData);
+      setErrors(validationErrors);
 
-      // Hard-coded credentials
-      if (formData.username === "admin" && formData.password === "123456") {
-        // Login successful
-        // Reset viewport zoom before navigation (fixes iOS Safari auto-zoom issue)
-        blurActiveInput();
-        resetViewportZoom();
-        
-        if (onLogin) {
-          onLogin(formData.username, formData.password, formData.rememberMe);
-        } else {
-          console.log("Login successful:", formData);
-        }
-      } else {
-        // Login failed
-        setLoginError("Invalid username or password. Please try again.");
+      if (!isFormValid(validationErrors)) {
+        return;
       }
-    }, 1500);
-  };
+
+      setIsLoading(true);
+
+      // Simulate API call
+      setTimeout(() => {
+        setIsLoading(false);
+
+        // Check credentials
+        if (
+          formData.username === DEMO_CREDENTIALS.username &&
+          formData.password === DEMO_CREDENTIALS.password
+        ) {
+          // Login successful - Reset viewport zoom before navigation
+          blurActiveInput();
+          resetViewportZoom();
+
+          if (onLogin) {
+            onLogin(formData.username, formData.password, formData.rememberMe);
+          } else {
+            console.log("Login successful:", formData);
+          }
+        } else {
+          // Login failed
+          setLoginError(ERROR_MESSAGES.INVALID_CREDENTIALS);
+        }
+      }, LOGIN_SIMULATION_DELAY);
+    },
+    [formData, onLogin]
+  );
+
+  // ========================================================================
+  // RENDER
+  // ========================================================================
+
+  const slides = [slide1, slide2, slide3, slide4];
 
   return (
-    <div className="min-h-screen w-full flex overflow-hidden">
-      {/* Mobile Splash Screen */}
+    <div className="min-h-screen w-full flex overflow-hidden" role="main">
+      {/* ====================================================================
+          MOBILE SPLASH SCREEN
+          ==================================================================== */}
       <div
         className={cn(
           "lg:hidden fixed inset-0 z-50 bg-slate-900 transition-all duration-700 ease-in-out",
           showSplash
             ? "visible scale-100"
-            : "opacity-0 invisible scale-110 pointer-events-none",
+            : "opacity-0 invisible scale-110 pointer-events-none"
         )}
+        role="dialog"
+        aria-label="Welcome screen"
+        aria-hidden={!showSplash}
       >
         {/* Carousel Background */}
-        <div className="absolute inset-0 z-0">
-          {slides.map((slide, index) => (
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          {SLIDE_IMAGES.map((slide, index) => (
             <div
               key={index}
               className={cn(
                 "absolute inset-0 transition-all duration-1000 ease-in-out",
                 index === currentSlide
                   ? "opacity-100 scale-100"
-                  : "opacity-0 scale-105",
+                  : "opacity-0 scale-105"
               )}
             >
               <img
                 src={slide}
-                alt={`Slide ${index + 1}`}
+                alt={`Product showcase ${index + 1}`}
                 className="w-full h-full object-cover opacity-80"
               />
             </div>
@@ -147,13 +265,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         </div>
 
         {/* Splash Content */}
-        <div className="relative z-10 h-full flex flex-col p-8 text-white">
+        <div className="relative z-10 h-full flex flex-col p-6 sm:p-8 text-white">
           {/* Logo at Top */}
-          <div className="pt-8 pb-8 flex justify-center">
+          <div className="pt-6 sm:pt-8 pb-6 sm:pb-8 flex justify-center">
             <img
               src={logoImg}
-              alt="Logo"
-              className="h-14 sm:h-16 w-auto object-contain drop-shadow-2xl mx-auto"
+              alt="QMS Logo"
+              className="h-14 sm:h-16 md:h-18 w-auto object-contain drop-shadow-2xl mx-auto"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
               }}
@@ -161,12 +279,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
           </div>
 
           {/* Title & Description - Centered */}
-          <div className="flex-1 flex flex-col justify-center items-center text-center">
-            <div className="space-y-3">
-              <h1 className="text-2xl font-bold leading-tight tracking-wide">
+          <div className="flex-1 flex flex-col justify-center items-center text-center px-4">
+            <div className="space-y-3 max-w-lg">
+              <h1 className="text-2xl sm:text-3xl font-bold leading-tight tracking-wide">
                 Quality Management System
               </h1>
-              <p className="text-sm text-white/90 leading-relaxed max-w-sm mx-auto tracking-wide">
+              <p className="text-sm sm:text-base text-white/90 leading-relaxed tracking-wide">
                 Next generation pharmaceutical quality management. Intelligent,
                 compliant, and secure.
               </p>
@@ -176,23 +294,27 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
           {/* Sign In Button */}
           <div className="space-y-4">
             <Button
-              onClick={() => setShowSplash(false)}
+              onClick={handleCloseSplash}
               size="default"
-              className="w-full h-14 text-base font-bold shadow-2xl shadow-emerald-500/30"
+              className="w-full h-12 sm:h-14 text-base font-semibold shadow-2xl shadow-emerald-500/30"
+              aria-label="Continue to sign in"
             >
               Sign In
             </Button>
 
             {/* Carousel Indicators */}
-            <div className="flex justify-center gap-2 pb-2">
-              {slides.map((_, index) => (
+            <div className="flex justify-center gap-2 pb-2" role="tablist" aria-label="Carousel slides">
+              {SLIDE_IMAGES.map((_, index) => (
                 <div
                   key={index}
+                  role="tab"
+                  aria-selected={index === currentSlide}
+                  aria-label={`Slide ${index + 1} of ${SLIDE_IMAGES.length}`}
                   className={cn(
                     "h-1.5 rounded-full transition-all duration-300",
                     index === currentSlide
                       ? "w-8 bg-white"
-                      : "w-1.5 bg-white/40",
+                      : "w-1.5 bg-white/40"
                   )}
                 />
               ))}
@@ -206,25 +328,28 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Left Side - Branding & Image (Hidden on mobile) */}
+      {/* ====================================================================
+          LEFT SIDE - BRANDING & IMAGE (Desktop Only)
+          ==================================================================== */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 p-4 lg:p-6 items-center justify-center bg-white">
         {/* Branding Card with Carousel */}
         <div className="relative w-full h-full rounded-[1.25rem] overflow-hidden bg-slate-600 ring-1 ring-black/5">
           {/* Carousel Container */}
-          <div className="absolute inset-0 z-0">
-            {slides.map((slide, index) => (
+          <div className="absolute inset-0 z-0" role="region" aria-label="Product showcase carousel">
+            {SLIDE_IMAGES.map((slide, index) => (
               <div
                 key={index}
                 className={cn(
                   "absolute inset-0 transition-all duration-1000 ease-in-out",
                   index === currentSlide
                     ? "opacity-100 scale-100"
-                    : "opacity-0 scale-105",
+                    : "opacity-0 scale-105"
                 )}
+                aria-hidden={index !== currentSlide}
               >
                 <img
                   src={slide}
-                  alt={`Slide ${index + 1}`}
+                  alt={`Product showcase ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -232,36 +357,38 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
           </div>
 
           {/* Carousel Indicators */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-            {slides.map((_, index) => (
+          <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2" role="tablist" aria-label="Carousel controls">
+            {SLIDE_IMAGES.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentSlide(index)}
+                onClick={() => handleSlideChange(index)}
                 className={cn(
-                  "h-2 rounded-full transition-all duration-300",
+                  "h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-slate-900",
                   index === currentSlide
                     ? "w-8 bg-white"
-                    : "w-2 bg-white/50 hover:bg-white/75",
+                    : "w-2 bg-white/50 hover:bg-white/75"
                 )}
                 aria-label={`Go to slide ${index + 1}`}
+                aria-current={index === currentSlide ? "true" : "false"}
+                role="tab"
               />
             ))}
           </div>
 
           {/* Content Overlay */}
-          <div className="relative z-10 flex flex-col justify-between h-full p-10 xl:p-14 text-white">
+          <div className="relative z-10 flex flex-col justify-between h-full p-8 lg:p-10 xl:p-14 text-white">
             {/* Top Content */}
             <div className="space-y-3">
               {/* Dark backdrop for text readability */}
-              <div className="absolute top-0 left-0 right-0 h-2/3 bg-gradient-to-b from-slate-900/75 via-slate-900/20 to-transparent -mx-10 xl:-mx-14 -mt-10 z-[-1]" />
+              <div className="absolute top-0 left-0 right-0 h-2/3 bg-gradient-to-b from-slate-900/75 via-slate-900/20 to-transparent -mx-8 lg:-mx-10 xl:-mx-14 -mt-8 lg:-mt-10 xl:-mt-14 z-[-1]" aria-hidden="true" />
               <div className="space-y-4 relative z-10">
-                <h1 className="text-5xl xl:text-6xl font-bold leading-tight font-display tracking-tight">
+                <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight font-display tracking-tight">
                   Enter the Future of
-                  <span className="block mt-2 text-6xl xl:text-7xl">
+                  <span className="block mt-2 text-5xl lg:text-6xl xl:text-7xl">
                     Quality Assurance
                   </span>
-                </h1>
-                <p className="text-lg text-white leading-relaxed max-w-auto font-base">
+                </h2>
+                <p className="text-base lg:text-lg text-white leading-relaxed max-w-auto font-base">
                   Experience the next generation of pharmaceutical quality
                   management. Intelligent, compliant, and secure.
                 </p>
@@ -277,34 +404,36 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      {/* ====================================================================
+          RIGHT SIDE - LOGIN FORM
+          ==================================================================== */}
       <div
         className={cn(
           "w-full lg:w-1/2 xl:w-2/5 relative flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-white transition-all duration-700 ease-in-out",
           showSplash
             ? "opacity-0 scale-95 lg:opacity-100 lg:scale-100"
-            : "opacity-100 scale-100",
+            : "opacity-100 scale-100"
         )}
       >
         {/* Back Button (Mobile Only) */}
         <button
-          onClick={() => setShowSplash(true)}
-          className="mt-8 lg:hidden absolute top-6 left-6 h-10 w-10 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors z-20"
-          aria-label="Back to splash"
+          onClick={handleOpenSplash}
+          className="mt-6 sm:mt-8 lg:hidden absolute top-6 left-6 h-10 w-10 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors z-20 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+          aria-label="Back to splash screen"
         >
           <IconArrowLeft className="h-5 w-5" />
         </button>
 
         {/* Form Container */}
-        <div className="w-full max-w-md mt-20 lg:mt-0">
+        <div className="w-full max-w-md mt-16 sm:mt-20 lg:mt-0">
           <div className="bg-white overflow-hidden">
             {/* Form Header */}
-            <div className="px-6 sm:px-8 pt-8 pb-6">
+            <div className="px-6 sm:px-8 pt-6 sm:pt-8 pb-6">
               <div className="text-center space-y-2">
                 <div className="inline-flex items-center justify-center mb-4">
                   <img
                     src={logoImg}
-                    alt="QualiGuard Logo"
+                    alt="QMS Logo"
                     className="h-12 sm:h-14 w-auto object-contain drop-shadow-lg"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
@@ -314,7 +443,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
                   Welcome Back
                 </h1>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm sm:text-base text-slate-600">
                   Sign in to access your account
                 </p>
               </div>
@@ -324,8 +453,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             <div className="px-6 sm:px-8 py-6 sm:py-8">
               {/* Login Error Alert */}
               {loginError && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                  <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center shrink-0"></div>
+                <div
+                  className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300"
+                  role="alert"
+                  aria-live="assertive"
+                >
+                  <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center shrink-0" aria-hidden="true"></div>
                   <div className="flex-1 min-w-0 pt-0.5">
                     <p className="text-sm font-semibold text-red-900">
                       Authentication Failed
@@ -335,7 +468,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 {/* Username/Email Field */}
                 <div className="space-y-2">
                   <label
@@ -347,7 +480,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   <div className="relative group">
                     <input
                       id="username"
+                      name="username"
                       type="text"
+                      autoComplete="username"
                       value={formData.username}
                       onChange={(e) =>
                         handleInputChange("username", e.target.value)
@@ -358,14 +493,20 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         "focus:outline-none focus:ring-4",
                         errors.username
                           ? "border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-500/10"
-                          : "border-slate-200 bg-white hover:border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10",
+                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10"
                       )}
                       placeholder="Enter your username or email"
                       disabled={isLoading}
+                      aria-invalid={!!errors.username}
+                      aria-describedby={errors.username ? "username-error" : undefined}
                     />
                   </div>
                   {errors.username && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1.5 mt-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <p
+                      id="username-error"
+                      className="text-xs text-red-600 font-medium flex items-center gap-1.5 mt-2 animate-in fade-in slide-in-from-top-1 duration-200"
+                      role="alert"
+                    >
                       {errors.username}
                     </p>
                   )}
@@ -382,7 +523,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   <div className="relative group">
                     <input
                       id="password"
+                      name="password"
                       type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
                       value={formData.password}
                       onChange={(e) =>
                         handleInputChange("password", e.target.value)
@@ -393,26 +536,34 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         "focus:outline-none focus:ring-4",
                         errors.password
                           ? "border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-500/10"
-                          : "border-slate-200 bg-white hover:border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/10",
+                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10"
                       )}
                       placeholder="Enter your password"
                       disabled={isLoading}
+                      aria-invalid={!!errors.password}
+                      aria-describedby={errors.password ? "password-error" : undefined}
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-700 transition-colors"
+                      onClick={handleTogglePassword}
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-700 transition-colors focus:outline-none focus:text-slate-700"
                       disabled={isLoading}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      tabIndex={-1}
                     >
                       {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
+                        <EyeOff className="h-5 w-5" aria-hidden="true" />
                       ) : (
-                        <Eye className="h-5 w-5" />
+                        <Eye className="h-5 w-5" aria-hidden="true" />
                       )}
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-xs text-red-600 font-medium flex items-center gap-1.5 mt-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <p
+                      id="password-error"
+                      className="text-xs text-red-600 font-medium flex items-center gap-1.5 mt-2 animate-in fade-in slide-in-from-top-1 duration-200"
+                      role="alert"
+                    >
                       {errors.password}
                     </p>
                   )}
@@ -423,16 +574,15 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   <Checkbox
                     id="rememberMe"
                     checked={formData.rememberMe}
-                    onChange={(checked) =>
-                      setFormData((prev) => ({ ...prev, rememberMe: checked }))
-                    }
+                    onChange={handleRememberMeChange}
                     label="Remember me"
                     disabled={isLoading}
                   />
                   <button
                     type="button"
-                    className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+                    className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors focus:outline-none focus:underline"
                     disabled={isLoading}
+                    aria-label="Forgot password"
                   >
                     Forgot password?
                   </button>
@@ -442,24 +592,26 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <Button
                   type="submit"
                   size="default"
-                  className="w-full h-12 mt-6 text-base font-bold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all group"
+                  className="w-full h-12 mt-6 text-base font-semibold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all group"
                   disabled={isLoading}
+                  aria-busy={isLoading}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
-                      <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Signing in...
+                      <div
+                        className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                        aria-hidden="true"
+                      />
+                      <span>Signing in...</span>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center gap-2">
-                      <span>Sign In</span>
-                    </div>
+                    <span>Sign In</span>
                   )}
                 </Button>
               </form>
 
               {/* Divider */}
-              <div className="relative my-6">
+              <div className="relative my-6" aria-hidden="true">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-slate-200"></div>
                 </div>
@@ -474,7 +626,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               <div className="text-center">
                 <p className="text-sm text-slate-600">
                   Don't have an account?{" "}
-                  <button className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors hover:underline">
+                  <button
+                    className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors hover:underline focus:outline-none focus:underline"
+                    aria-label="Contact administrator to create an account"
+                  >
                     Contact Administrator
                   </button>
                 </p>
