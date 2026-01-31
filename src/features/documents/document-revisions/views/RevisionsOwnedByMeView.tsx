@@ -663,7 +663,6 @@ export const RevisionsOwnedByMeView: React.FC = () => {
             itemsPerPage={itemsPerPage}
             onPageChange={setCurrentPage}
             onItemsPerPageChange={setItemsPerPage}
-            onPageChange={setCurrentPage}
           />
         </div>
       </div>

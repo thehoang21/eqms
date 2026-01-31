@@ -659,7 +659,6 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
           itemsPerPage={itemsPerPage}
           onPageChange={setCurrentPage}
           onItemsPerPageChange={setItemsPerPage}
-          onPageChange={setCurrentPage}
         />
       </div>
 
