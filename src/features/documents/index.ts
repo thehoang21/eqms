@@ -97,11 +97,6 @@ export { ControlledCopyDetailView } from './controlled-copies/detail/ControlledC
 export { DestroyControlledCopyView } from './controlled-copies/components/DestroyControlledCopyView';
 export { RequestControlledCopyView } from './views/RequestControlledCopyView';
 
-// =============================================================================
-// TEMPLATE LIBRARY
-// =============================================================================
-export { TemplateLibraryView } from './template-library/TemplateLibraryView';
-export { NewTemplateView } from './template-library/NewTemplateView';
 
 // =============================================================================
 // ARCHIVED DOCUMENTS
