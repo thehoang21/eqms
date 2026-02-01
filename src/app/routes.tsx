@@ -18,7 +18,7 @@ const NotificationsView = lazy(() => import('@/features/notifications').then(m =
 
 // Documents
 const DetailDocumentView = lazy(() => import('@/features/documents').then(m => ({ default: m.DetailDocumentView })));
-const ArchivedDocumentsView = lazy(() => import('@/features/documents').then(m => ({ default: m.ArchivedDocumentsView })));
+const ArchivedDocumentsView = lazy(() => import('@/features/documents/archived-documents').then(m => ({ default: m.ArchivedDocumentsView })));
 const DocumentsView = lazy(() => import('@/features/documents/document-list').then(m => ({ default: m.DocumentsView })));
 const NewDocumentView = lazy(() => import('@/features/documents/document-list/new-document').then(m => ({ default: m.NewDocumentView })));
 const DocumentReviewView = lazy(() => import('@/features/documents/document-list/review-document').then(m => ({ default: m.DocumentReviewView })));

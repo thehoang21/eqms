@@ -16,15 +16,13 @@ export const MainLayout: React.FC = () => {
   const { activeId, handleNavigate } = useNavigation();
   const [isIOS, setIsIOS] = useState(false);
 
-  // Detect iOS Safari on mount
+  // Detect iOS Safari and reset viewport zoom on mount (combined effect)
   useEffect(() => {
-    setIsIOS(isIOSSafari());
-  }, []);
-
-  // Reset viewport zoom on mount (fixes iOS Safari auto-zoom after login)
-  useEffect(() => {
-    if (isIOSSafari()) {
-      // Small delay to ensure the page has rendered
+    const isiOSSafari = isIOSSafari();
+    setIsIOS(isiOSSafari);
+    
+    if (isiOSSafari) {
+      // Small delay to ensure the page has rendered before resetting zoom
       const timer = setTimeout(() => {
         resetViewportZoom();
       }, 150);

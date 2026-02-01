@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { Button } from '../../ui/button/Button';
@@ -15,11 +15,49 @@ interface HeaderProps {
   onLogout?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollapsed, isMobileMenuOpen, onNavigateToProfile, onLogout }) => {
+export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSidebarCollapsed, isMobileMenuOpen, onNavigateToProfile, onLogout }) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
   const userMenuRef = useRef<HTMLDivElement>(null);
   const menuDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Memoized handlers
+  const handleToggleUserMenu = useCallback(() => {
+    setIsUserMenuOpen(prev => {
+      if (!prev && userMenuRef.current) {
+        // Calculate position when opening
+        const rect = userMenuRef.current.getBoundingClientRect();
+        setMenuPosition({
+          top: rect.bottom + window.scrollY + 8,
+          right: window.innerWidth - rect.right - window.scrollX
+        });
+      }
+      return !prev;
+    });
+  }, []);
+
+  const handleToggleNotifications = useCallback(() => {
+    setIsNotificationsOpen(prev => !prev);
+  }, []);
+
+  const handleCloseUserMenu = useCallback(() => {
+    setIsUserMenuOpen(false);
+  }, []);
+
+  const handleCloseNotifications = useCallback(() => {
+    setIsNotificationsOpen(false);
+  }, []);
+
+  const handleProfileClick = useCallback(() => {
+    setIsUserMenuOpen(false);
+    onNavigateToProfile?.();
+  }, [onNavigateToProfile]);
+
+  const handleLogoutClick = useCallback(() => {
+    setIsUserMenuOpen(false);
+    onLogout?.();
+  }, [onLogout]);
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -116,8 +154,8 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
           {/* Notifications */}
           <NotificationsDropdown
             isOpen={isNotificationsOpen}
-            onClose={() => setIsNotificationsOpen(false)}
-            onToggle={() => setIsNotificationsOpen(!isNotificationsOpen)}
+            onClose={handleCloseNotifications}
+            onToggle={handleToggleNotifications}
           />
 
           {/* Divider - Hidden on mobile */}
@@ -127,7 +165,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
           <div className="relative" ref={userMenuRef}>
             <button 
               className="flex items-center gap-1.5 md:gap-2 lg:gap-2.5 cursor-pointer px-1.5 py-1.5 lg:px-2 lg:py-1.5 rounded-lg border border-transparent transition-all select-none group"
-              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              onClick={handleToggleUserMenu}
               aria-label="User menu"
             >
               {/* Avatar */}
@@ -147,8 +185,8 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                   ref={menuDropdownRef}
                   className="fixed w-56 bg-white border border-slate-200 rounded-xl shadow-lg focus:outline-none animate-in fade-in zoom-in-95 duration-200 z-50"
                   style={{
-                      top: `${userMenuRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
-                      right: `${window.innerWidth - userMenuRef.current?.getBoundingClientRect().right! - window.scrollX}px`
+                      top: `${menuPosition.top}px`,
+                      right: `${menuPosition.right}px`
                   }}
               >
                 {/* User Info Header */}
@@ -161,10 +199,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                 <div className="py-0">
                   <button 
                       className="w-full text-left px-4 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 flex items-center gap-3 transition-colors"
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        onNavigateToProfile?.();
-                      }}
+                      onClick={handleProfileClick}
                   >
                       <User className="h-4 w-4 shrink-0" />
                       <span>Profile</span>
@@ -175,10 +210,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
                 <div className="border-t border-slate-100">
                   <button 
                       className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors"
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        onLogout?.();
-                      }}
+                      onClick={handleLogoutClick}
                   >
                       <IconLogout className="h-4 w-4 shrink-0" />
                       <span>Logout</span>
@@ -193,4 +225,4 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, isSidebarCollap
       </div>
     </header>
   );
-};
+});

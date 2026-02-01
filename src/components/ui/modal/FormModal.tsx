@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import { Button } from '../button/Button';
 import { cn } from '../utils';
 
-interface FormModalProps {
+export interface FormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm?: () => void;
