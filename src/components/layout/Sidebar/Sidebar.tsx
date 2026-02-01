@@ -337,12 +337,18 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           {/* Label */}
           <div 
             className={cn(
-              "overflow-hidden transition-all duration-200 flex-1",
-              isCollapsed ? "max-w-0 opacity-0 ml-0" : "opacity-100 ml-3"
+              "overflow-hidden flex-1",
+              isCollapsed 
+                ? "max-w-0 opacity-0 ml-0 transition-all duration-150 ease-in" 
+                : "opacity-100 ml-3 transition-all duration-250 ease-out delay-75"
             )}
+            style={{
+              willChange: isCollapsed ? 'auto' : 'opacity, max-width',
+            }}
           >
             <span className={cn(
-              "block text-sm text-left break-words leading-tight",
+              "block text-sm text-left whitespace-nowrap leading-tight",
+              "overflow-hidden",
               isActive ? "font-semibold text-emerald-700" : "font-medium"
             )}>
               {item.label}
@@ -576,9 +582,11 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           // Desktop: Sticky positioning
           "md:sticky md:top-0 md:z-30 md:h-screen",
           // Width
-          isCollapsed ? "w-20" : "w-[250px] max-w-[85vw]",
-          // Smooth transitions
-          "transition-all duration-300 ease-out",
+          isCollapsed ? "w-16" : "w-[250px] max-w-[85vw]",
+          // Smooth transitions - collapse nhanh, expand chậm
+          isCollapsed 
+            ? "transition-all duration-200 ease-in" 
+            : "transition-all duration-300 ease-out",
           // Mobile slide animation
           "md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
@@ -605,8 +613,10 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         >
           {/* Logo */}
           <div className={cn(
-            "flex items-center justify-center overflow-hidden transition-all duration-300",
-            isCollapsed ? "w-full" : "flex-1"
+            "flex items-center justify-center overflow-hidden",
+            isCollapsed 
+              ? "w-full transition-all duration-200 ease-in" 
+              : "flex-1 transition-all duration-300 ease-out"
           )}>
             <div className={cn(
               "flex items-center justify-center shrink-0",
@@ -648,9 +658,9 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar scroll-smooth",
             // Mobile: More padding for easier scrolling
             "pt-4 md:pt-3",
-            // Extra padding bottom on mobile for browser UI (address bar, toolbar)
-            // Using pb-32 (128px) to ensure enough space for iOS Safari bottom bar
-            "pb-32 md:pb-3"
+            // Extra padding bottom on mobile/tablet for browser UI (address bar, toolbar)
+            // Using pb-40 (160px) for iPad and pb-32 (128px) for mobile to ensure enough space for iOS Safari bottom bar
+            "pb-40 md:pb-3"
           )}
           style={{
             // Smooth scrolling on mobile with momentum
@@ -671,13 +681,13 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             {NAV_CONFIG.map((item) => renderMenuItem(item))}
           </nav>
           
-          {/* Extra spacer at bottom for mobile to ensure last items are accessible */}
-          {/* This compensates for iOS Safari bottom bar and home indicator */}
+          {/* Extra spacer at bottom for mobile/tablet to ensure last items are accessible */}
+          {/* This compensates for iOS Safari bottom bar, home indicator, and user profile footer */}
           <div 
             className="md:hidden shrink-0" 
             style={{ 
-              height: 'calc(env(safe-area-inset-bottom, 0px) + 60px)',
-              minHeight: '60px'
+              height: 'calc(env(safe-area-inset-bottom, 0px) + 100px)',
+              minHeight: '100px'
             }} 
             aria-hidden="true"
           />

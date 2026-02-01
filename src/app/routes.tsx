@@ -34,9 +34,7 @@ const RevisionReviewView = lazy(() => import('@/features/documents/document-revi
 const RevisionApprovalView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionApprovalView })));
 const StandaloneRevisionView = lazy(() => import('@/features/documents/document-revisions/components/StandaloneRevisionView').then(m => ({ default: m.StandaloneRevisionView })));
 
-// Templates & Controlled Copies
-const TemplateLibraryView = lazy(() => import('@/features/documents/template-library').then(m => ({ default: m.TemplateLibraryView })));
-const NewTemplateView = lazy(() => import('@/features/documents/template-library').then(m => ({ default: m.NewTemplateView })));
+// Controlled Copies
 const ControlledCopiesView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.ControlledCopiesView })));
 const ControlledCopyDetailView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.ControlledCopyDetailView })));
 const DestroyControlledCopyView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.DestroyControlledCopyView })));
@@ -203,12 +201,6 @@ export const AppRoutes: React.FC = () => {
             <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
           </Route>
           <Route path="controlled-copy/request" element={<Suspense fallback={<LoadingFallback />}><RequestControlledCopyView /></Suspense>} />
-          
-          {/* Templates */}
-          <Route path="templates">
-            <Route index element={<Suspense fallback={<LoadingFallback />}><TemplateLibraryView onViewTemplate={(id) => navigate(`/documents/templates/${id}`)} onCreateTemplate={() => navigate('/documents/templates/new')} /></Suspense>} />
-            <Route path="new" element={<Suspense fallback={<LoadingFallback />}><NewTemplateView /></Suspense>} />
-          </Route>
         </Route>
         
         {/* ===== SETTINGS ===== */}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { IconArrowLeft } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
 import { cn } from "@/components/ui/utils";
@@ -123,7 +122,6 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [showSplash, setShowSplash] = useState(true);
 
   // ========================================================================
   // MEMOIZED VALUES
@@ -163,14 +161,6 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
   const handleTogglePassword = useCallback(() => {
     setShowPassword((prev) => !prev);
-  }, []);
-
-  const handleCloseSplash = useCallback(() => {
-    setShowSplash(false);
-  }, []);
-
-  const handleOpenSplash = useCallback(() => {
-    setShowSplash(true);
   }, []);
 
   const handleSlideChange = useCallback((index: number) => {
@@ -223,110 +213,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   // RENDER
   // ========================================================================
 
-  const slides = [slide1, slide2, slide3, slide4];
-
   return (
     <div className="min-h-screen w-full flex overflow-hidden" role="main">
-      {/* ====================================================================
-          MOBILE SPLASH SCREEN
-          ==================================================================== */}
-      <div
-        className={cn(
-          "lg:hidden fixed inset-0 z-50 bg-slate-900 transition-all duration-700 ease-in-out",
-          showSplash
-            ? "visible scale-100"
-            : "opacity-0 invisible scale-110 pointer-events-none"
-        )}
-        role="dialog"
-        aria-label="Welcome screen"
-        aria-hidden={!showSplash}
-      >
-        {/* Carousel Background */}
-        <div className="absolute inset-0 z-0" aria-hidden="true">
-          {SLIDE_IMAGES.map((slide, index) => (
-            <div
-              key={index}
-              className={cn(
-                "absolute inset-0 transition-all duration-1000 ease-in-out",
-                index === currentSlide
-                  ? "opacity-100 scale-100"
-                  : "opacity-0 scale-105"
-              )}
-            >
-              <img
-                src={slide}
-                alt={`Product showcase ${index + 1}`}
-                className="w-full h-full object-cover opacity-80"
-              />
-            </div>
-          ))}
-          {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-900/80" />
-        </div>
-
-        {/* Splash Content */}
-        <div className="relative z-10 h-full flex flex-col p-6 sm:p-8 text-white">
-          {/* Logo at Top */}
-          <div className="pt-6 sm:pt-8 pb-6 sm:pb-8 flex justify-center">
-            <img
-              src={logoImg}
-              alt="QMS Logo"
-              className="h-14 sm:h-16 md:h-18 w-auto object-contain drop-shadow-2xl mx-auto"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-            />
-          </div>
-
-          {/* Title & Description - Centered */}
-          <div className="flex-1 flex flex-col justify-center items-center text-center px-4">
-            <div className="space-y-3 max-w-lg">
-              <h1 className="text-2xl sm:text-3xl font-bold leading-tight tracking-wide">
-                Quality Management System
-              </h1>
-              <p className="text-sm sm:text-base text-white/90 leading-relaxed tracking-wide">
-                Next generation pharmaceutical quality management. Intelligent,
-                compliant, and secure.
-              </p>
-            </div>
-          </div>
-
-          {/* Sign In Button */}
-          <div className="space-y-4">
-            <Button
-              onClick={handleCloseSplash}
-              size="default"
-              className="w-full h-12 sm:h-14 text-base font-semibold shadow-2xl shadow-emerald-500/30"
-              aria-label="Continue to sign in"
-            >
-              Sign In
-            </Button>
-
-            {/* Carousel Indicators */}
-            <div className="flex justify-center gap-2 pb-2" role="tablist" aria-label="Carousel slides">
-              {SLIDE_IMAGES.map((_, index) => (
-                <div
-                  key={index}
-                  role="tab"
-                  aria-selected={index === currentSlide}
-                  aria-label={`Slide ${index + 1} of ${SLIDE_IMAGES.length}`}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all duration-300",
-                    index === currentSlide
-                      ? "w-8 bg-white"
-                      : "w-1.5 bg-white/40"
-                  )}
-                />
-              ))}
-            </div>
-
-            {/* Footer */}
-            <p className="text-xs text-center text-white/70 pb-4">
-              A product of NTP Dev Team - Ngoc Thien Pharma.
-            </p>
-          </div>
-        </div>
-      </div>
 
       {/* ====================================================================
           LEFT SIDE - BRANDING & IMAGE (Desktop Only)
@@ -407,25 +295,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
       {/* ====================================================================
           RIGHT SIDE - LOGIN FORM
           ==================================================================== */}
-      <div
-        className={cn(
-          "w-full lg:w-1/2 xl:w-2/5 relative flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-white transition-all duration-700 ease-in-out",
-          showSplash
-            ? "opacity-0 scale-95 lg:opacity-100 lg:scale-100"
-            : "opacity-100 scale-100"
-        )}
-      >
-        {/* Back Button (Mobile Only) */}
-        <button
-          onClick={handleOpenSplash}
-          className="mt-6 sm:mt-8 lg:hidden absolute top-6 left-6 h-10 w-10 flex items-center justify-center rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors z-20 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
-          aria-label="Back to splash screen"
-        >
-          <IconArrowLeft className="h-5 w-5" />
-        </button>
-
+      <div className="w-full lg:w-1/2 xl:w-2/5 relative flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-white">
         {/* Form Container */}
-        <div className="w-full max-w-md mt-16 sm:mt-20 lg:mt-0">
+        <div className="w-full max-w-md">
           <div className="bg-white overflow-hidden">
             {/* Form Header */}
             <div className="px-6 sm:px-8 pt-6 sm:pt-8 pb-6">
