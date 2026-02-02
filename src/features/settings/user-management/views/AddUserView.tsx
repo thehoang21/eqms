@@ -16,6 +16,12 @@ export const AddUserView: React.FC = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
 
+  // Mock existing users for duplicate detection
+  const EXISTING_USERS = [
+    { employeeId: "0001", email: "admin@zenithquality.com" },
+    { employeeId: "0002", email: "a.smith@zenithquality.com" },
+  ];
+
   const [newUser, setNewUser] = useState<NewUser>({
     employeeId: "",
     fullName: "",
@@ -31,6 +37,9 @@ export const AddUserView: React.FC = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showCredentialsModal, setShowCredentialsModal] = useState(false);
   const [generatedCredentials, setGeneratedCredentials] = useState({ username: "", password: "" });
+
+  // Duplicate detection warnings (non-blocking)
+  const [warnings, setWarnings] = useState<{ [key: string]: string }>({});
 
   const formDepartments = useMemo(() => {
     return newUser.businessUnit ? BUSINESS_UNIT_DEPARTMENTS[newUser.businessUnit] || [] : [];
@@ -172,17 +181,30 @@ export const AddUserView: React.FC = () => {
                       const value = e.target.value.replace(/\D/g, '').slice(0, 4);
                       setNewUser({ ...newUser, employeeId: value });
                       setFormErrors({ ...formErrors, employeeId: "" });
+                      setWarnings({ ...warnings, employeeId: "" });
+                    }}
+                    onBlur={(e) => {
+                      const empId = e.target.value.trim();
+                      if (empId && EXISTING_USERS.some(u => u.employeeId === empId)) {
+                        setWarnings({ ...warnings, employeeId: "This Employee ID is already assigned" });
+                      }
                     }}
                     placeholder="0008"
                     maxLength={4}
                     className={cn(
                       "w-full h-11 pl-[50px] pr-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors font-medium",
-                      formErrors.employeeId ? "border-red-300 bg-red-50" : "border-slate-200"
+                      formErrors.employeeId ? "border-red-300 bg-red-50" : warnings.employeeId ? "border-amber-300 bg-amber-50" : "border-slate-200"
                     )}
                   />
                 </div>
                 {formErrors.employeeId && (
                   <p className="text-xs text-red-600 mt-1">{formErrors.employeeId}</p>
+                )}
+                {!formErrors.employeeId && warnings.employeeId && (
+                  <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
+                    <span>⚠️</span>
+                    {warnings.employeeId}
+                  </p>
                 )}
               </div>
 
@@ -207,6 +229,14 @@ export const AddUserView: React.FC = () => {
                 {formErrors.fullName && (
                   <p className="text-xs text-red-600 mt-1">{formErrors.fullName}</p>
                 )}
+                {newUser.fullName.trim() && (
+                  <div className="flex items-center gap-1.5 mt-1.5 text-xs text-slate-600">
+                    <span>Username will be:</span>
+                    <span className="font-mono font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      {generateUsername(newUser.fullName, [])}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Email */}
@@ -220,15 +250,28 @@ export const AddUserView: React.FC = () => {
                   onChange={(e) => {
                     setNewUser({ ...newUser, email: e.target.value });
                     setFormErrors({ ...formErrors, email: "" });
+                    setWarnings({ ...warnings, email: "" });
+                  }}
+                  onBlur={(e) => {
+                    const email = e.target.value.trim();
+                    if (email && EXISTING_USERS.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                      setWarnings({ ...warnings, email: "This email is already in use by another user" });
+                    }
                   }}
                   placeholder="john.doe@company.com"
                   className={cn(
                     "w-full h-11 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors",
-                    formErrors.email ? "border-red-300 bg-red-50" : "border-slate-200"
+                    formErrors.email ? "border-red-300 bg-red-50" : warnings.email ? "border-amber-300 bg-amber-50" : "border-slate-200"
                   )}
                 />
                 {formErrors.email && (
                   <p className="text-xs text-red-600 mt-1">{formErrors.email}</p>
+                )}
+                {!formErrors.email && warnings.email && (
+                  <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
+                    <span>⚠️</span>
+                    {warnings.email}
+                  </p>
                 )}
               </div>
 

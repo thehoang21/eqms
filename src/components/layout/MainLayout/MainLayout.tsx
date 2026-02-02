@@ -97,7 +97,12 @@ export const MainLayout: React.FC = () => {
           }}
         >
           {/* Main Content: Responsive padding */}
-          <main className="w-full p-4 md:p-6 lg:p-8 pb-6">
+          <main
+            className="w-full p-4 md:p-6 lg:p-8 pb-6"
+            style={{
+              paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))',
+            }}
+          >
             <div className="w-full max-w-[1920px] mx-auto space-y-4 md:space-y-6">
               <Outlet />
             </div>

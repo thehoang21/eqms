@@ -434,7 +434,7 @@ const MobileDrawer: React.FC<{
         ref={drawerRef}
         className={cn(
           "absolute bottom-0 left-0 right-0 bg-white shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.25)]",
-          isFullHeight ? "rounded-none" : "rounded-t-2xl"
+          isFullHeight ? "rounded-none" : "rounded-t-xl"
         )}
         style={{
           height: `${drawerHeight}dvh`,

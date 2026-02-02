@@ -9,11 +9,18 @@ export interface SelectOption {
   icon?: React.ReactNode;
 }
 
+export interface SelectOptionGroup {
+  groupLabel: string;
+  options: SelectOption[];
+}
+
 export interface SelectProps {
   label?: string;
   value: string | number;
   onChange: (value: any) => void;
   options: SelectOption[];
+  /** Grouped options (alternative to options) */
+  groups?: SelectOptionGroup[];
   placeholder?: string;
   searchPlaceholder?: string;
   className?: string;
@@ -22,6 +29,14 @@ export interface SelectProps {
   disabled?: boolean;
   maxVisibleRows?: number;
   rowHeight?: number;
+  isLoading?: boolean;
+  loadingText?: string;
+  /** Async search function - called when user types */
+  onSearch?: (query: string) => Promise<SelectOption[]>;
+  /** Debounce delay for async search (ms) */
+  debounceMs?: number;
+  /** Minimum characters before triggering search */
+  minSearchLength?: number;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -29,6 +44,7 @@ export const Select: React.FC<SelectProps> = ({
   value,
   onChange,
   options,
+  groups,
   placeholder = "Select...",
   searchPlaceholder = "Search...",
   className,
@@ -37,24 +53,86 @@ export const Select: React.FC<SelectProps> = ({
   disabled = false,
   maxVisibleRows = 5,
   rowHeight = 40,
+  isLoading = false,
+  loadingText = "Loading options...",
+  onSearch,
+  debounceMs = 300,
+  minSearchLength = 0,
 }) => {
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [position, setPosition] = useState({ top: 0, left: 0, width: 0, showAbove: false });
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [asyncOptions, setAsyncOptions] = useState<SelectOption[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const debounceTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const filteredOptions = enableSearch
-    ? options.filter((opt) =>
+  // Flatten groups to options for internal use
+  const allOptions = groups ? groups.flatMap(g => g.options) : options;
+
+  const displayOptions = onSearch && asyncOptions.length > 0 ? asyncOptions : allOptions;
+
+  const filteredOptions = enableSearch && !onSearch
+    ? displayOptions.filter((opt) =>
         opt.label.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    : options;
+    : displayOptions;
 
-  const selectedOption = options.find((opt) => opt.value === value);
+  // Filter groups based on search
+  const filteredGroups = groups && enableSearch && !onSearch
+    ? groups.map(g => ({
+        ...g,
+        options: g.options.filter(opt => 
+          opt.label.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      })).filter(g => g.options.length > 0)
+    : groups;
+
+  const selectedOption = displayOptions.find((opt) => opt.value === value);
+
+  // Debounced async search
+  useEffect(() => {
+    if (!onSearch || !isOpen) return;
+
+    // Clear previous timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Check min length
+    if (searchQuery.length < minSearchLength) {
+      setAsyncOptions([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+
+    debounceTimerRef.current = setTimeout(async () => {
+      try {
+        const results = await onSearch(searchQuery);
+        setAsyncOptions(results);
+      } catch (error) {
+        console.error('Search failed:', error);
+        setAsyncOptions([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, debounceMs);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [searchQuery, onSearch, debounceMs, minSearchLength, isOpen]);
 
   // Calculate dropdown position
   const updatePosition = () => {
@@ -87,17 +165,70 @@ export const Select: React.FC<SelectProps> = ({
     updatePosition();
     setIsOpen(true);
     setSearchQuery("");
+    setFocusedIndex(-1);
   };
 
   const handleClose = () => {
     setIsOpen(false);
     setSearchQuery("");
+    setFocusedIndex(-1);
   };
 
   const handleSelect = (optionValue: string | number) => {
     onChange(optionValue);
     handleClose();
   };
+
+  // Keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setFocusedIndex(prev => 
+          prev < filteredOptions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setFocusedIndex(prev => prev > 0 ? prev - 1 : prev);
+        break;
+      case 'Home':
+        e.preventDefault();
+        setFocusedIndex(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        setFocusedIndex(filteredOptions.length - 1);
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        if (focusedIndex >= 0 && focusedIndex < filteredOptions.length) {
+          handleSelect(filteredOptions[focusedIndex].value);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        handleClose();
+        triggerRef.current?.focus();
+        break;
+      case 'Tab':
+        handleClose();
+        break;
+    }
+  };
+
+  // Scroll focused option into view
+  useEffect(() => {
+    if (focusedIndex >= 0 && optionRefs.current[focusedIndex]) {
+      optionRefs.current[focusedIndex]?.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth'
+      });
+    }
+  }, [focusedIndex]);
 
   // Close on click outside
   useEffect(() => {
@@ -188,6 +319,7 @@ export const Select: React.FC<SelectProps> = ({
         ref={triggerRef}
         type="button"
         onClick={handleTriggerClick}
+        onKeyDown={handleKeyDown}
         disabled={disabled}
         className={cn(
           "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2.5 text-sm transition-colors",
@@ -249,31 +381,82 @@ export const Select: React.FC<SelectProps> = ({
           <div 
             className="overflow-y-auto overscroll-contain"
             style={{ maxHeight: maxVisibleRows * rowHeight }}
+            onKeyDown={handleKeyDown}
           >
-            {filteredOptions.length === 0 ? (
+            {isLoading || isSearching ? (
+              <div className="py-8 flex flex-col items-center justify-center gap-2">
+                <div className="h-5 w-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+                <span className="text-sm text-slate-500">
+                  {isSearching ? 'Searching...' : loadingText}
+                </span>
+              </div>
+            ) : filteredOptions.length === 0 ? (
               <div className="py-8 text-center text-sm text-slate-500">
                 No results found
               </div>
-            ) : (
-              filteredOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => handleSelect(option.value)}
-                  className={cn(
-                    "flex w-full items-center px-3 text-sm transition-colors",
-                    "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
-                    value === option.value && "bg-emerald-50 text-emerald-700"
-                  )}
-                  style={{ height: rowHeight }}
-                >
-                  <span className="flex-1 text-left truncate">{option.label}</span>
-                  {value === option.value && (
-                    <Check className="h-4 w-4 text-emerald-600 shrink-0 ml-2" />
-                  )}
-                </button>
+            ) : groups && filteredGroups ? (
+              // Render grouped options
+              filteredGroups.map((group, groupIndex) => (
+                <div key={group.groupLabel} className="py-1">
+                  <div className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider sticky top-0 bg-slate-50 border-b border-slate-100">
+                    {group.groupLabel}
+                  </div>
+                  {group.options.map((option, optionIndex) => {
+                    const flatIndex = filteredGroups
+                      .slice(0, groupIndex)
+                      .reduce((sum, g) => sum + g.options.length, 0) + optionIndex;
+                    const isSelected = value === option.value;
+                    const isFocused = flatIndex === focusedIndex;
+                    return (
+                      <button
+                        key={option.value}
+                        ref={el => { optionRefs.current[flatIndex] = el; }}
+                        type="button"
+                        onClick={() => handleSelect(option.value)}
+                        className={cn(
+                          "flex w-full items-center px-3 text-sm transition-colors",
+                          "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
+                          isSelected && "bg-emerald-50 text-emerald-700",
+                          isFocused && "bg-slate-100 ring-1 ring-inset ring-slate-300"
+                        )}
+                        style={{ height: rowHeight }}
+                      >
+                        <span className="flex-1 text-left truncate">{option.label}</span>
+                        {isSelected && (
+                          <Check className="h-4 w-4 text-emerald-600 shrink-0 ml-2" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               ))
-            )}
+            ) : (
+              // Render flat options
+              filteredOptions.map((option, index) => {
+                const isSelected = value === option.value;
+                const isFocused = index === focusedIndex;
+                return (
+                  <button
+                    key={option.value}
+                    ref={el => { optionRefs.current[index] = el; }}
+                    type="button"
+                    onClick={() => handleSelect(option.value)}
+                    className={cn(
+                      "flex w-full items-center px-3 text-sm transition-colors",
+                      "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
+                      isSelected && "bg-emerald-50 text-emerald-700",
+                      isFocused && "bg-slate-100 ring-1 ring-inset ring-slate-300"
+                    )}
+                    style={{ height: rowHeight }}
+                  >
+                    <span className="flex-1 text-left truncate">{option.label}</span>
+                    {isSelected && (
+                      <Check className="h-4 w-4 text-emerald-600 shrink-0 ml-2" />
+                    )}
+                  </button>
+                );
+              }))
+            }
           </div>
         </div>,
         document.body

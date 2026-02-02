@@ -156,6 +156,53 @@ export const UserManagementView: React.FC = () => {
     return buttonRefs.current[id];
   };
 
+  // Export to Excel functionality
+  const exportToExcel = () => {
+    const headers = columns
+      .filter(col => col.visible)
+      .map(col => col.label)
+      .join('\t');
+    
+    const rows = filteredUsers.map(user => 
+      columns
+        .filter(col => col.visible)
+        .map(col => {
+          switch(col.id) {
+            case 'employeeId': return user.employeeId;
+            case 'fullName': return user.fullName;
+            case 'username': return user.username;
+            case 'email': return user.email;
+            case 'phone': return user.phone;
+            case 'role': return user.role;
+            case 'businessUnit': return user.businessUnit;
+            case 'department': return user.department;
+            case 'status': return user.status;
+            case 'lastLogin': return user.lastLogin;
+            case 'createdDate': return user.createdDate;
+            default: return '';
+          }
+        })
+        .join('\t')
+    ).join('\n');
+    
+    const tsv = `${headers}\n${rows}`;
+    const blob = new Blob([tsv], { type: 'text/tab-separated-values' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `users_export_${new Date().toISOString().split('T')[0]}.xls`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    showToast({
+      type: 'success',
+      title: 'Export Successful',
+      message: `Exported ${filteredUsers.length} users to Excel`,
+    });
+  };
+
   // Filter users
   const filteredUsers = useMemo(() => {
     return MOCK_USERS.filter((user) => {
@@ -317,14 +364,7 @@ export const UserManagementView: React.FC = () => {
             size="sm"
             variant="outline"
             className="flex items-center gap-2 whitespace-nowrap"
-            onClick={() => {
-              console.log("Export users data");
-              showToast({
-                type: "info",
-                title: "Export",
-                message: "User data export feature coming soon",
-              });
-            }}
+            onClick={exportToExcel}
           >
             <Download className="h-4 w-4" />
             <span>Export</span>

@@ -23,6 +23,8 @@ export interface MultiSelectProps {
   maxVisibleRows?: number;
   rowHeight?: number;
   maxVisibleTags?: number;
+  isLoading?: boolean;
+  loadingText?: string;
 }
 
 export const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -39,16 +41,20 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   maxVisibleRows = 5,
   rowHeight = 40,
   maxVisibleTags = 2,
+  isLoading = false,
+  loadingText = "Loading options...",
 }) => {
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const filteredOptions = enableSearch
     ? options.filter((opt) =>
@@ -78,11 +84,13 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     updatePosition();
     setIsOpen(true);
     setSearchQuery("");
+    setFocusedIndex(-1);
   };
 
   const handleClose = () => {
     setIsOpen(false);
     setSearchQuery("");
+    setFocusedIndex(-1);
   };
 
   const handleToggleOption = (optionValue: string | number) => {
@@ -97,6 +105,74 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     e.stopPropagation();
     onChange(value.filter(v => v !== optionValue));
   };
+
+  const handleClearAll = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onChange([]);
+  };
+
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      onChange([]);
+    } else {
+      onChange(filteredOptions.map(opt => opt.value));
+    }
+  };
+
+  const isAllSelected = filteredOptions.length > 0 && 
+    filteredOptions.every(opt => value.includes(opt.value));
+  const isSomeSelected = value.length > 0 && !isAllSelected;
+
+  // Keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setFocusedIndex(prev => 
+          prev < filteredOptions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setFocusedIndex(prev => prev > 0 ? prev - 1 : prev);
+        break;
+      case 'Home':
+        e.preventDefault();
+        setFocusedIndex(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        setFocusedIndex(filteredOptions.length - 1);
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        if (focusedIndex >= 0 && focusedIndex < filteredOptions.length) {
+          handleToggleOption(filteredOptions[focusedIndex].value);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        handleClose();
+        triggerRef.current?.focus();
+        break;
+      case 'Tab':
+        handleClose();
+        break;
+    }
+  };
+
+  // Scroll focused option into view
+  useEffect(() => {
+    if (focusedIndex >= 0 && optionRefs.current[focusedIndex]) {
+      optionRefs.current[focusedIndex]?.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth'
+      });
+    }
+  }, [focusedIndex]);
 
   // Close on click outside
   useEffect(() => {
@@ -187,6 +263,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         ref={triggerRef}
         type="button"
         onClick={handleTriggerClick}
+        onKeyDown={handleKeyDown}
         disabled={disabled}
         className={cn(
           "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm transition-colors",
@@ -225,6 +302,16 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             </>
           )}
         </div>
+        {selectedOptions.length > 0 && (
+          <button
+            type="button"
+            onClick={handleClearAll}
+            className="inline-flex items-center justify-center h-6 w-6 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600 shrink-0 ml-1"
+            aria-label="Clear all selections"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
         <ChevronDown
           className={cn(
             "h-4 w-4 text-slate-400 transition-transform shrink-0 ml-2",
@@ -270,23 +357,70 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           <div 
             className="overflow-y-auto overscroll-contain"
             style={{ maxHeight: maxVisibleRows * rowHeight }}
+            onKeyDown={handleKeyDown}
           >
-            {filteredOptions.length === 0 ? (
+            {isLoading ? (
+              <div className="py-8 flex flex-col items-center justify-center gap-2">
+                <div className="h-5 w-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+                <span className="text-sm text-slate-500">{loadingText}</span>
+              </div>
+            ) : filteredOptions.length === 0 ? (
               <div className="py-8 text-center text-sm text-slate-500">
                 No results found
               </div>
             ) : (
-              filteredOptions.map((option) => {
+              <>
+                {/* Select All */}
+                {filteredOptions.length > 1 && (
+                  <div className="sticky top-0 bg-white border-b border-slate-100 z-10">
+                    <button
+                      type="button"
+                      onClick={handleSelectAll}
+                      className="flex w-full items-center gap-3 px-3 py-2.5 text-sm hover:bg-slate-50 transition-colors font-medium text-slate-700"
+                    >
+                      <div className="relative flex items-center justify-center">
+                        <div
+                          className={cn(
+                            "w-4 h-4 rounded border-2 flex items-center justify-center transition-all",
+                            isAllSelected
+                              ? "bg-emerald-600 border-emerald-600"
+                              : isSomeSelected
+                              ? "bg-emerald-600 border-emerald-600"
+                              : "bg-white border-slate-300 hover:border-emerald-400"
+                          )}
+                        >
+                          {isAllSelected ? (
+                            <Check className="h-3 w-3 text-white stroke-[3]" />
+                          ) : isSomeSelected ? (
+                            <div className="h-2 w-2 bg-white rounded-sm" />
+                          ) : null}
+                        </div>
+                      </div>
+                      <span>
+                        {isAllSelected 
+                          ? `Deselect All (${filteredOptions.length})`
+                          : `Select All (${filteredOptions.length})`
+                        }
+                      </span>
+                    </button>
+                  </div>
+                )}
+
+                {/* Options List */}
+                {filteredOptions.map((option, index) => {
                 const isSelected = value.includes(option.value);
+                const isFocused = index === focusedIndex;
                 return (
                   <button
                     key={option.value}
+                    ref={el => { optionRefs.current[index] = el; }}
                     type="button"
                     onClick={() => handleToggleOption(option.value)}
                     className={cn(
                       "flex w-full items-center px-3 text-sm transition-colors",
                       "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
-                      isSelected && "bg-emerald-50 text-emerald-700"
+                      isSelected && "bg-emerald-50 text-emerald-700",
+                      isFocused && "bg-slate-100 ring-1 ring-inset ring-slate-300"
                     )}
                     style={{ height: rowHeight }}
                   >
@@ -296,7 +430,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                     )}
                   </button>
                 );
-              })
+              })}
+              </>
             )}
           </div>
         </div>,

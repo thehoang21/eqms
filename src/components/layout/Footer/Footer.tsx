@@ -5,9 +5,10 @@ export const Footer: React.FC = () => {
     <footer 
       className="shrink-0 border-t border-slate-200 bg-white/95 backdrop-blur-sm shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)] ios-fixed-footer"
       style={{
-        paddingTop: '0.5rem',
-        // Safe area for home indicator on iPhone X+ and navigation gestures
-        paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom, 0.5rem))',
+        paddingTop: '0.75rem',
+        // Safe area for home indicator on iPhone/iPad with gesture bar
+        paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))',
+        // Fallback for older iOS versions using constant() is not supported in React inline styles
         paddingLeft: 'env(safe-area-inset-left, 0px)',
         paddingRight: 'env(safe-area-inset-right, 0px)',
         // iOS Safari fix: force GPU layer

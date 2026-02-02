@@ -39,6 +39,8 @@ const COLORS = {
   info: "bg-blue-50 text-blue-700 border-blue-200",
 };
 
+const MAX_TOASTS = 3;
+
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const timers = useRef<{ [id: string]: NodeJS.Timeout }>({});
@@ -53,7 +55,25 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const showToast = useCallback((toast: Omit<Toast, "id"> & { id?: string }) => {
     const id = toast.id || Math.random().toString(36).slice(2, 10);
-    setToasts((prev) => [...prev, { ...toast, id }]);
+    
+    setToasts((prev) => {
+      const newToasts = [...prev, { ...toast, id }];
+      
+      // Remove oldest toasts if exceeding MAX_TOASTS
+      if (newToasts.length > MAX_TOASTS) {
+        const toastsToRemove = newToasts.slice(0, newToasts.length - MAX_TOASTS);
+        toastsToRemove.forEach(t => {
+          if (timers.current[t.id]) {
+            clearTimeout(timers.current[t.id]);
+            delete timers.current[t.id];
+          }
+        });
+        return newToasts.slice(-MAX_TOASTS);
+      }
+      
+      return newToasts;
+    });
+    
     const duration = toast.duration ?? 3500;
     timers.current[id] = setTimeout(() => removeToast(id), duration);
   }, [removeToast]);
@@ -89,7 +109,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                   <div className="text-sm leading-relaxed">{toast.message}</div>
                 </div>
                 <button
-                  className="ml-2 p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+                  className="ml-2 p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
                   aria-label="Close"
                   onClick={() => removeToast(toast.id)}
                 >

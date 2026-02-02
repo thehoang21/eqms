@@ -380,7 +380,71 @@ interface FiltersProps {
 ```
 - Cấp cuối cùng: `text-slate-700 font-medium`
 
-## 8. Color Palette (Emerald Theme)
+## 8. Border-Radius Standards (3-Tier System)
+
+**QUY TẮC: Tuân thủ hệ thống 3 cấp độ border-radius để đảm bảo đồng nhất UI**
+
+### 8.1 Level 1: Large Containers (16px / 1rem)
+**Class:** `rounded-xl`
+- **Sử dụng cho:** Cards, Panels, Modals, Table containers, Filter containers, Large form sections
+- **Ví dụ:**
+  ```tsx
+  <div className="border rounded-xl bg-white shadow-sm">
+    {/* Table container */}
+  </div>
+  
+  <div className="bg-white p-5 rounded-xl border border-slate-200">
+    {/* Filter panel */}
+  </div>
+  ```
+
+### 8.2 Level 2: Medium Elements (12px / 0.75rem)
+**Class:** `rounded-lg`
+- **Sử dụng cho:** Buttons, Inputs, Selects, Dropdowns, Action buttons, Small cards, Alert boxes, Search bars
+- **Ví dụ:**
+  ```tsx
+  <Button variant="default" className="rounded-lg">Submit</Button>
+  
+  <input className="h-11 border border-slate-200 rounded-lg" />
+  
+  <div className="fixed bg-white rounded-lg shadow-2xl">
+    {/* Dropdown menu */}
+  </div>
+  ```
+
+### 8.3 Level 3: Pills & Circular Elements (9999px / 50%)
+**Class:** `rounded-full`
+- **Sử dụng cho:** Status badges, Tags, Pills, Avatars, Profile pictures, Count indicators, Dot indicators
+- **Ví dụ:**
+  ```tsx
+  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border">
+    {/* Status badge */}
+  </span>
+  
+  <div className="h-10 w-10 rounded-full bg-slate-100">
+    {/* Avatar */}
+  </div>
+  
+  <div className="h-1.5 w-1.5 rounded-full bg-emerald-600">
+    {/* Dot indicator */}
+  </div>
+  ```
+
+### 8.4 CẢNH BÁO: Tránh sử dụng
+- ❌ `rounded-md` (8px) - Không còn sử dụng, thay bằng `rounded-lg`
+- ❌ `rounded-2xl` (24px) - Quá lớn, chỉ dùng trong trường hợp đặc biệt
+- ❌ `rounded` (4px) - Quá nhỏ, không phù hợp với design system
+
+### 8.5 Component Enforcement
+Các components trong `components/ui` ĐÃ enforce border-radius chuẩn:
+- **Button:** `rounded-lg` (enforced)
+- **Select/MultiSelect:** `rounded-lg` (enforced)
+- **Input fields:** `rounded-lg` (h-11, enforced)
+- **StatusBadge:** `rounded-full` (enforced)
+- **Modal:** `rounded-xl` (enforced)
+- **Card:** `rounded-xl` (enforced)
+
+## 9. Color Palette (Emerald Theme)
 - **Primary:** `emerald-600` (buttons, active states)
 - **Primary Hover:** `emerald-700`
 - **Success:** `emerald-50/600/700`

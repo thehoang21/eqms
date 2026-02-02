@@ -249,6 +249,35 @@ export const RolePermissionView: React.FC = () => {
     });
   };
 
+  // Calculate filtered permission counts
+  const getFilteredPermissionCounts = () => {
+    const allPermissions = PERMISSION_GROUPS.flatMap(g => g.permissions);
+    let filtered = allPermissions;
+    
+    // Apply search filter
+    if (permissionSearch.trim()) {
+      filtered = filtered.filter(p => 
+        p.label.toLowerCase().includes(permissionSearch.toLowerCase())
+      );
+    }
+    
+    // Apply action filter
+    if (actionFilters.size > 0) {
+      filtered = filtered.filter(p => {
+        const action = p.id.split('.').pop();
+        return action && actionFilters.has(action);
+      });
+    }
+    
+    return {
+      total: allPermissions.length,
+      filtered: filtered.length,
+      selected: selectedRole ? selectedRole.permissions.length : 0
+    };
+  };
+
+  const permissionCounts = getFilteredPermissionCounts();
+
   const openCreateModal = () => {
     setFormMode("create");
     setFormRoleId("");
@@ -584,6 +613,26 @@ export const RolePermissionView: React.FC = () => {
                   )}
                </Button>
             </div>
+
+            {/* Permission Count Display */}
+            {(permissionSearch.trim() || actionFilters.size > 0) && (
+              <div className="px-6 py-3 bg-blue-50 border-b border-blue-200 shrink-0">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-blue-700">
+                    Showing <span className="font-semibold">{permissionCounts.filtered}</span> of{' '}
+                    <span className="font-semibold">{permissionCounts.total}</span> permissions
+                  </span>
+                  {permissionCounts.selected > 0 && (
+                    <>
+                      <span className="text-blue-400">•</span>
+                      <span className="text-blue-700">
+                        <span className="font-semibold">{permissionCounts.selected}</span> selected
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Content List */}
             <div className="flex-1 overflow-y-auto bg-white custom-scrollbar">

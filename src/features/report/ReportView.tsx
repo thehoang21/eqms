@@ -689,7 +689,7 @@ export const ReportView: React.FC = () => {
                         </h3>
                         <p className="text-sm text-slate-600 line-clamp-2">{template.description}</p>
                         {template.regulatoryRef && (
-                          <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-xs font-medium border border-blue-200">
+                          <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-medium border border-blue-200">
                             <ShieldAlert className="h-3 w-3" />
                             {template.regulatoryRef}
                           </div>

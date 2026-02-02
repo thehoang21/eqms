@@ -278,9 +278,14 @@ export const DocumentTypesTab: React.FC = () => {
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                      <span className="font-medium text-slate-900">
-                        {item.currentSequence}
-                      </span>
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium text-slate-900">
+                          {item.currentSequence}
+                        </span>
+                        <span className="font-mono text-xs text-slate-500">
+                          Next: {item.shortCode}-{String(item.currentSequence + 1).padStart(4, '0')}
+                        </span>
+                      </div>
                     </td>
                     <td className="py-3.5 px-4 text-sm text-slate-600 max-w-md truncate">
                       {item.description || "-"}
