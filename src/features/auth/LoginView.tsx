@@ -221,7 +221,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
           ==================================================================== */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 p-4 lg:p-6 items-center justify-center bg-white">
         {/* Branding Card with Carousel */}
-        <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-slate-900 ring-1 ring-slate-900/5">
+        <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden bg-slate-900 ring-1 ring-slate-900/5">
           {/* Carousel Container */}
           <div className="absolute inset-0 z-0" role="region" aria-label="Product showcase carousel">
             {SLIDE_IMAGES.map((slide, index) => (
@@ -240,53 +240,45 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   alt={`Product showcase ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
-                {/* Modern Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-transparent" />
+                {/* Subtle Overlay */}
+                <div className="absolute inset-0 bg-black/10" />
               </div>
             ))}
           </div>
 
-          {/* Content Overlay */}
-          <div className="relative z-10 flex flex-col justify-end h-full p-12 lg:p-16">
-            <div className="space-y-8 max-w-2xl transform transition-all duration-500">
-              
-              {/* Status Badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-medium text-emerald-300 w-fit animate-in fade-in slide-in-from-bottom-4 duration-700">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                  </span>
-                  System Operational
-               </div>
-
+          {/* Content Overlay - Floating Glass Card */}
+          <div className="relative z-10 flex flex-col justify-end h-full p-6 lg:p-8 xl:p-10">
+            <div className="bg-slate-950/40 backdrop-blur-xl border border-white/10 p-8 rounded-[1.45rem] shadow-2xl space-y-8 max-w-2xl transform transition-all duration-500 mr-auto hover:bg-slate-950/50 hover:scale-[1.01] hover:shadow-emerald-500/10 hover:border-white/20 group/card">
               {/* Main Text */}
               <div className="space-y-4">
-                <h2 className="text-4xl lg:text-5xl font-bold leading-tight font-display tracking-tight text-white animate-in fade-in slide-in-from-bottom-3 duration-700 delay-100">
+                <h2 className="text-3xl lg:text-4xl font-bold leading-tight font-display tracking-tight text-white">
                   Enter the Future of <br/>
-                  <span className="text-emerald-400">Quality Assurance</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Quality Assurance</span>
                 </h2>
-                <p className="text-lg text-slate-300 leading-relaxed font-light max-w-md animate-in fade-in slide-in-from-bottom-2 duration-700 delay-200">
+                <p className="text-base text-slate-200 leading-relaxed font-light max-w-md">
                   Experience the next generation of pharmaceutical quality
                   management. Intelligent, compliant, and secure.
                 </p>
               </div>
 
               {/* Minimalist Indicators */}
-              <div className="flex gap-3 animate-in fade-in slide-in-from-bottom-1 duration-700 delay-300" role="tablist" aria-label="Carousel controls">
+              <div className="flex gap-2" role="tablist" aria-label="Carousel controls">
                 {SLIDE_IMAGES.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => handleSlideChange(index)}
-                    className={cn(
-                      "h-1.5 rounded-full transition-all duration-500 ease-out focus:outline-none",
-                      index === currentSlide
-                        ? "w-12 bg-emerald-500"
-                        : "w-2 bg-white/20 hover:bg-white/40"
-                    )}
+                    className="group focus:outline-none py-2"
                     aria-label={`Go to slide ${index + 1}`}
                     aria-current={index === currentSlide ? "true" : "false"}
                     role="tab"
-                  />
+                  >
+                    <div className={cn(
+                      "h-1 rounded-full transition-all duration-700 ease-out",
+                      index === currentSlide
+                        ? "w-12 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]"
+                        : "w-2 bg-white/20 group-hover:bg-white/40 group-hover:w-4"
+                    )} />
+                  </button>
                 ))}
               </div>
             </div>
@@ -302,29 +294,29 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         <div className="w-full max-w-md">
           <div className="bg-white overflow-hidden">
             {/* Form Header */}
-            <div className="px-6 sm:px-8 pt-6 sm:pt-8 pb-6">
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center justify-center mb-4">
+            <div className="px-6 sm:px-8 pt-8 sm:pt-10 pb-8">
+              <div className="text-center space-y-3">
+                <div className="inline-flex items-center justify-center mb-6">
                   <img
                     src={logoImg}
                     alt="QMS Logo"
-                    className="h-12 sm:h-14 w-auto object-contain drop-shadow-lg"
+                    className="h-14 sm:h-16 w-auto object-contain drop-shadow-sm"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
                     }}
                   />
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+                <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
                   Welcome Back
                 </h1>
-                <p className="text-sm sm:text-base text-slate-600">
+                <p className="text-sm text-slate-500">
                   Sign in to access your account
                 </p>
               </div>
             </div>
 
             {/* Form Body */}
-            <div className="px-6 sm:px-8 py-6 sm:py-8">
+            <div className="px-6 sm:px-8 py-4 sm:py-6">
               {/* Login Error Alert */}
               {loginError && (
                 <div
@@ -347,7 +339,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <div className="space-y-2">
                   <label
                     htmlFor="username"
-                    className="block text-sm font-semibold text-slate-700"
+                    className="block text-sm font-medium text-slate-700"
                   >
                     Username or Email
                   </label>
@@ -362,12 +354,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         handleInputChange("username", e.target.value)
                       }
                       className={cn(
-                        "w-full h-12 px-4 text-sm font-medium border-2 rounded-xl transition-all",
+                        "w-full h-12 px-4 text-sm font-medium border rounded-xl transition-all",
                         "placeholder:text-slate-400 placeholder:font-normal",
-                        "focus:outline-none focus:ring-4",
+                        "focus:outline-none focus:ring-2",
                         errors.username
-                          ? "border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-500/10"
-                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                          ? "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/20"
+                          : "border-slate-200 bg-slate-50 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-emerald-500 focus:ring-emerald-500/20"
                       )}
                       placeholder="Enter your username or email"
                       disabled={isLoading}
@@ -390,7 +382,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <div className="space-y-2">
                   <label
                     htmlFor="password"
-                    className="block text-sm font-semibold text-slate-700"
+                    className="block text-sm font-medium text-slate-700"
                   >
                     Password
                   </label>
@@ -405,12 +397,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         handleInputChange("password", e.target.value)
                       }
                       className={cn(
-                        "w-full h-12 pl-4 pr-12 text-sm font-medium border-2 rounded-xl transition-all",
+                        "w-full h-12 pl-4 pr-12 text-sm font-medium border rounded-xl transition-all",
                         "placeholder:text-slate-400 placeholder:font-normal",
-                        "focus:outline-none focus:ring-4",
+                        "focus:outline-none focus:ring-2",
                         errors.password
-                          ? "border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-500/10"
-                          : "border-slate-200 bg-white hover:border-slate-300 focus:border-emerald-500 focus:ring-emerald-500/10"
+                          ? "border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500/20"
+                          : "border-slate-200 bg-slate-50 hover:bg-white hover:border-slate-300 focus:bg-white focus:border-emerald-500 focus:ring-emerald-500/20"
                       )}
                       placeholder="Enter your password"
                       disabled={isLoading}
@@ -420,7 +412,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                     <button
                       type="button"
                       onClick={handleTogglePassword}
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-700 transition-colors focus:outline-none focus:text-slate-700"
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors focus:outline-none focus:text-slate-700"
                       disabled={isLoading}
                       aria-label={showPassword ? "Hide password" : "Show password"}
                       tabIndex={-1}
@@ -444,7 +436,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 </div>
 
                 {/* Remember Me & Forgot Password */}
-                <div className="flex items-center justify-between pt-1">
+                <div className="flex items-center justify-between pt-2">
                   <Checkbox
                     id="rememberMe"
                     checked={formData.rememberMe}
@@ -454,7 +446,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   />
                   <button
                     type="button"
-                    className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors focus:outline-none focus:underline"
+                    className="text-sm font-medium text-emerald-600 hover:text-emerald-700 hover:underline transition-colors focus:outline-none focus:underline"
                     disabled={isLoading}
                     aria-label="Forgot password"
                   >
@@ -466,7 +458,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <Button
                   type="submit"
                   size="default"
-                  className="rounded-xl w-full h-12 mt-6 text-base font-semibold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all group"
+                  className="rounded-xl w-full h-12 mt-6 text-base font-semibold shadow-md shadow-emerald-500/10 hover:shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 group"
                   disabled={isLoading}
                   aria-busy={isLoading}
                 >
@@ -485,12 +477,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               </form>
 
               {/* Divider */}
-              <div className="relative my-6" aria-hidden="true">
+              <div className="relative my-8" aria-hidden="true">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200"></div>
+                  <div className="w-full border-t border-slate-100"></div>
                 </div>
                 <div className="relative flex justify-center text-xs">
-                  <span className="px-3 bg-white text-slate-500 font-medium">
+                  <span className="px-4 bg-white text-slate-400 font-medium">
                     Need help?
                   </span>
                 </div>
@@ -498,7 +490,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
               {/* Footer Text */}
               <div className="text-center">
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-slate-500">
                   Don't have an account?{" "}
                   <button
                     className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors hover:underline focus:outline-none focus:underline"

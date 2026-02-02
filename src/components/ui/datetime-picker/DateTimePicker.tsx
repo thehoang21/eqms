@@ -95,32 +95,43 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         const screenHeight = window.innerHeight;
         
         const popoverWidth = 320;
-        const popoverHeight = 420;
+        const realHeight = popoverRef.current?.offsetHeight || 420;
         
         let left = triggerRect.left;
-        let top = triggerRect.bottom + 8;
+        let style: React.CSSProperties = {
+          position: 'fixed',
+          zIndex: 9999,
+          opacity: 1,
+        };
         
+        // Horizontal adjustment
         if (left + popoverWidth > screenWidth - 20) {
           left = screenWidth - popoverWidth - 20;
         }
-        
         if (left < 20) left = 20;
+        style.left = left;
         
-        if (top + popoverHeight > screenHeight - 20) {
-          top = triggerRect.top - popoverHeight - 8;
-          if (top < 20) top = triggerRect.bottom + 8;
+        // Vertical adjustment
+        const spaceBelow = screenHeight - triggerRect.bottom - 8;
+        const spaceAbove = triggerRect.top - 8;
+        
+        // Flip up if space below is insufficient and space above is better
+        if (spaceBelow < realHeight && spaceAbove > spaceBelow) {
+          style.bottom = screenHeight - triggerRect.top + 8;
+          style.top = 'auto';
+        } else {
+          style.top = triggerRect.bottom + 8;
+          style.bottom = 'auto';
         }
 
-        setPopoverStyle({
-          position: 'fixed',
-          top: top,
-          left: left,
-          zIndex: 9999,
-          opacity: 1,
-        });
+        setPopoverStyle(style);
       };
 
+      // Initial update
       updatePosition();
+      // Update when popover ref is ready (e.g. after first render in this layout effect)
+      requestAnimationFrame(updatePosition);
+
       window.addEventListener('resize', updatePosition);
       window.addEventListener('scroll', updatePosition, true);
 
@@ -129,7 +140,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         window.removeEventListener('scroll', updatePosition, true);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, viewMode, viewDate]);
 
   // Handle click outside
   useEffect(() => {

@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/components/ui/utils';
 import { IconRadarFilled } from '@tabler/icons-react';
+import { fetchWorldTime } from '@/services/api/worldTimeApi';
 
 // Mock Data
 const MOCK_STATS = {
@@ -77,17 +78,68 @@ const MOCK_DEADLINES = [
 ];
 
 export const DashboardView: React.FC = () => {
+  const [currentTime, setCurrentTime] = React.useState(new Date());
+  const [timezone, setTimezone] = React.useState('ICT');
+
+  // Fetch time from World Time API
+  React.useEffect(() => {
+    const fetchTimeFromAPI = async () => {
+      const timeData = await fetchWorldTime('Asia/Ho_Chi_Minh');
+      setCurrentTime(timeData.datetime);
+      setTimezone(timeData.abbreviation);
+    };
+
+    // Initial fetch
+    fetchTimeFromAPI();
+
+    // Update every second locally
+    const timer = setInterval(() => {
+      setCurrentTime(prev => new Date(prev.getTime() + 1000));
+    }, 1000);
+
+    // Sync with API every 5 minutes
+    const syncTimer = setInterval(() => {
+      fetchTimeFromAPI();
+    }, 5 * 60 * 1000);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(syncTimer);
+    };
+  }, []);
+
   const maxDocValue = Math.max(...MOCK_CHART_DATA.timeline.map(d => d.documents));
   const maxTaskValue = Math.max(...MOCK_CHART_DATA.tasksByModule.map(d => d.count));
   const totalDocStatus = MOCK_CHART_DATA.documentStatus.reduce((sum, item) => sum + item.value, 0);
 
+  const formatDateTime = (date: Date, tz: string) => {
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    
+    return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year} - GMT${tz}`;
+  };
+
   return (
     <div className="space-y-4 sm:space-y-5 lg:space-y-6 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Dashboard
-          </h1>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
+          <div>
+            <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
+              Dashboard
+            </h1>
+          </div>
+          
+          {/* Real-time Clock */}
+          <div className="flex items-center gap-2.5 bg-white px-4 py-3 rounded-xl border border-slate-200 shadow-sm">
+            <span className="text-base font-bold text-slate-900 tabular-nums tracking-tight whitespace-nowrap">
+              {formatDateTime(currentTime, timezone)}
+            </span>
+          </div>
       </div>
 
       {/* Key Metrics Grid */}
