@@ -657,10 +657,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           className={cn(
             "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar scroll-smooth",
             // Mobile: More padding for easier scrolling
-            "pt-4 md:pt-3",
-            // Extra padding bottom on mobile/tablet for browser UI (address bar, toolbar)
-            // Using pb-40 (160px) for iPad and pb-32 (128px) for mobile to ensure enough space for iOS Safari bottom bar
-            "pb-40 md:pb-3"
+            "pt-4 md:pt-3 md:pb-3"
           )}
           style={{
             // Smooth scrolling on mobile with momentum
@@ -672,6 +669,9 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             // GPU acceleration for smoother scrolling
             willChange: 'scroll-position',
             transform: 'translateZ(0)',
+            // Safe area padding bottom for iPad/iPhone - Minimum 160px + safe area inset
+            // This ensures Settings menu at bottom is never obscured
+            paddingBottom: 'max(160px, calc(env(safe-area-inset-bottom, 0px) + 160px))',
           }}
         >
           <nav className={cn(

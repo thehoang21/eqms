@@ -14,9 +14,9 @@ import slide4 from "@/assets/images/slide-image/ipad4.webp";
 // CONSTANTS & CONFIGURATION
 // ============================================================================
 
-const CAROUSEL_INTERVAL = 2000; // 2 seconds per slide
+const CAROUSEL_INTERVAL = 3000; // 3 seconds per slide
 const MIN_PASSWORD_LENGTH = 6;
-const LOGIN_SIMULATION_DELAY = 1500; // 1.5 seconds
+const LOGIN_SIMULATION_DELAY = 3500; // 1.5 seconds
 
 const SLIDE_IMAGES = [slide1, slide2, slide3, slide4] as const;
 
@@ -221,17 +221,17 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
           ==================================================================== */}
       <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 p-4 lg:p-6 items-center justify-center bg-white">
         {/* Branding Card with Carousel */}
-        <div className="relative w-full h-full rounded-[1.25rem] overflow-hidden bg-slate-600 ring-1 ring-black/5">
+        <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-slate-900 ring-1 ring-slate-900/5">
           {/* Carousel Container */}
           <div className="absolute inset-0 z-0" role="region" aria-label="Product showcase carousel">
             {SLIDE_IMAGES.map((slide, index) => (
               <div
                 key={index}
                 className={cn(
-                  "absolute inset-0 transition-all duration-1000 ease-in-out",
+                  "absolute inset-0 transition-all duration-[1500ms] ease-out",
                   index === currentSlide
                     ? "opacity-100 scale-100"
-                    : "opacity-0 scale-105"
+                    : "opacity-0 scale-110"
                 )}
                 aria-hidden={index !== currentSlide}
               >
@@ -240,53 +240,55 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   alt={`Product showcase ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
+                {/* Modern Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/50 to-transparent" />
               </div>
-            ))}
-          </div>
-
-          {/* Carousel Indicators */}
-          <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2" role="tablist" aria-label="Carousel controls">
-            {SLIDE_IMAGES.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handleSlideChange(index)}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-slate-900",
-                  index === currentSlide
-                    ? "w-8 bg-white"
-                    : "w-2 bg-white/50 hover:bg-white/75"
-                )}
-                aria-label={`Go to slide ${index + 1}`}
-                aria-current={index === currentSlide ? "true" : "false"}
-                role="tab"
-              />
             ))}
           </div>
 
           {/* Content Overlay */}
-          <div className="relative z-10 flex flex-col justify-between h-full p-8 lg:p-10 xl:p-14 text-white">
-            {/* Top Content */}
-            <div className="space-y-3">
-              {/* Dark backdrop for text readability */}
-              <div className="absolute top-0 left-0 right-0 h-2/3 bg-gradient-to-b from-slate-900/75 via-slate-900/20 to-transparent -mx-8 lg:-mx-10 xl:-mx-14 -mt-8 lg:-mt-10 xl:-mt-14 z-[-1]" aria-hidden="true" />
-              <div className="space-y-4 relative z-10">
-                <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight font-display tracking-tight">
-                  Enter the Future of
-                  <span className="block mt-2 text-5xl lg:text-6xl xl:text-7xl">
-                    Quality Assurance
+          <div className="relative z-10 flex flex-col justify-end h-full p-12 lg:p-16">
+            <div className="space-y-8 max-w-2xl transform transition-all duration-500">
+              
+              {/* Status Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-medium text-emerald-300 w-fit animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
+                  System Operational
+               </div>
+
+              {/* Main Text */}
+              <div className="space-y-4">
+                <h2 className="text-4xl lg:text-5xl font-bold leading-tight font-display tracking-tight text-white animate-in fade-in slide-in-from-bottom-3 duration-700 delay-100">
+                  Enter the Future of <br/>
+                  <span className="text-emerald-400">Quality Assurance</span>
                 </h2>
-                <p className="text-base lg:text-lg text-white leading-relaxed max-w-auto font-base">
+                <p className="text-lg text-slate-300 leading-relaxed font-light max-w-md animate-in fade-in slide-in-from-bottom-2 duration-700 delay-200">
                   Experience the next generation of pharmaceutical quality
                   management. Intelligent, compliant, and secure.
                 </p>
               </div>
-            </div>
-            {/* Footer */}
-            <div className="relative">
-              <p className="text-sm text-white/90">
-                A product of NTP Dev Team - Ngoc Thien Pharma.
-              </p>
+
+              {/* Minimalist Indicators */}
+              <div className="flex gap-3 animate-in fade-in slide-in-from-bottom-1 duration-700 delay-300" role="tablist" aria-label="Carousel controls">
+                {SLIDE_IMAGES.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSlideChange(index)}
+                    className={cn(
+                      "h-1.5 rounded-full transition-all duration-500 ease-out focus:outline-none",
+                      index === currentSlide
+                        ? "w-12 bg-emerald-500"
+                        : "w-2 bg-white/20 hover:bg-white/40"
+                    )}
+                    aria-label={`Go to slide ${index + 1}`}
+                    aria-current={index === currentSlide ? "true" : "false"}
+                    role="tab"
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -464,7 +466,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <Button
                   type="submit"
                   size="default"
-                  className="w-full h-12 mt-6 text-base font-semibold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all group"
+                  className="rounded-xl w-full h-12 mt-6 text-base font-semibold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-all group"
                   disabled={isLoading}
                   aria-busy={isLoading}
                 >
