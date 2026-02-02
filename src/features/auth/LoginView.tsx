@@ -20,6 +20,29 @@ const LOGIN_SIMULATION_DELAY = 3500; // 1.5 seconds
 
 const SLIDE_IMAGES = [slide1, slide2, slide3, slide4] as const;
 
+const SLIDE_CONTENT = [
+  {
+    tag: "Compliance First",
+    title: "Pharmaceutical Excellence",
+    description: "A comprehensive platform engineered for strict adherence to EU-GMP, FDA 21 CFR Part 11, and global GxP regulatory standards."
+  },
+  {
+    tag: "Digital Integrity",
+    title: "Streamlined Quality Workflows",
+    description: "Digitize critical processes from CAPA to Change Control. Ensure data integrity with automated audit trails and secure electronic signatures."
+  },
+  {
+    tag: "Strategic Vision",
+    title: "Real-time Quality Analytics",
+    description: "Transform operational data into strategic insights. Visualize quality trends instantly to drive continuous improvement and risk mitigation."
+  },
+  {
+    tag: "Global Synergy",
+    title: "Unified Quality Ecosystem",
+    description: "Break down operational silos. Foster seamless collaboration across departments and geographies in a secure, centralized environment."
+  }
+];
+
 const DEMO_CREDENTIALS = {
   username: "admin",
   password: "123456",
@@ -246,38 +269,55 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             ))}
           </div>
 
-          {/* Content Overlay - Floating Glass Card */}
-          <div className="relative z-10 flex flex-col justify-end h-full p-6 lg:p-8 xl:p-10">
-            <div className="bg-slate-950/40 backdrop-blur-xl border border-white/10 p-8 rounded-[1.45rem] shadow-2xl space-y-8 max-w-2xl transform transition-all duration-500 mr-auto hover:bg-slate-950/50 hover:scale-[1.01] hover:shadow-emerald-500/10 hover:border-white/20 group/card">
-              {/* Main Text */}
-              <div className="space-y-4">
-                <h2 className="text-3xl lg:text-4xl font-bold leading-tight font-display tracking-tight text-white">
-                  Enter the Future of <br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Quality Assurance</span>
-                </h2>
-                <p className="text-base text-slate-200 leading-relaxed font-light max-w-md">
-                  Experience the next generation of pharmaceutical quality
-                  management. Intelligent, compliant, and secure.
-                </p>
-              </div>
+          {/* Gradient Overlay for Text Readability */}
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-950/95 via-slate-900/60 to-transparent pointer-events-none" />
 
-              {/* Minimalist Indicators */}
-              <div className="flex gap-2" role="tablist" aria-label="Carousel controls">
+          {/* Content Overlay - Modern Clean Style */}
+          <div className="absolute inset-x-0 bottom-0 z-20 p-8 lg:p-12 xl:p-16 flex flex-col justify-end pointer-events-none"> 
+            <div className="max-w-3xl pointer-events-auto">
+               {/* Animated Text Content */}
+               <div className="relative h-[220px] mb-6"> 
+                  {SLIDE_CONTENT.map((content, index) => (
+                    <div
+                      key={index}
+                      className={cn(
+                        "absolute bottom-0 left-0 w-full flex flex-col justify-end transition-all duration-700 ease-out transform",
+                        index === currentSlide 
+                           ? "opacity-100 translate-y-0" 
+                           : "opacity-0 translate-y-8"
+                      )}
+                    >
+                       <div className="flex items-center gap-3 mb-4">
+                          <span className="w-8 h-0.5 bg-emerald-500 rounded-full"></span>
+                          <span className="text-emerald-400 font-bold tracking-wider text-xs uppercase">{content.tag}</span>
+                       </div>
+                       
+                       <h2 className="text-4xl lg:text-5xl font-bold leading-tight text-white mb-4 tracking-tight drop-shadow-sm">
+                          {content.title}
+                       </h2>
+                       
+                       <p className="text-lg text-slate-300/90 leading-relaxed font-light max-w-xl">
+                          {content.description}
+                       </p>
+                    </div>
+                  ))}
+               </div>
+
+               {/* Modern Indicators */}
+               <div className="flex gap-4">
                 {SLIDE_IMAGES.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => handleSlideChange(index)}
-                    className="group focus:outline-none py-2"
+                    className="group focus:outline-none py-4"
                     aria-label={`Go to slide ${index + 1}`}
-                    aria-current={index === currentSlide ? "true" : "false"}
-                    role="tab"
                   >
-                    <div className={cn(
-                      "h-1 rounded-full transition-all duration-700 ease-out",
-                      index === currentSlide
-                        ? "w-12 bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]"
-                        : "w-2 bg-white/20 group-hover:bg-white/40 group-hover:w-4"
-                    )} />
+                    <div className="relative h-1 w-12 bg-white/20 rounded-full overflow-hidden">
+                       <div className={cn(
+                          "absolute inset-y-0 left-0 bg-emerald-500 rounded-full transition-all duration-300 ease-out",
+                          index === currentSlide ? "w-full" : "w-0 group-hover:w-full group-hover:opacity-50"
+                       )} />
+                    </div>
                   </button>
                 ))}
               </div>
