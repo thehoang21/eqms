@@ -1,8 +1,7 @@
-import React, { useRef, ChangeEvent, useState } from 'react';
+import React, { useRef, ChangeEvent } from 'react';
 import { Camera, Edit2, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
-import { AvatarCropModal } from '@/components/ui/avatar-crop';
 
 interface AccountInfoTabProps {
     formData: {
@@ -49,8 +48,6 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
     phoneVerified = false,
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [showCropModal, setShowCropModal] = useState(false);
-    const [selectedImage, setSelectedImage] = useState<string>('');
 
     const handleAvatarClick = () => {
         fileInputRef.current?.click();
@@ -70,24 +67,11 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                 return;
             }
             
-            // Read file and show crop modal
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedImage(reader.result as string);
-                setShowCropModal(true);
-            };
-            reader.readAsDataURL(file);
+            // Upload directly without cropping
+            onAvatarChange(file);
         }
         // Reset input value to allow re-selecting the same file
         e.target.value = '';
-    };
-
-    const handleCropComplete = (croppedBlob: Blob) => {
-        // Convert blob to file
-        const croppedFile = new File([croppedBlob], 'avatar.jpg', { type: 'image/jpeg' });
-        onAvatarChange(croppedFile);
-        setShowCropModal(false);
-        setSelectedImage('');
     };
 
     return (
@@ -338,17 +322,6 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                     </div>
                 </div>
             </div>
-
-            {/* Avatar Crop Modal */}
-            <AvatarCropModal
-                isOpen={showCropModal}
-                onClose={() => {
-                    setShowCropModal(false);
-                    setSelectedImage('');
-                }}
-                imageSrc={selectedImage}
-                onCropComplete={handleCropComplete}
-            />
         </div>
     );
 };
