@@ -334,13 +334,13 @@ const NotificationTabs: React.FC<{
   ];
 
   return (
-    <div className="flex gap-1 p-1 bg-slate-100 rounded-lg w-fit">
+    <div className="flex gap-1 p-1 bg-slate-100 rounded-lg w-full sm:w-fit">
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
           className={cn(
-            "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
+            "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 flex-1 sm:flex-initial",
             activeTab === tab.id
               ? "bg-white text-slate-900 shadow-sm"
               : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
@@ -964,14 +964,14 @@ export const NotificationsView: React.FC = () => {
 
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
-      {/* Header: Title + Breadcrumb + Action Button */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
+      {/* Header: Title + Action Button */}
+      <div className="flex flex-row items-center justify-between gap-3">
         <div className="flex-1 min-w-0">
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             Notifications
           </h1>
         </div>
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-2 md:gap-3 shrink-0">
           <Button
             variant="outline"
             size="sm"
@@ -980,7 +980,7 @@ export const NotificationsView: React.FC = () => {
             className="whitespace-nowrap gap-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
           >
             <CheckCheck className="h-4 w-4" />
-            Mark all as read
+            <span className="inline">Mark all as read</span>
           </Button>
         </div>
       </div>
