@@ -18,6 +18,7 @@ import { Select } from "@/components/ui/select/Select";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { useToast } from "@/components/ui/toast";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
 import { ResetPasswordModal } from "../components/ResetPasswordModal";
 import { User, UserRole, UserStatus, TableColumn } from "../types";
@@ -461,7 +462,9 @@ export const UserManagementView: React.FC = () => {
 
       {/* Table */}
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
-        <div className="overflow-x-auto">
+        {currentUsers.length > 0 ? (
+          <>
+            <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
@@ -473,7 +476,7 @@ export const UserManagementView: React.FC = () => {
                     {col.label}
                   </th>
                 ))}
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-20 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>
@@ -532,7 +535,7 @@ export const UserManagementView: React.FC = () => {
                   ))}
                   <td
                     onClick={(e) => e.stopPropagation()}
-                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-10 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50/80"
+                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50/80"
                   >
                     <button
                       ref={getButtonRef(user.id)}
@@ -557,33 +560,44 @@ export const UserManagementView: React.FC = () => {
           onPageChange={setCurrentPage}
           onItemsPerPageChange={setItemsPerPage}
         />
+          </>
+        ) : (
+          <TableEmptyState
+            title="No Users Found"
+            description="We couldn't find any users matching your filters. Try adjusting your search criteria or clear filters."
+            actionLabel="Clear Filters"
+            onAction={() => {
+              setSearchQuery("");
+              setRoleFilter("All");
+              setStatusFilter("All");
+              setBusinessUnitFilter("All");
+              setDepartmentFilter("All");
+            }}
+          />
+        )}
       </div>
 
       {/* Dropdown Menu */}
-      {openDropdownId &&
-        createPortal(
-          <>
-            <div
-              className="fixed inset-0 z-40 animate-in fade-in duration-150"
-              onClick={() => setOpenDropdownId(null)}
-              aria-hidden="true"
-            />
-            {/* Menu */}
-            <div
-              className={cn(
-                "fixed z-50 min-w-[180px] rounded-lg border border-slate-200 bg-white shadow-xl",
-                dropdownPosition.showAbove
-                  ? "animate-in fade-in slide-in-from-bottom-2 duration-200"
-                  : "animate-in fade-in slide-in-from-top-2 duration-200"
-              )}
-              style={{
-                top: dropdownPosition.showAbove
-                  ? `${dropdownPosition.top}px`
-                  : `${dropdownPosition.top}px`,
-                left: `${dropdownPosition.left}px`,
-                transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none',
-              }}
-            >
+      {openDropdownId && createPortal(
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-40 animate-in fade-in duration-150"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpenDropdownId(null);
+            }}
+            aria-hidden="true"
+          />
+          {/* Menu */}
+          <div
+            className="fixed z-50 min-w-[160px] w-[180px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+            style={{
+              top: `${dropdownPosition.top}px`,
+              left: `${dropdownPosition.left}px`,
+              transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none',
+            }}
+          >
               <div className="py-1">
                 <button
                   onClick={() => {

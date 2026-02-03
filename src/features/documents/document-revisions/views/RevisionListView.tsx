@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button/Button';
 import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge';
 import { TablePagination } from '@/components/ui/table/TablePagination';
+import { TableEmptyState } from '@/components/ui/table/TableEmptyState';
 import { DocumentFilters } from "@/features/documents/shared/components";
 import { cn } from '@/components/ui/utils';
 import { IconFileCheck, IconFileTime, IconInfoCircle, IconFileExport, IconSmartHome, IconEyeCheck, IconChecks } from "@tabler/icons-react";
@@ -410,8 +411,10 @@ export const RevisionListView: React.FC = () => {
       {/* Table Container - Match DocumentListView wrapper */}
       <div className="flex-1 min-h-0 flex flex-col">
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
-          {/* Table with Horizontal Scroll */}
-          <div className="overflow-x-auto flex-1">
+          {paginatedRevisions.length > 0 ? (
+            <>
+              {/* Table with Horizontal Scroll */}
+              <div className="overflow-x-auto flex-1">
             <table className="w-full">
               <thead className="bg-slate-50/80 border-b-2 border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
                 <tr>
@@ -482,6 +485,15 @@ export const RevisionListView: React.FC = () => {
             onPageChange={setCurrentPage}
             onItemsPerPageChange={setItemsPerPage}
           />
+            </>
+          ) : (
+            <TableEmptyState
+              title="No Revisions Found"
+              description="We couldn't find any revision records matching your filters. Try adjusting your search criteria or clear filters."
+              actionLabel="Clear Filters"
+              onAction={() => window.location.reload()}
+            />
+          )}
         </div>
       </div>
 

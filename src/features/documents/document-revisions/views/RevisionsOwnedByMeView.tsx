@@ -30,6 +30,7 @@ import { Checkbox } from "@/components/ui/checkbox/Checkbox";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
 import {
   IconInfoCircle,
@@ -595,7 +596,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
       {/* Table Container */}
       <div className="flex-1 min-h-0 flex flex-col">
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col flex-1">
-          <div className="overflow-x-auto flex-1">
+          {paginatedRevisions.length > 0 ? (
+            <>
+              <div className="overflow-x-auto flex-1">
             <table className="w-full">
               <thead className="bg-slate-50 border-b-2 border-slate-200">
                 <tr>
@@ -664,6 +667,15 @@ export const RevisionsOwnedByMeView: React.FC = () => {
             onPageChange={setCurrentPage}
             onItemsPerPageChange={setItemsPerPage}
           />
+            </>
+          ) : (
+            <TableEmptyState
+              title="No Revisions Found"
+              description="We couldn't find any revision records matching your filters. Try adjusting your search criteria or clear filters."
+              actionLabel="Clear Filters"
+              onAction={() => window.location.reload()}
+            />
+          )}
         </div>
       </div>
 

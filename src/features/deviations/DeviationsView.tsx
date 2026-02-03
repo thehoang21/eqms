@@ -19,6 +19,7 @@ import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
 import {
   Deviation,
@@ -27,10 +28,6 @@ import {
   DeviationCategory,
   DeviationSeverity,
 } from "./types";
-import {
-  MobileCard,
-  MobileCardList,
-} from "@/components/ui/table/MobileCardView";
 
 // Mock Data
 const MOCK_DEVIATIONS: Deviation[] = [
@@ -452,81 +449,11 @@ export const DeviationsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Card View */}
-      <MobileCardList>
-        {paginatedData.map((dev, index) => (
-          <MobileCard
-            key={dev.id}
-            index={(currentPage - 1) * itemsPerPage + index + 1}
-            fields={[
-              {
-                label: "Deviation ID",
-                value: <span className="font-mono">{dev.deviationId}</span>,
-              },
-              {
-                label: "Title",
-                value: dev.title,
-                fullWidth: true,
-              },
-              {
-                label: "Category",
-                value: <span className="text-xs">{dev.category}</span>,
-              },
-              {
-                label: "Severity",
-                value: (
-                  <span
-                    className={cn(
-                      "inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-medium border",
-                      getSeverityColor(dev.severity),
-                    )}
-                  >
-                    {dev.severity}
-                  </span>
-                ),
-                badge: true,
-              },
-              {
-                label: "Status",
-                value: <StatusBadge status={getStatusColor(dev.status)} />,
-                badge: true,
-              },
-              {
-                label: "Assigned",
-                value: dev.assignedTo,
-              },
-              {
-                label: "Deadline",
-                value: new Date(dev.investigationDeadline).toLocaleDateString(
-                  "en-GB",
-                  {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  },
-                ),
-              },
-            ]}
-            actions={[
-              {
-                label: "View",
-                icon: <Eye className="h-4 w-4" />,
-                onClick: () => console.log("View", dev.id),
-                variant: "outline",
-              },
-              {
-                label: "Investigate",
-                icon: <Edit className="h-4 w-4" />,
-                onClick: () => console.log("Investigate", dev.id),
-              },
-            ]}
-          />
-        ))}
-      </MobileCardList>
-
-      {/* Desktop Table */}
-      <div className="hidden md:block border rounded-xl bg-white shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Table */}
+      <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+        {paginatedData.length > 0 ? (
+          <>
+            <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
@@ -625,6 +552,15 @@ export const DeviationsView: React.FC = () => {
           onPageChange={setCurrentPage}
           onItemsPerPageChange={setItemsPerPage}
         />
+          </>
+        ) : (
+          <TableEmptyState
+            title="No Deviations Found"
+            description="We couldn't find any deviation records matching your filters. Try adjusting your search criteria or clear filters."
+            actionLabel="Clear Filters"
+            onAction={() => window.location.reload()}
+          />
+        )}
       </div>
     </div>
   );

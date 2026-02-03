@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { TablePagination } from '@/components/ui/table/TablePagination';
+import { TableEmptyState } from '@/components/ui/table/TableEmptyState';
 import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "@/features/documents/shared/components";
 import { IconChecks, IconEyeCheck, IconInfoCircle, IconFileExport, IconSmartHome } from "@tabler/icons-react";
@@ -571,8 +572,10 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
 
       {/* Table */}
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
-        <div className="overflow-x-auto flex-1">
-          <table className="w-full">
+        {currentRevisions.length > 0 ? (
+          <>
+            <div className="overflow-x-auto flex-1">
+              <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">No.</th>
@@ -634,32 +637,29 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
                     </td>
                   </tr>
                 ))
-              ) : (
-                <tr>
-                  <td colSpan={13} className="py-12 text-center">
-                    <div className="flex flex-col items-center justify-center text-slate-500">
-                      <div className="bg-slate-50 p-4 rounded-full mb-3">
-                        <FileText className="h-8 w-8 text-slate-400" />
-                      </div>
-                      <p className="text-base font-medium text-slate-900">No revisions found</p>
-                      <p className="text-sm mt-1">Try adjusting your search or filters</p>
-                    </div>
-                  </td>
-                </tr>
-              )}
+              ) : null}
             </tbody>
           </table>
-        </div>
+          </div>
 
-        {/* Pagination */}
-        <TablePagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={filteredRevisions.length}
-          itemsPerPage={itemsPerPage}
-          onPageChange={setCurrentPage}
-          onItemsPerPageChange={setItemsPerPage}
-        />
+          {/* Pagination */}
+          <TablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredRevisions.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={setItemsPerPage}
+          />
+          </>
+        ) : (
+          <TableEmptyState
+            title="No Pending Documents Found"
+            description="We couldn't find any pending documents for review or approval matching your filters. Try adjusting your search criteria or clear filters."
+            actionLabel="Clear Filters"
+            onAction={() => window.location.reload()}
+          />
+        )}
       </div>
 
       {/* Dropdown Menu Portal */}

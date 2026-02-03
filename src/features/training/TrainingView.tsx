@@ -22,6 +22,7 @@ import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
 import {
   TrainingRecord,
@@ -29,10 +30,6 @@ import {
   TrainingStatus,
   TrainingType,
 } from "./types";
-import {
-  MobileCard,
-  MobileCardList,
-} from "@/components/ui/table/MobileCardView";
 
 // Mock Data
 const MOCK_TRAININGS: TrainingRecord[] = [
@@ -425,77 +422,11 @@ export const TrainingView: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Card View */}
-      <MobileCardList>
-        {paginatedData.map((training, index) => (
-          <MobileCard
-            key={training.id}
-            index={(currentPage - 1) * itemsPerPage + index + 1}
-            fields={[
-              {
-                label: "Training ID",
-                value: <span className="font-mono">{training.trainingId}</span>,
-              },
-              {
-                label: "Title",
-                value: training.title,
-                fullWidth: true,
-              },
-              {
-                label: "Type",
-                value: (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-700">
-                    {getTypeIcon(training.type)}
-                    {training.type}
-                  </span>
-                ),
-                badge: true,
-              },
-              {
-                label: "Status",
-                value: <StatusBadge status={getStatusColor(training.status)} />,
-                badge: true,
-              },
-              {
-                label: "Instructor",
-                value: training.instructor,
-              },
-              {
-                label: "Date",
-                value: new Date(training.scheduledDate).toLocaleDateString(
-                  "en-GB",
-                  {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  },
-                ),
-              },
-              {
-                label: "Enrolled",
-                value: `${training.enrolled}/${training.capacity}`,
-              },
-            ]}
-            actions={[
-              {
-                label: "View",
-                icon: <Eye className="h-4 w-4" />,
-                onClick: () => console.log("View training", training.id),
-                variant: "outline",
-              },
-              {
-                label: "Edit",
-                icon: <Edit className="h-4 w-4" />,
-                onClick: () => console.log("Edit training", training.id),
-              },
-            ]}
-          />
-        ))}
-      </MobileCardList>
-
-      {/* Desktop Table View */}
-      <div className="hidden md:block border rounded-xl bg-white shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Table */}
+      <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+        {paginatedData.length > 0 ? (
+          <>
+            <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
@@ -609,6 +540,15 @@ export const TrainingView: React.FC = () => {
           onPageChange={setCurrentPage}
           onItemsPerPageChange={setItemsPerPage}
         />
+          </>
+        ) : (
+          <TableEmptyState
+            title="No Training Records Found"
+            description="We couldn't find any training records matching your filters. Try adjusting your search criteria or clear filters."
+            actionLabel="Clear Filters"
+            onAction={() => window.location.reload()}
+          />
+        )}
       </div>
     </div>
   );

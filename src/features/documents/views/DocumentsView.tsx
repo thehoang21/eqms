@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button/Button";
 import { StatusBadge, StatusType } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
 import { DocumentFilters } from "./../shared/components/DocumentFilters";
 import { DetailDocumentView } from "../document-detail/DetailDocumentView";
@@ -1015,8 +1016,10 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
 
       {/* Table Container with Pagination */}
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
-        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100 hover:scrollbar-thumb-slate-400 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-          <table className="w-full">
+        {paginatedDocuments.length > 0 ? (
+          <>
+            <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100 hover:scrollbar-thumb-slate-400 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+              <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 {visibleColumns.map(col => (
@@ -1188,6 +1191,15 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           itemsPerPage={itemsPerPage}
           onItemsPerPageChange={setItemsPerPage}
         />
+          </>
+        ) : (
+          <TableEmptyState
+            title="No Documents Found"
+            description="We couldn't find any documents matching your filters. Try adjusting your search criteria or clear filters."
+            actionLabel="Clear Filters"
+            onAction={() => window.location.reload()}
+          />
+        )}
       </div>
 
       {/* Create Shareable Link Modal */}

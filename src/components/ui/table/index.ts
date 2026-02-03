@@ -6,24 +6,13 @@ export {
   TableBody,
   TableCell,
   TableRow,
-  TableEmptyState
+  TableEmptyState as ResponsiveTableEmptyState
 } from './ResponsiveTable';
 export type { ResponsiveTableProps } from './ResponsiveTable';
 
 export { TablePagination } from './TablePagination';
 export type { TablePaginationProps } from './TablePagination';
 
-export { 
-  MobileCard, 
-  MobileCardList, 
-  MobileCardEmptyState 
-} from './MobileCardView';
-
-export type { 
-  MobileCardField, 
-  MobileCardAction, 
-  MobileCardProps, 
-  MobileCardListProps, 
-  MobileCardEmptyStateProps 
-} from './MobileCardView';
+export { TableEmptyState } from './TableEmptyState';
+export type { TableEmptyStateProps } from './TableEmptyState';
 

@@ -8,6 +8,31 @@ import logoFull from '@/assets/images/logo_nobg.png';
 import logoCollapsed from '@/assets/images/LOGO.png';
 import './Sidebar.module.css';
 
+// Inject keyframes for animations
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  `;
+  if (!document.head.querySelector('[data-sidebar-animations]')) {
+    style.setAttribute('data-sidebar-animations', 'true');
+    document.head.appendChild(style);
+  }
+}
+
 // Constants
 const BASE_PADDING = 12;
 const LEVEL_PADDING = 16;
@@ -253,13 +278,16 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
   }, []);
 
   // Memoized menu item renderer
-  const renderMenuItem = useCallback((item: NavItem, level: number = 0) => {
+  const renderMenuItem = useCallback((item: NavItem, level: number = 0, index: number = 0) => {
     const hasChildren = Boolean(item.children?.length);
     const isExpanded = expandedItems.includes(item.id);
     const isActive = activeId === item.id;
     const Icon = item.icon;
 
     const paddingLeft = isCollapsed ? 0 : (level === 0 ? BASE_PADDING : (level * LEVEL_PADDING + BASE_PADDING));
+    
+    // Staggered animation delay for mobile sidebar opening
+    const staggerDelay = level === 0 && isMobileOpen && window.innerWidth < 768 ? index * 30 : 0;
 
     return (
       <>
@@ -283,7 +311,6 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           onMouseLeave={handleTooltipHide}
           className={cn(
             "w-full flex items-center group relative overflow-visible z-10 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/20",
-            `transition-all duration-200 ease-in-out`,
             // Mobile: Taller touch target (h-12), Desktop: h-11
             "h-12 md:h-11",
             isCollapsed ? "justify-center px-0" : "justify-start pr-3",
@@ -296,7 +323,9 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           )}
           style={{ 
             paddingLeft: isCollapsed ? 0 : `${paddingLeft}px`,
-            WebkitTapHighlightColor: 'transparent'
+            WebkitTapHighlightColor: 'transparent',
+            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+            animation: staggerDelay > 0 ? `slideInLeft 300ms cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms backwards` : 'none'
           }}
         >
           {/* Active indicator */}
@@ -360,15 +389,18 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             <div
               onClick={(e) => toggleExpand(item.id, e)}
               className={cn(
-                "rounded-lg ml-auto flex items-center justify-center h-6 w-6 transition-all duration-200"
+                "rounded-lg ml-auto flex items-center justify-center h-6 w-6"
               )}
             >
               <ChevronRight 
                 className={cn(
-                  "h-4 w-4 text-slate-400 transition-transform duration-300 ease-out",
+                  "h-4 w-4 text-slate-400",
                   isExpanded && "rotate-90"
                 )}
-                style={{ willChange: 'transform' }}
+                style={{ 
+                  transition: 'transform 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                  willChange: 'transform'
+                }}
               />
             </div>
           )}
@@ -378,13 +410,16 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         {hasChildren && !isCollapsed && (
           <div 
             className={cn(
-              "grid transition-all duration-200 ease-in-out",
+              "grid",
               isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
             )}
+            style={{
+              transition: 'grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 250ms cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
           >
             <div className="overflow-hidden">
               <div className="relative pt-1">
-                {item.children?.map((child) => renderMenuItem(child, level + 1))}
+                {item.children?.map((child, childIndex) => renderMenuItem(child, level + 1, childIndex))}
               </div>
             </div>
           </div>
@@ -468,13 +503,14 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             level >= 2 ? "ml-0" : "ml-3"
           )}>{item.label}</span>
           {hasChildren && (
-            <div className="rounded-lg flex items-center justify-center h-6 w-6 transition-all duration-200 shrink-0">
+            <div className="rounded-lg flex items-center justify-center h-6 w-6 shrink-0">
               <ChevronRight 
                 className={cn(
-                  "h-4 w-4 text-slate-400 transition-transform duration-300 ease-out",
+                  "h-4 w-4 text-slate-400",
                   isExpanded && "rotate-90"
                 )}
                 style={{ 
+                  transition: 'transform 250ms cubic-bezier(0.4, 0, 0.2, 1)',
                   willChange: 'transform'
                 }}
               />
@@ -485,9 +521,12 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         {hasChildren && (
           <div
             className={cn(
-              "grid transition-all duration-200 ease-in-out bg-slate-50/50",
+              "grid bg-slate-50/50",
               isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
             )}
+            style={{
+              transition: 'grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 250ms cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
           >
             <div className="overflow-hidden">
               <div className="pl-3 py-1">
@@ -517,6 +556,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         <div
           className={cn(
             "fixed z-50 min-w-[240px] max-w-[280px] bg-white rounded-xl border border-slate-200 shadow-xl",
+            "origin-left",
             hoverMenu.position.showAbove
               ? "animate-in fade-in slide-in-from-bottom-2 duration-200"
               : "animate-in fade-in slide-in-from-left-2 duration-200"
@@ -564,11 +604,13 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
       {/* Mobile Overlay Backdrop - Only show on mobile (<768px) */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/40 z-40 md:hidden animate-in fade-in duration-200"
+          className="fixed inset-0 bg-slate-900/40 z-40 md:hidden"
           onClick={onClose}
           aria-hidden="true"
           style={{
-            WebkitTapHighlightColor: 'transparent'
+            WebkitTapHighlightColor: 'transparent',
+            animation: 'fadeIn 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards',
+            opacity: 0
           }}
         />
       )}
@@ -583,15 +625,18 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           "md:sticky md:top-0 md:z-30 md:h-screen",
           // Width
           isCollapsed ? "w-16" : "w-[250px] max-w-[85vw]",
-          // Smooth transitions - collapse nhanh, expand chậm
-          isCollapsed 
-            ? "transition-all duration-200 ease-in" 
-            : "transition-all duration-300 ease-out",
           // Mobile slide animation
           "md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
         style={{
+          // Mobile: Custom easing for smooth slide
+          transition: window.innerWidth < 768 
+            ? 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)' 
+            : isCollapsed
+              ? 'width 250ms cubic-bezier(0.4, 0, 0.2, 1)'
+              : 'width 350ms cubic-bezier(0.4, 0, 0.2, 1)',
+          willChange: window.innerWidth < 768 ? 'transform' : 'width',
           // Safe area for notch/Dynamic Island (top) and landscape edges
           // Bottom is NOT set here - handled by nav container padding for proper scroll
           paddingTop: 'env(safe-area-inset-top, 0px)',
@@ -678,7 +723,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             // Mobile: Larger spacing between items
             "space-y-1 md:space-y-0.5"
           )}>
-            {NAV_CONFIG.map((item) => renderMenuItem(item))}
+            {NAV_CONFIG.map((item, index) => renderMenuItem(item, 0, index))}
           </nav>
           
           {/* Extra spacer at bottom for mobile/tablet to ensure last items are accessible */}

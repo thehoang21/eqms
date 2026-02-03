@@ -216,27 +216,27 @@ export const AvatarCropModal: React.FC<AvatarCropModalProps> = ({
 
           {/* Rotation Control */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-slate-700">Rotation</label>
-              <span className="text-xs text-slate-500">{rotation}°</span>
+            <div className="flex items-center justify-between mb-3">
+              <label className="text-sm sm:text-base font-semibold text-slate-900">Rotation</label>
+              <span className="text-sm sm:text-base font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">{rotation}°</span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <button
+                onClick={() => setRotation((prev) => (prev - 90 + 360) % 360)}
+                className="inline-flex items-center justify-center gap-2 h-12 sm:h-11 px-4 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 active:scale-95 transition-all shadow-sm touch-manipulation"
+                aria-label="Rotate left 90 degrees"
+              >
+                <RotateCw className="h-5 w-5 text-slate-700 transform -scale-x-100" />
+                <span className="text-sm sm:text-base font-semibold text-slate-800">Rotate Left</span>
+              </button>
               <button
                 onClick={handleRotate}
-                className="inline-flex items-center justify-center gap-2 h-9 px-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors"
+                className="inline-flex items-center justify-center gap-2 h-12 sm:h-11 px-4 rounded-xl border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 active:scale-95 transition-all shadow-sm touch-manipulation"
+                aria-label="Rotate right 90 degrees"
               >
-                <RotateCw className="h-4 w-4 text-slate-600" />
-                <span className="text-sm text-slate-700">Rotate 90°</span>
+                <RotateCw className="h-5 w-5 text-emerald-700" />
+                <span className="text-sm sm:text-base font-semibold text-emerald-800">Rotate Right</span>
               </button>
-              <input
-                type="range"
-                min={0}
-                max={360}
-                step={1}
-                value={rotation}
-                onChange={(e) => setRotation(Number(e.target.value))}
-                className="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-emerald-600 [&::-webkit-slider-thumb]:cursor-pointer"
-              />
             </div>
           </div>
         </div>

@@ -11,10 +11,11 @@ import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 import { TablePagination } from '@/components/ui/table/TablePagination';
+import { TableEmptyState } from '@/components/ui/table/TableEmptyState';
 import { FilterCard } from '@/components/ui/card/FilterCard';
 import { cn } from '@/components/ui/utils';
 import type { Task, ViewMode } from "./types";
-import { TaskTable, TaskMobileList, TaskCalendarView, TaskGanttView, TaskDetailDrawer } from "./components";
+import { TaskTable, TaskCalendarView, TaskGanttView, TaskDetailDrawer } from "./components";
 
 // --- Mock Data ---
 const MOCK_TASKS: Task[] = [
@@ -441,22 +442,6 @@ const TaskFilters: React.FC<{
   );
 };
 
-const EmptyState = () => (
-  <div className="flex flex-col items-center justify-center py-16 px-4 bg-white text-center">
-    <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-      <Search className="h-8 w-8 text-slate-300" />
-    </div>
-    <h3 className="text-lg font-bold text-slate-900 mb-1">No Tasks Found</h3>
-    <p className="text-slate-500 max-w-sm mx-auto mb-6">
-      We couldn't find any tasks matching your filters. Try adjusting your
-      search criteria or clear filters.
-    </p>
-    <Button variant="outline" onClick={() => window.location.reload()}>
-      Clear Filters
-    </Button>
-  </div>
-);
-
 const SkeletonLoader = () => {
   return (
     <div className="w-full animate-pulse">
@@ -646,15 +631,8 @@ export const MyTasksView: React.FC = () => {
               <>
                 {paginatedData.length > 0 ? (
                   <>
-                    {/* Mobile Card View - visible on small screens */}
-                    <TaskMobileList
-                      tasks={paginatedData}
-                      startIndex={(currentPage - 1) * itemsPerPage + 1}
-                      onTaskClick={setSelectedTask}
-                    />
-                    
-                    {/* Desktop Table View - visible on md and up */}
-                    <div className="hidden md:block rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
+                    {/* Table View with responsive design */}
+                    <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
                       <TaskTable
                         tasks={paginatedData}
                         onTaskClick={setSelectedTask}
@@ -669,23 +647,15 @@ export const MyTasksView: React.FC = () => {
                         onItemsPerPageChange={setItemsPerPage}
                       />
                     </div>
-                    
-                    {/* Mobile Pagination - visible on small screens */}
-                    <div className="md:hidden mt-4">
-                      <TablePagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        totalItems={totalItems}
-                        itemsPerPage={itemsPerPage}
-                        onPageChange={setCurrentPage}
-                        onItemsPerPageChange={setItemsPerPage}
-                        className="rounded-xl border border-slate-200 shadow-sm"
-                      />
-                    </div>
                   </>
                 ) : (
                   <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                    <EmptyState />
+                    <TableEmptyState
+                      title="No Tasks Found"
+                      description="We couldn't find any tasks matching your filters. Try adjusting your search criteria or clear filters."
+                      actionLabel="Clear Filters"
+                      onAction={() => window.location.reload()}
+                    />
                   </div>
                 )}
               </>
@@ -700,7 +670,12 @@ export const MyTasksView: React.FC = () => {
                   />
                 ) : (
                   <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                    <EmptyState />
+                    <TableEmptyState
+                      title="No Tasks Found"
+                      description="We couldn't find any tasks matching your filters."
+                      actionLabel="Clear Filters"
+                      onAction={() => window.location.reload()}
+                    />
                   </div>
                 )}
               </>
@@ -716,7 +691,12 @@ export const MyTasksView: React.FC = () => {
                   />
                 ) : (
                   <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                    <EmptyState />
+                    <TableEmptyState
+                      title="No Tasks Found"
+                      description="We couldn't find any tasks matching your filters."
+                      actionLabel="Clear Filters"
+                      onAction={() => window.location.reload()}
+                    />
                   </div>
                 )}
               </>

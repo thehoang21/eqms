@@ -54,6 +54,9 @@ const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ d
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
 const ReportView = lazy(() => import('@/features/report').then(m => ({ default: m.ReportView })));
 
+// System
+const AuditTrailView = lazy(() => import('@/features/audit-trail').then(m => ({ default: m.AuditTrailView })));
+
 // Dev Tools
 const UIShowcase = lazy(() => import('@/features/ui-showcase/UIShowcase').then(m => ({ default: m.UIShowcase })));
 
@@ -244,7 +247,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="report" element={<Suspense fallback={<LoadingFallback />}><ReportView /></Suspense>} />
         
         {/* ===== AUDIT TRAIL SYSTEM ===== */}
-        <Route path="audit-trail" element={<UnderConstruction />} />
+        <Route path="audit-trail" element={<Suspense fallback={<LoadingFallback />}><AuditTrailView /></Suspense>} />
         
         {/* ===== PROFILE ===== */}
         <Route path="profile" element={<Suspense fallback={<LoadingFallback />}><ProfileView onBack={() => navigate(-1)} /></Suspense>} />

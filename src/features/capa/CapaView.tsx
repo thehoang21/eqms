@@ -19,12 +19,9 @@ import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
 import { CAPA, CAPAFilters, CAPAType, CAPASource, CAPAStatus } from "./types";
-import {
-  MobileCard,
-  MobileCardList,
-} from "@/components/ui/table/MobileCardView";
 
 // Mock Data
 const MOCK_CAPAS: CAPA[] = [
@@ -484,82 +481,11 @@ export const CAPAView: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Card View */}
-      <MobileCardList>
-        {paginatedData.map((capa, index) => (
-          <MobileCard
-            key={capa.id}
-            index={(currentPage - 1) * itemsPerPage + index + 1}
-            fields={[
-              {
-                label: "CAPA ID",
-                value: <span className="font-mono">{capa.capaId}</span>,
-              },
-              {
-                label: "Title",
-                value: capa.title,
-                fullWidth: true,
-              },
-              {
-                label: "Type",
-                value: (
-                  <span
-                    className={cn(
-                      "inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-medium border",
-                      getTypeColor(capa.type),
-                    )}
-                  >
-                    {getTypeIcon(capa.type)}
-                    {capa.type}
-                  </span>
-                ),
-                badge: true,
-              },
-              {
-                label: "Source",
-                value: <span className="text-xs">{capa.source}</span>,
-              },
-              {
-                label: "Status",
-                value: <StatusBadge status={getStatusColor(capa.status)} />,
-                badge: true,
-              },
-              {
-                label: "Assigned",
-                value: capa.assignedTo,
-              },
-              {
-                label: "Target Date",
-                value: new Date(capa.targetCompletionDate).toLocaleDateString(
-                  "en-GB",
-                  {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  },
-                ),
-              },
-            ]}
-            actions={[
-              {
-                label: "View",
-                icon: <Eye className="h-4 w-4" />,
-                onClick: () => console.log("View", capa.id),
-                variant: "outline",
-              },
-              {
-                label: "Manage",
-                icon: <Edit className="h-4 w-4" />,
-                onClick: () => console.log("Manage", capa.id),
-              },
-            ]}
-          />
-        ))}
-      </MobileCardList>
-
-      {/* Desktop Table */}
-      <div className="hidden md:block border rounded-xl bg-white shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
+      {/* Table */}
+      <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+        {paginatedData.length > 0 ? (
+          <>
+            <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
@@ -659,6 +585,15 @@ export const CAPAView: React.FC = () => {
           onPageChange={setCurrentPage}
           onItemsPerPageChange={setItemsPerPage}
         />
+          </>
+        ) : (
+          <TableEmptyState
+            title="No CAPAs Found"
+            description="We couldn't find any CAPA records matching your filters. Try adjusting your search criteria or clear filters."
+            actionLabel="Clear Filters"
+            onAction={() => window.location.reload()}
+          />
+        )}
       </div>
     </div>
   );
