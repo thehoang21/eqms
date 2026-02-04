@@ -19,7 +19,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className, onClo
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchDropdownRef = useRef<HTMLDivElement>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout>();
+  const debounceTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Debounce search query (300ms)
   useEffect(() => {
