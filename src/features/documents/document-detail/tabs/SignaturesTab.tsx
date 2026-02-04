@@ -51,7 +51,7 @@ export const SignaturesTab: React.FC = () => {
               <label className="text-sm font-medium text-slate-700">
                 {record.actionBy}
               </label>
-              <div className="h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded text-sm text-slate-900">
+              <div className="h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-900">
                 {record.actionByName}
               </div>
             </div>
@@ -61,7 +61,7 @@ export const SignaturesTab: React.FC = () => {
               <label className="text-sm font-medium text-slate-700">
                 {record.actionOn}
               </label>
-              <div className="h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded text-sm text-slate-900">
+              <div className="h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-900">
                 {record.actionOnValue}
               </div>
             </div>

@@ -14,7 +14,6 @@ import {
   Users,
   ShieldCheck,
   BookText,
-  Palette,
 } from "lucide-react";
 
 import {
@@ -118,7 +117,13 @@ const FOUNDATION_MODULES: NavItem[] = [
     id: "training-management",
     label: "Training Management",
     icon: IconPresentationAnalytics,
-    path: "/training",
+    children: [
+      {
+        id: "courses-list",
+        label: "Courses List",
+        path: "/training-management/courses",
+      },
+    ],
   },
 ];
 
@@ -246,7 +251,6 @@ const SYSTEM_MODULES: NavItem[] = [
         icon: IconInfoCircle,
         path: "/settings/info-system",
       },
-      { id: "ui-demo", label: "UI Showcase", icon: Palette, path: "/ui-demo" },
     ],
   },
 ];

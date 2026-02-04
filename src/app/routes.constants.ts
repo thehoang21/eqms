@@ -98,9 +98,6 @@ export const ROUTES = {
 
   // Profile
   PROFILE: '/profile',
-
-  // UI Demo
-  UI_DEMO: '/ui-demo',
 } as const;
 
 /**

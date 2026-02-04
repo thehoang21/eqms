@@ -39,12 +39,11 @@ type DocumentStatus =
   | "Draft"
   | "Pending Review"
   | "Pending Approval"
-  | "Approved"
   | "Pending Training"
   | "Ready for Publishing"
-  | "Published"
   | "Effective"
-  | "Archive";
+  | "Obsoleted"
+  | "Closed - Cancelled";
 type ReviewFlowType = "sequential" | "parallel";
 type ReviewStatus = "pending" | "approved" | "rejected" | "completed";
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
@@ -287,12 +286,11 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
     "Draft",
     "Pending Review",
     "Pending Approval",
-    "Approved",
     "Pending Training",
     "Ready for Publishing",
-    "Published",
     "Effective",
-    "Archive",
+    "Obsoleted",
+    "Closed - Cancelled",
   ];
 
   // Breadcrumbs

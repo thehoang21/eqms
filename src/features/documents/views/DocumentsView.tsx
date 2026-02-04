@@ -32,7 +32,7 @@ import { CreateLinkModal } from "./../shared/components/CreateLinkModal";
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type ViewType = "all" | "owned-by-me";
 
 interface TableColumn {
@@ -334,8 +334,10 @@ const mapDocumentStatusToStatusType = (status: DocumentStatus): StatusType => {
       return "pendingReview";
     case "Draft":
       return "draft";
-    case "Archive":
-      return "archived";
+    case "Obsoleted":
+      return "obsoleted";
+    case "Closed - Cancelled":
+      return "closed";
     default:
       return "draft";
   }
@@ -345,15 +347,15 @@ const getStatusColor = (status: DocumentStatus) => {
   switch (status) {
     case "Effective":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Approved":
-      return "bg-blue-50 text-blue-700 border-blue-200";
     case "Pending Approval":
       return "bg-blue-50 text-blue-700 border-blue-200";
     case "Pending Review":
       return "bg-amber-50 text-amber-700 border-amber-200";
     case "Draft":
       return "bg-slate-50 text-slate-700 border-slate-200";
-    case "Archive":
+    case "Obsoleted":
+      return "bg-orange-50 text-orange-700 border-orange-200";
+    case "Closed - Cancelled":
       return "bg-red-50 text-red-700 border-red-200";
     default:
       return "bg-slate-50 text-slate-700 border-slate-200";
@@ -512,7 +514,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         );
         break;
 
-      case "Archive":
+      case "Obsoleted":
+      case "Closed - Cancelled":
         break;
     }
 

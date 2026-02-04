@@ -1,7 +1,8 @@
 import React from "react";
-import { Settings, BookOpen, ClipboardCheck, HelpCircle } from "lucide-react";
-import { TrainingConfig } from "./types";
+import { BookOpen, ClipboardCheck } from "lucide-react";
+import { TrainingConfig } from "../types";
 import { cn } from '@/components/ui/utils';
+import { MultiSelect } from '@/components/ui/select/MultiSelect';
 
 interface TrainingConfigSectionProps {
     config: TrainingConfig;
@@ -85,8 +86,43 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
                 </div>
 
                 {/* Configuration Fields */}
-                    {/* Configuration Fields */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="space-y-6">
+                    {/* Distribution List */}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-700">
+                            Distribution List
+                        </label>
+                        <MultiSelect
+                            value={config.distributionList}
+                            onChange={(selected) => onUpdate({ distributionList: selected as string[] })}
+                            options={[
+                                { label: "Quality Assurance (QA)", value: "qa" },
+                                { label: "Quality Control (QC)", value: "qc" },
+                                { label: "Production", value: "production" },
+                                { label: "Research & Development (R&D)", value: "rnd" },
+                                { label: "Regulatory Affairs", value: "regulatory" },
+                                { label: "Warehouse", value: "warehouse" },
+                                { label: "Maintenance", value: "maintenance" },
+                                { label: "Engineering", value: "engineering" },
+                                { label: "Human Resources (HR)", value: "hr" },
+                                { label: "Finance & Accounting", value: "finance" },
+                                { label: "Procurement", value: "procurement" },
+                                { label: "Logistics", value: "logistics" },
+                                { label: "IT Department", value: "it" },
+                                { label: "Safety & Environment", value: "safety" },
+                                { label: "Management", value: "management" },
+                            ]}
+                            placeholder="Select departments to distribute training..."
+                            enableSearch
+                            maxVisibleTags={3}
+                        />
+                        <p className="text-xs text-slate-500 mt-1.5">
+                            Select which departments will receive this training
+                        </p>
+                    </div>
+
+                    {/* Numeric Fields Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {isTestMode && (
                         <>
                             <div className="space-y-2">
@@ -132,30 +168,9 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
                             </div>
                         </>
                     )}
-
-                    <div className="space-y-2">
-                        <div className="relative group inline-block">
-                            <label className="text-sm font-medium text-slate-700 inline-flex items-center gap-1.5 cursor-help">
-                                Training Period (Days)
-                            </label>
-                            {/* Tooltip */}
-                            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 absolute bottom-full left-0 mb-2 px-3 py-2 bg-slate-900 text-white text-xs rounded-lg shadow-lg z-50 w-64 pointer-events-none">
-                                Training Period duration after which the Document Revision will automatically progress to the Ready for Publishing status
-                                <div className="absolute top-full left-4 -mt-1 border-4 border-transparent border-t-slate-900"></div>
-                            </div>
-                        </div>
-                        <div className="relative">
-                            <input
-                                type="number"
-                                min="1"
-                                value={config.trainingPeriodDays}
-                                onChange={(e) => onUpdate({ trainingPeriodDays: parseInt(e.target.value) || 1 })}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                            />
-                        </div>
-                    </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

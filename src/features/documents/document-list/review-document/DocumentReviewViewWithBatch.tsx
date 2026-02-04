@@ -28,7 +28,7 @@ import {
 
 // --- Types ---
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type ReviewFlowType = 'sequential' | 'parallel';
 type ReviewStatus = 'pending' | 'approved' | 'rejected' | 'completed';
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
@@ -644,7 +644,7 @@ export const DocumentReviewViewWithBatch: React.FC<DocumentReviewViewProps> = ({
     };
 
     // Status workflow steps
-    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective", "Archive"];
+    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Effective", "Obsoleted", "Closed - Cancelled"];
 
     // Breadcrumbs
     const breadcrumbs = [

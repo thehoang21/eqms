@@ -25,7 +25,7 @@ import { DocumentType } from "@/types/documentTypes";
 import { IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 export const SingleDocumentView: React.FC = () => {
@@ -155,7 +155,7 @@ export const SingleDocumentView: React.FC = () => {
     };
 
     // Status workflow steps
-    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Pending Training", "Ready for Publishing", "Published", "Effective", "Archive"];
+    const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Pending Training", "Ready for Publishing", "Effective", "Obsoleted", "Closed - Cancelled"];
     const currentStepIndex = 0; // Always "Draft" for new documents
 
     const tabs = [

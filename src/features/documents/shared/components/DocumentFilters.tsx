@@ -4,7 +4,7 @@ import { Select } from '@/components/ui/select/Select';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 
 interface DocumentFiltersProps {
     searchQuery: string;

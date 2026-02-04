@@ -47,7 +47,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   const selectId = useId();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [position, setPosition] = useState({ top: 0, left: 0, width: 0, showAbove: false });
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   
   const containerRef = useRef<HTMLDivElement>(null);
@@ -70,10 +70,19 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   const updatePosition = () => {
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const dropdownHeight = Math.min(maxVisibleRows * rowHeight + 100, 400); // Estimate dropdown height
+      
+      // Show above if not enough space below and more space above
+      const showAbove = spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+      
       setPosition({
-        top: rect.bottom + 4,
+        top: showAbove ? rect.top - 4 : rect.bottom + 4,
         left: rect.left,
         width: rect.width,
+        showAbove,
       });
     }
   };
@@ -278,7 +287,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       >
         <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
           {selectedOptions.length === 0 ? (
-            <span className="text-slate-500">{placeholder}</span>
+            <span className="text-slate-500 text-left">{placeholder}</span>
           ) : (
             <>
               {visibleTags.map((option) => (
@@ -326,7 +335,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           ref={dropdownRef}
           className="fixed bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150"
           style={{
-            top: position.top,
+            top: position.showAbove ? 'auto' : position.top,
+            bottom: position.showAbove ? `${window.innerHeight - position.top}px` : 'auto',
             left: position.left,
             width: position.width,
             zIndex: 50,

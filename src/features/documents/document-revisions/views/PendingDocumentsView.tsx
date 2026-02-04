@@ -22,7 +22,7 @@ import { IconChecks, IconEyeCheck, IconInfoCircle, IconFileExport, IconSmartHome
 // --- Types ---
 
 type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type ViewType = "review" | "approval";
 
 interface ReviewerApprover {

@@ -86,9 +86,9 @@ export const Input: React.FC<InputProps> = ({
   return (
     <input
       className={cn(
-        'rounded-lg border transition-all',
+        'h-11 rounded-lg border transition-all',
         // Responsive padding and font
-        'px-3 py-2 md:px-4 md:py-3',
+        'px-3 md:px-4',
         'text-sm md:text-base',
         // Width
         fullWidth ? 'w-full' : 'w-auto',
@@ -97,7 +97,7 @@ export const Input: React.FC<InputProps> = ({
           ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
           : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500',
         'focus:outline-none focus:ring-1',
-        'placeholder:text-slate-400',
+        'placeholder:text-slate-400 placeholder:text-sm',
         'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-500',
         'read-only:bg-slate-50 read-only:cursor-default',
         className
@@ -133,7 +133,7 @@ export const Textarea: React.FC<TextareaProps> = ({
           ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
           : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500',
         'focus:outline-none focus:ring-1',
-        'placeholder:text-slate-400',
+        'placeholder:text-slate-400 placeholder:text-sm',
         'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-500',
         className
       )}

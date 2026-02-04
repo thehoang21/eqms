@@ -24,6 +24,34 @@ export type AttendanceStatus =
   | "Absent" 
   | "Excused";
 
+// Quiz/Test Types
+export type QuestionType = "multiple_choice" | "essay";
+export type TrainingTestType = "read_understand" | "test_certification";
+
+export interface QuestionOption {
+    id: string;
+    text: string;
+    isCorrect: boolean;
+}
+
+export interface Question {
+    id: string;
+    text: string;
+    type: QuestionType;
+    points: number;
+    imageUrl?: string;
+    options?: QuestionOption[];
+}
+
+export interface TrainingConfig {
+    trainingType: TrainingTestType;
+    passingScore: number;
+    maxAttempts: number;
+    trainingPeriodDays: number;
+    distributionList: string[]; // IDs of departments/divisions
+    questions: Question[];
+}
+
 export interface TrainingRecord {
   id: string;
   trainingId: string;
@@ -40,6 +68,7 @@ export interface TrainingRecord {
   department: string;
   mandatory: boolean;
   passScore: number;
+  config?: TrainingConfig; // Training configuration with quiz
   attendees?: Attendee[];
   createdBy: string;
   createdAt: string;

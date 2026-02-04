@@ -34,12 +34,11 @@ type DocumentStatus =
     | "Draft"
     | "Pending Review"
     | "Pending Approval"
-    | "Approved"
     | "Pending Training"
     | "Ready for Publishing"
-    | "Published"
     | "Effective"
-    | "Archive";
+    | "Obsoleted"
+    | "Closed - Cancelled";
 type TabType =
     | "general"
     | "training"
@@ -444,12 +443,11 @@ export const RevisionWorkspaceView: React.FC = () => {
         "Draft",
         "Pending Review",
         "Pending Approval",
-        "Approved",
         "Pending Training",
         "Ready for Publishing",
-        "Published",
         "Effective",
-        "Archive",
+        "Obsoleted",
+        "Closed - Cancelled",
     ];
     const currentStepIndex = 0; // Always "Draft" for new revisions
 

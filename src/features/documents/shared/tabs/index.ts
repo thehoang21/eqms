@@ -10,11 +10,7 @@ export { GeneralTab, type GeneralTabFormData } from './GeneralTab/GeneralTab';
 export * from './GeneralTab/subtabs';
 
 // Training Tab
-export { TrainingTab } from './TrainingTab/TrainingTab';
-export { TrainingConfigSection } from './TrainingTab/TrainingConfigSection';
-export { QuestionCard } from './TrainingTab/QuestionCard';
-export * from './TrainingTab/types';
-export * from './TrainingTab/utils';
+export { TrainingTab, type TrainingConfig } from './TrainingTab/TrainingTab';
 
 // Signatures Tab
 export { SignaturesTab } from './SignaturesTab/SignaturesTab';

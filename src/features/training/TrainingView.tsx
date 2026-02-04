@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   GraduationCap,
@@ -138,6 +139,8 @@ const MOCK_TRAININGS: TrainingRecord[] = [
 ];
 
 export const TrainingView: React.FC = () => {
+  const navigate = useNavigate();
+  
   // Filters
   const [filters, setFilters] = useState<TrainingFilters>({
     searchQuery: "",
@@ -270,12 +273,12 @@ export const TrainingView: React.FC = () => {
             Export
           </Button>
           <Button
-            onClick={() => console.log("New Training")}
+            onClick={() => navigate("/training-management/create")}
             size="sm"
             className="whitespace-nowrap gap-2"
           >
             <IconPlus className="h-4 w-4" />
-            New Training
+            Add New Course
           </Button>
         </div>
       </div>

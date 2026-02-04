@@ -1,4 +1,4 @@
 // Export Training Management components
 export { TrainingView } from './TrainingView';
-export type { TrainingRecord, TrainingFilters, TrainingStatus, TrainingType, Attendee, AttendanceStatus } from './types';
-
+export { CreateTrainingView } from './views/CreateTrainingView';
+export type { TrainingRecord, TrainingFilters, TrainingStatus, TrainingType, Attendee, AttendanceStatus, TrainingConfig, Question, QuestionOption, QuestionType, TrainingTestType } from './types';

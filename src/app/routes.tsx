@@ -50,15 +50,13 @@ const RolePermissionView = lazy(() => import('@/features/settings/role-permissio
 
 // Quality Management
 const TrainingView = lazy(() => import('@/features/training').then(m => ({ default: m.TrainingView })));
+const CreateTrainingView = lazy(() => import('@/features/training').then(m => ({ default: m.CreateTrainingView })));
 const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
 const ReportView = lazy(() => import('@/features/report').then(m => ({ default: m.ReportView })));
 
 // System
 const AuditTrailView = lazy(() => import('@/features/audit-trail').then(m => ({ default: m.AuditTrailView })));
-
-// Dev Tools
-const UIShowcase = lazy(() => import('@/features/ui-showcase/UIShowcase').then(m => ({ default: m.UIShowcase })));
 
 // ==================== ROUTE WRAPPERS ====================
 // Reusable wrapper for extracting ID from URL params
@@ -220,7 +218,11 @@ export const AppRoutes: React.FC = () => {
         </Route>
         
         {/* ===== TRAINING MANAGEMENT ===== */}
-        <Route path="training-management" element={<Suspense fallback={<LoadingFallback />}><TrainingView /></Suspense>} />
+        <Route path="training-management">
+          <Route path="courses" element={<Suspense fallback={<LoadingFallback />}><TrainingView /></Suspense>} />
+          <Route path="create" element={<Suspense fallback={<LoadingFallback />}><CreateTrainingView /></Suspense>} />
+          <Route index element={<Navigate to="/training-management/courses" replace />} />
+        </Route>
         
         {/* ===== DEVIATION & NCs ===== */}
         <Route path="deviations-ncs" element={<Suspense fallback={<LoadingFallback />}><DeviationsView /></Suspense>} />
@@ -251,9 +253,6 @@ export const AppRoutes: React.FC = () => {
         
         {/* ===== PROFILE ===== */}
         <Route path="profile" element={<Suspense fallback={<LoadingFallback />}><ProfileView onBack={() => navigate(-1)} /></Suspense>} />
-        
-        {/* ===== DEV TOOLS ===== */}
-        <Route path="ui-demo" element={<Suspense fallback={<LoadingFallback />}><UIShowcase /></Suspense>} />
         
         {/* ===== FALLBACK ===== */}
         <Route path="*" element={<UnderConstruction />} />

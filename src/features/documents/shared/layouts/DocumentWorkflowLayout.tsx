@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button/Button";
 import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Pending Training" | "Ready for Publishing" | "Published" | "Effective" | "Archive";
+type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
 
 interface BatchDocument {
@@ -82,12 +82,13 @@ const getStatusIcon = (status: DocumentStatus) => {
         case "Pending Review":
         case "Pending Approval":
             return <AlertCircle className="h-4 w-4" />;
-        case "Approved":
         case "Pending Training":
         case "Ready for Publishing":
-        case "Published":
         case "Effective":
             return <CheckCircle2 className="h-4 w-4" />;
+        case "Obsoleted":
+        case "Closed - Cancelled":
+            return <AlertCircle className="h-4 w-4" />;
         default:
             return <Clock className="h-4 w-4" />;
     }

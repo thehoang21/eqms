@@ -31,12 +31,11 @@ type DocumentStatus =
   | "Draft"
   | "Pending Review"
   | "Pending Approval"
-  | "Approved"
   | "Pending Training"
   | "Ready for Publishing"
-  | "Published"
   | "Effective"
-  | "Archive";
+  | "Obsoleted"
+  | "Closed - Cancelled";
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 interface DocumentDetail {
@@ -82,11 +81,11 @@ const getStatusColor = (status: DocumentStatus) => {
       return "bg-amber-50 text-amber-700 border-amber-200";
     case "Pending Approval":
       return "bg-blue-50 text-blue-700 border-blue-200";
-    case "Approved":
-      return "bg-emerald-50 text-emerald-700 border-emerald-200";
     case "Effective":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Archive":
+    case "Obsoleted":
+      return "bg-orange-50 text-orange-700 border-orange-200";
+    case "Closed - Cancelled":
       return "bg-red-50 text-red-700 border-red-200";
     default:
       return "bg-slate-50 text-slate-700 border-slate-200";
@@ -100,9 +99,11 @@ const getStatusIcon = (status: DocumentStatus) => {
     case "Pending Review":
     case "Pending Approval":
       return <AlertCircle className="h-4 w-4" />;
-    case "Approved":
     case "Effective":
       return <CheckCircle2 className="h-4 w-4" />;
+    case "Obsoleted":
+    case "Closed - Cancelled":
+      return <AlertCircle className="h-4 w-4" />;
     default:
       return <Clock className="h-4 w-4" />;
   }
@@ -178,12 +179,11 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
     "Draft",
     "Pending Review",
     "Pending Approval",
-    "Approved",
     "Pending Training",
     "Ready for Publishing",
-    "Published",
     "Effective",
-    "Archive",
+    "Obsoleted",
+    "Closed - Cancelled",
   ];
   const currentStepIndex = statusSteps.indexOf(document.status);
 
