@@ -298,7 +298,6 @@ export const NewDocumentView: React.FC = () => {
                             disabled={
                                 documentStatus === "Obsoleted" ||
                                 isSaving ||
-                                uploadedFiles.length === 0 ||
                                 missingRequiredFields.length > 0 ||
                                 (isSaved && (reviewers.length === 0 || approvers.length === 0))
                             }
@@ -487,7 +486,6 @@ export const NewDocumentView: React.FC = () => {
                             onClick={handleSaveDraft}
                             disabled={
                                 documentStatus === "Obsoleted" ||
-                                uploadedFiles.length === 0 ||
                                 missingRequiredFields.length > 0 ||
                                 (isSaved && (reviewers.length === 0 || approvers.length === 0)) ||
                                 isSaving
