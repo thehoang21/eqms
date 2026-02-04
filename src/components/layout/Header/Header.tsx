@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { Button } from '../../ui/button/Button';
 import { cn } from '../../ui/utils';
-import { SearchDropdown } from './SearchDropdown';
 import { NotificationsDropdown } from './NotificationsDropdown';
 import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand, IconLogout } from '@tabler/icons-react';
 
@@ -141,11 +140,6 @@ export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSi
                   : "opacity-0 -rotate-180 scale-90"
               )} />
           </Button>
-        </div>
-
-        {/* CENTER: Global Search - Responsive width */}
-        <div className="flex-1 flex justify-center max-w-xl lg:max-w-2xl mx-auto">
-          <SearchDropdown />
         </div>
 
         {/* RIGHT: Notifications & Profile */}

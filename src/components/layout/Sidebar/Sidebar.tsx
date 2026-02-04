@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { NavItem } from '@/types';
 import { NAV_CONFIG } from '@/app/constants';
 import { cn } from '@/components/ui/utils';
+import { SearchDropdown } from '../Header/SearchDropdown';
 import logoFull from '@/assets/images/logo_nobg.png';
 import logoCollapsed from '@/assets/images/LOGO.png';
 import './Sidebar.module.css';
@@ -696,6 +697,13 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             </button>
           )}
         </div>
+
+        {/* Search Bar - Only show when expanded */}
+        {!isCollapsed && (
+          <div className="px-3 py-3 border-b border-slate-100 shrink-0">
+            <SearchDropdown onCloseSidebar={onClose} />
+          </div>
+        )}
 
         {/* Navigation Menu */}
         <div 

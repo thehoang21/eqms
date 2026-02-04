@@ -8,26 +8,48 @@ import { NavItem } from '../../../types';
 
 interface SearchDropdownProps {
   className?: string;
+  onCloseSidebar?: () => void;
 }
 
-export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => {
+export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className, onCloseSidebar }) => {
   const navigate = useNavigate();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const searchDropdownRef = useRef<HTMLDivElement>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout>();
+
+  // Debounce search query (300ms)
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
+    debounceTimerRef.current = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [searchQuery]);
 
   // Flatten navigation items for search
-  const flattenNavItems = (items: NavItem[], parentLabel?: string): Array<NavItem & { fullPath?: string }> => {
-    let result: Array<NavItem & { fullPath?: string }> = [];
+  const flattenNavItems = (items: NavItem[], parentLabel?: string, parentIcon?: any): Array<NavItem & { fullPath?: string; parentIcon?: any }> => {
+    let result: Array<NavItem & { fullPath?: string; parentIcon?: any }> = [];
     items.forEach(item => {
       const fullLabel = parentLabel ? `${parentLabel} > ${item.label}` : item.label;
+      // Use parent icon for children, or own icon if it's a top-level item
+      const iconToUse = parentIcon || item.icon;
       if (item.path) {
-        result.push({ ...item, fullPath: fullLabel });
+        result.push({ ...item, fullPath: fullLabel, parentIcon: iconToUse });
       }
       if (item.children) {
-        result = result.concat(flattenNavItems(item.children, fullLabel));
+        result = result.concat(flattenNavItems(item.children, fullLabel, iconToUse));
       }
     });
     return result;
@@ -35,14 +57,14 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
 
   const allNavItems = useMemo(() => flattenNavItems(NAV_CONFIG), []);
 
-  // Filter navigation items based on search query
+  // Filter navigation items based on debounced search query
   const filteredNavItems = useMemo(() => {
-    if (!searchQuery.trim()) return [];
+    if (!debouncedQuery.trim()) return [];
     return allNavItems.filter(item =>
-      item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.fullPath && item.fullPath.toLowerCase().includes(searchQuery.toLowerCase()))
-    ).slice(0, 5);
-  }, [searchQuery, allNavItems]);
+      item.label.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+      (item.fullPath && item.fullPath.toLowerCase().includes(debouncedQuery.toLowerCase()))
+    ).slice(0, 8);
+  }, [debouncedQuery, allNavItems]);
 
   // Keyboard shortcut for search
   useEffect(() => {
@@ -57,13 +79,13 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
         searchInputRef.current?.blur();
       }
       // Search all results with Enter
-      if (e.key === 'Enter' && isSearchFocused && searchQuery.trim()) {
+      if (e.key === 'Enter' && isSearchFocused && debouncedQuery.trim()) {
         handleSearchAll();
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isSearchFocused, searchQuery]);
+  }, [isSearchFocused, debouncedQuery]);
 
   // Close search dropdown when clicking outside
   useEffect(() => {
@@ -81,7 +103,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
   }, [isSearchFocused]);
 
   const handleSearchAll = () => {
-    console.log("Search all results for:", searchQuery);
+    console.log("Search all results for:", debouncedQuery);
     setIsSearchFocused(false);
     // TODO: Navigate to search results page or trigger global search
   };
@@ -90,6 +112,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
     console.log("Navigate to:", item);
     setIsSearchFocused(false);
     setSearchQuery("");
+    setDebouncedQuery("");
     // TODO: Navigate to specific document/deviation
   };
 
@@ -97,6 +120,8 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
     navigate(path);
     setIsSearchFocused(false);
     setSearchQuery("");
+    setDebouncedQuery("");
+    onCloseSidebar?.();
   };
 
   return (
@@ -125,20 +150,20 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
-              "block w-full pl-10 md:pl-11 pr-12 md:pr-16 py-2 md:py-2.5 rounded-lg border leading-5 transition-all duration-200",
+              "block w-full pl-10 md:pl-11 py-2 md:py-2.5 rounded-lg border leading-5 transition-all duration-200",
               "text-sm md:text-[14px]",
               "placeholder-slate-400 focus:outline-none",
               isSearchFocused 
                 ? "bg-white ring-2 ring-emerald-500/50 border-emerald-500 shadow-lg shadow-emerald-500/5" 
                 : "bg-slate-50 border-slate-200 hover:bg-white hover:border-slate-200 text-slate-700"
             )}
-            placeholder="Search documents, deviations, tasks..."
+            placeholder="Search features, pages..."
             onFocus={() => setIsSearchFocused(true)}
           />
         </div>
 
-        {/* Quick Results Dropdown */}
-        {isSearchFocused && createPortal(
+        {/* Quick Results Dropdown - Only show when typing */}
+        {isSearchFocused && debouncedQuery.trim() && createPortal(
           <div 
             ref={searchDropdownRef}
             className="fixed bg-white rounded-lg shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 z-50"
@@ -148,126 +173,43 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className }) => 
               width: `${searchContainerRef.current?.getBoundingClientRect().width}px`
             }}
           >
-            {searchQuery.trim() ? (
-              // Search Results
-              <div className="max-h-[400px] overflow-y-auto">
-                <div className="p-2">
-                  <div className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Search Results for "{searchQuery}"
-                  </div>
-                  <button 
-                    onClick={() => handleRecentItemClick("SOP-QA-001")}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
-                  >
-                    <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
-                      <FileText className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900 truncate">SOP-QA-001</p>
-                      <p className="text-xs text-slate-500 truncate">Batch Release Procedure</p>
-                    </div>
-                  </button>
-                  <button 
-                    onClick={() => handleRecentItemClick("SOP-QA-005")}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
-                  >
-                    <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
-                      <FileText className="h-4 w-4 text-emerald-600" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900 truncate">SOP-QA-005</p>
-                      <p className="text-xs text-slate-500 truncate">Quality Control Testing</p>
-                    </div>
-                  </button>
-                  <button 
-                    onClick={() => handleRecentItemClick("DEV-2023-089")}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
-                  >
-                    <div className="h-8 w-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0 group-hover:bg-red-100 transition-colors">
-                      <AlertTriangle className="h-4 w-4 text-red-600" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900 truncate">DEV-2023-089</p>
-                      <p className="text-xs text-slate-500 truncate">Temperature Excursion Room 4</p>
-                    </div>
-                  </button>
-                  
-                  {/* Navigation Items Section */}
-                  {filteredNavItems.length > 0 && (
-                    <>
-                      <div className="px-3 py-2 mt-1 text-xs font-semibold text-slate-500 uppercase tracking-wider border-t border-slate-100">
-                        Pages & Features
-                      </div>
-                      {filteredNavItems.map((navItem) => {
-                        const Icon = navItem.icon;
-                        return (
-                          <button
-                            key={navItem.id}
-                            onClick={() => handleNavItemClick(navItem.path!)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
-                          >
-                            <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
-                              {Icon && <Icon className="h-4 w-4 text-emerald-600" />}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-slate-900 truncate">{navItem.label}</p>
-                              {navItem.fullPath && navItem.fullPath !== navItem.label && (
-                                <p className="text-xs text-slate-500 truncate">{navItem.fullPath}</p>
-                              )}
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </>
-                  )}
-                </div>
-              </div>
-            ) : (
-              // Recent Items
+            {/* Search Results */}
+            <div className="max-h-[400px] overflow-y-auto">
               <div className="p-2">
-                <div className="px-3 py-2 text-xs font-medium text-emerald-700">
-                  Recent
-                </div>
-                <button 
-                  onClick={() => handleRecentItemClick("SOP-QA-001")}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
-                >
-                  <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
-                    <FileText className="h-4 w-4 text-blue-600" />
+                {filteredNavItems.length > 0 ? (
+                  <>
+                    <div className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                      Features & Pages
+                    </div>
+                    {filteredNavItems.map((navItem) => {
+                      const Icon = navItem.parentIcon || navItem.icon;
+                      return (
+                        <button
+                          key={navItem.id}
+                          onClick={() => handleNavItemClick(navItem.path!)}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-emerald-50 rounded-lg transition-colors text-left group"
+                        >
+                          <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
+                            {Icon && <Icon className="h-4 w-4 text-emerald-600" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-slate-900 truncate">{navItem.label}</p>
+                            {navItem.fullPath && navItem.fullPath !== navItem.label && (
+                              <p className="text-xs text-slate-500 truncate">{navItem.fullPath}</p>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <div className="px-3 py-8 text-center">
+                    <p className="text-sm text-slate-500">No results found for "{debouncedQuery}"</p>
+                    <p className="text-xs text-slate-400 mt-1">Try a different search term</p>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-slate-900 truncate">SOP-QA-001</p>
-                    <p className="text-xs text-slate-500 truncate">Batch Release Procedure</p>
-                  </div>
-                </button>
-                <button 
-                  onClick={() => handleRecentItemClick("DEV-2023-089")}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
-                >
-                  <div className="h-8 w-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0 group-hover:bg-red-100 transition-colors">
-                    <AlertTriangle className="h-4 w-4 text-red-600" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-slate-900 truncate">DEV-2023-089</p>
-                    <p className="text-xs text-slate-500 truncate">Temperature Excursion Room 4</p>
-                  </div>
-                </button>
-                
-                <div className="px-3 py-2 mt-1 text-xs font-medium text-emerald-700 border-t border-slate-100">
-                  Quick Actions
-                </div>
-                <button 
-                  onClick={() => {
-                    console.log("Navigate to System Configuration");
-                    setIsSearchFocused(false);
-                  }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors text-left group"
-                >
-                  <Settings className="h-4 w-4 text-slate-400 ml-2 group-hover:text-slate-600 transition-colors" />
-                  <span>System Configuration</span>
-                </button>
+                )}
               </div>
-            )}
+            </div>
           </div>,
           document.body
         )}
