@@ -625,7 +625,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           // Desktop: Sticky positioning
           "md:sticky md:top-0 md:z-30 md:h-screen",
           // Width
-          isCollapsed ? "w-16" : "w-[250px] max-w-[85vw]",
+          isCollapsed ? "w-16 md:w-20" : "w-[250px] md:w-[280px] max-w-[85vw]",
           // Mobile slide animation
           "md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
