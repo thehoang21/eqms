@@ -21,11 +21,11 @@ import {
 } from "@/features/documents/shared/layouts";
 import {
   GeneralInformationTab,
-  TrainingInformationTab,
   DocumentTab,
   SignaturesTab,
   AuditTrailTab,
 } from "@/features/documents/document-detail/tabs";
+import { TrainingTab } from "@/features/documents/shared/tabs";
 
 // --- Types ---
 type DocumentType =
@@ -652,7 +652,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
           isReadOnly={true}
         />
       )}
-      {activeTab === "training" && <TrainingInformationTab />}
+      {activeTab === "training" && <TrainingTab isReadOnly />}
       {activeTab === "signatures" && <SignaturesTab />}
       {activeTab === "audit" && <AuditTrailTab />}
 

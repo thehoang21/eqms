@@ -11,12 +11,20 @@ interface TrainingConfig {
     courseId: string;
 }
 
-export const TrainingTab: React.FC = () => {
+interface TrainingTabProps {
+    isReadOnly?: boolean;
+    data?: Partial<TrainingConfig>;
+}
+
+export const TrainingTab: React.FC<TrainingTabProps> = ({ 
+    isReadOnly = false,
+    data 
+}) => {
     const [config, setConfig] = useState<TrainingConfig>({
-        isRequired: false,
-        trainingPeriodDays: 7,
-        distributionList: [],
-        courseId: ""
+        isRequired: data?.isRequired ?? false,
+        trainingPeriodDays: data?.trainingPeriodDays ?? 7,
+        distributionList: data?.distributionList ?? [],
+        courseId: data?.courseId ?? ""
     });
 
     // Mock courses - in production, this would come from API
@@ -35,6 +43,7 @@ export const TrainingTab: React.FC = () => {
                     label="Requires Training?"
                     checked={config.isRequired}
                     onChange={(checked) => setConfig({ ...config, isRequired: checked })}
+                    disabled={isReadOnly}
                 />
             </div>
 
@@ -50,6 +59,7 @@ export const TrainingTab: React.FC = () => {
                                 onChange={(value) => setConfig({ ...config, courseId: value as string })}
                                 options={availableCourses}
                                 placeholder="Select a training course..."
+                                disabled={isReadOnly}
                             />
                         </div>
 
@@ -63,6 +73,7 @@ export const TrainingTab: React.FC = () => {
                                     type="number"
                                     min={1}
                                     value={config.trainingPeriodDays}
+                                    disabled={isReadOnly}
                                     onChange={(e) => setConfig({ ...config, trainingPeriodDays: parseInt(e.target.value) || 1 })}
                                 />
                             </div>
@@ -94,6 +105,7 @@ export const TrainingTab: React.FC = () => {
                             ]}
                             placeholder="Select departments to distribute training..."
                             enableSearch
+                            disabled={isReadOnly}
                             maxVisibleTags={3}
                         />
                         <p className="text-xs text-slate-500 mt-1.5">

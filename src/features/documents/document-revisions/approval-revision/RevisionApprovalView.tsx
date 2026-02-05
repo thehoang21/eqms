@@ -377,7 +377,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                     onFormChange={setFormData}
                 />
             )}
-            {activeTab === "training" && <TrainingTab />}
+            {activeTab === "training" && <TrainingTab isReadOnly />}
             {activeTab === "signatures" && <SignaturesTab />}
             {activeTab === "audit" && <AuditTab />}
 
