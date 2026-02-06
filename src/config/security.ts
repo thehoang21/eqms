@@ -204,17 +204,18 @@ export const initializeSecurity = () => {
     document.head.appendChild(meta);
   }
 
-  // Log security initialization
-  console.log('🔒 Security features initialized');
-  
-  // Audit log
-  if (AUDIT_CONFIG.enabled) {
-    console.log('📝 Audit logging enabled');
+  // Log security initialization (dev only)
+  if (import.meta.env.DEV) {
+    console.log('🔒 Security features initialized');
+    
+    if (AUDIT_CONFIG.enabled) {
+      console.log('📝 Audit logging enabled');
+    }
   }
 
   // Check HTTPS in production
   if (import.meta.env.PROD && window.location.protocol !== 'https:') {
-    console.warn('⚠️ WARNING: Application is not running on HTTPS in production!');
+    // Silently handle - don't expose to console in prod
   }
 };
 

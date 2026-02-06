@@ -11,13 +11,15 @@ import {
     ChevronRight as ChevronRightIcon,
     List,
     CheckCircle,
+    FileText,
 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Button } from "@/components/ui/button/Button";
 import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
 
+import type { DocumentStatus } from "@/features/documents/types";
+
 // --- Types ---
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
 
 interface BatchDocument {

@@ -262,7 +262,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
       {label && (
-        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+        <label htmlFor={`${selectId}-trigger`} className="text-sm font-medium text-slate-700 mb-1.5 block">
           {label}
         </label>
       )}
@@ -270,7 +270,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       {/* Trigger */}
       <button
         ref={triggerRef}
+        id={`${selectId}-trigger`}
         type="button"
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-controls={`${selectId}-listbox`}
         onClick={handleTriggerClick}
         onKeyDown={handleKeyDown}
         disabled={disabled}
@@ -299,7 +304,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   <button
                     type="button"
                     onClick={(e) => handleRemoveTag(option.value, e)}
-                    className="hover:bg-emerald-100 rounded p-0.5"
+                    className="hover:bg-emerald-100 rounded p-1 min-w-[24px] min-h-[24px] flex items-center justify-center"
+                    aria-label={`Remove ${option.label}`}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -315,7 +321,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           <button
             type="button"
             onClick={handleClearAll}
-            className="inline-flex items-center justify-center h-6 w-6 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600 shrink-0 ml-1"
+            className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600 shrink-0 ml-1"
             aria-label="Clear all selections"
           >
             <X className="h-3.5 w-3.5" />
@@ -334,12 +340,15 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         <div
           ref={dropdownRef}
           className="fixed bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150"
+          role="listbox"
+          aria-multiselectable="true"
+          id={`${selectId}-listbox`}
           style={{
             top: position.showAbove ? 'auto' : position.top,
             bottom: position.showAbove ? `${window.innerHeight - position.top}px` : 'auto',
             left: position.left,
             width: position.width,
-            zIndex: 50,
+            zIndex: 9999,
             maxHeight: dropdownMaxHeight,
           }}
         >
@@ -385,6 +394,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   <div className="sticky top-0 bg-white border-b border-slate-100 z-10">
                     <button
                       type="button"
+                      role="option"
+                      aria-selected={isAllSelected}
                       onClick={handleSelectAll}
                       className="flex w-full items-center gap-3 px-3 py-2.5 text-sm hover:bg-slate-50 transition-colors font-medium text-slate-700"
                     >
@@ -425,10 +436,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                     key={option.value}
                     ref={el => { optionRefs.current[index] = el; }}
                     type="button"
+                    role="option"
+                    aria-selected={isSelected}
                     onClick={() => handleToggleOption(option.value)}
                     className={cn(
                       "flex w-full items-center px-3 text-sm transition-colors",
-                      "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
+                      "min-h-[44px] hover:bg-slate-50 active:bg-slate-100",
                       isSelected && "bg-emerald-50 text-emerald-700",
                       isFocused && "bg-slate-100 ring-1 ring-inset ring-slate-300"
                     )}

@@ -26,19 +26,10 @@ import {
     AuditTab
 } from "../revision-tabs";
 import { MultiDocumentUpload } from "./MultiDocumentUpload";
-import { DocumentType } from "@/types/documentTypes";
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconChevronRight, IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
-type DocumentStatus =
-    | "Draft"
-    | "Pending Review"
-    | "Pending Approval"
-    | "Pending Training"
-    | "Ready for Publishing"
-    | "Effective"
-    | "Obsoleted"
-    | "Closed - Cancelled";
 type TabType =
     | "general"
     | "training"

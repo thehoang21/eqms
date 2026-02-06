@@ -22,9 +22,9 @@ import {
 } from "@/features/documents/document-detail/tabs";
 import { IconMessage2 } from "@tabler/icons-react";
 
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
+
 // --- Types ---
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
 

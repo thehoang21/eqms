@@ -89,7 +89,7 @@ export const RetentionPoliciesTab: React.FC = () => {
     MOCK_RETENTION_POLICIES,
   );
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement | null> }>(
     {},
   );
 

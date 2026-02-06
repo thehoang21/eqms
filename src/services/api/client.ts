@@ -4,6 +4,7 @@
  */
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { secureStorage } from '@/utils/security';
 
 // API Base URL - will be loaded from environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
@@ -21,7 +22,7 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     // Add authentication token if available
-    const token = localStorage.getItem('authToken');
+    const token = secureStorage.getItem('authToken', true);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -69,7 +70,8 @@ apiClient.interceptors.response.use(
         case 401:
           // Unauthorized - redirect to login
           console.error('🔒 Unauthorized - redirecting to login');
-          localStorage.removeItem('authToken');
+          secureStorage.removeItem('authToken');
+          secureStorage.removeItem('user');
           window.location.href = '/login';
           break;
 

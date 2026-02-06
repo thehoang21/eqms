@@ -26,9 +26,9 @@ import {
     AuditTrailTab,
 } from "@/features/documents/document-detail/tabs";
 
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
+
 // --- Types ---
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type ReviewFlowType = 'sequential' | 'parallel';
 type ReviewStatus = 'pending' | 'approved' | 'rejected' | 'completed';
 type TabType = "document" | "general" | "training" | "signatures" | "audit";

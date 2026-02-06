@@ -5,6 +5,7 @@ import { Button } from '../../ui/button/Button';
 import { cn } from '../../ui/utils';
 import { NotificationsDropdown } from './NotificationsDropdown';
 import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand, IconLogout } from '@tabler/icons-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -15,6 +16,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSidebarCollapsed, isMobileMenuOpen, onNavigateToProfile, onLogout }) => {
+  const { user } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
@@ -92,7 +94,7 @@ export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSi
       {/* Overlay for closing menu when clicking outside */}
       {isUserMenuOpen && createPortal(
         <div 
-          className="fixed inset-0 z-[39]"
+          className="fixed inset-0 z-[41]"
           onClick={() => setIsUserMenuOpen(false)}
         />,
         document.body
@@ -158,18 +160,20 @@ export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSi
           {/* User Profile Dropdown */}
           <div className="relative" ref={userMenuRef}>
             <button 
-              className="flex items-center gap-1.5 md:gap-2 lg:gap-2.5 cursor-pointer px-1.5 py-1.5 lg:px-2 lg:py-1.5 rounded-lg border border-transparent transition-all select-none group"
+              className="flex items-center gap-1.5 md:gap-2 lg:gap-2.5 cursor-pointer min-h-[44px] min-w-[44px] px-1.5 py-1.5 lg:px-2 lg:py-1.5 rounded-lg border border-transparent transition-all select-none group"
               onClick={handleToggleUserMenu}
               aria-label="User menu"
+              aria-expanded={isUserMenuOpen}
+              aria-haspopup="true"
             >
               {/* Avatar */}
-              <div className="h-8 w-8 md:h-8 md:w-8 lg:h-10 lg:w-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 transition-colors shrink-0">
+              <div className="h-9 w-9 md:h-9 md:w-9 lg:h-10 lg:w-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 text-emerald-600 transition-colors shrink-0">
                 <User className="h-4 w-4 md:h-4.5 md:w-4.5 lg:h-5 lg:w-5" />
               </div>
               {/* User Info - Hidden on mobile and tablet */}
               <div className="hidden lg:block text-left pr-1">
-                <p className="text-sm font-semibold text-slate-700 leading-tight group-hover:text-slate-900">Nguyễn Thế Hoàng</p>
-                <p className="text-xs text-slate-500 leading-tight">QA Manager</p>
+                <p className="text-sm font-semibold text-slate-700 leading-tight group-hover:text-slate-900">{user?.username || 'User'}</p>
+                <p className="text-xs text-slate-500 leading-tight">{user?.role || 'Staff'}</p>
               </div>
             </button>
 
@@ -185,8 +189,8 @@ export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSi
               >
                 {/* User Info Header */}
                 <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/50">
-                  <p className="text-sm font-semibold text-slate-900 truncate">Dr. A. Smith</p>
-                  <p className="text-xs text-slate-500 truncate mt-0.5">admin.thehoang@ngocthien.com.vn</p>
+                  <p className="text-sm font-semibold text-slate-900 truncate">{user?.username || 'User'}</p>
+                  <p className="text-xs text-slate-500 truncate mt-0.5">{user?.email || ''}</p>
                 </div>
                 
                 {/* Menu Items */}

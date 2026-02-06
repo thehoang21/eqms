@@ -100,7 +100,7 @@ export const DocumentTypesTab: React.FC = () => {
   const [mockData, setMockData] =
     useState<DocumentTypeItem[]>(MOCK_DOCUMENT_TYPES);
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement | null> }>(
     {},
   );
 

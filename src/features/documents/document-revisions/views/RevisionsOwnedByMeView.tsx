@@ -38,24 +38,9 @@ import {
   IconSmartHome,
 } from "@tabler/icons-react";
 
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
+
 // --- Types ---
-type DocumentType =
-  | "SOP"
-  | "Policy"
-  | "Form"
-  | "Report"
-  | "Specification"
-  | "Protocol";
-type DocumentStatus =
-  | "Draft"
-  | "Pending Review"
-  | "Pending Approval"
-  | "Approved"
-  | "Pending Training"
-  | "Ready for Publishing"
-  | "Published"
-  | "Effective"
-  | "Archive";
 
 interface TableColumn {
   id: string;

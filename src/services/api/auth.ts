@@ -4,6 +4,7 @@
  */
 
 import { api } from './client';
+import { secureStorage } from '@/utils/security';
 import type { User, LoginCredentials, LoginResponse } from '@/types/auth';
 
 const AUTH_ENDPOINT = '/auth';
@@ -15,10 +16,10 @@ export const authApi = {
   login: async (credentials: LoginCredentials) => {
     const response = await api.post<LoginResponse>(`${AUTH_ENDPOINT}/login`, credentials);
     
-    // Store token in localStorage
+    // Store token securely (encrypted)
     if (response.data.token) {
-      localStorage.setItem('authToken', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      secureStorage.setItem('authToken', response.data.token, true);
+      secureStorage.setItem('user', JSON.stringify(response.data.user), true);
     }
     
     return response.data;
@@ -30,9 +31,9 @@ export const authApi = {
   logout: async () => {
     const response = await api.post(`${AUTH_ENDPOINT}/logout`);
     
-    // Clear localStorage
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
+    // Clear secure storage
+    secureStorage.removeItem('authToken');
+    secureStorage.removeItem('user');
     
     return response.data;
   },
@@ -71,7 +72,7 @@ export const authApi = {
     const response = await api.post<{ token: string }>(`${AUTH_ENDPOINT}/refresh`);
     
     if (response.data.token) {
-      localStorage.setItem('authToken', response.data.token);
+      secureStorage.setItem('authToken', response.data.token, true);
     }
     
     return response.data;

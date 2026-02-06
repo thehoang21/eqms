@@ -418,7 +418,7 @@ const MobileDrawer: React.FC<{
   const isFullHeight = drawerHeight >= 95;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] md:hidden">
+    <div className="fixed inset-0 z-50 md:hidden">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
@@ -570,7 +570,7 @@ const DesktopDropdown: React.FC<{
       {/* Dropdown */}
       <div 
         ref={dropdownRef}
-        className="fixed w-80 bg-white border border-slate-200 rounded-xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 z-[100]"
+        className="fixed w-80 bg-white border border-slate-200 rounded-xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 z-[60]"
         style={{
           top: `${buttonRef.current?.getBoundingClientRect().bottom! + window.scrollY + 8}px`,
           right: `${window.innerWidth - buttonRef.current?.getBoundingClientRect().right! - window.scrollX}px`

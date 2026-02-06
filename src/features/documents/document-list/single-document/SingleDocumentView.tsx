@@ -21,11 +21,10 @@ import {
     type ParentDocument,
     type RelatedDocument,
 } from "@/features/documents/document-list/new-document/new-tabs";
-import { DocumentType } from "@/types/documentTypes";
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 export const SingleDocumentView: React.FC = () => {

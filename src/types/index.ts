@@ -7,6 +7,9 @@
 export * from './app';
 
 // ============ Document Types ============
+import type { DocumentStatus } from '@/features/documents/types';
+export type { DocumentStatus };
+
 export interface Document {
   id: string;
   code: string;
@@ -19,8 +22,6 @@ export interface Document {
   description?: string;
   attachments?: Attachment[];
 }
-
-export type DocumentStatus = 'draft' | 'pending' | 'effective' | 'obsolete';
 
 export interface DocumentFilter {
   status?: DocumentStatus;

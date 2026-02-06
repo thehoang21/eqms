@@ -88,7 +88,15 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ showToast }}>
       {children}
       {/* Toast Container */}
-      <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-3 items-end max-w-xs md:max-w-sm lg:max-w-md w-full">
+      <div 
+        className="fixed z-[9999] flex flex-col gap-3 items-end max-w-xs md:max-w-sm lg:max-w-md w-full"
+        style={{
+          top: 'max(1rem, env(safe-area-inset-top, 1rem))',
+          right: 'max(1rem, env(safe-area-inset-right, 1rem))',
+        }}
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {toasts.map((toast) => {
           const Icon = ICONS[toast.type];
           const duration = toast.duration ?? 3500;
@@ -109,7 +117,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                   <div className="text-sm leading-relaxed">{toast.message}</div>
                 </div>
                 <button
-                  className="ml-2 p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+                  className="ml-2 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
                   aria-label="Close"
                   onClick={() => removeToast(toast.id)}
                 >

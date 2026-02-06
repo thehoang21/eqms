@@ -9,7 +9,6 @@ export { ArchivedDocumentsView } from './ArchivedDocumentsView';
 
 // Components
 export { ArchivedDocumentFilters } from './components/ArchivedDocumentFilters';
-export { PreviewModal } from './components/PreviewModal';
 export { RestoreModal } from './components/RestoreModal';
 
 // Types & Utils

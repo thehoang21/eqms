@@ -5,7 +5,8 @@ import { MultiSelect } from "@/components/ui/select/MultiSelect";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { cn } from "@/components/ui/utils";
-import { DocumentType, DOCUMENT_TYPES } from "@/types/documentTypes";
+import type { DocumentType } from "@/features/documents/types";
+import { DOCUMENT_TYPES } from "@/features/documents/types";
 
 // Export FormData interface to be reused by parent components
 export interface GeneralTabFormData {

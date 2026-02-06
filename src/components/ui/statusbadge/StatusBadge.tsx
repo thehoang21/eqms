@@ -23,7 +23,7 @@ export type StatusType =
 const STATUS_CONFIG: Record<StatusType, { label: string; className: string }> = {
   draft: { 
     label: 'Draft', 
-    className: 'bg-slate-100 text-slate-600 border-slate-200' 
+    className: 'bg-slate-100 text-slate-700 border-slate-200' 
   },
   pendingReview: { 
     label: 'Pending Review', 
@@ -115,7 +115,9 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   };
   
   return (
-    <span className={cn(
+    <span 
+      role="status"
+      className={cn(
       "inline-flex items-center gap-1 rounded-full font-medium border select-none", 
       sizeClasses[size],
       config.className, 

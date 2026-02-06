@@ -722,9 +722,8 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             // GPU acceleration for smoother scrolling
             willChange: 'scroll-position',
             transform: 'translateZ(0)',
-            // Safe area padding bottom for iPad/iPhone - Minimum 160px + safe area inset
-            // This ensures Settings menu at bottom is never obscured
-            paddingBottom: 'max(160px, calc(env(safe-area-inset-bottom, 0px) + 160px))',
+            // Safe area padding bottom for iPad/iPhone
+            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 80px)',
           }}
         >
           <nav className={cn(
@@ -735,12 +734,11 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           </nav>
           
           {/* Extra spacer at bottom for mobile/tablet to ensure last items are accessible */}
-          {/* This compensates for iOS Safari bottom bar, home indicator, and user profile footer */}
           <div 
             className="md:hidden shrink-0" 
             style={{ 
-              height: 'calc(env(safe-area-inset-bottom, 0px) + 100px)',
-              minHeight: '100px'
+              height: 'calc(env(safe-area-inset-bottom, 0px) + 40px)',
+              minHeight: '40px'
             }} 
             aria-hidden="true"
           />

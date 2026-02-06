@@ -132,7 +132,7 @@ export const DepartmentsTab: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mockData, setMockData] = useState<DepartmentItem[]>(MOCK_DEPARTMENTS);
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement | null> }>(
     {},
   );
 

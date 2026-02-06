@@ -7,5 +7,7 @@ export * from './format';
 export * from './validation';
 export * from './helpers';
 export * from './security';
-export * from './documentConverter';
 export * from './viewport';
+
+// Re-export with explicit naming to avoid conflicts
+export { isValidEmail } from './validation';

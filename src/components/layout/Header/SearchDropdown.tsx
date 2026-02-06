@@ -140,7 +140,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className, onClo
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-3 md:pl-3.5 flex items-center pointer-events-none">
             <Search className={cn(
-              "h-4 w-4 md:h-5 md:w-5 transition-colors duration-200", 
+              "h-4 w-4 sm:h-4.5 sm:w-4.5 transition-colors duration-200", 
               isSearchFocused ? "text-emerald-600" : "text-slate-400"
             )} />
           </div>
@@ -150,7 +150,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className, onClo
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
-              "block w-full pl-10 md:pl-11 py-2 md:py-2.5 rounded-lg border leading-5 transition-all duration-200",
+              "block w-full pl-9 sm:pl-10 py-2 md:py-2.5 rounded-lg border leading-5 transition-all duration-200",
               "text-sm md:text-[14px]",
               "placeholder-slate-400 focus:outline-none",
               isSearchFocused 

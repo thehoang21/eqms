@@ -33,12 +33,14 @@ export const useResponsiveSidebar = () => {
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isDesktopRef = useRef(typeof window !== 'undefined' ? window.innerWidth >= DESKTOP_BREAKPOINT : true);
-  const previousBreakpointRef = useRef<'mobile' | 'tablet' | 'desktop'>(() => {
-    const width = typeof window !== 'undefined' ? window.innerWidth : 1280;
-    if (width < MOBILE_BREAKPOINT) return 'mobile';
-    if (width < DESKTOP_BREAKPOINT) return 'tablet';
-    return 'desktop';
-  });
+  const previousBreakpointRef = useRef<'mobile' | 'tablet' | 'desktop'>(
+    (() => {
+      const width = typeof window !== 'undefined' ? window.innerWidth : 1280;
+      if (width < MOBILE_BREAKPOINT) return 'mobile';
+      if (width < DESKTOP_BREAKPOINT) return 'tablet';
+      return 'desktop';
+    })()
+  );
 
   useEffect(() => {
     // Optimized resize handler with debounce

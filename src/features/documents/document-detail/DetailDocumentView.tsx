@@ -20,23 +20,9 @@ import {
 import { Button } from "@/components/ui/button/Button";
 import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
 
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
+
 // --- Types ---
-type DocumentType =
-  | "SOP"
-  | "Policy"
-  | "Form"
-  | "Report"
-  | "Specification"
-  | "Protocol";
-type DocumentStatus =
-  | "Draft"
-  | "Pending Review"
-  | "Pending Approval"
-  | "Pending Training"
-  | "Ready for Publishing"
-  | "Effective"
-  | "Obsoleted"
-  | "Closed - Cancelled";
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
 
 interface DocumentDetail {

@@ -6,6 +6,8 @@
  * Note: TableColumn is already exported from document.types.ts
  */
 
+import type { DocumentStatus } from './document.types';
+
 export type {
   ControlledCopyStatus,
   CurrentStage,
@@ -25,6 +27,6 @@ export interface DocumentToPrint {
   documentId: string;
   title: string;
   version: string;
-  status: 'Effective' | 'Draft' | 'Pending Review' | 'Pending Approval' | 'Approved' | 'Archive';
+  status: DocumentStatus;
   isParent: boolean;
 }

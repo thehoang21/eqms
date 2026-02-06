@@ -4,6 +4,12 @@ import { Routes, Route, Navigate, useNavigate, useParams } from 'react-router-do
 // Layout
 import { MainLayout } from '@/components/layout/MainLayout';
 
+// Auth Guard
+import { ProtectedRoute } from '@/middleware/ProtectedRoute';
+
+// Auth Context
+import { useAuth } from '@/contexts/AuthContext';
+
 // Features - Auth (eager load for login page)
 import { LoginView } from '@/features/auth';
 import { UnderConstruction } from './UnderConstruction';
@@ -88,45 +94,57 @@ const DetailDocumentViewWrapper = () => (
   />
 );
 
-const DocumentReviewViewWrapper = () => (
-  <RouteWrapper 
-    render={(id, navigate) => (
-      <Suspense fallback={<LoadingFallback />}>
-        <DocumentReviewView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
-      </Suspense>
-    )} 
-  />
-);
+const DocumentReviewViewWrapper = () => {
+  const { user } = useAuth();
+  return (
+    <RouteWrapper 
+      render={(id, navigate) => (
+        <Suspense fallback={<LoadingFallback />}>
+          <DocumentReviewView documentId={id} onBack={() => navigate(-1)} currentUserId={user?.id || ''} />
+        </Suspense>
+      )} 
+    />
+  );
+};
 
-const DocumentApprovalViewWrapper = () => (
-  <RouteWrapper 
-    render={(id, navigate) => (
-      <Suspense fallback={<LoadingFallback />}>
-        <DocumentApprovalView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
-      </Suspense>
-    )} 
-  />
-);
+const DocumentApprovalViewWrapper = () => {
+  const { user } = useAuth();
+  return (
+    <RouteWrapper 
+      render={(id, navigate) => (
+        <Suspense fallback={<LoadingFallback />}>
+          <DocumentApprovalView documentId={id} onBack={() => navigate(-1)} currentUserId={user?.id || ''} />
+        </Suspense>
+      )} 
+    />
+  );
+};
 
-const RevisionReviewViewWrapper = () => (
-  <RouteWrapper 
-    render={(id, navigate) => (
-      <Suspense fallback={<LoadingFallback />}>
-        <RevisionReviewView documentId={id} onBack={() => navigate(-1)} currentUserId="1" />
-      </Suspense>
-    )} 
-  />
-);
+const RevisionReviewViewWrapper = () => {
+  const { user } = useAuth();
+  return (
+    <RouteWrapper 
+      render={(id, navigate) => (
+        <Suspense fallback={<LoadingFallback />}>
+          <RevisionReviewView documentId={id} onBack={() => navigate(-1)} currentUserId={user?.id || ''} />
+        </Suspense>
+      )} 
+    />
+  );
+};
 
-const RevisionApprovalViewWrapper = () => (
-  <RouteWrapper 
-    render={(id, navigate) => (
-      <Suspense fallback={<LoadingFallback />}>
-        <RevisionApprovalView revisionId={id} onBack={() => navigate(-1)} currentUserId="1" />
-      </Suspense>
-    )} 
-  />
-);
+const RevisionApprovalViewWrapper = () => {
+  const { user } = useAuth();
+  return (
+    <RouteWrapper 
+      render={(id, navigate) => (
+        <Suspense fallback={<LoadingFallback />}>
+          <RevisionApprovalView revisionId={id} onBack={() => navigate(-1)} currentUserId={user?.id || ''} />
+        </Suspense>
+      )} 
+    />
+  );
+};
 
 const ControlledCopyDetailViewWrapper = () => (
   <RouteWrapper 
@@ -152,15 +170,25 @@ const LoadingFallback: React.FC = () => (
 
 export const AppRoutes: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const handleLogin = async (username: string, password: string, _rememberMe: boolean) => {
+    try {
+      await login({ username, password });
+    } catch {
+      // Login simulation handles its own errors in LoginView
+    }
+    navigate('/dashboard');
+  };
 
   return (
     <Routes>
       {/* ==================== PUBLIC ROUTES ==================== */}
       <Route path="/" element={<Navigate to="/login" replace />} />
-      <Route path="/login" element={<LoginView onLogin={() => navigate('/dashboard')} />} />
+      <Route path="/login" element={<LoginView onLogin={handleLogin} />} />
       
       {/* ==================== PROTECTED ROUTES (WITH LAYOUT) ==================== */}
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/" element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
         
         {/* ===== DASHBOARD & TASKS ===== */}
         <Route path="dashboard" element={<Suspense fallback={<LoadingFallback />}><DashboardView /></Suspense>} />

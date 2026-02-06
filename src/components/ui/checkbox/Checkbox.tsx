@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId as useReactId } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '../utils';
 
@@ -37,6 +37,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   disabled = false,
   className,
 }) => {
+  const generatedId = useReactId();
+  const checkboxId = id || generatedId;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(e.target.checked);
@@ -45,9 +48,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
   return (
     <div className={cn('flex items-center', className)}>
-      <div className="relative">
+      <div className="relative min-w-[44px] min-h-[44px] flex items-center justify-center">
         <input
-          id={id}
+          id={checkboxId}
           type="checkbox"
           checked={checked}
           onChange={handleChange}
@@ -55,10 +58,10 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           className="sr-only peer"
         />
         <label
-          htmlFor={id}
+          htmlFor={checkboxId}
           className={cn(
             'flex items-center justify-center w-5 h-5 rounded border-2 cursor-pointer transition-all',
-            'peer-focus:ring-1 peer-focus:ring-emerald-500 peer-focus:ring-offset-2',
+            'peer-focus-visible:ring-1 peer-focus-visible:ring-emerald-500 peer-focus-visible:ring-offset-2',
             checked
               ? 'bg-emerald-600 border-emerald-600'
               : 'bg-white border-slate-200 hover:border-emerald-400',
@@ -72,7 +75,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       </div>
       {label && (
         <label
-          htmlFor={id}
+          htmlFor={checkboxId}
           className={cn(
             'ml-2 text-sm font-medium text-slate-700 cursor-pointer select-none',
             disabled && 'opacity-50 cursor-not-allowed'

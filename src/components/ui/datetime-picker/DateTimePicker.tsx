@@ -155,10 +155,21 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       }
     };
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
     }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen]);
 
   // Sync with external value changes
@@ -347,7 +358,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           type="button"
           onClick={() => handleDateClick(day)}
           className={cn(
-            "h-8 w-8 rounded-full text-xs flex items-center justify-center transition-all",
+            "h-9 w-9 rounded-full text-xs flex items-center justify-center transition-all",
             isSelected 
               ? 'bg-emerald-600 text-white font-semibold shadow-sm hover:bg-emerald-700' 
               : isToday
@@ -366,7 +377,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           <button
             type="button"
             onClick={() => navigateMonth('prev')}
-            className="p-1 hover:bg-slate-100 rounded-full text-slate-500 transition-colors"
+            className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+            aria-label="Previous month"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -389,7 +401,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           <button
             type="button"
             onClick={() => navigateMonth('next')}
-            className="p-1 hover:bg-slate-100 rounded-full text-slate-500 transition-colors"
+            className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+            aria-label="Next month"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -425,13 +438,16 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   return (
     <div className="relative w-full">
       {label && (
-        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+        <label htmlFor={`${pickerId}-trigger`} className="text-sm font-medium text-slate-700 mb-1.5 block">
           {label}
         </label>
       )}
       <button
         ref={triggerRef}
+        id={`${pickerId}-trigger`}
         type="button"
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
         onClick={() => {
           if (disabled) return;
           if (!isOpen) {
@@ -468,6 +484,9 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
       {isOpen && createPortal(
         <div 
           ref={popoverRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Choose date"
           style={popoverStyle}
           className="bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden flex flex-col w-[320px]"
         >

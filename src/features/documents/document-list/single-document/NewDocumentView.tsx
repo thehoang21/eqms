@@ -23,11 +23,10 @@ import {
     DocumentTab,
     type UploadedFile,
 } from "@/features/documents/document-list/new-document/new-tabs";
-import { DocumentType } from "@/types/documentTypes";
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconSmartHome } from "@tabler/icons-react";
 
 // --- Types ---
-type DocumentStatus = "Draft" | "Active" | "Obsoleted" | "Closed - Cancelled";
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
 type SubTabId = "revisions" | "reviewers" | "approvers" | "copies" | "related" | "correlated";
 type ReviewFlowType = "sequential" | "parallel";

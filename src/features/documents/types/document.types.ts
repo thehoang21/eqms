@@ -4,8 +4,9 @@
  * Shared type definitions used across the documents feature.
  */
 
-// Document type enum
-export type DocumentType = 
+// Document type - Abbreviated aliases used in mock data and display
+// Full names from @/types/documentTypes are the canonical business names
+export type DocumentTypeAbbrev = 
   | "SOP" 
   | "Policy" 
   | "Form" 
@@ -13,9 +14,15 @@ export type DocumentType =
   | "Specification" 
   | "Protocol";
 
-// Document status enum
+// Re-export full-name DocumentType from canonical source and extend with abbreviations
+import type { DocumentType as DocumentTypeFullName } from '@/types/documentTypes';
+export type DocumentType = DocumentTypeFullName | DocumentTypeAbbrev;
+export { DOCUMENT_TYPES, DOCUMENT_TYPE_CODES, DOCUMENT_TYPE_LABELS } from '@/types/documentTypes';
+
+// Document status enum - Single source of truth for all document statuses
 export type DocumentStatus = 
   | "Draft" 
+  | "Active"
   | "Pending Review" 
   | "Pending Approval" 
   | "Approved" 
@@ -23,7 +30,9 @@ export type DocumentStatus =
   | "Ready for Publishing" 
   | "Published" 
   | "Effective" 
-  | "Archive";
+  | "Archive"
+  | "Obsoleted"
+  | "Closed - Cancelled";
 
 // View type for document lists
 export type DocumentViewType = "all" | "owned-by-me";

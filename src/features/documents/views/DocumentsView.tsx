@@ -29,10 +29,9 @@ import { DocumentFilters } from "./../shared/components/DocumentFilters";
 import { DetailDocumentView } from "../document-detail/DetailDocumentView";
 import { CreateLinkModal } from "./../shared/components/CreateLinkModal";
 
-// --- Types ---
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
+// --- Types ---
 type ViewType = "all" | "owned-by-me";
 
 interface TableColumn {
@@ -335,9 +334,9 @@ const mapDocumentStatusToStatusType = (status: DocumentStatus): StatusType => {
     case "Draft":
       return "draft";
     case "Obsoleted":
-      return "obsoleted";
+      return "obsolete";
     case "Closed - Cancelled":
-      return "closed";
+      return "archived";
     default:
       return "draft";
   }
@@ -394,7 +393,7 @@ const formatDate = (dateStr: string) => {
 
 interface DropdownMenuProps {
   document: Document;
-  triggerRef: React.RefObject<HTMLButtonElement>;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
   isOpen: boolean;
   onClose: () => void;
   position: { top: number; left: number; showAbove?: boolean };
@@ -679,7 +678,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [columns, setColumns] = useState<TableColumn[]>(config.defaultColumns);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
-  const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = React.useRef<{ [key: string]: React.RefObject<HTMLButtonElement | null> }>({});
   const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [selectedDocumentTab, setSelectedDocumentTab] = useState<string>("general");
   const [isLoading, setIsLoading] = useState(true);

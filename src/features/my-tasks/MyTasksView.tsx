@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Search,
   Calendar,
@@ -487,6 +487,17 @@ export const MyTasksView: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  // Clear all filters handler
+  const handleClearFilters = useCallback(() => {
+    setSearchQuery("");
+    setModuleFilter("All Modules");
+    setPriorityFilter("All Priorities");
+    setStatusFilter("All Statuses");
+    setFromDateFilter("");
+    setToDateFilter("");
+    setAssigneeFilter("All Assignees");
+  }, []);
+
   // Simulate loading on filter change
   useEffect(() => {
     setIsLoading(true);
@@ -654,7 +665,7 @@ export const MyTasksView: React.FC = () => {
                       title="No Tasks Found"
                       description="We couldn't find any tasks matching your filters. Try adjusting your search criteria or clear filters."
                       actionLabel="Clear Filters"
-                      onAction={() => window.location.reload()}
+                      onAction={handleClearFilters}
                     />
                   </div>
                 )}
@@ -674,7 +685,7 @@ export const MyTasksView: React.FC = () => {
                       title="No Tasks Found"
                       description="We couldn't find any tasks matching your filters."
                       actionLabel="Clear Filters"
-                      onAction={() => window.location.reload()}
+                      onAction={handleClearFilters}
                     />
                   </div>
                 )}
@@ -695,7 +706,7 @@ export const MyTasksView: React.FC = () => {
                       title="No Tasks Found"
                       description="We couldn't find any tasks matching your filters."
                       actionLabel="Clear Filters"
-                      onAction={() => window.location.reload()}
+                      onAction={handleClearFilters}
                     />
                   </div>
                 )}

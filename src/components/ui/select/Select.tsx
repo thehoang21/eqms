@@ -309,7 +309,7 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
       {label && (
-        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+        <label htmlFor={`${selectId}-trigger`} className="text-sm font-medium text-slate-700 mb-1.5 block">
           {label}
         </label>
       )}
@@ -317,7 +317,12 @@ export const Select: React.FC<SelectProps> = ({
       {/* Trigger */}
       <button
         ref={triggerRef}
+        id={`${selectId}-trigger`}
         type="button"
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-controls={`${selectId}-listbox`}
         onClick={handleTriggerClick}
         onKeyDown={handleKeyDown}
         disabled={disabled}
@@ -347,6 +352,8 @@ export const Select: React.FC<SelectProps> = ({
       {isOpen && createPortal(
         <div
           ref={dropdownRef}
+          role="listbox"
+          id={`${selectId}-listbox`}
           className="fixed bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150"
           style={{
             top: position.showAbove ? 'auto' : position.top,
@@ -412,10 +419,12 @@ export const Select: React.FC<SelectProps> = ({
                         key={option.value}
                         ref={el => { optionRefs.current[flatIndex] = el; }}
                         type="button"
+                        role="option"
+                        aria-selected={isSelected}
                         onClick={() => handleSelect(option.value)}
                         className={cn(
                           "flex w-full items-center px-3 text-sm transition-colors",
-                          "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
+                          "min-h-[44px] hover:bg-slate-50 active:bg-slate-100",
                           isSelected && "bg-emerald-50 text-emerald-700",
                           isFocused && "bg-slate-100 ring-1 ring-inset ring-slate-300"
                         )}
@@ -440,10 +449,12 @@ export const Select: React.FC<SelectProps> = ({
                     key={option.value}
                     ref={el => { optionRefs.current[index] = el; }}
                     type="button"
+                    role="option"
+                    aria-selected={isSelected}
                     onClick={() => handleSelect(option.value)}
                     className={cn(
                       "flex w-full items-center px-3 text-sm transition-colors",
-                      "min-h-[40px] hover:bg-slate-50 active:bg-slate-100",
+                      "min-h-[44px] hover:bg-slate-50 active:bg-slate-100",
                       isSelected && "bg-emerald-50 text-emerald-700",
                       isFocused && "bg-slate-100 ring-1 ring-inset ring-slate-300"
                     )}

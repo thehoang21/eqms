@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { Calendar, CheckCircle2 } from "lucide-react";
+import React from "react";
+import { CheckCircle2 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { TaskStatusBadge, PriorityBadge, ModuleBadge } from '@/components/ui/badge';
 import { cn } from '@/components/ui/utils';
@@ -55,23 +55,12 @@ export const TaskTable: React.FC<{
   onTaskClick: (task: Task) => void;
   startIndex: number;
 }> = ({ tasks, onTaskClick, startIndex }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  // Paginate Data
-  const paginatedTasks = useMemo(() => {
-    const startIdx = (currentPage - 1) * itemsPerPage;
-    const endIdx = startIdx + itemsPerPage;
-    return tasks.slice(startIdx, endIdx);
-  }, [tasks, currentPage]);
-
-  const totalPages = Math.ceil(tasks.length / itemsPerPage);
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: diagonalStripesStyle }} />
       <div className="overflow-x-auto flex-1">
-        <table className="w-full min-w-[1800px] md:min-w-[2000px] xl:min-w-[2200px]">
+        <table className="w-full min-w-[1200px]">
           <thead className="bg-slate-50/80 border-b-2 border-slate-200 sticky top-0 z-30 backdrop-blur-sm">
             <tr>
               <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
@@ -113,7 +102,7 @@ export const TaskTable: React.FC<{
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white">
-            {paginatedTasks.map((task, idx) => {
+            {tasks.map((task, idx) => {
               const remainingDays = calculateDaysLeft(task.dueDate);
               const progressPercentage = task.progress || 0;
 

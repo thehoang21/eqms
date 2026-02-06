@@ -89,7 +89,7 @@ export const StorageLocationsTab: React.FC = () => {
     MOCK_STORAGE_LOCATIONS,
   );
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement | null> }>(
     {},
   );
 

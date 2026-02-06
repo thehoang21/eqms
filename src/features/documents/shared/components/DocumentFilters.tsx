@@ -3,8 +3,7 @@ import { Search } from 'lucide-react';
 import { Select } from '@/components/ui/select/Select';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 
 interface DocumentFiltersProps {
     searchQuery: string;
@@ -65,10 +64,9 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
     authorFilterDisabled = false,
 }) => {
     return (
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
+        <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
+            {/* Primary Filters — Always visible */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-                {/* Row 1: Search, Type, Department */}
-
                 {/* Search */}
                 <div className="xl:col-span-6 w-full">
                     <label className="text-sm font-medium text-slate-700 mb-1.5 block">
@@ -80,60 +78,13 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         </div>
                         <input
                             type="text"
-                            placeholder="Search by document name, ID, author, department, opened by..."
+                            placeholder="Search by document name, ID, author, department..."
                             value={searchQuery}
                             onChange={(e) => onSearchChange(e.target.value)}
                             className="block w-full pl-10 pr-3 h-11 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
                         />
                     </div>
                 </div>
-
-                {/* Type Filter */}
-                {showTypeFilter && (
-                    <div className="xl:col-span-3 w-full">
-                        <Select
-                            label="Document Type"
-                            value={typeFilter}
-                            onChange={(value) => onTypeChange(value as DocumentType | "All")}
-                            options={[
-                                { label: "All", value: "All" },
-                                { label: "SOP", value: "SOP" },
-                                { label: "Policy", value: "Policy" },
-                                { label: "Form", value: "Form" },
-                                { label: "Report", value: "Report" },
-                                { label: "Specification", value: "Specification" },
-                                { label: "Protocol", value: "Protocol" },
-                            ]}
-                            placeholder="Select type"
-                            searchPlaceholder="Search type..."
-                        />
-                    </div>
-                )}
-
-                {/* Department Filter */}
-                {showDepartmentFilter && (
-                    <div className="xl:col-span-3 w-full">
-                        <Select
-                            label="Department"
-                            value={departmentFilter}
-                            onChange={(value) => onDepartmentChange(value)}
-                            options={[
-                                { label: "All", value: "All" },
-                                { label: "Quality Assurance", value: "Quality Assurance" },
-                                { label: "Quality Management", value: "Quality Management" },
-                                { label: "Quality Control", value: "Quality Control" },
-                                { label: "Production", value: "Production" },
-                                { label: "Engineering", value: "Engineering" },
-                                { label: "Human Resources", value: "Human Resources" },
-                                { label: "Validation", value: "Validation" },
-                            ]}
-                            placeholder="Select department"
-                            searchPlaceholder="Search department..."
-                        />
-                    </div>
-                )}
-
-                {/* Row 2: Status Filter, Author, Created From/To */}
 
                 {/* Status Filter */}
                 <div className="xl:col-span-3 w-full">
@@ -159,6 +110,54 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                     />
                 </div>
 
+                {/* Type Filter */}
+                {showTypeFilter && (
+                    <div className="xl:col-span-3 w-full">
+                        <Select
+                            label="Document Type"
+                            value={typeFilter}
+                            onChange={(value) => onTypeChange(value as DocumentType | "All")}
+                            options={[
+                                { label: "All", value: "All" },
+                                { label: "SOP", value: "SOP" },
+                                { label: "Policy", value: "Policy" },
+                                { label: "Form", value: "Form" },
+                                { label: "Report", value: "Report" },
+                                { label: "Specification", value: "Specification" },
+                                { label: "Protocol", value: "Protocol" },
+                            ]}
+                            placeholder="Select type"
+                            searchPlaceholder="Search type..."
+                        />
+                    </div>
+                )}
+            </div>
+
+            {/* Additional Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end mt-4">
+                {/* Department Filter */}
+                {showDepartmentFilter && (
+                    <div className="xl:col-span-3 w-full">
+                        <Select
+                            label="Department"
+                            value={departmentFilter}
+                            onChange={(value) => onDepartmentChange(value)}
+                            options={[
+                                { label: "All", value: "All" },
+                                { label: "Quality Assurance", value: "Quality Assurance" },
+                                { label: "Quality Management", value: "Quality Management" },
+                                { label: "Quality Control", value: "Quality Control" },
+                                { label: "Production", value: "Production" },
+                                { label: "Engineering", value: "Engineering" },
+                                { label: "Human Resources", value: "Human Resources" },
+                                { label: "Validation", value: "Validation" },
+                            ]}
+                            placeholder="Select department"
+                            searchPlaceholder="Search department..."
+                        />
+                    </div>
+                )}
+
                 {/* Author Filter */}
                 <div className="xl:col-span-3 w-full">
                     <Select
@@ -183,7 +182,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                     />
                 </div>
 
-                {/* Created Date - From */}
+                {/* Created Date Range */}
                 <div className="xl:col-span-3 w-full">
                     <DateTimePicker
                         label="Created From"
@@ -192,8 +191,6 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         placeholder="Select start date"
                     />
                 </div>
-
-                {/* Created Date - To */}
                 <div className="xl:col-span-3 w-full">
                     <DateTimePicker
                         label="Created To"
@@ -203,9 +200,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                     />
                 </div>
 
-                {/* Row 3: Effective From/To, Valid Until From/To */}
-
-                {/* Effective Date - From */}
+                {/* Effective Date Range */}
                 <div className="xl:col-span-3 w-full">
                     <DateTimePicker
                         label="Effective From"
@@ -214,8 +209,6 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         placeholder="Select start date"
                     />
                 </div>
-
-                {/* Effective Date - To */}
                 <div className="xl:col-span-3 w-full">
                     <DateTimePicker
                         label="Effective To"
@@ -225,7 +218,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                     />
                 </div>
 
-                {/* Valid Until - From */}
+                {/* Valid Until Date Range */}
                 <div className="xl:col-span-3 w-full">
                     <DateTimePicker
                         label="Valid From"
@@ -234,8 +227,6 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         placeholder="Select start date"
                     />
                 </div>
-
-                {/* Valid Until - To */}
                 <div className="xl:col-span-3 w-full">
                     <DateTimePicker
                         label="Valid To"

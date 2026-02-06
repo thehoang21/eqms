@@ -19,10 +19,9 @@ import { cn } from '@/components/ui/utils';
 import { DocumentFilters } from "@/features/documents/shared/components";
 import { IconChecks, IconEyeCheck, IconInfoCircle, IconFileExport, IconSmartHome } from "@tabler/icons-react";
 
-// --- Types ---
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
+// --- Types ---
 type ViewType = "review" | "approval";
 
 interface ReviewerApprover {

@@ -80,7 +80,7 @@ export const isStrongPassword = (password: string): boolean => {
  * Uses base64 + XOR cipher (for basic obfuscation, not cryptographically secure)
  * For production, use Web Crypto API or backend encryption
  */
-const ENCRYPTION_KEY = 'EQMS_SECRET_KEY_2026'; // Should be loaded from env
+const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY || 'EQMS_SECRET_KEY_2026';
 
 export const encryptData = (data: string): string => {
   try {
@@ -93,7 +93,7 @@ export const encryptData = (data: string): string => {
       .join('');
     return btoa(encrypted); // Base64 encode
   } catch (error) {
-    console.error('Encryption error:', error);
+    if (import.meta.env.DEV) console.error('Encryption error:', error);
     return data;
   }
 };
@@ -109,7 +109,7 @@ export const decryptData = (encrypted: string): string => {
       )
       .join('');
   } catch (error) {
-    console.error('Decryption error:', error);
+    if (import.meta.env.DEV) console.error('Decryption error:', error);
     return encrypted;
   }
 };
@@ -123,7 +123,7 @@ export const secureStorage = {
       const stored = encrypt ? encryptData(value) : value;
       localStorage.setItem(key, stored);
     } catch (error) {
-      console.error('Storage error:', error);
+      if (import.meta.env.DEV) console.error('Storage error:', error);
     }
   },
 
@@ -133,7 +133,7 @@ export const secureStorage = {
       if (!stored) return null;
       return decrypt ? decryptData(stored) : stored;
     } catch (error) {
-      console.error('Retrieval error:', error);
+      if (import.meta.env.DEV) console.error('Retrieval error:', error);
       return null;
     }
   },
@@ -159,7 +159,7 @@ export const tokenUtils = {
       const payload = token.split('.')[1];
       return JSON.parse(atob(payload));
     } catch (error) {
-      console.error('Token parse error:', error);
+      if (import.meta.env.DEV) console.error('Token parse error:', error);
       return null;
     }
   },
@@ -200,11 +200,13 @@ export const tokenUtils = {
  * Content Security Policy helper
  */
 export const cspViolationHandler = (event: SecurityPolicyViolationEvent) => {
-  console.error('CSP Violation:', {
-    blockedURI: event.blockedURI,
-    violatedDirective: event.violatedDirective,
-    originalPolicy: event.originalPolicy,
-  });
+  if (import.meta.env.DEV) {
+    console.error('CSP Violation:', {
+      blockedURI: event.blockedURI,
+      violatedDirective: event.violatedDirective,
+      originalPolicy: event.originalPolicy,
+    });
+  }
 
   // Log to monitoring service in production
   if (import.meta.env.PROD) {
@@ -219,7 +221,7 @@ export const cspViolationHandler = (event: SecurityPolicyViolationEvent) => {
 export const preventClickjacking = (): void => {
   if (window.self !== window.top) {
     // Page is in an iframe
-    console.warn('Clickjacking attempt detected - page loaded in iframe');
+    if (import.meta.env.DEV) console.warn('Clickjacking attempt detected - page loaded in iframe');
     window.top!.location.href = window.self.location.href;
   }
 };
@@ -393,10 +395,10 @@ export const auditLog = {
       url: window.location.href,
     };
 
-    // In production, send to backend
+    // In production, send to backend API
     if (import.meta.env.PROD) {
-      // API call to log audit event
-      console.log('[AUDIT]', entry);
+      // TODO: Replace with actual API call
+      // api.post('/audit-log', entry);
     } else {
       console.log('[AUDIT]', entry);
     }

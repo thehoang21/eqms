@@ -16,12 +16,10 @@ import { useToast } from '@/components/ui/toast';
 import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
 import { GeneralTab, TrainingTab, SignaturesTab, AuditTab, type GeneralTabFormData } from "@/features/documents/shared/tabs";
-import { DocumentType as DocType } from "@/types/documentTypes";
+import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconMessage2 } from "@tabler/icons-react";
 
 // --- Types ---
-type DocumentType = "SOP" | "Policy" | "Form" | "Report" | "Specification" | "Protocol";
-type DocumentStatus = "Draft" | "Pending Review" | "Pending Approval" | "Pending Training" | "Ready for Publishing" | "Effective" | "Obsoleted" | "Closed - Cancelled";
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 type TabType = "document" | "general" | "training" | "signatures" | "audit";
 
@@ -167,7 +165,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     // GeneralTab state
     const [formData, setFormData] = useState<FormData>({
         title: revision.title,
-        type: revision.type as DocType,
+        type: revision.type as DocumentType,
         author: revision.author,
         coAuthors: [],
         businessUnit: revision.businessUnit,
