@@ -58,7 +58,7 @@ export const ArchivedDocumentFilters: React.FC<ArchivedDocumentFiltersProps> = (
                             placeholder="Search by code, document name..."
                             value={searchQuery}
                             onChange={(e) => onSearchChange(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 h-11 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full pl-9 pr-4 py-2 h-10 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                         />
                     </div>
                 </div>

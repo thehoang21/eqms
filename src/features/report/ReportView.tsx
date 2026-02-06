@@ -764,7 +764,7 @@ export const ReportView: React.FC = () => {
                     value={historySearch}
                     onChange={(e) => setHistorySearch(e.target.value)}
                     placeholder="Search by report name..."
-                    className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                    className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
                   />
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 </div>

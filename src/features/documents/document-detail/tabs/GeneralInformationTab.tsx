@@ -40,7 +40,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.documentId}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="Auto-generated after save"
           />
         </div>
@@ -52,7 +52,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.created}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="Auto-generated after save"
           />
         </div>
@@ -66,7 +66,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
               type="text"
               value={document.openedBy}
               readOnly
-              className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+              className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
               placeholder="Auto-generated after save"
             />
           </div>
@@ -78,7 +78,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
               type="text"
               value={document.author}
               readOnly
-              className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+              className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             />
           </div>
         </div>
@@ -96,7 +96,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.businessUnit}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -107,7 +107,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.title}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -118,7 +118,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.department}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -129,7 +129,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.knowledgeBase}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -140,7 +140,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.type}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -151,7 +151,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.subType}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -162,7 +162,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="number"
             value={document.periodicReviewCycle}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -173,7 +173,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="number"
             value={document.periodicReviewNotification}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -184,7 +184,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.effectiveDate}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="Set when approved"
           />
         </div>
@@ -196,7 +196,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.validUntil}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="Set when approved"
           />
         </div>
@@ -208,7 +208,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value={document.language}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
         </div>
 
@@ -219,7 +219,7 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
             type="text"
             value=""
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="N/A"
           />
         </div>

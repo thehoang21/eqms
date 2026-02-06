@@ -68,7 +68,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             type="text"
             value={documentNumber}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="Auto-generated after Next Step"
           />
         </div>
@@ -82,7 +82,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             type="text"
             value={createdDateTime}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="Auto-generated after Next Step"
           />
         </div>
@@ -115,7 +115,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               type="text"
               value={openedBy}
               readOnly
-              className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+              className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
               placeholder="Auto-generated after Next Step"
             />
           </div>
@@ -223,7 +223,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             placeholder="Enter document name"
             disabled={isObsoleted}
             className={cn(
-              "w-full h-11 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              "w-full h-10 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
               isObsoleted && "bg-slate-100 cursor-not-allowed",
             )}
           />
@@ -267,7 +267,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             placeholder="Enter knowledge base"
             disabled={isObsoleted}
             className={cn(
-              "w-full h-11 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              "w-full h-10 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
               isObsoleted && "bg-slate-100 cursor-not-allowed",
             )}
           />
@@ -331,7 +331,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             placeholder="Enter review cycle in months"
             disabled={isObsoleted}
             className={cn(
-              "w-full h-11 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              "w-full h-10 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
               isObsoleted && "bg-slate-100 cursor-not-allowed",
             )}
           />
@@ -355,7 +355,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             placeholder="Enter notification days before review"
             disabled={isObsoleted}
             className={cn(
-              "w-full h-11 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+              "w-full h-10 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
               isObsoleted && "bg-slate-100 cursor-not-allowed",
             )}
           />
@@ -370,7 +370,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             type="text"
             value={""}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="Set when approved"
           />
         </div>
@@ -383,7 +383,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             type="text"
             value={""}
             readOnly
-            className="w-full h-11 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
             placeholder="Set when approved"
           />
         </div>

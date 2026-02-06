@@ -85,7 +85,7 @@ export const CorrelatedDocumentsTab: React.FC<CorrelatedDocumentsTabProps> = ({
                             setSearchQuery(e.target.value);
                             setCurrentPage(1);
                         }}
-                        className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                        className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
                     />
                 </div>
             </div>

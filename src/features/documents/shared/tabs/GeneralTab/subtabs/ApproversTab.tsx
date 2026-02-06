@@ -94,7 +94,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                             placeholder="Search by name, role, or department..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                            className="w-full h-10 pl-9 pr-4 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                             autoFocus
                         />
                     </div>

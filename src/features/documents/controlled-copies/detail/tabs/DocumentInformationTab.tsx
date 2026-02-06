@@ -31,119 +31,137 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
   controlledCopy,
 }) => {
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-x-8 gap-y-4">
+    <div className="space-y-4 md:space-y-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Document Number */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Document Number
           </label>
           <input
             type="text"
             value={controlledCopy.documentNumber}
             readOnly
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Created */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Created
           </label>
           <input
             type="text"
             value={formatDateTime(controlledCopy.createdDate, controlledCopy.createdTime)}
             readOnly
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Opened by */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Opened by
           </label>
-          <div className="flex-1 flex items-center gap-2">
-            <input
-              type="text"
-              value={controlledCopy.openedBy}
-              readOnly
-              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
-            />
-          </div>
+          <input
+            type="text"
+            value={controlledCopy.openedBy}
+            readOnly
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+          />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Business Unit */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
+            Business Unit
+          </label>
+          <input
+            type="text"
+            value={controlledCopy.department || ""}
+            readOnly
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+          />
+        </div>
+
+        {/* Name - Full width */}
+        <div className="flex flex-col gap-1.5 md:col-span-2">
+          <label className="text-sm font-medium text-slate-700">
             Name
           </label>
           <input
             type="text"
             value={controlledCopy.name}
             readOnly
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Document */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Document
           </label>
-          <div className="flex-1 flex items-center gap-2">
-            <input
-              type="text"
-              value={controlledCopy.document}
-              readOnly
-              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
-            />
-          </div>
+          <input
+            type="text"
+            value={controlledCopy.document}
+            readOnly
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+          />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Document Revision */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Document Revision
           </label>
           <input
             type="text"
             value={controlledCopy.version || ""}
             readOnly
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Valid Until */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Valid Until
           </label>
           <input
             type="text"
             value={formatDate(controlledCopy.validUntil)}
             readOnly
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Revision Number */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Revision Number
           </label>
           <input
             type="text"
             value={controlledCopy.version || ""}
             readOnly
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Copy Number */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Copy Number
           </label>
-          <div className="flex-1 space-y-1.5">
+          <div className="space-y-1.5">
             <input
               type="text"
               value={controlledCopy.copyNumber?.toString() || "1"}
               readOnly
-              className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+              className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
             />
             <p className="text-xs text-slate-500 italic">
               The Copy Number field represents the n'th copy of the related revision
@@ -151,16 +169,17 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Total Copies Number */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Total Copies Number
           </label>
-          <div className="flex-1 space-y-1.5">
+          <div className="space-y-1.5">
             <input
               type="text"
               value={controlledCopy.totalCopies?.toString() || "1"}
               readOnly
-              className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+              className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
             />
             <p className="text-xs text-slate-500 italic">
               The Total Copies Number field represents the total number of all copies of the related revision
@@ -168,53 +187,42 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
-            Business Unit
-          </label>
-          <div className="flex-1 flex items-center gap-2">
-            <input
-              type="text"
-              value={controlledCopy.department || ""}
-              readOnly
-              className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Recall Date */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Recall Date
           </label>
           <input
             type="text"
             value=""
             readOnly
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0">
+        {/* Delivered By */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-slate-700">
             Delivered By
           </label>
           <input
             type="text"
             value=""
             readOnly
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-10 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-4">
-          <label className="text-sm font-medium text-slate-700 text-left md:w-56 md:flex-shrink-0 md:pt-2">
+        {/* Comments - Full width */}
+        <div className="flex flex-col gap-1.5 md:col-span-2">
+          <label className="text-sm font-medium text-slate-700">
             Comments
           </label>
           <textarea
             value={controlledCopy.reason || ""}
             readOnly
             rows={3}
-            className="flex-1 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 resize-none focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 resize-none focus:outline-none"
           />
         </div>
       </div>

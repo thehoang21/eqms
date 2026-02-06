@@ -86,7 +86,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <input
       className={cn(
-        'h-11 rounded-lg border transition-all',
+        'h-10 rounded-lg border transition-all',
         // Responsive padding and font
         'px-3 md:px-4',
         'text-sm md:text-base',

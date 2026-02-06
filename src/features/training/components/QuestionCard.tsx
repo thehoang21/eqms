@@ -233,7 +233,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                                             type="text"
                                             value={option.text}
                                             onChange={(e) => updateOption(option.id, { text: e.target.value })}
-                                            className="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                            className="flex-1 h-10 px-3 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
                                             placeholder="Option text..."
                                         />
                                         <button
@@ -266,7 +266,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                             step="0.01"
                             value={question.points}
                             onChange={(e) => onUpdate({ points: parseFloat(e.target.value) || 0 })}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                            className="w-full h-10 px-3 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
                         />
                     </div>
 

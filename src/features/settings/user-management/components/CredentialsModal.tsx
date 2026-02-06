@@ -54,7 +54,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={employeeId}
                   readOnly
-                  className="flex-1 h-11 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <CopyButton text={employeeId} label="Employee ID" showToast={showToast} />
               </div>
@@ -70,7 +70,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={username}
                   readOnly
-                  className="flex-1 h-11 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <CopyButton text={username} label="Username" showToast={showToast} />
               </div>
@@ -86,13 +86,13 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={password}
                   readOnly
-                  className="flex-1 h-11 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <Button
                   onClick={onRegeneratePassword}
                   variant="outline"
                   size="icon"
-                  className="flex items-center justify-center h-11 w-11 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-emerald-300 hover:text-emerald-600 transition-all duration-200"
+                  className="flex items-center justify-center h-10 w-11 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-emerald-300 hover:text-emerald-600 transition-all duration-200"
                   title="Regenerate Password"
                 >
                   <RefreshCw className="h-4 w-4" />
@@ -196,7 +196,7 @@ const CopyButton: React.FC<{ text: string; label: string; showToast: ReturnType<
     <button
       onClick={handleCopy}
       className={cn(
-        "flex items-center justify-center h-11 w-11 rounded-lg border transition-all duration-200",
+        "flex items-center justify-center h-10 w-11 rounded-lg border transition-all duration-200",
         copied
           ? "bg-emerald-50 border-emerald-200 text-emerald-600"
           : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"

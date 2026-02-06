@@ -93,7 +93,7 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ onCo
                         placeholder="Search by revision number, name, or author..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     />
                 </div>
             </div>

@@ -183,7 +183,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
               placeholder="Search revisions..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 sm:h-10 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
             />
           </div>
         </div>
@@ -299,7 +299,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     showAbove: false,
   });
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>(
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement | null> }>(
     {},
   );
 

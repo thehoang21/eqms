@@ -328,7 +328,7 @@ export const Select: React.FC<SelectProps> = ({
         disabled={disabled}
         className={cn(
           "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2.5 text-sm transition-colors",
-          "h-11 min-h-[44px]",
+          "h-10 min-h-[40px]",
           disabled
             ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200"
             : isOpen

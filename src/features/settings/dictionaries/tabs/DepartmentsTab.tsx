@@ -228,7 +228,7 @@ export const DepartmentsTab: React.FC = () => {
                 placeholder="Search departments..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 sm:h-11 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 sm:h-10 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -629,7 +629,7 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Enter department name"
                 required
                 disabled={isSaving}
@@ -651,7 +651,7 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
                   })
                 }
                 maxLength={10}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 px-3 border border-slate-200 rounded-lg text-sm uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="e.g., QA, PROD, R&D"
                 required
                 disabled={isSaving}

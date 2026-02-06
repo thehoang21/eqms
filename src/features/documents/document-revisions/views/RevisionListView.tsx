@@ -160,7 +160,7 @@ export const RevisionListView: React.FC = () => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
 
-  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement | null> }>({});
 
   const getButtonRef = (id: string) => {
     if (!buttonRefs.current[id]) {
@@ -404,8 +404,8 @@ export const RevisionListView: React.FC = () => {
           setValidToDate(dateStr);
           setCurrentPage(1);
         }}
-        showTypeFilter={false}
-        showDepartmentFilter={false}
+        showTypeFilter={true}
+        showDepartmentFilter={true}
       />
 
       {/* Table Container - Match DocumentListView wrapper */}

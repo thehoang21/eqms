@@ -437,7 +437,7 @@ const NotificationFilters: React.FC<{
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search notifications..."
-              className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+              className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
             />
           </div>
         </div>

@@ -437,7 +437,7 @@ export const ControlledCopiesView: React.FC = () => {
   // Dropdown state
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
-  const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement | null> }>({});
 
   const getButtonRef = (id: string) => {
     if (!buttonRefs.current[id]) {
@@ -750,7 +750,7 @@ export const ControlledCopiesView: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Document #, Name, Document ID..."
-                  className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
             </div>
