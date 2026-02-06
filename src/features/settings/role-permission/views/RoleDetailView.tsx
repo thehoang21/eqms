@@ -1,0 +1,619 @@
+import React, { useState, useMemo, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  Search,
+  Lock,
+  ChevronDown,
+  ChevronUp,
+  Filter,
+} from "lucide-react";
+import {
+  IconFileDescription,
+  IconPresentationAnalytics,
+  IconAlertTriangle,
+  IconReplace,
+  IconClipboardCheck,
+  IconFilter2Search,
+  IconUsers,
+  IconSettings2,
+  IconAlertSquareRounded,
+  IconBuildingStore,
+  IconDeviceLaptop,
+  IconShield,
+} from "@tabler/icons-react";
+import { Button } from "@/components/ui/button/Button";
+import { Checkbox } from "@/components/ui/checkbox/Checkbox";
+import { AlertModal } from "@/components/ui/modal/AlertModal";
+import { useToast } from "@/components/ui/toast";
+import { cn } from "@/components/ui/utils";
+import { Role, PermissionGroup } from "../types";
+import { MOCK_ROLES, PERMISSION_GROUPS, isALCOAPlusRequired } from "../constants";
+import { IconSmartHome } from "@tabler/icons-react";
+
+export const RoleDetailView: React.FC = () => {
+  const navigate = useNavigate();
+  const { showToast } = useToast();
+  const { id } = useParams<{ id: string }>();
+
+  const isNewRole = id === "new";
+  const isEditMode = window.location.pathname.includes("/edit");
+
+  const [roleName, setRoleName] = useState("");
+  const [roleDescription, setRoleDescription] = useState("");
+  const [roleType] = useState<"system" | "custom">("custom");
+  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
+    new Set(PERMISSION_GROUPS.map((g) => g.id))
+  );
+  const [permissionSearch, setPermissionSearch] = useState("");
+  const [actionFilters, setActionFilters] = useState<Set<string>>(new Set());
+  const [isDiscardConfirmOpen, setIsDiscardConfirmOpen] = useState(false);
+  const [isSaveConfirmOpen, setIsSaveConfirmOpen] = useState(false);
+  const [nameError, setNameError] = useState("");
+
+  // Load role data
+  useEffect(() => {
+    if (!isNewRole && id) {
+      const role = MOCK_ROLES.find((r) => r.id === id);
+      if (role) {
+        setRoleName(role.name);
+        setRoleDescription(role.description);
+        setSelectedPermissions(role.permissions);
+      }
+    }
+  }, [id, isNewRole]);
+
+  const validateName = (value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return "Role name is required";
+    }
+    if (trimmed.length < 3) {
+      return "Role name must be at least 3 characters";
+    }
+    return "";
+  };
+
+  const handleNameChange = (value: string) => {
+    setRoleName(value);
+    setHasUnsavedChanges(true);
+    const error = validateName(value);
+    setNameError(error);
+  };
+
+  const handlePermissionToggle = (permissionId: string) => {
+    setSelectedPermissions((prev) => {
+      const hasPermission = prev.includes(permissionId);
+      if (hasPermission) {
+        return prev.filter((p) => p !== permissionId);
+      } else {
+        return [...prev, permissionId];
+      }
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  const handleSelectAll = (group: PermissionGroup, checked: boolean) => {
+    const groupPermissionIds = group.permissions.map((p) => p.id);
+    setSelectedPermissions((prev) => {
+      let newPermissions = [...prev];
+
+      if (checked) {
+        groupPermissionIds.forEach((id) => {
+          if (!newPermissions.includes(id)) {
+            newPermissions.push(id);
+          }
+        });
+      } else {
+        newPermissions = newPermissions.filter((p) => !groupPermissionIds.includes(p));
+      }
+
+      return newPermissions;
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  const handleSave = () => {
+    const error = validateName(roleName);
+    if (error) {
+      setNameError(error);
+      showToast({
+        type: "error",
+        title: "Validation Error",
+        message: error,
+      });
+      return;
+    }
+
+    console.log("Saving role:", {
+      name: roleName.trim(),
+      description: roleDescription.trim(),
+      permissions: selectedPermissions,
+    });
+
+    showToast({
+      type: "success",
+      title: isNewRole ? "Role Created" : "Role Updated",
+      message: `${roleName.trim()} has been ${isNewRole ? "created" : "updated"}`,
+    });
+
+    setHasUnsavedChanges(false);
+    navigate("/settings/role-permission");
+  };
+
+  const handleDiscard = () => {
+    navigate("/settings/role-permission");
+  };
+
+  const getGroupPermissionCount = (group: PermissionGroup) => {
+    const selected = group.permissions.filter((p) => selectedPermissions.includes(p.id)).length;
+    return { selected, total: group.permissions.length };
+  };
+
+  const getTotalPermissionCount = () => {
+    const total = PERMISSION_GROUPS.reduce((sum, g) => sum + g.permissions.length, 0);
+    return { selected: selectedPermissions.length, total };
+  };
+
+  const permissionCount = getTotalPermissionCount();
+
+  const getModuleIcon = (moduleId: string) => {
+    const iconMap: { [key: string]: React.ComponentType<any> } = {
+      documents: IconFileDescription,
+      training: IconPresentationAnalytics,
+      capa: IconClipboardCheck,
+      change_control: IconReplace,
+      deviations: IconAlertTriangle,
+      audit_trail: IconFilter2Search,
+      user_management: IconUsers,
+      settings: IconSettings2,
+      risk_management: IconAlertSquareRounded,
+      supplier_quality: IconBuildingStore,
+      equipment: IconDeviceLaptop,
+    };
+    return iconMap[moduleId] || IconShield;
+  };
+
+  const ACTIONS = [
+    "view",
+    "create",
+    "edit",
+    "delete",
+    "approve",
+    "review",
+    "archive",
+    "export",
+    "assign",
+    "close",
+  ];
+
+  const ACTION_LABELS: Record<string, string> = {
+    view: "View",
+    create: "Create",
+    edit: "Edit",
+    delete: "Delete",
+    approve: "Approve",
+    review: "Review",
+    archive: "Archive",
+    export: "Export",
+    assign: "Assign",
+    close: "Close",
+  };
+
+  const toggleActionFilter = (action: string) => {
+    setActionFilters((prev) => {
+      const next = new Set(prev);
+      if (next.has(action)) next.delete(action);
+      else next.add(action);
+      return next;
+    });
+  };
+
+  const clearPermissionFilters = () => {
+    setPermissionSearch("");
+    setActionFilters(new Set());
+  };
+
+  const expandAll = () => setExpandedGroups(new Set(PERMISSION_GROUPS.map((g) => g.id)));
+  const collapseAll = () => setExpandedGroups(new Set());
+  const areAllExpanded = expandedGroups.size === PERMISSION_GROUPS.length;
+
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(groupId)) next.delete(groupId);
+      else next.add(groupId);
+      return next;
+    });
+  };
+
+  const getFilteredPermissionCounts = () => {
+    const allPermissions = PERMISSION_GROUPS.flatMap((g) => g.permissions);
+    let filtered = allPermissions;
+
+    if (permissionSearch.trim()) {
+      filtered = filtered.filter((p) =>
+        p.label.toLowerCase().includes(permissionSearch.toLowerCase())
+      );
+    }
+
+    if (actionFilters.size > 0) {
+      filtered = filtered.filter((p) => {
+        const action = p.id.split(".").pop();
+        return action && actionFilters.has(action);
+      });
+    }
+
+    return {
+      total: allPermissions.length,
+      filtered: filtered.length,
+      selected: selectedPermissions.length,
+    };
+  };
+
+  const permissionCounts = getFilteredPermissionCounts();
+
+  return (
+    <div className="space-y-4 md:space-y-6">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 lg:gap-4">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
+            {isNewRole ? "New Role" : isEditMode ? "Edit Role" : "Role Details"}
+          </h1>
+          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
+            <IconSmartHome className="h-4 w-4" />
+            <span className="text-slate-400 mx-1">/</span>
+            <span className="hidden sm:inline">Settings</span>
+            <span className="sm:hidden">...</span>
+            <span className="text-slate-400 mx-1">/</span>
+            <span
+              onClick={() => navigate("/settings/role-permission")}
+              className="text-slate-500 hover:text-slate-700 cursor-pointer"
+            >
+              Role & Permissions
+            </span>
+            <span className="text-slate-400 mx-1">/</span>
+            <span className="text-slate-700 font-medium">
+              {isNewRole ? "New Role" : roleName}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsDiscardConfirmOpen(true)}
+            className="text-slate-600 hover:text-slate-900"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => setIsSaveConfirmOpen(true)}
+            disabled={!hasUnsavedChanges || !!nameError}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[100px] gap-2"
+          >
+            {isNewRole ? "Create Role" : "Save Changes"}
+          </Button>
+        </div>
+      </div>
+
+      {/* Role Info Section */}
+      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+        <h3 className="text-base font-semibold text-slate-900 mb-4">Role Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              Role Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={roleName}
+              onChange={(e) => handleNameChange(e.target.value)}
+              placeholder="Enter role name"
+              className={cn(
+                "block w-full h-10 px-3 border rounded-lg bg-white focus:outline-none focus:ring-1 text-sm transition-all placeholder:text-slate-400",
+                nameError
+                  ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                  : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
+              )}
+            />
+            {nameError && <p className="text-xs text-red-600 mt-1">{nameError}</p>}
+          </div>
+          <div>
+            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Description</label>
+            <input
+              type="text"
+              value={roleDescription}
+              onChange={(e) => {
+                setRoleDescription(e.target.value);
+                setHasUnsavedChanges(true);
+              }}
+              placeholder="Enter role description"
+              className="block w-full h-10 px-3 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Permission Section */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col min-h-[520px] lg:h-[calc(100vh-320px)]">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-slate-200 bg-white shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex-1">
+            <h2 className="text-base font-semibold text-slate-900">Permissions</h2>
+            <p className="text-xs text-slate-500 mt-1">
+              Select permissions to grant access to specific features
+            </p>
+          </div>
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-3 md:shrink-0">
+            <div className="flex items-center gap-2 text-xs text-slate-600">
+              <span className="inline-flex items-center px-2 py-1 rounded-full bg-slate-100 text-slate-700">
+                {permissionCount.selected} selected
+              </span>
+              <span className="text-slate-400">/</span>
+              <span className="inline-flex items-center px-2 py-1 rounded-full bg-emerald-50 text-emerald-700">
+                {permissionCount.total} total
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Toolbar */}
+        <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4 shrink-0">
+          <div className="flex flex-1 items-center gap-3">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                value={permissionSearch}
+                onChange={(e) => setPermissionSearch(e.target.value)}
+                placeholder="Search permissions..."
+                className="w-full h-10 pl-9 pr-4 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={areAllExpanded ? collapseAll : expandAll}
+              className="h-10 px-3 text-xs md:text-sm bg-white min-w-[120px]"
+            >
+              {areAllExpanded ? (
+                <>
+                  <ChevronUp className="h-3.5 w-3.5 mr-1.5" /> Collapse All
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-3.5 w-3.5 mr-1.5" /> Expand All
+                </>
+              )}
+            </Button>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+              <Filter className="h-3.5 w-3.5" />
+              Action:
+            </div>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {ACTIONS.map((action) => (
+                <Button
+                  key={action}
+                  variant="outline"
+                  size="xs"
+                  onClick={() => toggleActionFilter(action)}
+                  className={cn(
+                    "h-7 px-2 text-xs",
+                    actionFilters.has(action)
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                      : "hover:bg-slate-50"
+                  )}
+                >
+                  {ACTION_LABELS[action] || action}
+                </Button>
+              ))}
+            </div>
+            {(permissionSearch.trim() || actionFilters.size > 0) && (
+              <Button
+                variant="outline"
+                size="xs"
+                onClick={clearPermissionFilters}
+                className="h-7 px-2 text-xs bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
+              >
+                Clear
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Permission Count Display */}
+        {(permissionSearch.trim() || actionFilters.size > 0) && (
+          <div className="px-6 py-3 bg-blue-50 border-b border-blue-200 shrink-0">
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-blue-700">
+                Showing <span className="font-semibold">{permissionCounts.filtered}</span> of{" "}
+                <span className="font-semibold">{permissionCounts.total}</span> permissions
+              </span>
+              {permissionCounts.selected > 0 && (
+                <>
+                  <span className="text-blue-400">•</span>
+                  <span className="text-blue-700">
+                    <span className="font-semibold">{permissionCounts.selected}</span> selected
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Content List */}
+        <div className="flex-1 overflow-y-auto bg-white custom-scrollbar">
+          <div className="min-h-full">
+            {PERMISSION_GROUPS.map((group) => {
+              const visiblePermissions = group.permissions.filter((permission) => {
+                const matchesSearch =
+                  !permissionSearch ||
+                  permission.label.toLowerCase().includes(permissionSearch.toLowerCase()) ||
+                  permission.description.toLowerCase().includes(permissionSearch.toLowerCase());
+                const matchesAction =
+                  actionFilters.size === 0 || actionFilters.has(permission.action);
+                return matchesSearch && matchesAction;
+              });
+
+              if (visiblePermissions.length === 0) return null;
+
+              const groupCount = getGroupPermissionCount(group);
+              const isAllSelected = groupCount.selected === groupCount.total;
+              const isExpanded = expandedGroups.has(group.id);
+              const ModuleIcon = getModuleIcon(group.id);
+
+              return (
+                <div
+                  key={group.id}
+                  className="border-b border-slate-100 last:border-0 border-l-[3px] border-l-transparent hover:border-l-emerald-500 transition-all"
+                >
+                  {/* Group Header */}
+                  <div
+                    onClick={() => toggleGroup(group.id)}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between px-4 md:px-6 py-1 cursor-pointer hover:bg-slate-50 transition-colors select-none group/header gap-3"
+                  >
+                    <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+                      <ModuleIcon className={cn(
+                        "h-5 w-5 shrink-0 transition-colors",
+                        isAllSelected
+                          ? "text-emerald-600"
+                          : "text-slate-500 group-hover/header:text-emerald-600"
+                      )} />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-sm md:text-sm text-slate-900 flex items-center gap-2 truncate">
+                          {group.name}
+                        </h3>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {group.permissions.length} permissions available
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 md:gap-6">
+                      <div
+                        className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-1.5 rounded-lg"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <span className="text-xs font-medium text-slate-600">Enable All</span>
+                        <Checkbox
+                          id={`group-${group.id}`}
+                          checked={isAllSelected}
+                          onChange={(checked) => handleSelectAll(group, checked)}
+                        />
+                      </div>
+                      {isExpanded ? (
+                        <ChevronUp className="h-5 w-5 text-slate-400 shrink-0" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5 text-slate-400 shrink-0" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Permissions List */}
+                  {isExpanded && (
+                    <div className="bg-slate-50/50">
+                      {visiblePermissions.map((permission, index) => {
+                        const isChecked = selectedPermissions.includes(permission.id);
+                        return (
+                          <div
+                            key={permission.id}
+                            className="flex items-start sm:items-center justify-between px-4 md:px-6 py-1.5 pl-[1rem] md:pl-[1.5rem] hover:bg-slate-50 transition-colors border-t border-slate-100 first:border-0 group/item gap-2"
+                          >
+                            <div className="flex items-start sm:items-center gap-2 md:gap-3 flex-1 pr-3 md:pr-6 min-w-0">
+                              <span className="text-xs text-slate-400 font-medium min-w-[1.5rem] shrink-0 pt-0.5 sm:pt-0">
+                                {index + 1}.
+                              </span>
+                              <div
+                                className="flex-1 cursor-pointer select-none min-w-0"
+                                onClick={() => handlePermissionToggle(permission.id)}
+                              >
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                  <span
+                                    className={cn(
+                                      "text-sm font-medium transition-colors break-words",
+                                      isChecked
+                                        ? "text-slate-900"
+                                        : "text-slate-600 group-hover/item:text-slate-900"
+                                    )}
+                                  >
+                                    {permission.label}
+                                  </span>
+                                  {isALCOAPlusRequired(permission.id) && (
+                                    <div
+                                      title="Audit Trail Required"
+                                      className="flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100 w-fit"
+                                    >
+                                      <IconFilter2Search className="h-3 w-3" />
+                                      <span className="sm:inline">Audit</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center shrink-0">
+                              <Checkbox
+                                id={permission.id}
+                                checked={isChecked}
+                                onChange={() => handlePermissionToggle(permission.id)}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Discard Changes Confirm */}
+      <AlertModal
+        isOpen={isDiscardConfirmOpen}
+        onClose={() => setIsDiscardConfirmOpen(false)}
+        onConfirm={() => {
+          handleDiscard();
+          setIsDiscardConfirmOpen(false);
+        }}
+        type="warning"
+        title="Discard Changes"
+        confirmText="Discard"
+        showCancel
+        description={
+          <div className="text-sm text-slate-600">
+            Are you sure you want to discard all changes? This action cannot be undone.
+          </div>
+        }
+      />
+
+      {/* Save Changes Confirm */}
+      <AlertModal
+        isOpen={isSaveConfirmOpen}
+        onClose={() => setIsSaveConfirmOpen(false)}
+        onConfirm={() => {
+          handleSave();
+          setIsSaveConfirmOpen(false);
+        }}
+        type="info"
+        title={isNewRole ? "Create Role" : "Save Changes"}
+        confirmText={isNewRole ? "Create" : "Save Changes"}
+        showCancel
+        description={
+          <div className="text-sm text-slate-600">
+            {isNewRole
+              ? `Are you sure you want to create role "${roleName.trim()}"?`
+              : `Are you sure you want to save the changes made to "${roleName}"?`}
+          </div>
+        }
+      />
+    </div>
+  );
+};

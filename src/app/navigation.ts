@@ -231,7 +231,7 @@ const SYSTEM_MODULES: NavItem[] = [
         id: "roles",
         label: "Roles & Permissions",
         icon: ShieldCheck,
-        path: "/settings/roles",
+        path: "/settings/role-permission",
       },
       {
         id: "dictionaries",

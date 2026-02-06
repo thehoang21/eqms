@@ -52,7 +52,8 @@ const UserManagementView = lazy(() => import('@/features/settings').then(m => ({
 const AddUserView = lazy(() => import('@/features/settings').then(m => ({ default: m.AddUserView })));
 const EditUserView = lazy(() => import('@/features/settings').then(m => ({ default: m.EditUserView })));
 const DictionariesView = lazy(() => import('@/features/settings').then(m => ({ default: m.DictionariesView })));
-const RolePermissionView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RolePermissionView })));
+const RoleListView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RoleListView })));
+const RoleDetailView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RoleDetailView })));
 
 // Quality Management
 const TrainingView = lazy(() => import('@/features/training').then(m => ({ default: m.TrainingView })));
@@ -239,7 +240,12 @@ export const AppRoutes: React.FC = () => {
             <Route path="add" element={<Suspense fallback={<LoadingFallback />}><AddUserView /></Suspense>} />
             <Route path="edit/:userId" element={<Suspense fallback={<LoadingFallback />}><EditUserView /></Suspense>} />
           </Route>
-          <Route path="roles" element={<Suspense fallback={<LoadingFallback />}><RolePermissionView /></Suspense>} />
+          <Route path="role-permission">
+            <Route index element={<Suspense fallback={<LoadingFallback />}><RoleListView /></Suspense>} />
+            <Route path="new" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
+            <Route path=":id" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
+            <Route path=":id/edit" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
+          </Route>
           <Route path="dictionaries" element={<Suspense fallback={<LoadingFallback />}><DictionariesView /></Suspense>} />
           <Route path="config" element={<UnderConstruction />} />
           <Route path="info-system" element={<UnderConstruction />} />
