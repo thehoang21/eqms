@@ -1,15 +1,13 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
     Archive, 
     ChevronRight, 
-    Eye, 
     RotateCcw, 
     Download,
     AlertTriangle,
     Clock,
-    MoreVertical,
-    Home,
-    FileOutput
+    MoreVertical
 } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button/Button';
@@ -17,7 +15,6 @@ import { TablePagination } from '@/components/ui/table/TablePagination';
 import { cn } from '@/components/ui/utils';
 import { ArchivedDocumentFilters } from './components/ArchivedDocumentFilters';
 import { RestoreModal } from './components/RestoreModal';
-import { PreviewModal } from './components/PreviewModal';
 import { ArchivedDocument, RetentionFilter } from './types';
 import { 
     calculateRetentionStatus, 
@@ -26,7 +23,7 @@ import {
     logAuditTrail,
     canUserRestore 
 } from './utils';
-import { IconFileExport, IconInfoCircle, IconSmartHome } from '@tabler/icons-react';
+import { IconInfoCircle, IconSmartHome } from '@tabler/icons-react';
 
 // Mock Data
 const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
@@ -98,6 +95,7 @@ const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
 ];
 
 export const ArchivedDocumentsView: React.FC = () => {
+    const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const [lastApproverFilter, setLastApproverFilter] = useState('all');
     const [retentionFilter, setRetentionFilter] = useState<RetentionFilter>('all');
@@ -105,7 +103,6 @@ export const ArchivedDocumentsView: React.FC = () => {
     const [endDate, setEndDate] = useState('');
     const [selectedDocument, setSelectedDocument] = useState<ArchivedDocument | null>(null);
     const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
-    const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
     const [currentPage, setCurrentPage] = useState(1);
@@ -154,9 +151,14 @@ export const ArchivedDocumentsView: React.FC = () => {
     const paginatedDocuments = filteredDocuments.slice(startIndex, endIndex);
 
     const handleView = (doc: ArchivedDocument) => {
-        setSelectedDocument(doc);
-        setIsPreviewModalOpen(true);
         logAuditTrail(doc.id, doc.code, 'viewed', userRole);
+        // Navigate to detail view with Obsoleted status
+        navigate(`/documents/${doc.id}`, {
+            state: {
+                initialStatus: 'Obsoleted',
+                fromArchive: true
+            }
+        });
     };
 
     const handleRestore = (doc: ArchivedDocument) => {
@@ -305,22 +307,15 @@ export const ArchivedDocumentsView: React.FC = () => {
                                             {doc.lastApprover}
                                         </td>
                                         <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
-                                            <div className="flex items-center gap-2">
-                                                <Clock className="h-4 w-4 text-slate-400" />
-                                                {formatRetentionPeriod(doc.retentionPeriod)}
-                                            </div>
+                                            {formatRetentionPeriod(doc.retentionPeriod)}
                                         </td>
                                         <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                                            <div className="flex flex-col gap-1">
-                                                <span className={cn(
-                                                    "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border w-fit",
-                                                    getRetentionBadgeStyle(retentionStatus.status)
-                                                )}>
-                                                    {retentionStatus.status === 'expired' && <AlertTriangle className="h-3 w-3" />}
-                                                    {retentionStatus.status === 'expiring-soon' && <Clock className="h-3 w-3" />}
-                                                    {retentionStatus.message}
-                                                </span>
-                                            </div>
+                                            <span className={cn(
+                                                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border w-fit",
+                                                getRetentionBadgeStyle(retentionStatus.status)
+                                            )}>
+                                                {retentionStatus.message}
+                                            </span>
                                         </td>
                                         <td 
                                             onClick={(e) => e.stopPropagation()}
@@ -432,13 +427,6 @@ export const ArchivedDocumentsView: React.FC = () => {
                 onConfirm={handleRestoreConfirm}
                 document={selectedDocument}
                 userRole={userRole}
-            />
-
-            <PreviewModal
-                isOpen={isPreviewModalOpen}
-                onClose={() => setIsPreviewModalOpen(false)}
-                document={selectedDocument}
-                onDownload={() => selectedDocument && handleDownload(selectedDocument)}
             />
         </div>
     );

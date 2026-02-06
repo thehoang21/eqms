@@ -287,7 +287,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                             variant="outline"
                             size="sm"
                             disabled={isSubmitting}
-                            className="border-red-200 text-red-700 hover:bg-red-50"
+                            className="bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
                         >
                             <span className="text-xs sm:text-sm">Reject</span>
                         </Button>

@@ -10,6 +10,14 @@ import { cn } from '../utils';
  *   Submit
  * </Button>
  * 
+ * <Button variant="destructive" size="sm">
+ *   Delete
+ * </Button>
+ * 
+ * <Button variant="link">
+ *   Learn more
+ * </Button>
+ * 
  * <Button variant="ghost" size="icon">
  *   <Settings className="h-4 w-4" />
  * </Button>
@@ -17,7 +25,7 @@ import { cn } from '../utils';
  */
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Button style variant */
-  variant?: 'default' | 'ghost' | 'outline' | 'secondary';
+  variant?: 'default' | 'outline' | 'ghost' | 'destructive' | 'secondary' | 'link';
   /** Button size with responsive support */
   size?: 'xs' | 'sm' | 'default' | 'lg' | 'xl' | 'icon' | 'icon-sm' | 'icon-lg';
   /** Make button full width */
@@ -33,9 +41,11 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const variants = {
     default: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm hover:shadow-md active:scale-[0.97] transition-all duration-200',
-    ghost: 'hover:bg-slate-100 hover:text-slate-900 active:scale-[0.97] transition-all duration-200',
     outline: 'border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-200 text-slate-900 shadow-sm hover:shadow active:scale-[0.97] transition-all duration-200',
+    ghost: 'hover:bg-slate-100 hover:text-slate-900 active:scale-[0.97] transition-all duration-200',
+    destructive: 'bg-red-600 text-white hover:bg-red-700 shadow-sm hover:shadow-md active:scale-[0.97] transition-all duration-200',
     secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200 active:scale-[0.97] transition-all duration-200',
+    link: 'text-emerald-600 underline-offset-4 hover:underline active:scale-[0.97] transition-all duration-200',
   };
 
   const sizes = {

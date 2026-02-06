@@ -2,17 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { 
     ChevronRight, 
-    X, 
-    Home, 
     FileText, 
     AlertCircle,
-    Info,
-    ArrowRight,
-    Save
+    Info
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { IconDeviceFloppy, IconSmartHome, IconX } from '@tabler/icons-react';
+import { IconSmartHome } from '@tabler/icons-react';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 
 // --- Types ---
@@ -121,8 +117,6 @@ export const NewRevisionView: React.FC = () => {
     
     const [reasonForChange, setReasonForChange] = useState("");
     const [showError, setShowError] = useState(false);
-    const [showSaveModal, setShowSaveModal] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
 
     // Restore state from navigation (when coming back from Workspace)
@@ -169,31 +163,6 @@ export const NewRevisionView: React.FC = () => {
         });
     };
 
-    const handleSaveDraft = () => {
-        // Show confirmation modal
-        setShowSaveModal(true);
-    };
-
-    const handleConfirmSave = async () => {
-        setIsSaving(true);
-        
-        // Simulate save operation
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // TODO: Implement actual save logic
-        console.log("Save draft:", {
-            sourceDocument: MOCK_SOURCE_DOCUMENT,
-            impactDecisions,
-            reasonForChange
-        });
-        
-        setIsSaving(false);
-        setShowSaveModal(false);
-        
-        // Navigate back to All Revisions
-        navigate("/documents/revisions/all");
-    };
-
     // Count upgrades
     const upgradeCount = Object.values(impactDecisions).filter(v => v).length;
 
@@ -230,9 +199,6 @@ export const NewRevisionView: React.FC = () => {
                     <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                         <Button size="sm" variant="outline" onClick={() => setShowCancelModal(true)} className="flex items-center gap-2">
                             Cancel
-                        </Button>
-                        <Button size="sm" variant="outline" onClick={handleSaveDraft} className="flex items-center gap-1.5 md:gap-2">
-                            Save Draft
                         </Button>
                         <Button 
                             size="sm" 
@@ -509,32 +475,6 @@ export const NewRevisionView: React.FC = () => {
                     </p>
                 </div>
             </div>
-
-            {/* Save Draft Confirmation Modal */}
-            <AlertModal
-                isOpen={showSaveModal}
-                onClose={() => setShowSaveModal(false)}
-                onConfirm={handleConfirmSave}
-                type="confirm"
-                title="Save Draft?"
-                description={
-                    <div className="space-y-3">
-                        <p>Are you sure you want to save the current Impact Analysis as draft?</p>
-                        <div className="text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
-                            <p><span className="font-semibold">Source Document:</span> {MOCK_SOURCE_DOCUMENT.code}</p>
-                            <p><span className="font-semibold">Documents to Upgrade:</span> {upgradeCount} of {MOCK_LINKED_DOCUMENTS.length}</p>
-                            {reasonForChange && (
-                                <p><span className="font-semibold">Reason Length:</span> {reasonForChange.length} characters</p>
-                            )}
-                        </div>
-                        <p className="text-xs text-slate-500">You can continue editing this draft later from the All Revisions screen.</p>
-                    </div>
-                }
-                confirmText="Save Draft"
-                cancelText="Cancel"
-                isLoading={isSaving}
-                showCancel={true}
-            />
 
             {/* Cancel Confirmation Modal */}
             <AlertModal

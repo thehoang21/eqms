@@ -155,9 +155,6 @@ export const TaskTable: React.FC<{
                   {/* Assignee */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-full bg-emerald-50 flex items-center justify-center text-xs font-bold text-emerald-600 border border-emerald-100">
-                        {task.assignee.charAt(0)}
-                      </div>
                       <span className="text-sm text-slate-700" title={task.assignee}>
                         {task.assignee}
                       </span>
@@ -167,9 +164,6 @@ export const TaskTable: React.FC<{
                   {/* Reporter */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-full bg-orange-50 flex items-center justify-center text-xs font-bold text-orange-600 border border-orange-100">
-                        {task.reporter.charAt(0)}
-                      </div>
                       <span className="text-sm text-slate-700" title={task.reporter}>
                         {task.reporter}
                       </span>
@@ -221,7 +215,6 @@ export const TaskTable: React.FC<{
                   {/* Due Date */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-1.5 text-slate-700">
-                      <Calendar className="h-3.5 w-3.5 text-slate-400" />
                       <span>{formatDate(task.dueDate)}</span>
                     </div>
                   </td>

@@ -278,7 +278,7 @@ export const TrainingView: React.FC = () => {
             className="whitespace-nowrap gap-2"
           >
             <IconPlus className="h-4 w-4" />
-            Add New Course
+            New Course
           </Button>
         </div>
       </div>

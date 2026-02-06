@@ -74,18 +74,18 @@ export const RestoreModal: React.FC<RestoreModalProps> = ({
                 {/* Document Info */}
                 <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg">
                     <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-slate-500">Document Code</span>
-                            <span className="text-sm font-semibold text-slate-900">{document.code}</span>
-                        </div>
-                        <div className="flex items-start justify-between">
-                            <span className="text-xs font-medium text-slate-500">Document Name</span>
-                            <span className="text-sm text-slate-900 text-right max-w-[60%]">{document.documentName}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-slate-500">Version</span>
-                            <span className="text-sm text-slate-900">{document.version}</span>
-                        </div>
+                        <p className="text-sm">
+                            <span className="font-medium text-slate-500">Document Code: </span>
+                            <span className="font-semibold text-slate-900">{document.code}</span>
+                        </p>
+                        <p className="text-sm">
+                            <span className="font-medium text-slate-500">Document Name: </span>
+                            <span className="text-slate-900">{document.documentName}</span>
+                        </p>
+                        <p className="text-sm">
+                            <span className="font-medium text-slate-500">Version: </span>
+                            <span className="text-slate-900">{document.version}</span>
+                        </p>
                     </div>
                 </div>
 

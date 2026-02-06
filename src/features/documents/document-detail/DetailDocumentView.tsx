@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   ChevronRight,
   Clock,
@@ -170,8 +171,15 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
   onBack,
   initialTab = "general",
 }) => {
+  const location = useLocation();
+  const state = location.state as { initialStatus?: DocumentStatus; fromArchive?: boolean };
+  
   // In real app, fetch document by documentId
-  const document = MOCK_DOCUMENT;
+  // Override status if coming from archive
+  const document = {
+    ...MOCK_DOCUMENT,
+    status: state?.initialStatus || MOCK_DOCUMENT.status,
+  };
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
   // Status workflow steps

@@ -257,8 +257,8 @@ export const StandaloneRevisionView: React.FC = () => {
                             size="sm" 
                             variant="outline" 
                             onClick={() => setShowCancelModal(true)} 
-                            className="border-red-600 text-red-600 hover:bg-red-50 shadow-sm gap-2"
-                        ><X className="h-4 w-4" />
+                            className="flex items-center gap-2"
+                        >
                             Cancel
                         </Button>
                         <Button
@@ -282,7 +282,6 @@ export const StandaloneRevisionView: React.FC = () => {
                             className="shadow-sm"
                         >
                             Continue
-                            <ArrowRight className="h-4 w-4 ml-2" />
                         </Button>
                     </div>
                 </div>

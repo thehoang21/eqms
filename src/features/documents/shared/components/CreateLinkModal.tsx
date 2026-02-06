@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { X, Copy, Send, Check, Link2, Clock, User, Search, Users, ChevronDown } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox/Checkbox";
+import { X, Copy, Send, Check, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
-import { Select } from "@/components/ui/select/Select";
+import { MultiSelect } from "@/components/ui/select/MultiSelect";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { useToast } from "@/components/ui/toast/Toast";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
@@ -45,12 +44,8 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
 }) => {
   const { showToast } = useToast();
   const [recipientType, setRecipientType] = useState<RecipientType>("users");
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [departmentSearchQuery, setDepartmentSearchQuery] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isDepartmentDropdownOpen, setIsDepartmentDropdownOpen] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState<(string | number)[]>([]);
+  const [selectedDepartments, setSelectedDepartments] = useState<(string | number)[]>([]);
   const [expiryDate, setExpiryDate] = useState("");
   const [generatedLink, setGeneratedLink] = useState("");
   const [isCopied, setIsCopied] = useState(false);
@@ -206,73 +201,11 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
     handleClose();
   };
 
-  // Toggle user selection
-  const handleToggleUser = (userId: string) => {
-    setSelectedUsers(prev => {
-      if (prev.includes(userId)) {
-        return prev.filter(id => id !== userId);
-      } else {
-        return [...prev, userId];
-      }
-    });
-    setGeneratedLink(""); // Reset link when selection changes
-  };
-
-  // Remove user chip
-  const handleRemoveUser = (userId: string) => {
-    setSelectedUsers(prev => prev.filter(id => id !== userId));
-    setGeneratedLink("");
-  };
-
-  // Get user label by ID
-  const getUserLabel = (userId: string) => {
-    const user = MOCK_USERS.find(u => u.value === userId);
-    return user ? user.label.split(" - ")[0] : userId;
-  };
-
-  // Filter users based on search query
-  const filteredUsers = MOCK_USERS.filter(user => 
-    user.label.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Toggle department selection
-  const handleToggleDepartment = (deptId: string) => {
-    setSelectedDepartments(prev => {
-      if (prev.includes(deptId)) {
-        return prev.filter(id => id !== deptId);
-      } else {
-        return [...prev, deptId];
-      }
-    });
-    setGeneratedLink("");
-  };
-
-  // Remove department chip
-  const handleRemoveDepartment = (deptId: string) => {
-    setSelectedDepartments(prev => prev.filter(id => id !== deptId));
-    setGeneratedLink("");
-  };
-
-  // Get department label by ID
-  const getDepartmentLabel = (deptId: string) => {
-    const dept = MOCK_DEPARTMENTS.find(d => d.value === deptId);
-    return dept ? dept.label : deptId;
-  };
-
-  // Filter departments based on search query
-  const filteredDepartments = MOCK_DEPARTMENTS.filter(dept => 
-    dept.label.toLowerCase().includes(departmentSearchQuery.toLowerCase())
-  );
-
   // Reset and close modal
   const handleClose = () => {
     setRecipientType("users");
     setSelectedUsers([]);
     setSelectedDepartments([]);
-    setSearchQuery("");
-    setDepartmentSearchQuery("");
-    setIsDropdownOpen(false);
-    setIsDepartmentDropdownOpen(false);
     setExpiryDate("");
     setGeneratedLink("");
     setIsCopied(false);
@@ -359,97 +292,19 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
           {/* Users Selection with Chips */}
           {recipientType === "users" && (
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                Select Users ({selectedUsers.length} selected)
-              </label>
-              
-              {/* Input with Chips and Dropdown */}
-              <div className="relative">
-                <div 
-                  className="min-h-[44px] border border-slate-200 rounded-lg bg-white px-3 py-2 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all cursor-text"
-                  onClick={() => setIsDropdownOpen(true)}
-                >
-                  {/* Selected User Chips */}
-                  <div className="flex flex-wrap gap-2 items-center">
-                    {/* Search Icon - Left */}
-                    <Search className="h-4 w-4 text-slate-400 flex-shrink-0" />
-                    
-                    {selectedUsers.map((userId) => (
-                      <span
-                        key={userId}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium border border-emerald-200 animate-in fade-in zoom-in-95 duration-150"
-                      >
-                        {getUserLabel(userId)}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveUser(userId);
-                          }}
-                          className="flex items-center justify-center w-4 h-4 rounded-full hover:bg-emerald-200 transition-colors"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </span>
-                    ))}
-                    
-                    {/* Search Input */}
-                    <div className="flex-1 min-w-[120px]">
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onFocus={() => setIsDropdownOpen(true)}
-                        placeholder={selectedUsers.length === 0 ? "Search users..." : ""}
-                        className="w-full outline-none text-sm text-slate-700 placeholder:text-slate-400 bg-transparent"
-                      />
-                    </div>
-                    
-                    {/* Chevron Icon - Right */}
-                    <ChevronDown className={`h-4 w-4 text-slate-400 flex-shrink-0 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                  </div>
-                </div>
-
-                {/* Dropdown with Checkboxes */}
-                {isDropdownOpen && (
-                  <>
-                    {/* Backdrop */}
-                    <div
-                      className="fixed inset-0 z-[60]"
-                      onClick={() => setIsDropdownOpen(false)}
-                    />
-                    
-                    {/* Dropdown Menu */}
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg z-[70] max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
-                      {filteredUsers.length > 0 ? (
-                        <div className="p-2 space-y-1">
-                          {filteredUsers.map((user) => (
-                            <div
-                              key={user.value}
-                              onClick={() => handleToggleUser(user.value)}
-                              className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
-                            >
-                              <Checkbox
-                                checked={selectedUsers.includes(user.value)}
-                                onChange={() => handleToggleUser(user.value)}
-                                className="mt-0.5"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-slate-900">{user.label.split(" - ")[0]}</p>
-                                <p className="text-xs text-slate-500 truncate">{user.label.split(" - ")[1]}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="p-6 text-center text-sm text-slate-500">
-                          No users found
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-              
+              <MultiSelect
+                label="Select Users"
+                value={selectedUsers}
+                onChange={(values) => {
+                  setSelectedUsers(values);
+                  setGeneratedLink("");
+                }}
+                options={MOCK_USERS}
+                placeholder="Search and select users..."
+                searchPlaceholder="Search users..."
+                enableSearch={true}
+                maxVisibleTags={3}
+              />
               <p className="text-xs text-slate-500">
                 Search and select users to share this document. You can select one or multiple users.
               </p>
@@ -459,96 +314,19 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
           {/* Department Selection with Chips */}
           {recipientType === "department" && (
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                Select Departments ({selectedDepartments.length} selected)
-              </label>
-              
-              {/* Input with Chips and Dropdown */}
-              <div className="relative">
-                <div 
-                  className="min-h-[44px] border border-slate-200 rounded-lg bg-white px-3 py-2 focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 transition-all cursor-text"
-                  onClick={() => setIsDepartmentDropdownOpen(true)}
-                >
-                  {/* Selected Department Chips */}
-                  <div className="flex flex-wrap gap-2 items-center">
-                    {/* Search Icon - Left */}
-                    <Search className="h-4 w-4 text-slate-400 flex-shrink-0" />
-                    
-                    {selectedDepartments.map((deptId) => (
-                      <span
-                        key={deptId}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium border border-emerald-200 animate-in fade-in zoom-in-95 duration-150"
-                      >
-                        {getDepartmentLabel(deptId)}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveDepartment(deptId);
-                          }}
-                          className="flex items-center justify-center w-4 h-4 rounded-full hover:bg-emerald-200 transition-colors"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </span>
-                    ))}
-                    
-                    {/* Search Input */}
-                    <div className="flex-1 min-w-[120px]">
-                      <input
-                        type="text"
-                        value={departmentSearchQuery}
-                        onChange={(e) => setDepartmentSearchQuery(e.target.value)}
-                        onFocus={() => setIsDepartmentDropdownOpen(true)}
-                        placeholder={selectedDepartments.length === 0 ? "Search departments..." : ""}
-                        className="w-full outline-none text-sm text-slate-700 placeholder:text-slate-400 bg-transparent"
-                      />
-                    </div>
-                    
-                    {/* Chevron Icon - Right */}
-                    <ChevronDown className={`h-4 w-4 text-slate-400 flex-shrink-0 transition-transform duration-200 ${isDepartmentDropdownOpen ? 'rotate-180' : ''}`} />
-                  </div>
-                </div>
-
-                {/* Dropdown with Checkboxes */}
-                {isDepartmentDropdownOpen && (
-                  <>
-                    {/* Backdrop */}
-                    <div
-                      className="fixed inset-0 z-[60]"
-                      onClick={() => setIsDepartmentDropdownOpen(false)}
-                    />
-                    
-                    {/* Dropdown Menu */}
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-lg shadow-lg z-[70] max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
-                      {filteredDepartments.length > 0 ? (
-                        <div className="p-2 space-y-1">
-                          {filteredDepartments.map((dept) => (
-                            <div
-                              key={dept.value}
-                              onClick={() => handleToggleDepartment(dept.value)}
-                              className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
-                            >
-                              <Checkbox
-                                checked={selectedDepartments.includes(dept.value)}
-                                onChange={() => handleToggleDepartment(dept.value)}
-                                className="mt-0.5"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-slate-900">{dept.label}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="p-6 text-center text-sm text-slate-500">
-                          No departments found
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-              
+              <MultiSelect
+                label="Select Departments"
+                value={selectedDepartments}
+                onChange={(values) => {
+                  setSelectedDepartments(values);
+                  setGeneratedLink("");
+                }}
+                options={MOCK_DEPARTMENTS}
+                placeholder="Search and select departments..."
+                searchPlaceholder="Search departments..."
+                enableSearch={true}
+                maxVisibleTags={3}
+              />
               <p className="text-xs text-slate-500">
                 Search and select departments to share this document. You can select one or multiple departments.
               </p>

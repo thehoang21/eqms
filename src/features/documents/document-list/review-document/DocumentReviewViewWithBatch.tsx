@@ -877,7 +877,7 @@ export const DocumentReviewViewWithBatch: React.FC<DocumentReviewViewProps> = ({
                                 variant="outline"
                                 size="sm"
                                 disabled={isSubmitting || isNavigating}
-                                className="flex-1 lg:flex-initial border-red-200 text-red-700 hover:bg-red-50"
+                                className="flex-1 lg:flex-initial bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
                             >
                                 <ThumbsDown className="h-3.5 w-3.5 lg:h-4 lg:w-4 mr-1.5 lg:mr-2" />
                                 <span className="text-xs lg:text-sm">Reject</span>
