@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   User,
   MessageSquare,
@@ -178,6 +179,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
   onBack,
   currentUserId = "1",
 }) => {
+  const navigate = useNavigate();
   const [document, setDocument] = useState(MOCK_REVISION);
   const [comments, setComments] = useState(MOCK_COMMENTS);
   const [newComment, setNewComment] = useState("");
@@ -281,10 +283,10 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
 
   // Breadcrumbs
   const breadcrumbs = [
-    { label: "Dashboard", onClick: onBack },
-    { label: "Document Control", onClick: onBack },
-    { label: "Document Revisions", onClick: onBack },
-    { label: "Review Revision", isActive: true },
+    { label: "Dashboard", onClick: () => navigate('/dashboard') },
+    { label: "Document Revisions", onClick: () => navigate('/documents/revisions/all') },
+    { label: "Pending My Review", onClick: onBack },
+    { label: document.documentId, isActive: true },
   ];
 
   return (
@@ -321,6 +323,38 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
             </Button>
           </>
         ) : undefined
+      }
+      footerActions={
+        <>
+          <Button
+            onClick={onBack}
+            variant="outline"
+            size="sm"
+          >
+            <span className="text-xs sm:text-sm">Back</span>
+          </Button>
+          {canReview && (
+            <>
+              <Button
+                onClick={handleReject}
+                variant="outline"
+                size="sm"
+                disabled={isSubmitting}
+                className="bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
+              >
+                <span className="text-xs sm:text-sm">Reject</span>
+              </Button>
+              <Button
+                onClick={handleApprove}
+                variant="default"
+                size="sm"
+                disabled={isSubmitting}
+              >
+                <span className="text-xs sm:text-sm">Complete Review</span>
+              </Button>
+            </>
+          )}
+        </>
       }
     >
       {activeTab === "document" && (

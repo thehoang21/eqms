@@ -52,10 +52,6 @@ export const formatRetentionPeriod = (months: number): string => {
     return `${years}y ${remainingMonths}m`;
 };
 
-export const canUserRestore = (userRole: string): boolean => {
-    return ['Admin', 'QA Manager', 'Quality Assurance'].includes(userRole);
-};
-
 export const canUserView = (userRole: string): boolean => {
     return ['Admin', 'QA Manager', 'Quality Assurance', 'Manager'].includes(userRole);
 };
@@ -63,7 +59,7 @@ export const canUserView = (userRole: string): boolean => {
 export const logAuditTrail = (
     documentId: string,
     documentCode: string,
-    action: 'viewed' | 'downloaded' | 'restored' | 'deleted',
+    action: 'viewed' | 'downloaded' | 'deleted',
     performedBy: string,
     details?: string
 ) => {

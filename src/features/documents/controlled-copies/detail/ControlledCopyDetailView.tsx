@@ -517,6 +517,50 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         </div>
       </div>
 
+      {/* Footer Action Buttons */}
+      <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+        <Button onClick={onBack} variant="outline" size="sm" className="gap-1.5 shadow-sm">
+          Back
+        </Button>
+        <Button
+          onClick={handleViewOriginalDocument}
+          variant="outline"
+          size="sm"
+          className="gap-1.5 shadow-sm hover:border-emerald-200 hover:text-emerald-700 hover:bg-emerald-50"
+        >
+          View Original
+        </Button>
+        <Button
+          onClick={handleDownloadPDF}
+          variant="outline"
+          size="sm"
+          className="gap-1.5 shadow-sm"
+        >
+          Download
+        </Button>
+        {controlledCopy.status === "Ready for Distribution" && (
+          <Button
+            onClick={handleDistribute}
+            variant="default"
+            size="sm"
+            className="gap-1.5 shadow-sm"
+          >
+            Distribute
+          </Button>
+        )}
+        {controlledCopy.status === "Distributed" && (
+          <Button
+            onClick={handleReportLostDamaged}
+            variant="outline"
+            size="sm"
+            className="gap-1.5 shadow-sm text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
+          >
+            <AlertCircle className="h-4 w-4" />
+            Report Lost
+          </Button>
+        )}
+      </div>
+
       {/* E-Signature Modal for Download */}
       <ESignatureModal
         isOpen={isESignModalOpen}

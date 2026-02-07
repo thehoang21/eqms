@@ -48,7 +48,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
   return (
     <div className={cn('flex items-center', className)}>
-      <div className="relative min-w-[44px] min-h-[44px] flex items-center justify-center">
+      <div className="relative min-w-[44px] min-h-[44px] flex items-center justify-start">
         <input
           id={checkboxId}
           type="checkbox"
@@ -77,7 +77,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         <label
           htmlFor={checkboxId}
           className={cn(
-            'ml-2 text-sm font-medium text-slate-700 cursor-pointer select-none',
+            'text-sm font-medium text-slate-700 cursor-pointer select-none',
             disabled && 'opacity-50 cursor-not-allowed'
           )}
         >

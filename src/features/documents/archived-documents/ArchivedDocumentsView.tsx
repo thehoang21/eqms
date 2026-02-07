@@ -2,11 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
     Archive, 
-    ChevronRight, 
-    RotateCcw, 
     Download,
-    AlertTriangle,
-    Clock,
     MoreVertical
 } from 'lucide-react';
 import { createPortal } from 'react-dom';
@@ -14,14 +10,12 @@ import { Button } from '@/components/ui/button/Button';
 import { TablePagination } from '@/components/ui/table/TablePagination';
 import { cn } from '@/components/ui/utils';
 import { ArchivedDocumentFilters } from './components/ArchivedDocumentFilters';
-import { RestoreModal } from './components/RestoreModal';
 import { ArchivedDocument, RetentionFilter } from './types';
 import { 
     calculateRetentionStatus, 
     getRetentionBadgeStyle, 
     formatRetentionPeriod,
-    logAuditTrail,
-    canUserRestore 
+    logAuditTrail
 } from './utils';
 import { IconInfoCircle, IconSmartHome } from '@tabler/icons-react';
 
@@ -101,8 +95,6 @@ export const ArchivedDocumentsView: React.FC = () => {
     const [retentionFilter, setRetentionFilter] = useState<RetentionFilter>('all');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [selectedDocument, setSelectedDocument] = useState<ArchivedDocument | null>(null);
-    const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
     const [currentPage, setCurrentPage] = useState(1);
@@ -159,21 +151,6 @@ export const ArchivedDocumentsView: React.FC = () => {
                 fromArchive: true
             }
         });
-    };
-
-    const handleRestore = (doc: ArchivedDocument) => {
-        setSelectedDocument(doc);
-        setIsRestoreModalOpen(true);
-    };
-
-    const handleRestoreConfirm = (reason: string) => {
-        if (!selectedDocument) return;
-        
-        console.log('Restoring document:', selectedDocument.code, 'Reason:', reason);
-        logAuditTrail(selectedDocument.id, selectedDocument.code, 'restored', userRole, reason);
-        
-        // In production, call API to restore the document
-        alert(`Document ${selectedDocument.code} restored successfully!`);
     };
 
     const handleDownload = (doc: ArchivedDocument) => {
@@ -397,37 +374,13 @@ export const ArchivedDocumentsView: React.FC = () => {
                                 <Download className="h-4 w-4 flex-shrink-0" />
                                 <span className="font-medium">Download</span>
                             </button>
-                            {canUserRestore(userRole) && (
-                                <>
-                                    <div className="h-px bg-slate-100 my-1" />
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            const doc = paginatedDocuments.find(d => d.id === openDropdownId);
-                                            if (doc) handleRestore(doc);
-                                            setOpenDropdownId(null);
-                                        }}
-                                        className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
-                                    >
-                                        <RotateCcw className="h-4 w-4 flex-shrink-0" />
-                                        <span className="font-medium">Restore Document</span>
-                                    </button>
-                                </>
-                            )}
+
                         </div>
                     </div>
                 </>,
                 window.document.body
             )}
 
-            {/* Modals */}
-            <RestoreModal
-                isOpen={isRestoreModalOpen}
-                onClose={() => setIsRestoreModalOpen(false)}
-                onConfirm={handleRestoreConfirm}
-                document={selectedDocument}
-                userRole={userRole}
-            />
         </div>
     );
 };

@@ -658,7 +658,7 @@ const NotificationRow: React.FC<{
       </td>
 
       {/* Related Item */}
-      <td className="py-3.5 px-4 hidden lg:table-cell">
+      <td className="py-3.5 px-4 hidden lg:table-cell whitespace-nowrap">
         {notification.relatedItem ? (
           <span className="text-sm font-medium text-emerald-600">
             {notification.relatedItem.code}

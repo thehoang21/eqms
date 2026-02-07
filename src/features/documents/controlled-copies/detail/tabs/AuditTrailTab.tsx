@@ -334,7 +334,7 @@ export const AuditTrailTab: React.FC = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-sm">
+                      <td className="px-4 py-3.5 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <span
                             className={cn(

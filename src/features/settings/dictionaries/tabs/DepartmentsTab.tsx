@@ -698,7 +698,7 @@ const DepartmentModal: React.FC<DepartmentModalProps> = ({
             </div>
 
             {/* Status Toggle */}
-            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg">
+            <div className="flex items-center gap-3">
               <Checkbox
                 id="isActive"
                 checked={formData.isActive}

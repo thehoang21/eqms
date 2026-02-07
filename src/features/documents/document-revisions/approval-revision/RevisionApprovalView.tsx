@@ -259,10 +259,10 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
 
     // Breadcrumbs
     const breadcrumbs = [
-        { label: "Dashboard", onClick: onBack },
-        { label: "Document Control", onClick: onBack },
-        { label: "Document Revisions", onClick: onBack },
-        { label: "Revision Approval", isActive: true },
+        { label: "Dashboard", onClick: () => navigate('/dashboard') },
+        { label: "Document Revisions", onClick: () => navigate('/documents/revisions/all') },
+        { label: "Pending My Approval", onClick: onBack },
+        { label: revision.documentId, isActive: true },
     ];
 
     return (
@@ -299,6 +299,38 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                         </Button>
                     </>
                 ) : undefined
+            }
+            footerActions={
+                <>
+                    <Button
+                        onClick={onBack}
+                        variant="outline"
+                        size="sm"
+                    >
+                        <span className="text-xs sm:text-sm">Back</span>
+                    </Button>
+                    {canApprove && (
+                        <>
+                            <Button
+                                onClick={handleReject}
+                                variant="outline"
+                                size="sm"
+                                disabled={isSubmitting}
+                                className="bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
+                            >
+                                <span className="text-xs sm:text-sm">Reject</span>
+                            </Button>
+                            <Button
+                                onClick={handleApprove}
+                                variant="default"
+                                size="sm"
+                                disabled={isSubmitting}
+                            >
+                                <span className="text-xs sm:text-sm">Complete Approve</span>
+                            </Button>
+                        </>
+                    )}
+                </>
             }
         >
             {activeTab === "document" && (

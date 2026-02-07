@@ -222,7 +222,7 @@ export const RevisionReviewViewWithBatch: React.FC<RevisionReviewViewProps> = ({
         currentDocumentId: documentId,
         onNavigateToDocument: useCallback((docId: string) => {
             // Navigate to the next revision
-            navigate(`/documents/revision/review/${docId}`);
+            navigate(`/documents/revisions/review/${docId}`);
         }, [navigate]),
         onFinishBatch: useCallback(() => {
             console.log("Hoàn thành tất cả revision trong lô!");
@@ -323,9 +323,9 @@ export const RevisionReviewViewWithBatch: React.FC<RevisionReviewViewProps> = ({
 
     // Breadcrumbs
     const breadcrumbs = [
-        { label: "Dashboard", onClick: onBack },
-        { label: "Document Control", onClick: onBack },
-        { label: "Document Revisions", onClick: onBack },
+        { label: "Dashboard", onClick: () => navigate('/dashboard') },
+        { label: "Document Revisions", onClick: () => navigate('/documents/revisions/all') },
+        { label: "Pending My Review", onClick: onBack },
         { label: "Review Revision", isActive: true },
     ];
 

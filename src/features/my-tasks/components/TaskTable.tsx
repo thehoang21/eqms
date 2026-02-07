@@ -128,9 +128,9 @@ export const TaskTable: React.FC<{
                   </td>
 
                   {/* Task Name */}
-                  <td className="py-3.5 px-4 text-sm">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-slate-900 line-clamp-2 break-words max-w-sm">
+                      <span className="font-medium text-slate-900">
                         {task.title}
                       </span>
                     </div>

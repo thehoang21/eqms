@@ -243,8 +243,8 @@ export const AppRoutes: React.FC = () => {
           <Route path="role-permission">
             <Route index element={<Suspense fallback={<LoadingFallback />}><RoleListView /></Suspense>} />
             <Route path="new" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
-            <Route path=":id" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
             <Route path=":id/edit" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
+            <Route path=":id" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
           </Route>
           <Route path="dictionaries" element={<Suspense fallback={<LoadingFallback />}><DictionariesView /></Suspense>} />
           <Route path="config" element={<UnderConstruction />} />

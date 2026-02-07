@@ -283,7 +283,7 @@ export const RoleDetailView: React.FC = () => {
             </span>
             <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">
-              {isNewRole ? "New Role" : roleName}
+              {isNewRole ? "New Role" : isEditMode ? "Edit Role" : roleName}
             </span>
           </div>
         </div>
@@ -334,7 +334,7 @@ export const RoleDetailView: React.FC = () => {
       {/* Role Info Section */}
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <h3 className="text-base font-semibold text-slate-900 mb-4">Role Information</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
           <div>
             <label className="text-sm font-medium text-slate-700 mb-1.5 block">
               Role Name <span className="text-red-500">*</span>

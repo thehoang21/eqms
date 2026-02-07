@@ -756,8 +756,8 @@ export const AuditTrailView: React.FC = () => {
                       </td>
 
                       {/* Description */}
-                      <td className="py-3.5 px-4 text-sm text-slate-700 max-w-[300px]">
-                        <span className="line-clamp-2">{record.description}</span>
+                      <td className="py-3.5 px-4 text-sm text-slate-700 whitespace-nowrap">
+                        {record.description}
                       </td>
 
                       {/* IP Address */}

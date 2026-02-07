@@ -648,8 +648,8 @@ export const DocumentReviewViewWithBatch: React.FC<DocumentReviewViewProps> = ({
 
     // Breadcrumbs
     const breadcrumbs = [
-        { label: "Dashboard", onClick: onBack },
-        { label: "Document Control", onClick: onBack },
+        { label: "Dashboard", onClick: () => navigate('/dashboard') },
+        { label: "All Documents", onClick: () => navigate('/documents/all') },
         { label: "Pending My Review", onClick: onBack },
         { label: document.documentId, isActive: true },
     ];

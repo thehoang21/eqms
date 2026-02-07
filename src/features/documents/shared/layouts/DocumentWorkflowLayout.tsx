@@ -72,6 +72,9 @@ interface DocumentWorkflowLayoutProps {
         onFinishBatch?: () => void;
     };
     
+    // Footer actions (buttons below tab card)
+    footerActions?: React.ReactNode;
+    
     // Content
     children: React.ReactNode;
 }
@@ -297,6 +300,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
     activeTab,
     onTabChange,
     batchInfo,
+    footerActions,
     children,
 }) => {
     const currentStepIndex = statusSteps.indexOf(currentStatus);
@@ -440,6 +444,13 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                     {children}
                 </div>
             </div>
+
+            {/* Footer Actions */}
+            {footerActions && (
+                <div className="flex items-center gap-2 md:gap-3">
+                    {footerActions}
+                </div>
+            )}
         </div>
     );
 };

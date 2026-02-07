@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     User,
     MessageSquare,
@@ -154,6 +155,7 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
     onBack,
     currentUserId = "1",
 }) => {
+    const navigate = useNavigate();
     const [document, setDocument] = useState(MOCK_DOCUMENT);
     const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
     const [newComment, setNewComment] = useState("");
@@ -225,8 +227,8 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
 
     // Breadcrumbs
     const breadcrumbs = [
-        { label: "Dashboard", onClick: onBack },
-        { label: "My Tasks", onClick: onBack },
+        { label: "Dashboard", onClick: () => navigate('/dashboard') },
+        { label: "All Documents", onClick: () => navigate('/documents/all') },
         { label: "Pending My Approval", onClick: onBack },
         { label: document.documentId, isActive: true },
     ];
@@ -265,6 +267,38 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                         </Button>
                     </>
                 ) : undefined
+            }
+            footerActions={
+                <>
+                    <Button
+                        onClick={onBack}
+                        variant="outline"
+                        size="sm"
+                    >
+                        <span className="text-xs sm:text-sm">Back</span>
+                    </Button>
+                    {canApprove && (
+                        <>
+                            <Button
+                                onClick={handleReject}
+                                variant="outline"
+                                size="sm"
+                                disabled={isSubmitting}
+                                className="bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
+                            >
+                                <span className="text-xs sm:text-sm">Reject</span>
+                            </Button>
+                            <Button
+                                onClick={handleApprove}
+                                variant="default"
+                                size="sm"
+                                disabled={isSubmitting}
+                            >
+                                <span className="text-xs sm:text-sm">Complete Approve</span>
+                            </Button>
+                        </>
+                    )}
+                </>
             }
         >
             {activeTab === "document" && (

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ChevronRight,
   Clock,
@@ -158,6 +158,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
   initialTab = "general",
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const state = location.state as { initialStatus?: DocumentStatus; fromArchive?: boolean };
   
   // In real app, fetch document by documentId
@@ -212,15 +213,15 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
               <IconSmartHome className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <button
-                onClick={onBack}
+                onClick={() => navigate('/dashboard')}
                 className="hover:text-slate-700 transition-colors hidden sm:inline"
               >
-                Document Control
+                Dashboard
               </button>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
               <button
-                onClick={onBack}
+                onClick={() => navigate('/documents/all')}
                 className="hover:text-slate-700 transition-colors"
               >
                 All Documents
