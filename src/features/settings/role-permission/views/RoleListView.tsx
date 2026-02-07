@@ -11,7 +11,7 @@ import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
 import { IconSmartHome } from "@tabler/icons-react";
 import { Role } from "../types";
-import { MOCK_ROLES } from "../constants";
+import { MOCK_ROLES, PERMISSION_GROUPS } from "../constants";
 
 interface DropdownMenuProps {
   isOpen: boolean;
@@ -113,6 +113,12 @@ export const RoleListView: React.FC = () => {
   const { showToast } = useToast();
 
   const [roles, setRoles] = useState<Role[]>(MOCK_ROLES);
+  
+  // Calculate total permissions
+  const totalPermissions = useMemo(
+    () => PERMISSION_GROUPS.reduce((sum, group) => sum + group.permissions.length, 0),
+    []
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -167,30 +173,43 @@ export const RoleListView: React.FC = () => {
       return;
     }
 
-    const button = event.currentTarget;
-    const rect = button.getBoundingClientRect();
+    const rect = event.currentTarget.getBoundingClientRect();
 
+    // Menu dimensions (estimate max)
     const menuHeight = 200;
     const menuWidth = 200;
     const safeMargin = 8;
 
+    // Check available space
     const spaceBelow = window.innerHeight - rect.bottom;
     const spaceAbove = rect.top;
-    const spaceRight = window.innerWidth - rect.right;
 
-    let showAbove = false;
-    let top = rect.bottom + window.scrollY + safeMargin;
-    if (spaceBelow < menuHeight && spaceAbove > spaceBelow) {
-      top = rect.top + window.scrollY - safeMargin;
-      showAbove = true;
+    // Show above if not enough space below AND there's more space above
+    const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+
+    // Calculate vertical position
+    let top: number;
+    if (shouldShowAbove) {
+      top = rect.top + window.scrollY - 4;
+    } else {
+      top = rect.bottom + window.scrollY + 4;
     }
 
+    // Calculate horizontal position with safe margins
+    const viewportWidth = window.innerWidth;
     let left = rect.right + window.scrollX - menuWidth;
-    if (spaceRight < menuWidth) {
-      left = Math.max(safeMargin, rect.left + window.scrollX);
+
+    // Ensure menu doesn't overflow right edge
+    if (left + menuWidth > viewportWidth - safeMargin) {
+      left = viewportWidth - menuWidth - safeMargin + window.scrollX;
     }
 
-    setDropdownPosition({ top, left, showAbove });
+    // Ensure menu doesn't overflow left edge
+    if (left < safeMargin + window.scrollX) {
+      left = safeMargin + window.scrollX;
+    }
+
+    setDropdownPosition({ top, left, showAbove: shouldShowAbove });
     setOpenDropdownId(id);
   };
 
@@ -353,8 +372,11 @@ export const RoleListView: React.FC = () => {
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
                         <div className="flex items-center gap-1.5">
-                          <Lock className="h-3.5 w-3.5 text-slate-400" />
-                          <span className="font-medium">{role.permissions.length}</span>
+                          <span className="font-medium">
+                            {role.permissions.length}
+                            <span className="text-slate-400 mx-0.5">/</span>
+                            {totalPermissions}
+                          </span>
                         </div>
                       </td>
                       <td

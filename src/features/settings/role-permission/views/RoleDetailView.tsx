@@ -6,6 +6,9 @@ import {
   ChevronDown,
   ChevronUp,
   Filter,
+  Package,
+  Scale,
+  FileBarChart,
 } from "lucide-react";
 import {
   IconFileDescription,
@@ -14,12 +17,12 @@ import {
   IconReplace,
   IconClipboardCheck,
   IconFilter2Search,
-  IconUsers,
   IconSettings2,
   IconAlertSquareRounded,
   IconBuildingStore,
   IconDeviceLaptop,
   IconShield,
+  IconMessageReport,
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
@@ -37,6 +40,7 @@ export const RoleDetailView: React.FC = () => {
 
   const isNewRole = id === "new";
   const isEditMode = window.location.pathname.includes("/edit");
+  const isViewMode = !isNewRole && !isEditMode;
 
   const [roleName, setRoleName] = useState("");
   const [roleDescription, setRoleDescription] = useState("");
@@ -165,12 +169,15 @@ export const RoleDetailView: React.FC = () => {
       capa: IconClipboardCheck,
       change_control: IconReplace,
       deviations: IconAlertTriangle,
-      audit_trail: IconFilter2Search,
-      user_management: IconUsers,
-      settings: IconSettings2,
+      complaints: IconMessageReport,
       risk_management: IconAlertSquareRounded,
-      supplier_quality: IconBuildingStore,
       equipment: IconDeviceLaptop,
+      supplier_quality: IconBuildingStore,
+      product: Package,
+      regulatory: Scale,
+      reports: FileBarChart,
+      audit_trail: IconFilter2Search,
+      settings: IconSettings2,
     };
     return iconMap[moduleId] || IconShield;
   };
@@ -281,23 +288,46 @@ export const RoleDetailView: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsDiscardConfirmOpen(true)}
-            className="text-slate-600 hover:text-slate-900"
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="default"
-            size="sm"
-            onClick={() => setIsSaveConfirmOpen(true)}
-            disabled={!hasUnsavedChanges || !!nameError}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[100px] gap-2"
-          >
-            {isNewRole ? "Create Role" : "Save Changes"}
-          </Button>
+          {isViewMode ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/settings/role-permission")}
+                className="text-slate-600 hover:text-slate-900"
+              >
+                Back
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => navigate(`/settings/role-permission/${id}/edit`)}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[100px]"
+              >
+                Edit Role
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsDiscardConfirmOpen(true)}
+                className="text-slate-600 hover:text-slate-900"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => setIsSaveConfirmOpen(true)}
+                disabled={!hasUnsavedChanges || !!nameError}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[100px] gap-2"
+              >
+                {isNewRole ? "Create Role" : "Save Changes"}
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -314,11 +344,13 @@ export const RoleDetailView: React.FC = () => {
               value={roleName}
               onChange={(e) => handleNameChange(e.target.value)}
               placeholder="Enter role name"
+              disabled={isViewMode}
               className={cn(
                 "block w-full h-10 px-3 border rounded-lg bg-white focus:outline-none focus:ring-1 text-sm transition-all placeholder:text-slate-400",
                 nameError
                   ? "border-red-300 focus:ring-red-500 focus:border-red-500"
-                  : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
+                  : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500",
+                isViewMode && "bg-slate-100 text-slate-600 cursor-not-allowed"
               )}
             />
             {nameError && <p className="text-xs text-red-600 mt-1">{nameError}</p>}
@@ -333,7 +365,11 @@ export const RoleDetailView: React.FC = () => {
                 setHasUnsavedChanges(true);
               }}
               placeholder="Enter role description"
-              className="block w-full h-10 px-3 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
+              disabled={isViewMode}
+              className={cn(
+                "block w-full h-10 px-3 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400",
+                isViewMode && "bg-slate-100 text-slate-600 cursor-not-allowed"
+              )}
             />
           </div>
         </div>
@@ -497,7 +533,7 @@ export const RoleDetailView: React.FC = () => {
                     </div>
                     <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 md:gap-6">
                       <div
-                        className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-1.5 rounded-lg"
+                        className="flex items-center gap-2 md:gap-3 px-2 md:px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <span className="text-xs font-medium text-slate-600">Enable All</span>
@@ -505,6 +541,7 @@ export const RoleDetailView: React.FC = () => {
                           id={`group-${group.id}`}
                           checked={isAllSelected}
                           onChange={(checked) => handleSelectAll(group, checked)}
+                          disabled={isViewMode}
                         />
                       </div>
                       {isExpanded ? (
@@ -561,6 +598,7 @@ export const RoleDetailView: React.FC = () => {
                                 id={permission.id}
                                 checked={isChecked}
                                 onChange={() => handlePermissionToggle(permission.id)}
+                                disabled={isViewMode}
                               />
                             </div>
                           </div>

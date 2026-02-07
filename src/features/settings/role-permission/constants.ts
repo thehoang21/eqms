@@ -20,7 +20,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
   },
   {
     id: "change_control",
-    name: "Change Control (MOC)",
+    name: "Change Controls",
     description: "Change request initiation, impact assessment, and implementation",
     order: 2,
     permissions: [
@@ -48,7 +48,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
   },
   {
     id: "deviations",
-    name: "Deviation Management",
+    name: "Deviation & NCs",
     description: "Deviation reporting and investigation",
     order: 4,
     permissions: [
@@ -59,10 +59,23 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     ],
   },
   {
+    id: "complaints",
+    name: "Complaints Management",
+    description: "Customer complaints handling and resolution",
+    order: 5,
+    permissions: [
+      { id: "complaint_view", module: "complaints", action: "view", label: "View Complaints", description: "Access complaint records", requiresAudit: false },
+      { id: "complaint_create", module: "complaints", action: "create", label: "Log Complaint", description: "Register new customer complaints", requiresAudit: true },
+      { id: "complaint_edit", module: "complaints", action: "edit", label: "Investigate Complaint", description: "Document investigation and actions", requiresAudit: true },
+      { id: "complaint_approve", module: "complaints", action: "approve", label: "Approve Resolution", description: "Approve complaint resolution", requiresAudit: true },
+      { id: "complaint_close", module: "complaints", action: "close", label: "Close Complaint", description: "Verify and close complaint", requiresAudit: true },
+    ],
+  },
+  {
     id: "training",
     name: "Training Management",
     description: "Training requirements, records and quizzes",
-    order: 5,
+    order: 6,
     permissions: [
       { id: "train_view", module: "training", action: "view", label: "View My Training", description: "View personal training status", requiresAudit: false },
       { id: "train_manage_view", module: "training", action: "view", label: "View All Training", description: "View organization-wide training matrix", requiresAudit: false },
@@ -75,7 +88,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     id: "risk_management",
     name: "Risk Management",
     description: "Risk assessment, FMEA, and mitigation",
-    order: 6,
+    order: 7,
     permissions: [
       { id: "risk_view", module: "risk_management", action: "view", label: "View Risk Registry", description: "View risk assessments", requiresAudit: false },
       { id: "risk_create", module: "risk_management", action: "create", label: "Create Assessment", description: "Initiate new risk assessment", requiresAudit: true },
@@ -84,10 +97,23 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     ],
   },
   {
+    id: "equipment",
+    name: "Equipment Management",
+    description: "Equipment tracking, calibration, and maintenance",
+    order: 8,
+    permissions: [
+      { id: "equip_view", module: "equipment", action: "view", label: "View Equipment", description: "Access equipment records and logs", requiresAudit: false },
+      { id: "equip_create", module: "equipment", action: "create", label: "Register Equipment", description: "Add new equipment to system", requiresAudit: true },
+      { id: "equip_edit", module: "equipment", action: "edit", label: "Update Equipment", description: "Modify equipment details and status", requiresAudit: true },
+      { id: "equip_calibrate", module: "equipment", action: "review", label: "Calibration Records", description: "Log calibration and maintenance", requiresAudit: true },
+      { id: "equip_approve", module: "equipment", action: "approve", label: "Approve Equipment", description: "Approve equipment qualification", requiresAudit: true },
+    ],
+  },
+  {
     id: "supplier_quality",
-    name: "Supplier Quality",
+    name: "Supplier Management",
     description: "Supplier qualification, audits, and scorecards",
-    order: 7,
+    order: 9,
     permissions: [
       { id: "supp_view", module: "supplier_quality", action: "view", label: "View Suppliers", description: "View approved supplier list", requiresAudit: false },
       { id: "supp_create", module: "supplier_quality", action: "create", label: "Onboard Supplier", description: "Add new supplier for qualification", requiresAudit: true },
@@ -96,36 +122,64 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     ],
   },
   {
+    id: "product",
+    name: "Product Management",
+    description: "Product specifications, lifecycle, and compliance",
+    order: 10,
+    permissions: [
+      { id: "prod_view", module: "product", action: "view", label: "View Products", description: "Access product catalog and specs", requiresAudit: false },
+      { id: "prod_create", module: "product", action: "create", label: "Create Product", description: "Register new products and formulations", requiresAudit: true },
+      { id: "prod_edit", module: "product", action: "edit", label: "Update Product", description: "Modify product specifications", requiresAudit: true },
+      { id: "prod_approve", module: "product", action: "approve", label: "Approve Product", description: "Approve product for production", requiresAudit: true },
+    ],
+  },
+  {
+    id: "regulatory",
+    name: "Regulatory Management",
+    description: "Regulatory compliance, submissions, and registrations",
+    order: 11,
+    permissions: [
+      { id: "reg_view", module: "regulatory", action: "view", label: "View Submissions", description: "Access regulatory submission records", requiresAudit: false },
+      { id: "reg_create", module: "regulatory", action: "create", label: "Create Submission", description: "Prepare regulatory submissions", requiresAudit: true },
+      { id: "reg_edit", module: "regulatory", action: "edit", label: "Update Submission", description: "Modify submission documents", requiresAudit: true },
+      { id: "reg_approve", module: "regulatory", action: "approve", label: "Approve Submission", description: "Approve regulatory submissions", requiresAudit: true },
+      { id: "reg_export", module: "regulatory", action: "export", label: "Export Reports", description: "Export regulatory reports", requiresAudit: true },
+    ],
+  },
+  {
+    id: "reports",
+    name: "Reports & Analytics",
+    description: "Business intelligence, KPIs, and compliance reports",
+    order: 12,
+    permissions: [
+      { id: "report_view", module: "reports", action: "view", label: "View Reports", description: "Access standard reports and dashboards", requiresAudit: false },
+      { id: "report_create", module: "reports", action: "create", label: "Create Reports", description: "Build custom reports and queries", requiresAudit: false },
+      { id: "report_export", module: "reports", action: "export", label: "Export Reports", description: "Export reports to PDF/Excel", requiresAudit: true },
+    ],
+  },
+  {
     id: "audit_trail",
-    name: "Audit Trail & Logs",
+    name: "Audit Trail System",
     description: "System audit logs, compliance reporting, and e-signatures",
-    order: 8,
+    order: 13,
     permissions: [
       { id: "audit_view", module: "audit_trail", action: "view", label: "View Audit Logs", description: "Access comprehensive audit trail", requiresAudit: false },
       { id: "audit_export", module: "audit_trail", action: "export", label: "Export Audit Logs", description: "Export logs for regulatory inspection", requiresAudit: true },
     ],
   },
   {
-    id: "user_management",
-    name: "User & Role Management",
-    description: "User accounts, roles, and security settings",
-    order: 9,
-    permissions: [
-      { id: "user_view", module: "user_management", action: "view", label: "View Users", description: "View user directory", requiresAudit: false },
-      { id: "user_create", module: "user_management", action: "create", label: "Create Users", description: "Provision new user accounts", requiresAudit: true },
-      { id: "user_edit", module: "user_management", action: "edit", label: "Edit Users", description: "Update user profiles and roles", requiresAudit: true },
-      { id: "user_reset", module: "user_management", action: "edit", label: "Reset Password", description: "Trigger password reset for users", requiresAudit: true },
-      { id: "role_manage", module: "user_management", action: "edit", label: "Manage Roles", description: "Create and modify system roles", requiresAudit: true },
-    ],
-  },
-  {
     id: "settings",
     name: "System Settings",
-    description: "General configuration, dictionaries, and parameters",
-    order: 10,
+    description: "General configuration, user management, roles, and parameters",
+    order: 14,
     permissions: [
       { id: "settings_view", module: "settings", action: "view", label: "View Configuration", description: "View system settings", requiresAudit: false },
       { id: "settings_edit", module: "settings", action: "edit", label: "Edit Configuration", description: "Modify system parameters", requiresAudit: true },
+      { id: "user_view", module: "settings", action: "view", label: "View Users", description: "View user directory", requiresAudit: false },
+      { id: "user_create", module: "settings", action: "create", label: "Create Users", description: "Provision new user accounts", requiresAudit: true },
+      { id: "user_edit", module: "settings", action: "edit", label: "Edit Users", description: "Update user profiles and roles", requiresAudit: true },
+      { id: "user_reset", module: "settings", action: "edit", label: "Reset Password", description: "Trigger password reset for users", requiresAudit: true },
+      { id: "role_manage", module: "settings", action: "edit", label: "Manage Roles", description: "Create and modify system roles", requiresAudit: true },
     ],
   },
 ];
