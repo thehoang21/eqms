@@ -600,7 +600,7 @@ export const AuditTrailView: React.FC = () => {
       <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-6">
+          <div className="md:col-span-2 xl:col-span-6">
             <label className="text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>

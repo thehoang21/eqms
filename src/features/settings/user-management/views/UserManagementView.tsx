@@ -385,7 +385,7 @@ export const UserManagementView: React.FC = () => {
       <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 sm:gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-3">
+          <div className="md:col-span-2 xl:col-span-3">
             <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />

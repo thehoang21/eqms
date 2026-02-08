@@ -204,7 +204,7 @@ export const AuditTrailTab: React.FC = () => {
           {/* Row 1: Search, Action Type, User */}
           
           {/* Search */}
-          <div className="xl:col-span-4 w-full">
+          <div className="md:col-span-2 xl:col-span-4 w-full">
             <label className="text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
