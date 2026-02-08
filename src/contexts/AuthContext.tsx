@@ -33,42 +33,56 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Check authentication status on mount with security checks
   useEffect(() => {
     const checkAuth = async () => {
-      const token = secureStorage.getItem('authToken', true); // Decrypt token
-      const storedUser = secureStorage.getItem('user', true);
+      try {
+        const token = secureStorage.getItem('authToken', true); // Decrypt token
+        const storedUser = secureStorage.getItem('user', true);
 
-      if (token && storedUser) {
-        try {
-          // Validate token expiry
-          if (tokenUtils.isTokenExpired(token)) {
-            auditLog.log('expired_token_on_mount');
+        if (token && storedUser) {
+          try {
+            // Parse user first to ensure it's valid JSON
+            const parsedUser = JSON.parse(storedUser);
+
+            // Validate token expiry (with grace period to avoid race conditions)
+            if (tokenUtils.isTokenExpired(token)) {
+              if (import.meta.env.DEV) console.log('Token expired, clearing auth');
+              auditLog.log('expired_token_on_mount');
+              secureStorage.removeItem('authToken');
+              secureStorage.removeItem('user');
+              setLoading(false);
+              return;
+            }
+
+            // Set authenticated state
+            setUser(parsedUser);
+            setIsAuthenticated(true);
+
+            // Generate CSRF token
+            const csrf = csrfToken.generate();
+            csrfToken.store(csrf);
+
+            auditLog.log('session_restored', { userId: parsedUser.id });
+
+            // Optionally validate token with backend
+            // const currentUser = await authApi.getCurrentUser();
+            // setUser(currentUser);
+          } catch (parseError) {
+            // JSON parse error - clear corrupted data
+            if (import.meta.env.DEV) console.error('Error parsing stored user:', parseError);
+            auditLog.log('auth_parse_error', { error: String(parseError) });
             secureStorage.removeItem('authToken');
             secureStorage.removeItem('user');
-            setLoading(false);
-            return;
           }
-
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          setIsAuthenticated(true);
-
-          // Generate CSRF token
-          const csrf = csrfToken.generate();
-          csrfToken.store(csrf);
-
-          auditLog.log('session_restored', { userId: parsedUser.id });
-
-          // Optionally validate token with backend
-          // const currentUser = await authApi.getCurrentUser();
-          // setUser(currentUser);
-        } catch (error) {
-          if (import.meta.env.DEV) console.error('Error parsing stored user:', error);
-          auditLog.log('auth_check_error', { error: String(error) });
-          secureStorage.removeItem('authToken');
-          secureStorage.removeItem('user');
         }
+      } catch (decryptError) {
+        // Decryption error - clear potentially corrupted storage
+        if (import.meta.env.DEV) console.error('Decryption error:', decryptError);
+        auditLog.log('auth_decrypt_error', { error: String(decryptError) });
+        secureStorage.removeItem('authToken');
+        secureStorage.removeItem('user');
+      } finally {
+        // Always set loading to false
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     checkAuth();
@@ -107,7 +121,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           role: 'admin',
           department: 'Quality Assurance',
         };
-        const demoToken = btoa(JSON.stringify({ sub: '1', exp: Math.floor(Date.now() / 1000) + 86400 }));
+        // Token expires in 7 days (604800 seconds) instead of 1 day
+        const demoToken = btoa(JSON.stringify({ 
+          sub: '1', 
+          exp: Math.floor(Date.now() / 1000) + 604800 
+        }));
         
         secureStorage.setItem('authToken', demoToken, true);
         secureStorage.setItem('user', JSON.stringify(demoUser), true);

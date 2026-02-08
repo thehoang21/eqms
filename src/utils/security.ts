@@ -123,7 +123,7 @@ export const secureStorage = {
       const stored = encrypt ? encryptData(value) : value;
       localStorage.setItem(key, stored);
     } catch (error) {
-      if (import.meta.env.DEV) console.error('Storage error:', error);
+      if (import.meta.env.DEV) console.error('Storage set error:', error);
     }
   },
 
@@ -131,19 +131,38 @@ export const secureStorage = {
     try {
       const stored = localStorage.getItem(key);
       if (!stored) return null;
-      return decrypt ? decryptData(stored) : stored;
+      
+      if (!decrypt) return stored;
+      
+      // Try to decrypt, if fails return null (not the corrupted data)
+      try {
+        return decryptData(stored);
+      } catch (decryptError) {
+        if (import.meta.env.DEV) console.error('Decrypt error for key:', key, decryptError);
+        // Remove corrupted data
+        localStorage.removeItem(key);
+        return null;
+      }
     } catch (error) {
-      if (import.meta.env.DEV) console.error('Retrieval error:', error);
+      if (import.meta.env.DEV) console.error('Storage get error:', error);
       return null;
     }
   },
 
   removeItem: (key: string): void => {
-    localStorage.removeItem(key);
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      if (import.meta.env.DEV) console.error('Storage remove error:', error);
+    }
   },
 
   clear: (): void => {
-    localStorage.clear();
+    try {
+      localStorage.clear();
+    } catch (error) {
+      if (import.meta.env.DEV) console.error('Storage clear error:', error);
+    }
   },
 };
 
