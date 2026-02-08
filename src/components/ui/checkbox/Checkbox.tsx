@@ -47,8 +47,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   return (
-    <div className={cn('flex items-center', className)}>
-      <div className="relative min-w-[44px] min-h-[44px] flex items-center justify-start">
+    <div className={cn('flex items-center gap-2', className)}>
+      <div className="relative flex items-center justify-start">
         <input
           id={checkboxId}
           type="checkbox"
