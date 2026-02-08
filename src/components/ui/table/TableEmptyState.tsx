@@ -43,7 +43,7 @@ export const TableEmptyState: React.FC<TableEmptyStateProps> = ({
         {description}
       </p>
       {onAction && (
-        <Button variant="outline" size="sm" onClick={onAction}>
+        <Button variant="outline" size="sm" onClick={onAction} type="button">
           {actionLabel}
         </Button>
       )}
