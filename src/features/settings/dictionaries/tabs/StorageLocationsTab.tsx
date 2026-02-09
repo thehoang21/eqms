@@ -168,7 +168,6 @@ export const StorageLocationsTab: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col gap-6 min-h-0">
       {/* Filter Card */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search Input */}
           <div className="md:col-span-2 xl:col-span-6">
@@ -216,7 +215,6 @@ export const StorageLocationsTab: React.FC = () => {
             </Button>
           </div>
         </div>
-      </div>
 
       {/* Table Container */}
       <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-w-0 overflow-hidden">

@@ -20,7 +20,6 @@ interface Dictionary {
   id: DictionaryType;
   label: string;
   icon: React.ElementType;
-  description: string;
 }
 
 // --- Tab Configuration ---
@@ -29,33 +28,26 @@ const DICTIONARIES: Dictionary[] = [
     id: "document-types",
     label: "Document Types",
     icon: IconFileCode2,
-    description: "Manage document type classifications with auto-numbering codes",
   },
   {
     id: "departments",
     label: "Departments",
     icon: Building2,
-    description: "Organizational departments and divisions",
   },
   {
     id: "storage-locations",
     label: "Storage Locations",
     icon: MapPin,
-    description: "Physical and digital storage locations for documents",
   },
   {
     id: "retention-policies",
     label: "Retention Policies",
     icon: Archive,
-    description: "Document retention and archival policies",
   },
 ];
 
 export const DictionariesView: React.FC = () => {
   const [selectedDictionary, setSelectedDictionary] = useState<DictionaryType>("document-types");
-
-  // Get current dictionary config
-  const currentDictConfig = DICTIONARIES.find((d) => d.id === selectedDictionary)!;
 
   // Render active tab content
   const renderTabContent = () => {
@@ -91,46 +83,37 @@ export const DictionariesView: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col gap-6 min-h-0">
-        {/* Tab Navigation */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="border-b border-slate-200">
-            <div className="flex overflow-x-auto">
-              {DICTIONARIES.map((dict) => {
-                const Icon = dict.icon;
-                const isSelected = selectedDictionary === dict.id;
-                return (
-                  <button
-                    key={dict.id}
-                    onClick={() => setSelectedDictionary(dict.id)}
-                    className={cn(
-                      "flex items-center justify-center gap-2 px-4 md:px-6 py-4 text-sm font-medium border-b-2 transition-all whitespace-nowrap",
-                      isSelected
-                        ? "border-emerald-600 text-emerald-700"
-                        : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
-                    )}
-                  >
-                    <Icon
-                      className={cn(
-                        "h-4 w-4 shrink-0",
-                        isSelected ? "text-emerald-600" : "text-slate-400"
-                      )}
-                    />
-                    <span className="hidden md:inline">{dict.label}</span>
-                  </button>
-                );
-              })}
-            </div>
+      <div className="flex-1 flex flex-col min-h-0">
+        {/* Tabs & Content Combined */}
+        <div className="flex-1 flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          {/* Tab Navigation */}
+          <div className="flex overflow-x-auto border-b border-slate-200">
+            {DICTIONARIES.map((dict) => {
+              const Icon = dict.icon;
+              const isSelected = selectedDictionary === dict.id;
+              return (
+                <button
+                  key={dict.id}
+                  onClick={() => setSelectedDictionary(dict.id)}
+                  className={cn(
+                    "px-4 py-2.5 text-sm font-medium transition-colors relative flex items-center gap-2 border-b-2 border-r border-slate-200 last:border-r-0 whitespace-nowrap",
+                    isSelected
+                      ? "border-b-emerald-600 text-emerald-700 bg-emerald-50/50"
+                      : "border-b-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="hidden md:inline">{dict.label}</span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Description */}
-          <div className="px-6 py-3 bg-slate-50 border-b border-slate-200">
-            <p className="text-sm text-slate-600">{currentDictConfig.description}</p>
+          {/* Tab Content */}
+          <div className="flex-1 overflow-auto p-6">
+            {renderTabContent()}
           </div>
         </div>
-
-        {/* Tab Content */}
-        {renderTabContent()}
       </div>
     </div>
   );

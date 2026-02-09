@@ -31,6 +31,7 @@ import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
+import { DocumentFilters } from "@/features/documents/shared/components";
 import { cn } from "@/components/ui/utils";
 import {
   IconInfoCircle,
@@ -72,6 +73,7 @@ const mapStatusToType = (status: string): StatusType => {
     Draft: "draft",
     Approved: "approved",
     Archive: "archived",
+    Effective: "effective",
   };
   return mapping[status] || "draft";
 };
@@ -99,6 +101,8 @@ const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => ({
   author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Davis", "Robert Brown"][i % 4],
 }));
 
+// --- Filters Component (removed - using shared DocumentFilters instead) ---
+
 // Default columns configuration
 const DEFAULT_COLUMNS: TableColumn[] = [
   { id: "no", label: "No.", visible: true, order: 0, locked: true },
@@ -117,164 +121,6 @@ const DEFAULT_COLUMNS: TableColumn[] = [
   { id: "action", label: "Action", visible: true, order: 13, locked: true },
 ];
 
-// --- Filters Component ---
-interface MyRevisionFiltersProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  statusFilter: DocumentStatus | "All";
-  onStatusChange: (value: DocumentStatus | "All") => void;
-  typeFilter: DocumentType | "All";
-  onTypeChange: (value: DocumentType | "All") => void;
-  createdFromDate: string;
-  onCreatedFromDateChange: (value: string) => void;
-  createdToDate: string;
-  onCreatedToDateChange: (value: string) => void;
-  effectiveFromDate: string;
-  onEffectiveFromDateChange: (value: string) => void;
-  effectiveToDate: string;
-  onEffectiveToDateChange: (value: string) => void;
-  validFromDate: string;
-  onValidFromDateChange: (value: string) => void;
-  validToDate: string;
-  onValidToDateChange: (value: string) => void;
-}
-
-const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
-  searchQuery,
-  onSearchChange,
-  statusFilter,
-  onStatusChange,
-  typeFilter,
-  onTypeChange,
-  createdFromDate,
-  onCreatedFromDateChange,
-  createdToDate,
-  onCreatedToDateChange,
-  effectiveFromDate,
-  onEffectiveFromDateChange,
-  effectiveToDate,
-  onEffectiveToDateChange,
-  validFromDate,
-  onValidFromDateChange,
-  validToDate,
-  onValidToDateChange,
-}) => {
-  const statusOptions = [
-    { label: "All Status", value: "All" },
-    { label: "Draft", value: "Draft" },
-    { label: "Pending Review", value: "Pending Review" },
-    { label: "Pending Approval", value: "Pending Approval" },
-    { label: "Approved", value: "Approved" },
-  ];
-
-  const typeOptions = [
-    { label: "All Types", value: "All" },
-    { label: "SOP", value: "SOP" },
-    { label: "Policy", value: "Policy" },
-    { label: "Form", value: "Form" },
-    { label: "Report", value: "Report" },
-  ];
-
-  return (
-    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-        {/* Row 1: Search + Status + Type */}
-        <div className="md:col-span-2 xl:col-span-6">
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
-            Search
-          </label>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search revisions..."
-              value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full h-10 sm:h-10 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
-            />
-          </div>
-        </div>
-
-        <div className="xl:col-span-3">
-          <Select
-            label="Status"
-            value={statusFilter}
-            onChange={(value) =>
-              onStatusChange(value as DocumentStatus | "All")
-            }
-            options={statusOptions}
-          />
-        </div>
-
-        <div className="xl:col-span-3">
-          <Select
-            label="Type"
-            value={typeFilter}
-            onChange={(value) => onTypeChange(value as DocumentType | "All")}
-            options={typeOptions}
-          />
-        </div>
-
-        {/* Row 2: Created From + Created To + Effective From + Effective To */}
-        <div className="xl:col-span-3">
-          <DateTimePicker
-            label="Created From"
-            value={createdFromDate}
-            onChange={onCreatedFromDateChange}
-            placeholder="Select start date"
-          />
-        </div>
-
-        <div className="xl:col-span-3">
-          <DateTimePicker
-            label="Created To"
-            value={createdToDate}
-            onChange={onCreatedToDateChange}
-            placeholder="Select end date"
-          />
-        </div>
-
-        <div className="xl:col-span-3">
-          <DateTimePicker
-            label="Effective From"
-            value={effectiveFromDate}
-            onChange={onEffectiveFromDateChange}
-            placeholder="Select start date"
-          />
-        </div>
-
-        <div className="xl:col-span-3">
-          <DateTimePicker
-            label="Effective To"
-            value={effectiveToDate}
-            onChange={onEffectiveToDateChange}
-            placeholder="Select end date"
-          />
-        </div>
-
-        {/* Row 3: Valid From + Valid To */}
-        <div className="xl:col-span-3">
-          <DateTimePicker
-            label="Valid From"
-            value={validFromDate}
-            onChange={onValidFromDateChange}
-            placeholder="Select start date"
-          />
-        </div>
-
-        <div className="xl:col-span-3">
-          <DateTimePicker
-            label="Valid To"
-            value={validToDate}
-            onChange={onValidToDateChange}
-            placeholder="Select end date"
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
 // --- Main Component ---
 export const RevisionsOwnedByMeView: React.FC = () => {
   const navigate = useNavigate();
@@ -285,6 +131,8 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     "All",
   );
   const [typeFilter, setTypeFilter] = useState<DocumentType | "All">("All");
+  const [departmentFilter, setDepartmentFilter] = useState("All");
+  const [authorFilter, setAuthorFilter] = useState("All");
   const [createdFromDate, setCreatedFromDate] = useState("");
   const [createdToDate, setCreatedToDate] = useState("");
   const [effectiveFromDate, setEffectiveFromDate] = useState("");
@@ -323,11 +171,14 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         revision.revisionName
           .toLowerCase()
           .includes(searchQuery.toLowerCase()) ||
+        revision.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
         revision.documentName.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesStatus =
         statusFilter === "All" || revision.state === statusFilter;
       const matchesType = typeFilter === "All" || revision.type === typeFilter;
+      const matchesDepartment = departmentFilter === "All" || revision.department === departmentFilter;
+      const matchesAuthor = authorFilter === "All" || revision.author === authorFilter;
 
       const matchesCreatedDate =
         (!createdFromDate || revision.created >= createdFromDate) &&
@@ -345,6 +196,8 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         matchesSearch &&
         matchesStatus &&
         matchesType &&
+        matchesDepartment &&
+        matchesAuthor &&
         matchesCreatedDate &&
         matchesEffectiveDate &&
         matchesValidDate
@@ -354,6 +207,8 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     searchQuery,
     statusFilter,
     typeFilter,
+    departmentFilter,
+    authorFilter,
     createdFromDate,
     createdToDate,
     effectiveFromDate,
@@ -537,7 +392,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <MyRevisionFilters
+      <DocumentFilters
         searchQuery={searchQuery}
         onSearchChange={(value) => {
           setSearchQuery(value);
@@ -553,36 +408,48 @@ export const RevisionsOwnedByMeView: React.FC = () => {
           setTypeFilter(value);
           setCurrentPage(1);
         }}
+        departmentFilter={departmentFilter}
+        onDepartmentChange={(value) => {
+          setDepartmentFilter(value);
+          setCurrentPage(1);
+        }}
+        authorFilter={authorFilter}
+        onAuthorChange={(value) => {
+          setAuthorFilter(value);
+          setCurrentPage(1);
+        }}
         createdFromDate={createdFromDate}
-        onCreatedFromDateChange={(value) => {
-          setCreatedFromDate(value);
+        onCreatedFromDateChange={(dateStr) => {
+          setCreatedFromDate(dateStr);
           setCurrentPage(1);
         }}
         createdToDate={createdToDate}
-        onCreatedToDateChange={(value) => {
-          setCreatedToDate(value);
+        onCreatedToDateChange={(dateStr) => {
+          setCreatedToDate(dateStr);
           setCurrentPage(1);
         }}
         effectiveFromDate={effectiveFromDate}
-        onEffectiveFromDateChange={(value) => {
-          setEffectiveFromDate(value);
+        onEffectiveFromDateChange={(dateStr) => {
+          setEffectiveFromDate(dateStr);
           setCurrentPage(1);
         }}
         effectiveToDate={effectiveToDate}
-        onEffectiveToDateChange={(value) => {
-          setEffectiveToDate(value);
+        onEffectiveToDateChange={(dateStr) => {
+          setEffectiveToDate(dateStr);
           setCurrentPage(1);
         }}
         validFromDate={validFromDate}
-        onValidFromDateChange={(value) => {
-          setValidFromDate(value);
+        onValidFromDateChange={(dateStr) => {
+          setValidFromDate(dateStr);
           setCurrentPage(1);
         }}
         validToDate={validToDate}
-        onValidToDateChange={(value) => {
-          setValidToDate(value);
+        onValidToDateChange={(dateStr) => {
+          setValidToDate(dateStr);
           setCurrentPage(1);
         }}
+        showTypeFilter={true}
+        showDepartmentFilter={true}
       />
 
       {/* Table Container */}
@@ -669,6 +536,8 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                 setSearchQuery("");
                 setStatusFilter("All");
                 setTypeFilter("All");
+                setDepartmentFilter("All");
+                setAuthorFilter("All");
                 setCreatedFromDate("");
                 setCreatedToDate("");
                 setEffectiveFromDate("");
