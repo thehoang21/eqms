@@ -14,6 +14,7 @@ export interface FormModalProps {
   confirmText?: string;
   cancelText?: string;
   isLoading?: boolean;
+  confirmDisabled?: boolean;
   showCancel?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   className?: string;
@@ -37,6 +38,7 @@ export const FormModal: React.FC<FormModalProps> = ({
   confirmText = 'Save',
   cancelText = 'Cancel',
   isLoading = false,
+  confirmDisabled = false,
   showCancel = true,
   size = 'xl',
   className,
@@ -78,7 +80,7 @@ export const FormModal: React.FC<FormModalProps> = ({
               {cancelText}
             </Button>
           )}
-          <Button size="sm" onClick={onConfirm || onClose} disabled={isLoading}>
+          <Button size="sm" onClick={onConfirm || onClose} disabled={isLoading || confirmDisabled}>
             {isLoading ? 'Processing...' : confirmText}
           </Button>
         </div>

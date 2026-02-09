@@ -591,7 +591,17 @@ export const CAPAView: React.FC = () => {
             title="No CAPAs Found"
             description="We couldn't find any CAPA records matching your filters. Try adjusting your search criteria or clear filters."
             actionLabel="Clear Filters"
-            onAction={() => window.location.reload()}
+            onAction={() => {
+              setFilters({
+                searchQuery: "",
+                typeFilter: "All",
+                sourceFilter: "All",
+                statusFilter: "All",
+                dateFrom: "",
+                dateTo: "",
+              });
+              setCurrentPage(1);
+            }}
           />
         )}
       </div>

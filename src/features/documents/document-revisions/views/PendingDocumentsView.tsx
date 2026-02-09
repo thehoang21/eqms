@@ -656,7 +656,19 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({ view
             title="No Pending Documents Found"
             description="We couldn't find any pending documents for review or approval matching your filters. Try adjusting your search criteria or clear filters."
             actionLabel="Clear Filters"
-            onAction={() => window.location.reload()}
+            onAction={() => {
+              setSearchQuery("");
+              setTypeFilter("All");
+              setDepartmentFilter("All");
+              setAuthorFilter(CURRENT_USER.name);
+              setCreatedFromDate("");
+              setCreatedToDate("");
+              setEffectiveFromDate("");
+              setEffectiveToDate("");
+              setValidFromDate("");
+              setValidToDate("");
+              setCurrentPage(1);
+            }}
           />
         )}
       </div>

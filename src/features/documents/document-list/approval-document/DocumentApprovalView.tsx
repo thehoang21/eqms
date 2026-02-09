@@ -20,6 +20,9 @@ import {
     DocumentTab,
     SignaturesTab,
     AuditTrailTab,
+    WorkingNotesTab,
+    DocumentInformationTab,
+    ReviewSignaturesTab,
 } from "@/features/documents/document-detail/tabs";
 import { IconMessage2 } from "@tabler/icons-react";
 
@@ -27,7 +30,7 @@ import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 
 // --- Types ---
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
-type TabType = "document" | "general" | "training" | "signatures" | "audit";
+type TabType = "document" | "general" | "workingNotes" | "documentInfo" | "training" | "reviewers" | "approvers" | "signatures" | "audit";
 
 interface Approver {
     id: string;
@@ -463,7 +466,11 @@ export const DocumentApprovalView: React.FC<DocumentApprovalViewProps> = ({
                 </div>
             )}
             {activeTab === "general" && <GeneralInformationTab document={document} isReadOnly={true} />}
+            {activeTab === "workingNotes" && <WorkingNotesTab isReadOnly />}
+            {activeTab === "documentInfo" && <DocumentInformationTab isReadOnly />}
             {activeTab === "training" && <TrainingInformationTab />}
+            {activeTab === "reviewers" && <ReviewSignaturesTab type="reviewers" />}
+            {activeTab === "approvers" && <ReviewSignaturesTab type="approvers" />}
             {activeTab === "signatures" && <SignaturesTab />}
             {activeTab === "audit" && <AuditTrailTab />}
 

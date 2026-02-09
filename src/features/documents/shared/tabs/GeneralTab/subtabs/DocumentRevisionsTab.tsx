@@ -5,57 +5,14 @@ import { TablePagination } from "@/components/ui/table/TablePagination";
 import { Revision } from "./types";
 
 interface DocumentRevisionsTabProps {
+    revisions?: Revision[];
     onCountChange?: (count: number) => void;
 }
 
-export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ onCountChange }) => {
+export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revisions = [], onCountChange }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-
-    // TODO: API Integration - Replace with API call
-    const [revisions, setRevisions] = useState<Revision[]>([
-        {
-            id: "1",
-            revisionNumber: "R001",
-            created: "2024-01-15",
-            openedBy: "John Doe",
-            revisionName: "Initial Release",
-            state: "effective"
-        },
-        {
-            id: "2",
-            revisionNumber: "R002",
-            created: "2024-02-20",
-            openedBy: "Jane Smith",
-            revisionName: "Updated Requirements Section 3.2",
-            state: "approved"
-        },
-        {
-            id: "3",
-            revisionNumber: "R003",
-            created: "2024-03-10",
-            openedBy: "Mike Johnson",
-            revisionName: "Major Revision - Document Restructure",
-            state: "draft"
-        },
-        {
-            id: "4",
-            revisionNumber: "R004",
-            created: "2024-03-15",
-            openedBy: "Sarah Williams",
-            revisionName: "Safety Guidelines Update",
-            state: "pendingReview"
-        },
-        {
-            id: "5",
-            revisionNumber: "R005",
-            created: "2024-03-20",
-            openedBy: "David Brown",
-            revisionName: "Quality Control Procedures",
-            state: "approved"
-        },
-    ]);
 
     // Filter revisions based on search query
     const filteredRevisions = useMemo(() => {
@@ -79,8 +36,8 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ onCo
 
     // Update counter when revisions change
     useEffect(() => {
-        onCountChange?.(revisions.length);
-    }, [revisions.length, onCountChange]);
+        onCountChange?.(revisions?.length || 0);
+    }, [revisions, onCountChange]);
 
     return (
         <div className="space-y-4">

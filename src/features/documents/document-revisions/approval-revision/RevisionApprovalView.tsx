@@ -16,12 +16,13 @@ import { useToast } from '@/components/ui/toast';
 import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
 import { GeneralTab, TrainingTab, SignaturesTab, AuditTab, type GeneralTabFormData } from "@/features/documents/shared/tabs";
+import { WorkingNotesTab, DocumentInformationTab, ReviewSignaturesTab } from "@/features/documents/document-detail/tabs";
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconMessage2 } from "@tabler/icons-react";
 
 // --- Types ---
 type ApprovalStatus = 'pending' | 'approved' | 'rejected';
-type TabType = "document" | "general" | "training" | "signatures" | "audit";
+type TabType = "document" | "general" | "workingNotes" | "documentInfo" | "training" | "reviewers" | "approvers" | "signatures" | "audit";
 
 interface Approver {
     id: string;
@@ -407,7 +408,11 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                     onFormChange={setFormData}
                 />
             )}
+            {activeTab === "workingNotes" && <WorkingNotesTab isReadOnly />}
+            {activeTab === "documentInfo" && <DocumentInformationTab isReadOnly />}
             {activeTab === "training" && <TrainingTab isReadOnly />}
+            {activeTab === "reviewers" && <ReviewSignaturesTab type="reviewers" />}
+            {activeTab === "approvers" && <ReviewSignaturesTab type="approvers" />}
             {activeTab === "signatures" && <SignaturesTab />}
             {activeTab === "audit" && <AuditTab />}
 

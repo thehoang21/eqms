@@ -171,7 +171,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
   return (
     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-        {/* Search */}
+        {/* Row 1: Search + Status + Type */}
         <div className="md:col-span-2 xl:col-span-6">
           <label className="block text-sm font-medium text-slate-700 mb-1.5">
             Search
@@ -188,7 +188,6 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           </div>
         </div>
 
-        {/* Status Filter */}
         <div className="xl:col-span-3">
           <Select
             label="Status"
@@ -200,7 +199,6 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           />
         </div>
 
-        {/* Type Filter */}
         <div className="xl:col-span-3">
           <Select
             label="Type"
@@ -210,8 +208,8 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           />
         </div>
 
-        {/* Created From Date */}
-        <div className="xl:col-span-2">
+        {/* Row 2: Created From + Created To + Effective From + Effective To */}
+        <div className="xl:col-span-3">
           <DateTimePicker
             label="Created From"
             value={createdFromDate}
@@ -220,8 +218,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           />
         </div>
 
-        {/* Created To Date */}
-        <div className="xl:col-span-2">
+        <div className="xl:col-span-3">
           <DateTimePicker
             label="Created To"
             value={createdToDate}
@@ -230,8 +227,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           />
         </div>
 
-        {/* Effective From Date */}
-        <div className="xl:col-span-2">
+        <div className="xl:col-span-3">
           <DateTimePicker
             label="Effective From"
             value={effectiveFromDate}
@@ -240,8 +236,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           />
         </div>
 
-        {/* Effective To Date */}
-        <div className="xl:col-span-2">
+        <div className="xl:col-span-3">
           <DateTimePicker
             label="Effective To"
             value={effectiveToDate}
@@ -250,8 +245,8 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           />
         </div>
 
-        {/* Valid From Date */}
-        <div className="xl:col-span-2">
+        {/* Row 3: Valid From + Valid To */}
+        <div className="xl:col-span-3">
           <DateTimePicker
             label="Valid From"
             value={validFromDate}
@@ -260,8 +255,7 @@ const MyRevisionFilters: React.FC<MyRevisionFiltersProps> = ({
           />
         </div>
 
-        {/* Valid To Date */}
-        <div className="xl:col-span-2">
+        <div className="xl:col-span-3">
           <DateTimePicker
             label="Valid To"
             value={validToDate}
@@ -658,7 +652,18 @@ export const RevisionsOwnedByMeView: React.FC = () => {
               title="No Revisions Found"
               description="We couldn't find any revision records matching your filters. Try adjusting your search criteria or clear filters."
               actionLabel="Clear Filters"
-              onAction={() => window.location.reload()}
+              onAction={() => {
+                setSearchQuery("");
+                setStatusFilter("All");
+                setTypeFilter("All");
+                setCreatedFromDate("");
+                setCreatedToDate("");
+                setEffectiveFromDate("");
+                setEffectiveToDate("");
+                setValidFromDate("");
+                setValidToDate("");
+                setCurrentPage(1);
+              }}
             />
           )}
         </div>

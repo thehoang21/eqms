@@ -3,10 +3,12 @@ import { Users, Plus, Trash2, Search, User, X, ShieldCheck, Check, GripVertical,
 import { createPortal } from "react-dom";
 import { IconListNumbers } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
+import { cn } from "@/components/ui/utils";
 
 interface Reviewer {
     id: string;
     name: string;
+    username?: string;
     role: string;
     email: string;
     department: string;
@@ -27,11 +29,11 @@ type ReviewFlowType = 'sequential' | 'parallel';
 
 // Mock Data for User Selection
 const MOCK_USERS = [
-    { id: '1', name: 'Nguyen Van A', role: 'QA Manager', department: 'Quality Assurance', email: 'a.nguyen@example.com' },
-    { id: '2', name: 'Tran Thi B', role: 'Director', department: 'Board of Directors', email: 'b.tran@example.com' },
-    { id: '3', name: 'Le Van C', role: 'Production Manager', department: 'Production', email: 'c.le@example.com' },
-    { id: '4', name: 'Pham Thi D', role: 'Technical Lead', department: 'Technical', email: 'd.pham@example.com' },
-    { id: '5', name: 'Hoang Van E', role: 'Quality Control', department: 'Quality Control', email: 'e.hoang@example.com' },
+    { id: '1', name: 'Nguyen Van A', username: 'nguyenvana', role: 'QA Manager', department: 'Quality Assurance', email: 'a.nguyen@example.com' },
+    { id: '2', name: 'Tran Thi B', username: 'tranthib', role: 'Director', department: 'Board of Directors', email: 'b.tran@example.com' },
+    { id: '3', name: 'Le Van C', username: 'levanc', role: 'Production Manager', department: 'Production', email: 'c.le@example.com' },
+    { id: '4', name: 'Pham Thi D', username: 'phamthid', role: 'Technical Lead', department: 'Technical', email: 'd.pham@example.com' },
+    { id: '5', name: 'Hoang Van E', username: 'hoangvane', role: 'Quality Control', department: 'Quality Control', email: 'e.hoang@example.com' },
 ];
 
 interface UserSelectionModalProps {
@@ -119,7 +121,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                                         key={user.id}
                                         onClick={() => !isAlreadyAdded && handleToggleUser(user.id)}
                                         disabled={isAlreadyAdded}
-                                        className={`w-full flex items-center gap-3 py-3 transition-all group text-left ${
+                                        className={`w-full flex items-center gap-3 py-1.5 transition-all group text-left ${
                                             isSelected 
                                                 ? "bg-emerald-50/80" 
                                                 : isAlreadyAdded
@@ -137,7 +139,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                                                 {user.name}
                                                 {isAlreadyAdded && <span className="ml-2 text-xs text-slate-500 font-normal">(Already Added)</span>}
                                             </div>
-                                            <div className="text-xs text-slate-500 truncate">{user.role} • {user.department}</div>
+                                            <div className="text-xs text-slate-500 truncate">{user.username} | {user.role} • {user.department}</div>
                                         </div>
                                         {isSelected && (
                                             <div className="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-lg shrink-0">
@@ -217,6 +219,7 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
         const newReviewers = users.map((user, idx) => ({
             id: user.id,
             name: user.name,
+            username: user.username,
             role: user.role,
             email: user.email,
             department: user.department,
@@ -269,45 +272,53 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
     return (
         <div className="space-y-4">
             {reviewers.length > 0 && (
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
-                    <div>
-                        <label className="text-sm font-medium text-slate-700 block mb-2">Review Flow Type</label>
-                        <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
-                            <Button
-                                onClick={() => onReviewFlowTypeChange('parallel')}
-                                variant={reviewFlowType === 'parallel' ? 'default' : 'ghost'}
-                                size="sm"
-                                className="rounded-lg"
+                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-slate-700 block">
+                            Review Flow Type:
+                        </label>
+                        <div className="py-2 flex items-center gap-3">
+                            <div className="flex items-center gap-2">
+                                <Users className="h-4 w-4 text-slate-500" />
+                                <span className={cn(
+                                    "text-sm font-medium transition-colors",
+                                    reviewFlowType === "parallel" ? "text-slate-900" : "text-slate-400"
+                                )}>
+                                    Parallel
+                                </span>
+                            </div>
+                            <button
+                                onClick={() => onReviewFlowTypeChange(reviewFlowType === "parallel" ? "sequential" : "parallel")}
+                                className={cn(
+                                    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+                                    reviewFlowType === "sequential" ? "bg-emerald-500" : "bg-slate-300"
+                                )}
+                                role="switch"
+                                aria-checked={reviewFlowType === "sequential"}
+                                aria-label="Toggle review flow type"
                             >
-                                <div className="flex items-center gap-2">
-                                    <Users className="h-4 w-4" />
-                                    <span>Parallel</span>
-                                </div>
-                            </Button>
-                            <Button
-                                onClick={() => onReviewFlowTypeChange('sequential')}
-                                variant={reviewFlowType === 'sequential' ? 'default' : 'ghost'}
-                                size="sm"
-                                className="rounded-lg"
-                            >
-                                <div className="flex items-center gap-2">
-                                    <IconListNumbers className="h-4 w-4" />
-                                    <span>Sequential</span>
-                                </div>
-                            </Button>
+                                <span
+                                    className={cn(
+                                        "inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 shadow-sm",
+                                        reviewFlowType === "sequential" ? "translate-x-6" : "translate-x-1"
+                                    )}
+                                />
+                            </button>
+                            <div className="flex items-center gap-2">
+                                <IconListNumbers className="h-4 w-4 text-slate-500" />
+                                <span className={cn(
+                                    "text-sm font-medium transition-colors",
+                                    reviewFlowType === "sequential" ? "text-emerald-700" : "text-slate-400"
+                                )}>
+                                    Sequential
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div className="text-xs text-slate-600 bg-white rounded-lg p-3 border border-slate-200">
-                        {reviewFlowType === 'parallel' ? (
-                            <>
-                                <span className="font-semibold text-slate-900">Parallel Review:</span> All reviewers will receive notification at the same time and can review independently.
-                            </>
-                        ) : (
-                            <>
-                                <span className="font-semibold text-slate-900">Sequential Review:</span> Reviewers will be notified one after another. The next reviewer will only be notified after the previous reviewer approves. Drag to reorder.
-                            </>
-                        )}
+                        <p className="text-xs text-slate-500 mt-2">
+                            {reviewFlowType === "parallel" 
+                                ? "All reviewers receive notification at the same time" 
+                                : "Reviewers notified one after another. Drag to reorder."}
+                        </p>
                     </div>
                 </div>
             )}
@@ -329,6 +340,9 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
                                     </th>
                                     <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                         Position
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        Department
                                     </th>
                                     <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                         Sequence
@@ -360,6 +374,7 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
                                                 <div className="flex items-center gap-3">
                                                     <div>
                                                         <div className="font-medium text-slate-900">{reviewer.name}</div>
+                                                        <div className="text-xs text-slate-500">{reviewer.username}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -368,6 +383,9 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
                                             </td>
                                             <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
                                                 {reviewer.role}
+                                            </td>
+                                            <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                                {reviewer.department}
                                             </td>
                                             <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                                                 {reviewFlowType === 'sequential' ? (

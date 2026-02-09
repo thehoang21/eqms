@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
+import { UploadRevisionModal } from "./modals/UploadRevisionModal";
+import { useAuth } from "@/contexts/AuthContext";
 import { TrainingTab, SignaturesTab, AuditTab } from "@/features/documents/shared/tabs";
 import {
     DocumentRevisionsTab,
@@ -50,6 +52,7 @@ interface Approver {
 
 export const NewDocumentView: React.FC = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState<TabType>("general");
     const [isSaving, setIsSaving] = useState(false);
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
@@ -57,6 +60,7 @@ export const NewDocumentView: React.FC = () => {
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [isObsoleteModalOpen, setIsObsoleteModalOpen] = useState(false);
+    const [isUploadRevisionModalOpen, setIsUploadRevisionModalOpen] = useState(false);
     const [isSaved, setIsSaved] = useState(false); // Track if document has been saved
     const [documentStatus, setDocumentStatus] = useState<DocumentStatus>("Draft"); // Track current document status
 
@@ -240,6 +244,50 @@ export const NewDocumentView: React.FC = () => {
         navigate("/documents/all");
     };
 
+    const handleUploadRevision = (file: File, note: string, useTemplate: boolean) => {
+        // Generate new revision
+        const now = new Date();
+        const revisionNumber = `0.0.1`; // Always 0.0.1 for new document
+        const created = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+        
+        const newRevision: Revision = {
+            id: `rev-${Date.now()}`,
+            revisionNumber,
+            created,
+            openedBy: user?.username || "Unknown User",
+            revisionName: note || file.name,
+            state: "draft",
+        };
+
+        // Keep only the latest revision for new document
+        setRevisions([newRevision]);
+
+        // Replace file in uploaded files for preview in Document tab (only 1 file allowed)
+        const newUploadedFile: UploadedFile = {
+            id: `file-${Date.now()}`,
+            file,
+            progress: 100,
+            status: "success",
+        };
+        setUploadedFiles([newUploadedFile]);
+        
+        // Select the new file for preview
+        setSelectedFile(file);
+        
+        // Close modal
+        setIsUploadRevisionModalOpen(false);
+        
+        // Switch to Document tab to show preview
+        setActiveTab("document");
+
+        console.log("Revision uploaded:", {
+            revision: newRevision,
+            file: file.name,
+            note,
+            useTemplate,
+        });
+    };
+
     // Status workflow steps - simplified for new document creation
     const statusSteps: DocumentStatus[] = ["Draft", "Active", "Obsoleted", "Closed - Cancelled"];
     // currentStepIndex is now calculated in useMemo above based on documentStatus
@@ -393,10 +441,10 @@ export const NewDocumentView: React.FC = () => {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={cn(
-                                        "flex items-center justify-center gap-2 px-4 md:px-6 py-4 text-sm font-medium border-b-2 transition-all whitespace-nowrap",
+                                        "flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap border-r border-slate-200 last:border-r-0",
                                         activeTab === tab.id
-                                            ? "border-emerald-600 text-emerald-700"
-                                            : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
+                                            ? "border-b-emerald-600 text-emerald-700"
+                                            : "border-b-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                                     )}
                                 >
                                     {tab.label}
@@ -501,8 +549,8 @@ export const NewDocumentView: React.FC = () => {
                                     : "Next Step"}
                         </Button>
 
-                        {/* Obsolete button - hidden when obsoleted, only show after saved */}
-                        {documentStatus !== "Obsoleted" && isSaved && (
+                        {/* Obsolete button - only show when document is Active */}
+                        {documentStatus === "Active" && (
                             <Button
                                 onClick={() => setIsObsoleteModalOpen(true)}
                                 size="sm"
@@ -514,12 +562,20 @@ export const NewDocumentView: React.FC = () => {
 
                         {/* Divider - only show when saved and not obsoleted */}
                         {isSaved && documentStatus !== "Obsoleted" && (
-                            <div className="hidden sm:block w-px h-8 bg-slate-200 mx-1" />
+                            <div className=" w-px h-8 bg-slate-500 mx-1" />
                         )}
 
                         {/* Other action buttons - only show after saved and not obsoleted */}
                         {isSaved && documentStatus !== "Obsoleted" && (
                             <>
+                                <Button
+                                    onClick={() => setIsUploadRevisionModalOpen(true)}
+                                    variant="outline"
+                                    size="sm"
+                                    className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
+                                >
+                                    Upload Revision
+                                </Button>
                                 <Button
                                     onClick={() => {
                                         setActiveSubtab("reviewers");
@@ -596,10 +652,10 @@ export const NewDocumentView: React.FC = () => {
                                     key={subtab.id}
                                     onClick={() => setActiveSubtab(subtab.id)}
                                     className={cn(
-                                        "flex items-center gap-1.5 md:gap-2 px-4 md:px-6 py-3 md:py-4 text-xs md:text-sm font-medium transition-colors whitespace-nowrap border-b-2",
+                                        "flex items-center gap-1.5 md:gap-2 px-2.5 md:px-6 py-3 md:py-2.5 text-xs md:text-sm font-medium transition-colors whitespace-nowrap border-b-2 border-r border-slate-200 last:border-r-0",
                                         activeSubtab === subtab.id
-                                            ? "border-emerald-600 text-emerald-600"
-                                            : "border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-200"
+                                            ? "border-b-emerald-600 text-emerald-600"
+                                            : "border-b-transparent text-slate-600 hover:text-slate-900 hover:border-slate-200"
                                     )}
                                 >
                                     {subtab.label}
@@ -610,7 +666,7 @@ export const NewDocumentView: React.FC = () => {
 
                     {/* Subtab Content */}
                     <div className="p-4 md:p-6">
-                        {activeSubtab === "revisions" && <DocumentRevisionsTab />}
+                        {activeSubtab === "revisions" && <DocumentRevisionsTab revisions={revisions} />}
                         {activeSubtab === "reviewers" && (
                             <ReviewersTab
                                 reviewers={reviewers}
@@ -657,6 +713,14 @@ export const NewDocumentView: React.FC = () => {
                 onRelatedModalClose={() => setIsRelatedModalOpen(false)}
                 isCorrelatedModalOpen={isCorrelatedModalOpen}
                 onCorrelatedModalClose={() => setIsCorrelatedModalOpen(false)}
+            />
+
+            <UploadRevisionModal
+                isOpen={isUploadRevisionModalOpen}
+                onClose={() => setIsUploadRevisionModalOpen(false)}
+                onConfirm={handleUploadRevision}
+                documentName={formData.title || "Untitled Document"}
+                revisionNumber={`${revisions.length}.0.${revisions.length + 1}`}
             />
 
             <ESignatureModal

@@ -1199,7 +1199,21 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
             title="No Documents Found"
             description="We couldn't find any documents matching your filters. Try adjusting your search criteria or clear filters."
             actionLabel="Clear Filters"
-            onAction={() => window.location.reload()}
+            onAction={() => {
+              setSearchQuery("");
+              setStatusFilter("All");
+              setTypeFilter("All");
+              setDepartmentFilter("All");
+              setCreatedFromDate("");
+              setCreatedToDate("");
+              setEffectiveFromDate("");
+              setEffectiveToDate("");
+              setValidFromDate("");
+              setValidToDate("");
+              setAuthorFilter(config.defaultAuthorFilter);
+              setVersionFilter("");
+              setCurrentPage(1);
+            }}
           />
         )}
       </div>

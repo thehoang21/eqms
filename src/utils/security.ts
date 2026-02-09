@@ -175,8 +175,13 @@ export const tokenUtils = {
    */
   parseToken: (token: string): any => {
     try {
-      const payload = token.split('.')[1];
-      return JSON.parse(atob(payload));
+      // Try JWT format first (header.payload.signature)
+      if (token.includes('.')) {
+        const payload = token.split('.')[1];
+        return JSON.parse(atob(payload));
+      }
+      // Fallback: try direct base64-encoded JSON (demo token format)
+      return JSON.parse(atob(token));
     } catch (error) {
       if (import.meta.env.DEV) console.error('Token parse error:', error);
       return null;

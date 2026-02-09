@@ -27,6 +27,9 @@ import {
   DocumentTab,
   SignaturesTab,
   AuditTrailTab,
+  WorkingNotesTab,
+  DocumentInformationTab,
+  ReviewSignaturesTab,
 } from "@/features/documents/document-detail/tabs";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
@@ -34,7 +37,7 @@ import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 // --- Types ---
 type ReviewFlowType = "sequential" | "parallel";
 type ReviewStatus = "pending" | "approved" | "rejected" | "completed";
-type TabType = "document" | "general" | "training" | "signatures" | "audit";
+type TabType = "document" | "general" | "workingNotes" | "documentInfo" | "training" | "reviewers" | "approvers" | "signatures" | "audit";
 
 interface Reviewer {
   id: string;
@@ -655,7 +658,11 @@ export const DocumentReviewView: React.FC<DocumentReviewViewProps> = ({
       {activeTab === "general" && (
         <GeneralInformationTab document={document} isReadOnly={true} />
       )}
+      {activeTab === "workingNotes" && <WorkingNotesTab />}
+      {activeTab === "documentInfo" && <DocumentInformationTab />}
       {activeTab === "training" && <TrainingInformationTab />}
+      {activeTab === "reviewers" && <ReviewSignaturesTab type="reviewers" />}
+      {activeTab === "approvers" && <ReviewSignaturesTab type="approvers" />}
       {activeTab === "signatures" && <SignaturesTab />}
       {activeTab === "audit" && <AuditTrailTab />}
 

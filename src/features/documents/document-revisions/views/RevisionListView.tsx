@@ -491,7 +491,20 @@ export const RevisionListView: React.FC = () => {
               title="No Revisions Found"
               description="We couldn't find any revision records matching your filters. Try adjusting your search criteria or clear filters."
               actionLabel="Clear Filters"
-              onAction={() => window.location.reload()}
+              onAction={() => {
+                setSearchQuery("");
+                setStatusFilter("All");
+                setTypeFilter("All");
+                setDepartmentFilter("All");
+                setAuthorFilter("All");
+                setCreatedFromDate("");
+                setCreatedToDate("");
+                setEffectiveFromDate("");
+                setEffectiveToDate("");
+                setValidFromDate("");
+                setValidToDate("");
+                setCurrentPage(1);
+              }}
             />
           )}
         </div>

@@ -534,10 +534,10 @@ export const ReportView: React.FC = () => {
                   setReportType('All');
                 }}
                 className={cn(
-                  'flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap',
+                  'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap border-r border-slate-200 last:border-r-0',
                   activeTab === tab.id
-                    ? 'border-emerald-600 text-emerald-600'
-                    : 'border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300'
+                    ? 'border-b-emerald-600 text-emerald-600'
+                    : 'border-b-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300'
                 )}
               >
                 <Icon className="h-4 w-4" />

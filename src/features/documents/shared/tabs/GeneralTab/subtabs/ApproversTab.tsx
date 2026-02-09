@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button/Button";
 interface Approver {
     id: string;
     name: string;
+    username?: string;
     role: string;
     email: string;
     department: string;
@@ -21,11 +22,11 @@ interface ApproversTabProps {
 
 // Mock Data for User Selection
 const MOCK_USERS = [
-    { id: '1', name: 'Nguyen Van A', role: 'QA Manager', department: 'Quality Assurance', email: 'a.nguyen@example.com' },
-    { id: '2', name: 'Tran Thi B', role: 'Director', department: 'Board of Directors', email: 'b.tran@example.com' },
-    { id: '3', name: 'Le Van C', role: 'Production Manager', department: 'Production', email: 'c.le@example.com' },
-    { id: '4', name: 'Pham Thi D', role: 'Technical Lead', department: 'Technical', email: 'd.pham@example.com' },
-    { id: '5', name: 'Hoang Van E', role: 'Quality Control', department: 'Quality Control', email: 'e.hoang@example.com' },
+    { id: '1', name: 'Nguyen Van A', username: 'nguyenvana', role: 'QA Manager', department: 'Quality Assurance', email: 'a.nguyen@example.com' },
+    { id: '2', name: 'Tran Thi B', username: 'tranthib', role: 'Director', department: 'Board of Directors', email: 'b.tran@example.com' },
+    { id: '3', name: 'Le Van C', username: 'levanc', role: 'Production Manager', department: 'Production', email: 'c.le@example.com' },
+    { id: '4', name: 'Pham Thi D', username: 'phamthid', role: 'Technical Lead', department: 'Technical', email: 'd.pham@example.com' },
+    { id: '5', name: 'Hoang Van E', username: 'hoangvane', role: 'Quality Control', department: 'Quality Control', email: 'e.hoang@example.com' },
 ];
 
 interface UserSelectionModalProps {
@@ -112,7 +113,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                                         key={user.id}
                                         onClick={() => !isAlreadyAdded && handleToggleUser(user.id)}
                                         disabled={isAlreadyAdded}
-                                        className={`w-full flex items-center gap-3 py-3 transition-all group text-left ${
+                                        className={`w-full flex items-center gap-3 py-1.5 transition-all group text-left ${
                                             isSelected 
                                                 ? "bg-emerald-50/80" 
                                                 : isAlreadyAdded
@@ -130,7 +131,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                                                 {user.name}
                                                 {isAlreadyAdded && <span className="ml-2 text-xs text-slate-500 font-normal">(Already Added)</span>}
                                             </div>
-                                            <div className="text-xs text-slate-500 truncate">{user.role} • {user.department}</div>
+                                            <div className="text-xs text-slate-500 truncate">{user.username} | {user.role} • {user.department}</div>
                                         </div>
                                         {isSelected && (
                                             <div className="px-2.5 py-1 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-lg shrink-0">
@@ -217,6 +218,7 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
         const newApprover: Approver = {
             id: user.id,
             name: user.name,
+            username: user.username,
             role: user.role,
             email: user.email,
             department: user.department
@@ -250,6 +252,9 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
                                         Position
                                     </th>
                                     <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                        Department
+                                    </th>
+                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                         Role
                                     </th>
                                     <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-24">
@@ -265,12 +270,9 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
                                         </td>
                                         <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                                             <div className="flex items-center gap-3">
-                                                <div className="h-8 w-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">
-                                                    {approver.name.charAt(0)}
-                                                </div>
                                                 <div>
                                                     <div className="font-medium text-slate-900">{approver.name}</div>
-                                                    <div className="text-xs text-slate-500">{approver.department}</div>
+                                                    <div className="text-xs text-slate-500">{approver.username}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -279,6 +281,9 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
                                         </td>
                                         <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
                                             {approver.role}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                            {approver.department}
                                         </td>
                                         <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                                             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">

@@ -20,7 +20,7 @@ import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
 import type { DocumentStatus } from "@/features/documents/types";
 
 // --- Types ---
-type TabType = "document" | "general" | "training" | "signatures" | "audit";
+type TabType = "document" | "general" | "working-notes" | "documentInfo" | "training" | "reviewers" | "approvers" | "signatures" | "audit";
 
 interface BatchDocument {
     id: string;
@@ -102,8 +102,12 @@ const getStatusIcon = (status: DocumentStatus) => {
 // --- Default Tabs ---
 export const DEFAULT_WORKFLOW_TABS: TabItem[] = [
     { id: "general", label: "General Information" },
+    { id: "working-notes", label: "Working Notes" },
+    { id: "documentInfo", label: "Information from Document" },
     { id: "document", label: "Document" },
     { id: "training", label: "Training" },
+    { id: "reviewers", label: "Reviewers" },
+    { id: "approvers", label: "Approvers" },
     { id: "signatures", label: "Signatures" },
     { id: "audit", label: "Audit Trail" },
 ];
@@ -427,10 +431,10 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                                     key={tab.id}
                                     onClick={() => onTabChange(tab.id)}
                                     className={cn(
-                                        "flex items-center justify-center gap-2 px-4 md:px-6 py-4 text-sm font-medium border-b-2 transition-all whitespace-nowrap",
+                                        "flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 text-sm font-medium border-b-2 transition-all whitespace-nowrap border-r border-slate-200 last:border-r-0",
                                         activeTab === tab.id
-                                            ? "border-emerald-600 text-emerald-700"
-                                            : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
+                                            ? "border-b-emerald-600 text-emerald-700"
+                                            : "border-b-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                                     )}
                                 >
                                     {tab.label}

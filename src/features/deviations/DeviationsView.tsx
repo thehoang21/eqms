@@ -558,7 +558,17 @@ export const DeviationsView: React.FC = () => {
             title="No Deviations Found"
             description="We couldn't find any deviation records matching your filters. Try adjusting your search criteria or clear filters."
             actionLabel="Clear Filters"
-            onAction={() => window.location.reload()}
+            onAction={() => {
+              setFilters({
+                searchQuery: "",
+                categoryFilter: "All",
+                severityFilter: "All",
+                statusFilter: "All",
+                dateFrom: "",
+                dateTo: "",
+              });
+              setCurrentPage(1);
+            }}
           />
         )}
       </div>
