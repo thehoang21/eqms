@@ -487,6 +487,7 @@ export const NewDocumentView: React.FC = () => {
                             onRelatedDocumentsChange={setRelationshipDocs}
                             documentType={formData.type}
                             onSuggestedCodeChange={setSuggestedDocumentCode}
+                            hideUpload={!isSaved}
                         />
                     )}
 

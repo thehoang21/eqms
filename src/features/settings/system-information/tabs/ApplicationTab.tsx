@@ -45,7 +45,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               type="text"
               value={data.name}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
             />
           </div>
           <div>
@@ -56,14 +56,14 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               type="text"
               value={data.version}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono font-semibold"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono font-semibold"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               Environment
             </label>
-            <div className="flex items-center h-11 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
+            <div className="flex items-center h-10 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
               <StatusBadge status={getEnvironmentBadge(data.environment) as any} />
               <span className="ml-2 text-sm text-slate-700 font-medium capitalize">
                 {data.environment}
@@ -78,7 +78,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               type="text"
               value={data.buildNumber}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
             />
           </div>
           <div className="md:col-span-2">
@@ -89,7 +89,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               type="text"
               value={formatDate(data.buildDate)}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
             />
           </div>
         </div>

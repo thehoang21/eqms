@@ -33,6 +33,7 @@ interface DocumentTabProps {
   onSelectFile: (file: File | null) => void;
   maxFiles?: number; // Maximum number of files allowed (undefined = unlimited)
   isObsoleted?: boolean; // Disable all file operations when obsoleted
+  hideUpload?: boolean; // Hide upload section and show "no attachment" message
   // Optional extended props for document relationships
   parentDocument?: ParentDocument | null;
   onParentDocumentChange?: (doc: ParentDocument | null) => void;
@@ -49,6 +50,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
   onSelectFile,
   maxFiles,
   isObsoleted = false,
+  hideUpload = false,
   // Extended props (unused in this component but accepted for compatibility)
   parentDocument: _parentDocument,
   onParentDocumentChange: _onParentDocumentChange,
@@ -163,8 +165,22 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* File Preview and Uploaded Files */}
-      <div className="space-y-4 md:space-y-6">
+      {/* Show "No attachment" message when hideUpload is true */}
+      {hideUpload ? (
+        <div className="border-2 border-dashed rounded-xl flex items-center justify-center bg-slate-50">
+          <div className="text-center p-8">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center">
+              <File className="h-8 w-8 text-slate-400" />
+            </div>
+            <h4 className="text-base font-semibold text-slate-700 mb-2">
+              There is no attachment to display
+            </h4>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* File Preview and Uploaded Files */}
+          <div className="space-y-4 md:space-y-6">
         {/* Uploaded Files List - Horizontal scroll on desktop */}
         {uploadedFiles.length > 0 && (
           <div className="space-y-3">
@@ -398,6 +414,8 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
           })()}
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };

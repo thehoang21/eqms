@@ -53,7 +53,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
               type="text"
               value={data.licenseType}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-semibold"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-semibold"
             />
           </div>
           <div>
@@ -64,7 +64,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
               type="text"
               value={data.companyName}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
             />
           </div>
         </div>
@@ -85,7 +85,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
               type="text"
               value={formatDate(data.issuedDate)}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
             />
           </div>
           <div>
@@ -96,7 +96,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
               type="text"
               value={formatDate(data.expiryDate)}
               disabled
-              className={`w-full h-11 px-3.5 text-sm border rounded-lg cursor-not-allowed font-semibold ${
+              className={`w-full h-10 px-3.5 text-sm border rounded-lg cursor-not-allowed font-semibold ${
                 isExpiringSoon
                   ? "border-amber-300 bg-amber-50 text-amber-900"
                   : "border-slate-200 bg-slate-50 text-slate-700"
@@ -107,7 +107,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               Days Until Expiry
             </label>
-            <div className={`flex items-center h-11 px-3.5 border rounded-lg ${
+            <div className={`flex items-center h-10 px-3.5 border rounded-lg ${
               isExpiringSoon
                 ? "border-amber-300 bg-amber-50"
                 : "border-slate-200 bg-slate-50"

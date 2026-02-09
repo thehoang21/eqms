@@ -68,7 +68,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
               type="text"
               value={data.type}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-semibold"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-semibold"
             />
           </div>
           <div>
@@ -79,7 +79,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
               type="text"
               value={data.version}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
             />
           </div>
           <div>
@@ -90,7 +90,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
               type="text"
               value={data.host}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
             />
           </div>
           <div>
@@ -101,7 +101,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
               type="text"
               value={data.port}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
             />
           </div>
           <div className="md:col-span-2">
@@ -112,7 +112,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
               type="text"
               value={data.database}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
             />
           </div>
         </div>

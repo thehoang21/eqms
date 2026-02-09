@@ -102,7 +102,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                     type="text"
                     value={config.emailConfig.smtpHost}
                     onChange={(e) => handleEmailConfigChange('smtpHost', e.target.value)}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="smtp.gmail.com"
                   />
                 </div>
@@ -114,7 +114,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                     type="number"
                     value={config.emailConfig.smtpPort}
                     onChange={(e) => handleEmailConfigChange('smtpPort', parseInt(e.target.value))}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="587"
                   />
                 </div>
@@ -126,7 +126,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                     type="text"
                     value={config.emailConfig.smtpUsername}
                     onChange={(e) => handleEmailConfigChange('smtpUsername', e.target.value)}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="username@example.com"
                   />
                 </div>
@@ -139,7 +139,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                       type={showSmtpPassword ? "text" : "password"}
                       value={config.emailConfig.smtpPassword}
                       onChange={(e) => handleEmailConfigChange('smtpPassword', e.target.value)}
-                      className="w-full h-11 px-3.5 pr-10 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                      className="w-full h-10 px-3.5 pr-10 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Enter password"
                     />
                     <button
@@ -159,7 +159,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                     type="email"
                     value={config.emailConfig.senderEmail}
                     onChange={(e) => handleEmailConfigChange('senderEmail', e.target.value)}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="noreply@example.com"
                   />
                 </div>
@@ -171,7 +171,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                     type="text"
                     value={config.emailConfig.senderName}
                     onChange={(e) => handleEmailConfigChange('senderName', e.target.value)}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="EQMS Notification"
                   />
                 </div>
@@ -212,7 +212,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                       type={showTelegramToken ? "text" : "password"}
                       value={config.telegramConfig.botToken}
                       onChange={(e) => handleTelegramConfigChange('botToken', e.target.value)}
-                      className="w-full h-11 px-3.5 pr-10 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                      className="w-full h-10 px-3.5 pr-10 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
                       placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz"
                     />
                     <button
@@ -235,7 +235,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                     type="text"
                     value={config.telegramConfig.chatId}
                     onChange={(e) => handleTelegramConfigChange('chatId', e.target.value)}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
                     placeholder="-1001234567890"
                   />
                   <p className="text-xs text-slate-500 mt-1">
@@ -272,7 +272,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                     type="text"
                     value={config.whatsappConfig.phoneNumberId}
                     onChange={(e) => handleWhatsAppConfigChange('phoneNumberId', e.target.value)}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
                     placeholder="123456789012345"
                   />
                   <p className="text-xs text-slate-500 mt-1">
@@ -287,7 +287,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                     type="text"
                     value={config.whatsappConfig.businessAccountId}
                     onChange={(e) => handleWhatsAppConfigChange('businessAccountId', e.target.value)}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
                     placeholder="987654321098765"
                   />
                   <p className="text-xs text-slate-500 mt-1">
@@ -303,7 +303,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                       type={showWhatsAppToken ? "text" : "password"}
                       value={config.whatsappConfig.accessToken}
                       onChange={(e) => handleWhatsAppConfigChange('accessToken', e.target.value)}
-                      className="w-full h-11 px-3.5 pr-10 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                      className="w-full h-10 px-3.5 pr-10 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
                       placeholder="EAAxxxxxxxxxxxxxxxxxx"
                     />
                     <button

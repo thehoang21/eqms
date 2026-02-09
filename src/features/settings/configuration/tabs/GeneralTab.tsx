@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { GeneralConfig } from '../types';
 import { Select } from '@/components/ui/select/Select';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
-import { Upload, Image, FileIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
+import { Upload, Image, FileIcon, X } from 'lucide-react';
 
 interface GeneralTabProps {
   config: GeneralConfig;
@@ -45,7 +46,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                 type="text"
                 value={config.systemName}
                 onChange={(e) => handleChange('systemName', e.target.value)}
-                className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="EQMS Enterprise"
               />
               <p className="text-xs text-slate-500 mt-1">
@@ -60,7 +61,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                 type="text"
                 value={config.systemDisplayName}
                 onChange={(e) => handleChange('systemDisplayName', e.target.value)}
-                className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="EQMS - Quality Management System"
               />
               <p className="text-xs text-slate-500 mt-1">
@@ -92,20 +93,32 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                   </div>
                 )}
                 <div className="flex-1">
-                  <label
-                    htmlFor="logo-upload"
-                    className="inline-flex items-center gap-2 px-4 h-11 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 cursor-pointer transition-colors"
-                  >
-                    <Upload className="h-4 w-4" />
-                    Upload Logo
-                  </label>
-                  <input
-                    id="logo-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleFileUpload('systemLogo', e)}
-                    className="hidden"
-                  />
+                  <div className="flex items-center gap-2">
+                    <label
+                      htmlFor="logo-upload"
+                      className="inline-flex items-center gap-2 px-4 h-10 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 cursor-pointer transition-colors"
+                    >
+                      <Upload className="h-4 w-4" />
+                      Upload Logo
+                    </label>
+                    <input
+                      id="logo-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload('systemLogo', e)}
+                      className="hidden"
+                    />
+                    {config.systemLogo && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleChange('systemLogo', '')}
+                        className="h-10 px-4 !border-red-200 !text-red-600 hover:!bg-red-50 hover:!border-red-300"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                   <p className="text-xs text-slate-500 mt-1.5">
                     Recommended: PNG or SVG, 200x50px
                   </p>
@@ -134,20 +147,32 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                   </div>
                 )}
                 <div className="flex-1">
-                  <label
-                    htmlFor="favicon-upload"
-                    className="inline-flex items-center gap-2 px-4 h-11 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 cursor-pointer transition-colors"
-                  >
-                    <Upload className="h-4 w-4" />
-                    Upload Favicon
-                  </label>
-                  <input
-                    id="favicon-upload"
-                    type="file"
-                    accept="image/x-icon,image/png"
-                    onChange={(e) => handleFileUpload('systemFavicon', e)}
-                    className="hidden"
-                  />
+                  <div className="flex items-center gap-2">
+                    <label
+                      htmlFor="favicon-upload"
+                      className="inline-flex items-center gap-2 px-4 h-10 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 cursor-pointer transition-colors"
+                    >
+                      <Upload className="h-4 w-4" />
+                      Upload Favicon
+                    </label>
+                    <input
+                      id="favicon-upload"
+                      type="file"
+                      accept="image/x-icon,image/png"
+                      onChange={(e) => handleFileUpload('systemFavicon', e)}
+                      className="hidden"
+                    />
+                    {config.systemFavicon && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleChange('systemFavicon', '')}
+                        className="h-10 px-4 !border-red-200 !text-red-600 hover:!bg-red-50 hover:!border-red-300"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                   <p className="text-xs text-slate-500 mt-1.5">
                     Recommended: ICO or PNG, 32x32px
                   </p>
@@ -172,7 +197,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="email"
               value={config.adminEmail}
               onChange={(e) => handleChange('adminEmail', e.target.value)}
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="admin@example.com"
             />
             <p className="text-xs text-slate-500 mt-1">

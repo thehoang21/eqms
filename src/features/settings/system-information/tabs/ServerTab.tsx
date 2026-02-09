@@ -24,7 +24,7 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
               type="text"
               value={data.os}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
             />
           </div>
           <div>
@@ -35,7 +35,7 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
               type="text"
               value={data.nodeVersion}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
             />
           </div>
           <div>
@@ -47,7 +47,7 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
               type="text"
               value={data.uptime}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
             />
           </div>
         </div>
@@ -68,14 +68,14 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
               type="text"
               value={data.cpuModel}
               disabled
-              className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
               CPU Cores
             </label>
-            <div className="flex items-center h-11 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
+            <div className="flex items-center h-10 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
               <span className="text-sm text-slate-700 font-semibold">{data.cpuCores}</span>
               <span className="ml-2 text-sm text-slate-500">cores</span>
             </div>
