@@ -20,7 +20,7 @@ import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
 import type { DocumentStatus } from "@/features/documents/types";
 
 // --- Types ---
-type TabType = "document" | "general" | "working-notes" | "documentInfo" | "training" | "reviewers" | "approvers" | "signatures" | "audit";
+type TabType = "document" | "general" | "workingNotes" | "documentInfo" | "training" | "reviewers" | "approvers" | "signatures" | "audit";
 
 interface BatchDocument {
     id: string;
@@ -102,7 +102,7 @@ const getStatusIcon = (status: DocumentStatus) => {
 // --- Default Tabs ---
 export const DEFAULT_WORKFLOW_TABS: TabItem[] = [
     { id: "general", label: "General Information" },
-    { id: "working-notes", label: "Working Notes" },
+    { id: "workingNotes", label: "Working Notes" },
     { id: "documentInfo", label: "Information from Document" },
     { id: "document", label: "Document" },
     { id: "training", label: "Training" },
