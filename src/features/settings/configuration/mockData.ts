@@ -1,0 +1,68 @@
+import { SystemConfig } from './types';
+
+export const MOCK_SYSTEM_CONFIG: SystemConfig = {
+  general: {
+    systemName: 'EQMS Enterprise',
+    systemDisplayName: 'EQMS - Quality Management System',
+    systemLogo: '/assets/logo.png',
+    systemFavicon: '/assets/favicon.ico',
+    adminEmail: 'admin@eqms.com',
+    maintenanceMode: false,
+    dateTimeFormat: 'DD/MM/YYYY HH:mm:ss',
+    timeZone: 'UTC+7',
+  },
+  security: {
+    passwordMinLength: 12,
+    requireSpecialChars: true,
+    requireNumbers: true,
+    requireUppercase: true,
+    requireLowercase: true,
+    passwordExpiryDays: 90,
+    enablePasswordExpiry: true,
+    preventPasswordReuse: true,
+    passwordHistoryCount: 5,
+    sessionTimeoutMinutes: 30,
+    enable2FA: true,
+    enableAutoLogout: true,
+    autoLogoutMinutes: 15,
+    enableAccountLockout: true,
+    maxLoginAttempts: 5,
+  },
+  documents: {
+    defaultRetentionPeriodDays: 365,
+    enableWatermark: true,
+    allowDownload: false,
+    maxFileSizeMB: 25,
+  },
+  notifications: {
+    enableEmailNotifications: true,
+    enableInAppNotifications: true,
+    enableTelegramNotifications: false,
+    enableWhatsAppNotifications: false,
+    emailDigestFrequency: 'daily',
+    emailConfig: {
+      smtpHost: 'smtp.gmail.com',
+      smtpPort: 587,
+      smtpUsername: 'noreply@eqms.com',
+      smtpPassword: '••••••••••••',
+      senderEmail: 'noreply@eqms.com',
+      senderName: 'EQMS Notification',
+      useSSL: true,
+    },
+    telegramConfig: {
+      botToken: '',
+      chatId: '',
+    },
+    whatsappConfig: {
+      phoneNumberId: '',
+      accessToken: '',
+      businessAccountId: '',
+    },
+    triggers: {
+      documentApproval: true,
+      taskAssignment: true,
+      systemAlerts: true,
+      capaDue: true,
+    },
+  },
+};

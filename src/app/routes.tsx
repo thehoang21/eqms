@@ -52,6 +52,8 @@ const UserManagementView = lazy(() => import('@/features/settings').then(m => ({
 const AddUserView = lazy(() => import('@/features/settings').then(m => ({ default: m.AddUserView })));
 const EditUserView = lazy(() => import('@/features/settings').then(m => ({ default: m.EditUserView })));
 const DictionariesView = lazy(() => import('@/features/settings').then(m => ({ default: m.DictionariesView })));
+const SystemInformationView = lazy(() => import('@/features/settings').then(m => ({ default: m.SystemInformationView })));
+const ConfigurationView = lazy(() => import('@/features/settings').then(m => ({ default: m.ConfigurationView })));
 const RoleListView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RoleListView })));
 const RoleDetailView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RoleDetailView })));
 
@@ -247,8 +249,8 @@ export const AppRoutes: React.FC = () => {
             <Route path=":id" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
           </Route>
           <Route path="dictionaries" element={<Suspense fallback={<LoadingFallback />}><DictionariesView /></Suspense>} />
-          <Route path="config" element={<UnderConstruction />} />
-          <Route path="info-system" element={<UnderConstruction />} />
+          <Route path="config" element={<Suspense fallback={<LoadingFallback />}><ConfigurationView /></Suspense>} />
+          <Route path="info-system" element={<Suspense fallback={<LoadingFallback />}><SystemInformationView /></Suspense>} />
         </Route>
         
         {/* ===== TRAINING MANAGEMENT ===== */}
