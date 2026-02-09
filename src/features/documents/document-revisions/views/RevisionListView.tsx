@@ -57,7 +57,7 @@ const mapStatusToType = (status: string): StatusType => {
 };
 
 // --- Mock Data ---
-const MOCK_REVISIONS: Revision[] = [
+export const MOCK_REVISIONS: Revision[] = [
   // Pending Review items (for testing Review workflow)
   {
     id: "rev-001",
@@ -422,13 +422,15 @@ export const RevisionListView: React.FC = () => {
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Number</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Revision Number</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Created</th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Opened by</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Opened By</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Revision Name</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">State</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Name</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Type</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Department</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Author</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Effective Date</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Valid Until</th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Name</th>
                   <th className="sticky right-0 bg-slate-50/80 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">Action</th>
                 </tr>
               </thead>
@@ -443,17 +445,23 @@ export const RevisionListView: React.FC = () => {
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
                       <span className="font-medium text-emerald-600">{revision.documentNumber}</span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.revisionNumber}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      {revision.revisionNumber}
+                    </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.created}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.openedBy}</td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.revisionName}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      <span className="font-medium text-slate-900">{revision.revisionName}</span>
+                    </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
                       <StatusBadge status={mapStatusToType(revision.state)} />
                     </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">{revision.documentName}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.type}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.department}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.author}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.effectiveDate}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.validUntil}</td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.documentName}</td>
                     <td
                       onClick={(e) => e.stopPropagation()}
                       className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"

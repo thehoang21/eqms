@@ -853,7 +853,7 @@ export const ControlledCopiesView: React.FC = () => {
                       <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
                         {copy.openedBy}
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-900 max-w-xs truncate">
+                      <td className="py-3.5 px-4 text-sm text-slate-900 whitespace-nowrap">
                         {copy.name}
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
@@ -869,7 +869,7 @@ export const ControlledCopiesView: React.FC = () => {
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                         <span className="font-medium text-slate-900">{copy.document}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-600 max-w-xs truncate">
+                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
                         {copy.distributionList}
                       </td>
                       <td

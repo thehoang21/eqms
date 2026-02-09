@@ -55,6 +55,7 @@ interface Revision {
   documentNumber: string;
   revisionNumber: string;
   created: string;
+  openedBy: string;
   revisionName: string;
   state: DocumentStatus;
   effectiveDate: string;
@@ -62,6 +63,7 @@ interface Revision {
   documentName: string;
   type: DocumentType;
   department: string;
+  author: string;
 }
 
 // Helper to map status string to StatusType
@@ -82,6 +84,7 @@ const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => ({
   created: new Date(Date.now() - Math.random() * 10000000000)
     .toISOString()
     .split("T")[0],
+  openedBy: ["John Smith", "Jane Doe", "Dr. Sarah Johnson", "Michael Chen"][i % 4],
   revisionName: `My Revision ${i + 1}`,
   state: ["Draft", "Pending Review", "Approved"][i % 3] as DocumentStatus,
   effectiveDate: new Date(Date.now() + Math.random() * 10000000000)
@@ -93,6 +96,7 @@ const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => ({
   documentName: `My Document ${i + 1}`,
   type: ["SOP", "Policy", "Form", "Report"][i % 4] as DocumentType,
   department: ["Quality Assurance", "Production", "R&D"][i % 3],
+  author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Davis", "Robert Brown"][i % 4],
 }));
 
 // Default columns configuration
@@ -101,13 +105,16 @@ const DEFAULT_COLUMNS: TableColumn[] = [
   { id: "documentNumber", label: "Document Number", visible: true, order: 1 },
   { id: "revisionNumber", label: "Revision Number", visible: true, order: 2 },
   { id: "created", label: "Created", visible: true, order: 3 },
-  { id: "revisionName", label: "Revision Name", visible: true, order: 4 },
-  { id: "state", label: "State", visible: true, order: 5 },
-  { id: "effectiveDate", label: "Effective Date", visible: true, order: 6 },
-  { id: "validUntil", label: "Valid Until", visible: true, order: 7 },
-  { id: "documentName", label: "Document Name", visible: true, order: 8 },
-  { id: "type", label: "Type", visible: true, order: 9 },
-  { id: "action", label: "Action", visible: true, order: 10, locked: true },
+  { id: "openedBy", label: "Opened By", visible: true, order: 4 },
+  { id: "revisionName", label: "Revision Name", visible: true, order: 5 },
+  { id: "state", label: "State", visible: true, order: 6 },
+  { id: "documentName", label: "Document Name", visible: true, order: 7 },
+  { id: "type", label: "Document Type", visible: true, order: 8 },
+  { id: "department", label: "Department", visible: true, order: 9 },
+  { id: "author", label: "Author", visible: true, order: 10 },
+  { id: "effectiveDate", label: "Effective Date", visible: true, order: 11 },
+  { id: "validUntil", label: "Valid Until", visible: true, order: 12 },
+  { id: "action", label: "Action", visible: true, order: 13, locked: true },
 ];
 
 // --- Filters Component ---
@@ -462,22 +469,28 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         return revision.revisionNumber;
       case "created":
         return revision.created;
+      case "openedBy":
+        return revision.openedBy;
       case "revisionName":
-        return revision.revisionName;
+        return <span className="font-medium text-slate-900">{revision.revisionName}</span>;
       case "state":
         return (
           <span className="inline-flex items-center gap-1.5">
             <StatusBadge status={mapStatusToType(revision.state)} />
           </span>
         );
+      case "documentName":
+        return <span className="text-slate-600">{revision.documentName}</span>;
+      case "type":
+        return revision.type;
+      case "department":
+        return revision.department;
+      case "author":
+        return revision.author;
       case "effectiveDate":
         return revision.effectiveDate;
       case "validUntil":
         return revision.validUntil;
-      case "documentName":
-        return revision.documentName;
-      case "type":
-        return revision.type;
       default:
         return null;
     }

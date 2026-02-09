@@ -60,7 +60,7 @@ interface Document {
 }
 
 // --- Mock Data ---
-const MOCK_DOCUMENTS: Document[] = [
+export const MOCK_DOCUMENTS: Document[] = [
   {
     id: "1",
     documentId: "SOP.0001.03",

@@ -200,7 +200,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
                         </button>
                         <button
                             className={cn(
-                                "flex-1 sm:flex-none px-3 sm:px-4 py-3 sm:py-3.5 text-xs sm:text-sm font-medium transition-colors relative flex items-center justify-center sm:justify-start gap-2 border-b-2",
+                                "flex-1 sm:flex-none px-3 sm:px-4 py-2.5 sm:py-2.5 text-xs sm:text-sm font-medium transition-colors relative flex items-center justify-center sm:justify-start gap-2 border-b-2",
                                 activeTab === 'password'
                                     ? "text-emerald-600 border-b-emerald-600 bg-white"
                                     : "text-slate-600 border-b-transparent hover:text-slate-900 hover:bg-slate-50"
