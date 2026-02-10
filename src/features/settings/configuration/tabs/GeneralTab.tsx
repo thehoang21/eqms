@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GeneralConfig } from '../types';
 import { Select } from '@/components/ui/select/Select';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
-import { Button } from '@/components/ui/button/Button';
-import { Upload, Image, FileIcon, X } from 'lucide-react';
 
 interface GeneralTabProps {
   config: GeneralConfig;
@@ -11,21 +9,51 @@ interface GeneralTabProps {
 }
 
 export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
+  const [timeZones, setTimeZones] = useState<Array<{ label: string; value: string }>>([]);
+
+  // Fetch time zones using Intl API
+  useEffect(() => {
+    try {
+      // Get all supported time zones from browser
+      const zones = Intl.supportedValuesOf('timeZone');
+      
+      // Format time zones with offset information
+      const formatted = zones.map((zone) => {
+        const formatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: zone,
+          timeZoneName: 'shortOffset',
+        });
+        
+        // Get current time to calculate offset
+        const parts = formatter.formatToParts(new Date());
+        const offset = parts.find((part) => part.type === 'timeZoneName')?.value || '';
+        
+        return {
+          label: `${zone.replace(/_/g, ' ')} ${offset}`,
+          value: zone,
+        };
+      });
+
+      // Sort by zone name
+      formatted.sort((a, b) => a.value.localeCompare(b.value));
+
+      setTimeZones(formatted);
+    } catch (error) {
+      console.error('Failed to load time zones:', error);
+      // Fallback to basic options
+      setTimeZones([
+        { label: 'UTC', value: 'UTC' },
+        { label: 'Asia/Bangkok (UTC+7)', value: 'Asia/Bangkok' },
+        { label: 'Asia/Ho_Chi_Minh (UTC+7)', value: 'Asia/Ho_Chi_Minh' },
+        { label: 'America/New_York (EST)', value: 'America/New_York' },
+        { label: 'America/Los_Angeles (PST)', value: 'America/Los_Angeles' },
+        { label: 'Europe/London (GMT)', value: 'Europe/London' },
+      ]);
+    }
+  }, []);
+
   const handleChange = (key: keyof GeneralConfig, value: any) => {
     onChange({ ...config, [key]: value });
-  };
-
-  const handleFileUpload = (key: 'systemLogo' | 'systemFavicon', event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // In production, upload to server and get URL
-      // For now, create a local URL preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        handleChange(key, reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   return (
@@ -67,117 +95,6 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               <p className="text-xs text-slate-500 mt-1">
                 Displayed in browser tab title
               </p>
-            </div>
-          </div>
-
-          {/* Logo & Favicon Upload */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* System Logo */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                System Logo
-              </label>
-              <div className="flex items-start gap-3">
-                {config.systemLogo && (
-                  <div className="flex-shrink-0 w-16 h-16 border border-slate-200 rounded-lg overflow-hidden bg-slate-50 flex items-center justify-center">
-                    <img
-                      src={config.systemLogo}
-                      alt="System Logo"
-                      className="max-w-full max-h-full object-contain"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                    <Image className="h-8 w-8 text-slate-400 hidden" />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <label
-                      htmlFor="logo-upload"
-                      className="inline-flex items-center gap-2 px-4 h-10 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 cursor-pointer transition-colors"
-                    >
-                      <Upload className="h-4 w-4" />
-                      Upload Logo
-                    </label>
-                    <input
-                      id="logo-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFileUpload('systemLogo', e)}
-                      className="hidden"
-                    />
-                    {config.systemLogo && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleChange('systemLogo', '')}
-                        className="h-10 px-4 !border-red-200 !text-red-600 hover:!bg-red-50 hover:!border-red-300"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                  <p className="text-xs text-slate-500 mt-1.5">
-                    Recommended: PNG or SVG, 200x50px
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Favicon */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Favicon
-              </label>
-              <div className="flex items-start gap-3">
-                {config.systemFavicon && (
-                  <div className="flex-shrink-0 w-16 h-16 border border-slate-200 rounded-lg overflow-hidden bg-slate-50 flex items-center justify-center">
-                    <img
-                      src={config.systemFavicon}
-                      alt="Favicon"
-                      className="max-w-full max-h-full object-contain"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                    <FileIcon className="h-8 w-8 text-slate-400 hidden" />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <label
-                      htmlFor="favicon-upload"
-                      className="inline-flex items-center gap-2 px-4 h-10 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 cursor-pointer transition-colors"
-                    >
-                      <Upload className="h-4 w-4" />
-                      Upload Favicon
-                    </label>
-                    <input
-                      id="favicon-upload"
-                      type="file"
-                      accept="image/x-icon,image/png"
-                      onChange={(e) => handleFileUpload('systemFavicon', e)}
-                      className="hidden"
-                    />
-                    {config.systemFavicon && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleChange('systemFavicon', '')}
-                        className="h-10 px-4 !border-red-200 !text-red-600 hover:!bg-red-50 hover:!border-red-300"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                  <p className="text-xs text-slate-500 mt-1.5">
-                    Recommended: ICO or PNG, 32x32px
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -234,12 +151,9 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
             label="Time Zone"
             value={config.timeZone}
             onChange={(val) => handleChange('timeZone', val)}
-            options={[
-              { label: 'UTC', value: 'UTC' },
-              { label: 'UTC+7 (Bangkok, Hanoi)', value: 'UTC+7' },
-              { label: 'EST', value: 'EST' },
-              { label: 'PST', value: 'PST' },
-            ]}
+            options={timeZones}
+            enableSearch
+            placeholder="Select time zone..."
           />
         </div>
       </div>

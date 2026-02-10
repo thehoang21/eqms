@@ -4,6 +4,7 @@ import { IconSmartHome } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import { useToast } from '@/components/ui/toast/Toast';
+import { AlertModal } from '@/components/ui/modal/AlertModal';
 import { SystemConfig } from './types';
 import { MOCK_SYSTEM_CONFIG } from './mockData';
 import { GeneralTab } from './tabs/GeneralTab';
@@ -44,6 +45,7 @@ export const ConfigurationView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('general');
   const [config, setConfig] = useState<SystemConfig>(MOCK_SYSTEM_CONFIG);
   const [isDirty, setIsDirty] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const { showToast } = useToast();
 
   const handleConfigChange = <K extends keyof SystemConfig>(section: K, value: SystemConfig[K]) => {
@@ -65,16 +67,19 @@ export const ConfigurationView: React.FC = () => {
     });
   };
 
-  const handleReset = () => {
-    if (window.confirm('Are you sure you want to discard unsaved changes?')) {
-      setConfig(MOCK_SYSTEM_CONFIG);
-      setIsDirty(false);
-      showToast({
-        type: "info",
-        title: "Changes discarded",
-        message: "Configuration reset to last saved state.",
-      });
-    }
+  const handleResetClick = () => {
+    setShowResetModal(true);
+  };
+
+  const handleResetConfirm = () => {
+    setConfig(MOCK_SYSTEM_CONFIG);
+    setIsDirty(false);
+    setShowResetModal(false);
+    showToast({
+      type: "info",
+      title: "Changes discarded",
+      message: "Configuration reset to last saved state.",
+    });
   };
 
   const renderTabContent = () => {
@@ -112,11 +117,12 @@ export const ConfigurationView: React.FC = () => {
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <Button 
             variant="outline" 
-            onClick={handleReset} 
+            onClick={handleResetClick} 
             disabled={!isDirty}
             size="sm"
             className="gap-2"
           >
+            <RotateCcw className="h-4 w-4" />
             Reset
           </Button>
           <Button 
@@ -126,10 +132,32 @@ export const ConfigurationView: React.FC = () => {
             size="sm"
             className="gap-2"
           >
+            <Save className="h-4 w-4" />
             Save Changes
           </Button>
         </div>
       </div>
+
+      {/* Reset Confirmation Modal */}
+      <AlertModal
+        isOpen={showResetModal}
+        onClose={() => setShowResetModal(false)}
+        onConfirm={handleResetConfirm}
+        type="warning"
+        title="Discard unsaved changes?"
+        description={
+          <div className="space-y-2">
+            <p className="text-sm text-slate-600">
+              All unsaved changes will be lost and the configuration will be reset to the last saved state.
+            </p>
+            <p className="text-sm font-medium text-amber-700">
+              This action cannot be undone.
+            </p>
+          </div>
+        }
+        confirmText="Discard Changes"
+        cancelText="Keep Editing"
+      />
 
       {/* Tabbed Content */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
