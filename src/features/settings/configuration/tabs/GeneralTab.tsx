@@ -56,6 +56,26 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
     onChange({ ...config, [key]: value });
   };
 
+  const handleCompanyInfoChange = (key: keyof GeneralConfig['companyInfo'], value: string) => {
+    onChange({
+      ...config,
+      companyInfo: {
+        ...config.companyInfo,
+        [key]: value,
+      },
+    });
+  };
+
+  const handleBackupSettingsChange = (key: keyof GeneralConfig['backupSettings'], value: any) => {
+    onChange({
+      ...config,
+      backupSettings: {
+        ...config.backupSettings,
+        [key]: value,
+      },
+    });
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* Branding */}
@@ -121,6 +141,187 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               Primary contact for system notifications
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* Company Information */}
+      <div>
+        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
+          Company Information
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Company Name
+            </label>
+            <input
+              type="text"
+              value={config.companyInfo.companyName}
+              onChange={(e) => handleCompanyInfoChange('companyName', e.target.value)}
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="ACME Corporation"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Tax ID / Registration Number
+            </label>
+            <input
+              type="text"
+              value={config.companyInfo.taxId}
+              onChange={(e) => handleCompanyInfoChange('taxId', e.target.value)}
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="TAX-123456789"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Company Address
+            </label>
+            <input
+              type="text"
+              value={config.companyInfo.companyAddress}
+              onChange={(e) => handleCompanyInfoChange('companyAddress', e.target.value)}
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="123 Business Street, Tech City, TC 12345"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Company Phone
+            </label>
+            <input
+              type="tel"
+              value={config.companyInfo.companyPhone}
+              onChange={(e) => handleCompanyInfoChange('companyPhone', e.target.value)}
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="+1-555-0123"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Company Website
+            </label>
+            <input
+              type="url"
+              value={config.companyInfo.companyWebsite}
+              onChange={(e) => handleCompanyInfoChange('companyWebsite', e.target.value)}
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="https://www.company.com"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Industry
+            </label>
+            <input
+              type="text"
+              value={config.companyInfo.industry}
+              onChange={(e) => handleCompanyInfoChange('industry', e.target.value)}
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="Pharmaceutical Manufacturing"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Regulatory Body / Standards
+            </label>
+            <input
+              type="text"
+              value={config.companyInfo.regulatoryBody}
+              onChange={(e) => handleCompanyInfoChange('regulatoryBody', e.target.value)}
+              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              placeholder="FDA, ISO 9001:2015"
+            />
+            <p className="text-xs text-slate-500 mt-1">
+              e.g., FDA, ISO 9001, ISO 13485, GMP, etc.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Backup & Data Management */}
+      <div>
+        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
+          Backup & Data Management
+        </h3>
+        <div className="space-y-4">
+          <Checkbox
+            id="enableAutoBackup"
+            label="Enable Automatic Backup"
+            checked={config.backupSettings.enableAutoBackup}
+            onChange={(checked) => handleBackupSettingsChange('enableAutoBackup', checked)}
+          />
+          <p className="text-xs text-slate-500 ml-7">
+            Automatically backup system data at scheduled intervals
+          </p>
+          
+          {config.backupSettings.enableAutoBackup && (
+            <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Select
+                  label="Backup Frequency"
+                  value={config.backupSettings.backupFrequency}
+                  onChange={(val) => handleBackupSettingsChange('backupFrequency', val as 'daily' | 'weekly' | 'monthly')}
+                  options={[
+                    { label: 'Daily', value: 'daily' },
+                    { label: 'Weekly', value: 'weekly' },
+                    { label: 'Monthly', value: 'monthly' },
+                  ]}
+                />
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Backup Time
+                  </label>
+                  <input
+                    type="time"
+                    value={config.backupSettings.backupTime}
+                    onChange={(e) => handleBackupSettingsChange('backupTime', e.target.value)}
+                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                  />
+                  <p className="text-xs text-slate-500 mt-1">
+                    System local time (24-hour format)
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Retention Period (Days)
+                  </label>
+                  <input
+                    type="number"
+                    value={config.backupSettings.retentionDays}
+                    onChange={(e) => handleBackupSettingsChange('retentionDays', parseInt(e.target.value))}
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    min={7}
+                    max={365}
+                  />
+                  <p className="text-xs text-slate-500 mt-1">
+                    Keep backups for {config.backupSettings.retentionDays} days
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Select
+                  label="Backup Location"
+                  value={config.backupSettings.backupLocation}
+                  onChange={(val) => handleBackupSettingsChange('backupLocation', val as 'local' | 'cloud' | 's3')}
+                  options={[
+                    { label: 'Local Server', value: 'local' },
+                    { label: 'Cloud Storage', value: 'cloud' },
+                    { label: 'Amazon S3', value: 's3' },
+                  ]}
+                />
+                <div className="flex items-center pt-8">
+                  <Checkbox
+                    id="notifyOnBackupFailure"
+                    label="Notify on Backup Failure"
+                    checked={config.backupSettings.notifyOnBackupFailure}
+                    onChange={(checked) => handleBackupSettingsChange('notifyOnBackupFailure', checked)}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

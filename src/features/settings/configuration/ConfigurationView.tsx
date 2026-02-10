@@ -122,7 +122,6 @@ export const ConfigurationView: React.FC = () => {
             size="sm"
             className="gap-2"
           >
-            <RotateCcw className="h-4 w-4" />
             Reset
           </Button>
           <Button 
@@ -132,7 +131,6 @@ export const ConfigurationView: React.FC = () => {
             size="sm"
             className="gap-2"
           >
-            <Save className="h-4 w-4" />
             Save Changes
           </Button>
         </div>

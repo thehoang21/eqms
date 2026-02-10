@@ -48,6 +48,16 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
     });
   };
 
+  const handleSmsConfigChange = (key: keyof NotificationConfig['smsConfig'], value: any) => {
+    onChange({
+      ...config,
+      smsConfig: {
+        ...config.smsConfig,
+        [key]: value,
+      },
+    });
+  };
+
   const handleTriggerChange = (trigger: keyof NotificationConfig['triggers'], checked: boolean) => {
     onChange({
       ...config,
@@ -347,6 +357,152 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
             Enable email notifications to configure digest settings
           </p>
         )}
+      </div>
+
+      {/* SMS Notifications */}
+      <div>
+        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
+          SMS Notifications
+        </h3>
+        <div className="space-y-4">
+          <Checkbox
+            id="enableSms"
+            label="Enable SMS Notifications"
+            checked={config.smsConfig.enableSms}
+            onChange={(checked) => handleSmsConfigChange('enableSms', checked)}
+          />
+          <p className="text-xs text-slate-500 ml-7">
+            Send time-sensitive notifications via SMS
+          </p>
+          
+          {config.smsConfig.enableSms && (
+            <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
+              <Select
+                label="SMS Provider"
+                value={config.smsConfig.provider}
+                onChange={(val) => handleSmsConfigChange('provider', val as 'twilio' | 'vonage' | 'aws-sns')}
+                options={[
+                  { label: 'Twilio', value: 'twilio' },
+                  { label: 'Vonage (Nexmo)', value: 'vonage' },
+                  { label: 'AWS SNS', value: 'aws-sns' },
+                ]}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Account SID / API Key
+                  </label>
+                  <input
+                    type="text"
+                    value={config.smsConfig.accountSid}
+                    onChange={(e) => handleSmsConfigChange('accountSid', e.target.value)}
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                    placeholder="ACxxxxxxxxxxxxxxxxxxxxx"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Auth Token / Secret
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showSmtpPassword ? "text" : "password"}
+                      value={config.smsConfig.authToken}
+                      onChange={(e) => handleSmsConfigChange('authToken', e.target.value)}
+                      className="w-full h-10 px-3.5 pr-10 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="Enter auth token"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowSmtpPassword(!showSmtpPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-600 transition-colors"
+                    >
+                      {showSmtpPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Sender Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={config.smsConfig.fromNumber}
+                    onChange={(e) => handleSmsConfigChange('fromNumber', e.target.value)}
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="+1-555-0100"
+                  />
+                  <p className="text-xs text-slate-500 mt-1">
+                    Verified phone number from your SMS provider
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Rate Limit (Per Hour)
+                  </label>
+                  <input
+                    type="number"
+                    value={config.smsConfig.rateLimitPerHour}
+                    onChange={(e) => handleSmsConfigChange('rateLimitPerHour', parseInt(e.target.value))}
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    min={1}
+                    max={1000}
+                  />
+                  <p className="text-xs text-slate-500 mt-1">
+                    Maximum SMS messages per hour to prevent abuse
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Notification Templates */}
+      <div>
+        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
+          Notification Templates
+        </h3>
+        <div className="space-y-4">
+          <Checkbox
+            id="enableCustomTemplates"
+            label="Enable Custom Notification Templates"
+            checked={config.enableCustomTemplates}
+            onChange={(checked) => handleChange('enableCustomTemplates', checked)}
+          />
+          <p className="text-xs text-slate-500 ml-7">
+            Customize email and notification templates with your own branding and messages
+          </p>
+          
+          {config.enableCustomTemplates && (
+            <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-slate-700">
+                    Template Library
+                  </p>
+                  <span className="text-xs text-slate-500">
+                    {config.templates.length} template{config.templates.length !== 1 ? 's' : ''} configured
+                  </span>
+                </div>
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    <strong>Coming Soon:</strong> Template editor with support for dynamic variables, multi-language, 
+                    and HTML formatting. You'll be able to customize templates for Document Approval, Task Assignment, 
+                    CAPA Notifications, and more.
+                  </p>
+                </div>
+                <p className="text-xs text-slate-500">
+                  <strong>Available Variables:</strong> <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700">{'{userName}'}</code>, 
+                  <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 ml-1">{'{documentTitle}'}</code>, 
+                  <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 ml-1">{'{taskName}'}</code>, 
+                  <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 ml-1">{'{dueDate}'}</code>, 
+                  <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 ml-1">{'{systemName}'}</code>
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Notification Triggers */}

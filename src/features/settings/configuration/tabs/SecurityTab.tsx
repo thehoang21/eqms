@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SecurityConfig } from '../types';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
+import { Select } from '@/components/ui/select/Select';
+import { Button } from '@/components/ui/button/Button';
+import { Plus, X } from 'lucide-react';
 
 interface SecurityTabProps {
   config: SecurityConfig;
@@ -8,8 +11,59 @@ interface SecurityTabProps {
 }
 
 export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) => {
+  const [newIp, setNewIp] = useState('');
+  const [newCountry, setNewCountry] = useState('');
+
   const handleChange = (key: keyof SecurityConfig, value: any) => {
     onChange({ ...config, [key]: value });
+  };
+
+  const handleIpSecurityChange = (key: keyof SecurityConfig['ipSecurity'], value: any) => {
+    onChange({
+      ...config,
+      ipSecurity: {
+        ...config.ipSecurity,
+        [key]: value,
+      },
+    });
+  };
+
+  const handleAuditSettingsChange = (key: keyof SecurityConfig['auditSettings'], value: any) => {
+    onChange({
+      ...config,
+      auditSettings: {
+        ...config.auditSettings,
+        [key]: value,
+      },
+    });
+  };
+
+  const addWhitelistedIp = () => {
+    if (newIp.trim()) {
+      handleIpSecurityChange('whitelistedIps', [...config.ipSecurity.whitelistedIps, newIp.trim()]);
+      setNewIp('');
+    }
+  };
+
+  const removeWhitelistedIp = (ip: string) => {
+    handleIpSecurityChange(
+      'whitelistedIps',
+      config.ipSecurity.whitelistedIps.filter((i) => i !== ip)
+    );
+  };
+
+  const addBlockedCountry = () => {
+    if (newCountry.trim()) {
+      handleIpSecurityChange('blockedCountries', [...config.ipSecurity.blockedCountries, newCountry.trim()]);
+      setNewCountry('');
+    }
+  };
+
+  const removeBlockedCountry = (country: string) => {
+    handleIpSecurityChange(
+      'blockedCountries',
+      config.ipSecurity.blockedCountries.filter((c) => c !== country)
+    );
   };
 
   return (
@@ -231,6 +285,209 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* IP Access Control */}
+      <div>
+        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
+          IP Access Control & Geo-blocking
+        </h3>
+        <div className="space-y-4">
+          <Checkbox
+            id="enableIpWhitelisting"
+            label="Enable IP Whitelisting"
+            checked={config.ipSecurity.enableIpWhitelisting}
+            onChange={(checked) => handleIpSecurityChange('enableIpWhitelisting', checked)}
+          />
+          <p className="text-xs text-slate-500 ml-7">
+            Only allow access from specified IP addresses or ranges
+          </p>
+
+          {config.ipSecurity.enableIpWhitelisting && (
+            <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Whitelisted IPs / CIDR Ranges
+                </label>
+                <div className="flex gap-2 mb-3">
+                  <input
+                    type="text"
+                    value={newIp}
+                    onChange={(e) => setNewIp(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addWhitelistedIp()}
+                    placeholder="192.168.1.1 or 10.0.0.0/24"
+                    className="flex-1 h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                  />
+                  <Button variant="default" size="sm" onClick={addWhitelistedIp} className="h-10">
+                    <Plus className="h-4 w-4 mr-1.5" />
+                    Add
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {config.ipSecurity.whitelistedIps.map((ip) => (
+                    <div key={ip} className="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200">
+                      <span className="text-sm font-mono text-slate-700">{ip}</span>
+                      <button
+                        onClick={() => removeWhitelistedIp(ip)}
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                  {config.ipSecurity.whitelistedIps.length === 0 && (
+                    <p className="text-xs text-slate-500 italic">No whitelisted IPs configured</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="pt-2">
+            <Checkbox
+              id="enableGeoBlocking"
+              label="Enable Geographic Blocking"
+              checked={config.ipSecurity.enableGeoBlocking}
+              onChange={(checked) => handleIpSecurityChange('enableGeoBlocking', checked)}
+            />
+            <p className="text-xs text-slate-500 ml-7">
+              Block access from specific countries or regions
+            </p>
+
+            {config.ipSecurity.enableGeoBlocking && (
+              <div className="ml-7 mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Blocked Countries (ISO 2-letter codes)
+                  </label>
+                  <div className="flex gap-2 mb-3">
+                    <input
+                      type="text"
+                      value={newCountry}
+                      onChange={(e) => setNewCountry(e.target.value.toUpperCase())}
+                      onKeyPress={(e) => e.key === 'Enter' && addBlockedCountry()}
+                      placeholder="e.g., CN, RU, KP"
+                      className="flex-1 h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono uppercase"
+                      maxLength={2}
+                    />
+                    <Button variant="default" size="sm" onClick={addBlockedCountry} className="h-10">
+                      <Plus className="h-4 w-4 mr-1.5" />
+                      Add
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {config.ipSecurity.blockedCountries.map((country) => (
+                      <div key={country} className="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200">
+                        <span className="text-sm font-mono text-slate-700">{country}</span>
+                        <button
+                          onClick={() => removeBlockedCountry(country)}
+                          className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                    {config.ipSecurity.blockedCountries.length === 0 && (
+                      <p className="text-xs text-slate-500 italic">No blocked countries configured</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="pt-2">
+            <Checkbox
+              id="allowVpnConnections"
+              label="Allow VPN Connections"
+              checked={config.ipSecurity.allowVpnConnections}
+              onChange={(checked) => handleIpSecurityChange('allowVpnConnections', checked)}
+            />
+            <p className="text-xs text-slate-500 ml-7">
+              If disabled, connections from VPN/proxy servers will be blocked
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Audit & Logging */}
+      <div>
+        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
+          Audit & Logging
+        </h3>
+        <div className="space-y-4">
+          <Checkbox
+            id="enableDetailedAuditLog"
+            label="Enable Detailed Audit Logging"
+            checked={config.auditSettings.enableDetailedAuditLog}
+            onChange={(checked) => handleAuditSettingsChange('enableDetailedAuditLog', checked)}
+          />
+          <p className="text-xs text-slate-500 ml-7">
+            Log all user actions, changes, and system events for compliance
+          </p>
+
+          {config.auditSettings.enableDetailedAuditLog && (
+            <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Select
+                  label="Log Level"
+                  value={config.auditSettings.logLevel}
+                  onChange={(val) => handleAuditSettingsChange('logLevel', val as 'minimal' | 'standard' | 'detailed')}
+                  options={[
+                    { label: 'Minimal (Critical events only)', value: 'minimal' },
+                    { label: 'Standard (Important actions)', value: 'standard' },
+                    { label: 'Detailed (All user activities)', value: 'detailed' },
+                  ]}
+                />
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Retain Logs For (Days)
+                  </label>
+                  <input
+                    type="number"
+                    value={config.auditSettings.retainLogsForDays}
+                    onChange={(e) => handleAuditSettingsChange('retainLogsForDays', parseInt(e.target.value))}
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    min={30}
+                    max={3650}
+                  />
+                  <p className="text-xs text-slate-500 mt-1">
+                    Logs older than {config.auditSettings.retainLogsForDays} days will be archived
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <Checkbox
+                  id="logSensitiveData"
+                  label="Log Sensitive Data Actions"
+                  checked={config.auditSettings.logSensitiveData}
+                  onChange={(checked) => handleAuditSettingsChange('logSensitiveData', checked)}
+                />
+                <p className="text-xs text-slate-500 ml-7">
+                  Include PHI/PII modifications in audit logs (may require encryption)
+                </p>
+                <Checkbox
+                  id="enableRealTimeAlerts"
+                  label="Enable Real-Time Alerts"
+                  checked={config.auditSettings.enableRealTimeAlerts}
+                  onChange={(checked) => handleAuditSettingsChange('enableRealTimeAlerts', checked)}
+                />
+                <p className="text-xs text-slate-500 ml-7">
+                  Send immediate notifications for critical security events
+                </p>
+                <Checkbox
+                  id="alertOnSuspiciousActivity"
+                  label="Alert on Suspicious Activity"
+                  checked={config.auditSettings.alertOnSuspiciousActivity}
+                  onChange={(checked) => handleAuditSettingsChange('alertOnSuspiciousActivity', checked)}
+                />
+                <p className="text-xs text-slate-500 ml-7">
+                  Detect and alert on unusual patterns (e.g., multiple failed logins, after-hours access)
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
