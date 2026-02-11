@@ -1,9 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Check, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
+import { FormModal } from "@/components/ui/modal/FormModal";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { UploadRevisionModal } from "./modals/UploadRevisionModal";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,7 +26,7 @@ import {
     GeneralTab,
     DocumentTab,
     type UploadedFile,
-} from "@/features/documents/document-list/new-document/new-tabs";
+} from "@/features/documents/document-list/document-creation/new-tabs";
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconSmartHome } from "@tabler/icons-react";
 
@@ -60,6 +61,7 @@ export const NewDocumentView: React.FC = () => {
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
     const [validationModalMessage, setValidationModalMessage] = useState<React.ReactNode>(null);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+    const [cancelActivitySummary, setCancelActivitySummary] = useState("");
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [isObsoleteModalOpen, setIsObsoleteModalOpen] = useState(false);
     const [isUploadRevisionModalOpen, setIsUploadRevisionModalOpen] = useState(false);
@@ -190,23 +192,25 @@ export const NewDocumentView: React.FC = () => {
     };
 
     const handleCancelConfirm = () => {
+        // Close modal and reset activity summary
         setIsCancelModalOpen(false);
         
         // Update document status to Closed - Cancelled
         setDocumentStatus("Closed - Cancelled");
         
+        // TODO: Save cancelActivitySummary to database
+        console.log("Document cancelled with Activity Summary:", cancelActivitySummary);
+        
         // Show toast notification
         showToast({
-            type: "info",
+            type: "success",
             title: "Document Cancelled",
             message: "The document has been moved to Closed - Cancelled status.",
             duration: 3000
         });
         
-        // Navigate back to list after a short delay to show status update
-        setTimeout(() => {
-            navigate("/documents/all");
-        }, 1500);
+        // Reset activity summary for next use
+        setCancelActivitySummary("");
     };
 
     const handleSaveDraft = () => {
@@ -310,8 +314,8 @@ export const NewDocumentView: React.FC = () => {
 
     const tabs = [
         { id: "general" as TabType, label: "General Information" },
+        { id: "training" as TabType, label: "Training Information" },
         { id: "document" as TabType, label: "Document" },
-        { id: "training" as TabType, label: "Training" },
         { id: "signatures" as TabType, label: "Signatures" },
         { id: "audit" as TabType, label: "Audit Trail" },
     ];
@@ -328,18 +332,15 @@ export const NewDocumentView: React.FC = () => {
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
                             <IconSmartHome className="h-4 w-4" />
                             <span className="text-slate-400 mx-1">/</span>
-                            <button className="hover:text-slate-700 transition-colors">
+                            <span>
                                 <span className="hidden md:inline">Document Control</span>
                                 <span className="md:hidden">...</span>
-                            </button>
+                            </span>
                             <span className="text-slate-400 mx-1">/</span>
-                            <button
-                                onClick={() => navigate("/documents/all")}
-                                className="hover:text-slate-700 transition-colors"
-                            >
+                            <span>
                                 <span className="hidden md:inline">All Documents</span>
                                 <span className="md:hidden">...</span>
-                            </button>
+                            </span>
                             <span className="text-slate-400 mx-1">/</span>
                             <span className="text-slate-700 font-medium">New Document</span>
                         </div>
@@ -347,28 +348,41 @@ export const NewDocumentView: React.FC = () => {
 
                     {/* Action Buttons */}
                     <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-                        <Button
-                            onClick={handleCancel}
-                            variant="outline"
-                            size="sm"
-                            className="flex items-center gap-2"
-                            disabled={documentStatus === "Obsoleted"}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={handleSaveDraft}
-                            disabled={
-                                documentStatus === "Obsoleted" ||
-                                isSaving ||
-                                missingRequiredFields.length > 0 ||
-                                (isSaved && (reviewers.length === 0 || approvers.length === 0))
-                            }
-                            size="sm"
-                            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
-                        >
-                            {isSaving ? (isSaved ? "Saving..." : "Processing...") : (isSaved ? "Save" : "Next Step")}
-                        </Button>
+                        {documentStatus === "Closed - Cancelled" ? (
+                            <Button
+                                onClick={handleBackToList}
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-2"
+                            >
+                                Back to List
+                            </Button>
+                        ) : (
+                            <>
+                                <Button
+                                    onClick={handleCancel}
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex items-center gap-2"
+                                    disabled={documentStatus === "Obsoleted"}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    onClick={handleSaveDraft}
+                                    disabled={
+                                        documentStatus === "Obsoleted" ||
+                                        isSaving ||
+                                        missingRequiredFields.length > 0 ||
+                                        (isSaved && (reviewers.length === 0 || approvers.length === 0))
+                                    }
+                                    size="sm"
+                                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
+                                >
+                                    {isSaving ? (isSaved ? "Saving..." : "Processing...") : (isSaved ? "Save" : "Next Step")}
+                                </Button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -386,10 +400,23 @@ export const NewDocumentView: React.FC = () => {
                             // Special case: When status is "Obsoleted", show "Closed - Cancelled" as skipped (striped)
                             const isObsoletedStatus = documentStatus === "Obsoleted";
                             const isClosedCancelledStep = step === "Closed - Cancelled";
-                            const isSkipped = isObsoletedStatus && isClosedCancelledStep;
+                            const isSkippedForObsoleted = isObsoletedStatus && isClosedCancelledStep;
                             
                             // For Obsoleted status: Draft and Active are considered completed
-                            const showAsCompleted = isObsoletedStatus && (step === "Draft" || step === "Active");
+                            const showAsCompletedForObsoleted = isObsoletedStatus && (step === "Draft" || step === "Active");
+                            
+                            // Special case: When status is "Closed - Cancelled", show Active and Obsoleted as skipped (striped)
+                            const isCancelledStatus = documentStatus === "Closed - Cancelled";
+                            const isSkippedForCancelled = isCancelledStatus && (step === "Active" || step === "Obsoleted");
+                            
+                            // For Cancelled status: Draft is considered completed
+                            const showAsCompletedForCancelled = isCancelledStatus && step === "Draft";
+                            
+                            // Combine skip conditions
+                            const isSkipped = isSkippedForObsoleted || isSkippedForCancelled;
+                            
+                            // Combine completed conditions
+                            const showAsCompleted = showAsCompletedForObsoleted || showAsCompletedForCancelled;
 
                             return (
                                 <div
@@ -447,6 +474,18 @@ export const NewDocumentView: React.FC = () => {
                 </div>
             </div>
         </div>
+            {/* Warning Banner - Show when saved but missing reviewers or approvers */}
+            {isSaved && (reviewers.length === 0 || approvers.length === 0) && documentStatus !== "Obsoleted" && documentStatus !== "Closed - Cancelled" && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                    <div className="flex items-start gap-3">
+                        <div className="flex-1">
+                            <p className="text-sm font-medium text-red-800 text-center">
+                                Please add at least one reviewer and one approver in order to upload revisions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
                     {/* Tab Navigation */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="border-b border-slate-200">
@@ -486,7 +525,7 @@ export const NewDocumentView: React.FC = () => {
                     )}
 
                     {activeTab === "training" && (
-                        <TrainingTab />
+                        <TrainingTab isReadOnly={documentStatus === "Obsoleted" || documentStatus === "Closed - Cancelled"} />
                     )}
 
                     {activeTab === "document" && (
@@ -557,27 +596,28 @@ export const NewDocumentView: React.FC = () => {
                             </Button>
                         )}
 
-                        {/* Save/Next Step button - always shown but disabled when obsoleted or cancelled */}
-                        <Button
-                            onClick={handleSaveDraft}
-                            disabled={
-                                documentStatus === "Obsoleted" ||
-                                documentStatus === "Closed - Cancelled" ||
-                                missingRequiredFields.length > 0 ||
-                                (isSaved && (reviewers.length === 0 || approvers.length === 0)) ||
-                                isSaving
-                            }
-                            size="sm"
-                            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
-                        >
-                            {isSaving
-                                ? isSaved
-                                    ? "Saving..."
-                                    : "Processing..."
-                                : isSaved
+                        {/* Save/Next Step button - only show when not cancelled */}
+                        {documentStatus !== "Closed - Cancelled" && (
+                            <Button
+                                onClick={handleSaveDraft}
+                                disabled={
+                                    documentStatus === "Obsoleted" ||
+                                    missingRequiredFields.length > 0 ||
+                                    (isSaved && (reviewers.length === 0 || approvers.length === 0)) ||
+                                    isSaving
+                                }
+                                size="sm"
+                                className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
+                            >
+                                {isSaving
+                                    ? isSaved
+                                        ? "Saving..."
+                                        : "Processing..."
+                                    : isSaved
                                     ? "Save"
                                     : "Save & Next"}
                         </Button>
+                        )}
 
                         {/* Obsolete button - only show when document is Active */}
                         {documentStatus === "Active" && (
@@ -598,14 +638,17 @@ export const NewDocumentView: React.FC = () => {
                         {/* Other action buttons - only show after saved and not obsoleted or cancelled */}
                         {isSaved && documentStatus !== "Obsoleted" && documentStatus !== "Closed - Cancelled" && (
                             <>
-                                <Button
-                                    onClick={() => setIsUploadRevisionModalOpen(true)}
-                                    variant="outline"
-                                    size="sm"
-                                    className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
-                                >
-                                    Upload Revision
-                                </Button>
+                                {/* Upload Revision button - only show when reviewers and approvers are added */}
+                                {reviewers.length > 0 && approvers.length > 0 && (
+                                    <Button
+                                        onClick={() => setIsUploadRevisionModalOpen(true)}
+                                        variant="outline"
+                                        size="sm"
+                                        className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
+                                    >
+                                        Upload Revision
+                                    </Button>
+                                )}
                                 <Button
                                     onClick={() => {
                                         setActiveSubtab("reviewers");
@@ -762,26 +805,44 @@ export const NewDocumentView: React.FC = () => {
                 }}
                 actionTitle="Obsolete Document"
             />
-            <AlertModal
+            <FormModal
                 isOpen={isCancelModalOpen}
-                onClose={() => setIsCancelModalOpen(false)}
+                onClose={() => {
+                    setIsCancelModalOpen(false);
+                    setCancelActivitySummary("");
+                }}
                 onConfirm={handleCancelConfirm}
-                type="warning"
-                title="Cancel Document Creation?"
+                title="Cancel Document Creation"
                 description={
-                    <div className="space-y-3">
-                        <p>Are you sure you want to cancel this document creation?</p>
-                        <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
-                            <p className="text-amber-800">
-                                ⚠️ <span className="font-semibold">Note:</span> The document will be moved to <strong>Closed - Cancelled</strong> status.
-                            </p>
-                        </div>
+                    <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
+                        <p className="text-amber-800">
+                            ⚠️ <span className="font-semibold">Note:</span> The document will be moved to <strong>Closed - Cancelled</strong> status.
+                        </p>
                     </div>
                 }
                 confirmText="Yes, Cancel Document"
                 cancelText="No, Continue Editing"
+                confirmDisabled={!cancelActivitySummary.trim()}
                 showCancel={true}
-            />
+                size="lg"
+            >
+                <div className="space-y-2">
+                    <label htmlFor="activity-summary" className="text-sm font-medium text-slate-700 block">
+                        Activity Summary <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                        id="activity-summary"
+                        value={cancelActivitySummary}
+                        onChange={(e) => setCancelActivitySummary(e.target.value)}
+                        placeholder="Please provide a reason for cancelling this document..."
+                        rows={4}
+                        className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 text-sm resize-none"
+                    />
+                    {!cancelActivitySummary.trim() && (
+                        <p className="text-xs text-slate-500">Activity Summary is required to cancel the document.</p>
+                    )}
+                </div>
+            </FormModal>
 
             <AlertModal
                 isOpen={showSaveModal}

@@ -20,6 +20,8 @@ import {
   User,
   Home,
   Search,
+  FilePlusCorner,
+  FileStack,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import {
@@ -65,12 +67,15 @@ interface Revision {
   type: DocumentType;
   department: string;
   author: string;
+  hasRelatedDocuments?: boolean;
+  hasCorrelatedDocuments?: boolean;
 }
 
 // Helper to map status string to StatusType
 const mapStatusToType = (status: string): StatusType => {
   const mapping: { [key: string]: StatusType } = {
     Draft: "draft",
+    "Pending Review": "pendingReview",
     Approved: "approved",
     Archive: "archived",
     Effective: "effective",
@@ -79,27 +84,32 @@ const mapStatusToType = (status: string): StatusType => {
 };
 
 // --- Mock Data (Owned by current user) ---
-const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => ({
-  id: `my-${i + 1}`,
-  documentNumber: `SOP.${String(i + 1).padStart(4, "0")}.0${(i % 2) + 1}`,
-  revisionNumber: `${Math.floor(i / 2) + 1}.${i % 2}`,
-  created: new Date(Date.now() - Math.random() * 10000000000)
-    .toISOString()
-    .split("T")[0],
-  openedBy: ["John Smith", "Jane Doe", "Dr. Sarah Johnson", "Michael Chen"][i % 4],
-  revisionName: `My Revision ${i + 1}`,
-  state: ["Draft", "Pending Review", "Approved"][i % 3] as DocumentStatus,
-  effectiveDate: new Date(Date.now() + Math.random() * 10000000000)
-    .toISOString()
-    .split("T")[0],
-  validUntil: new Date(Date.now() + Math.random() * 20000000000)
-    .toISOString()
-    .split("T")[0],
-  documentName: `My Document ${i + 1}`,
-  type: ["SOP", "Policy", "Form", "Report"][i % 4] as DocumentType,
-  department: ["Quality Assurance", "Production", "R&D"][i % 3],
-  author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Davis", "Robert Brown"][i % 4],
-}));
+const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => {
+  const status = ["Draft", "Pending Review", "Approved", "Effective"][i % 4] as DocumentStatus;
+  return {
+    id: `my-${i + 1}`,
+    documentNumber: `SOP.${String(i + 1).padStart(4, "0")}.0${(i % 2) + 1}`,
+    revisionNumber: `${Math.floor(i / 2) + 1}.${i % 2}`,
+    created: new Date(Date.now() - Math.random() * 10000000000)
+      .toISOString()
+      .split("T")[0],
+    openedBy: ["John Smith", "Jane Doe", "Dr. Sarah Johnson", "Michael Chen"][i % 4],
+    revisionName: `My Revision ${i + 1}`,
+    state: status,
+    effectiveDate: new Date(Date.now() + Math.random() * 10000000000)
+      .toISOString()
+      .split("T")[0],
+    validUntil: new Date(Date.now() + Math.random() * 20000000000)
+      .toISOString()
+      .split("T")[0],
+    documentName: `My Document ${i + 1}`,
+    type: ["SOP", "Policy", "Form", "Report"][i % 4] as DocumentType,
+    department: ["Quality Assurance", "Production", "R&D"][i % 3],
+    author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Davis", "Robert Brown"][i % 4],
+    hasRelatedDocuments: status === "Effective" && i % 2 === 0, // Some Effective revisions have related docs
+    hasCorrelatedDocuments: i % 3 === 0, // Some revisions have correlated docs
+  };
+});
 
 // --- Filters Component (removed - using shared DocumentFilters instead) ---
 
@@ -114,11 +124,13 @@ const DEFAULT_COLUMNS: TableColumn[] = [
   { id: "state", label: "State", visible: true, order: 6 },
   { id: "documentName", label: "Document Name", visible: true, order: 7 },
   { id: "type", label: "Document Type", visible: true, order: 8 },
-  { id: "department", label: "Department", visible: true, order: 9 },
-  { id: "author", label: "Author", visible: true, order: 10 },
-  { id: "effectiveDate", label: "Effective Date", visible: true, order: 11 },
-  { id: "validUntil", label: "Valid Until", visible: true, order: 12 },
-  { id: "action", label: "Action", visible: true, order: 13, locked: true },
+  { id: "relatedDocuments", label: "Related Document", visible: true, order: 9 },
+  { id: "correlatedDocuments", label: "Correlated Document", visible: true, order: 10 },
+  { id: "department", label: "Department", visible: true, order: 11 },
+  { id: "author", label: "Author", visible: true, order: 12 },
+  { id: "effectiveDate", label: "Effective Date", visible: true, order: 13 },
+  { id: "validUntil", label: "Valid Until", visible: true, order: 14 },
+  { id: "action", label: "Action", visible: true, order: 15, locked: true },
 ];
 
 // --- Main Component ---
@@ -285,6 +297,40 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     setOpenDropdownId(id);
   };
 
+  const handleNewRevision = (revision: Revision) => {
+    if (revision.hasRelatedDocuments) {
+      navigate(`/documents/revisions/new?sourceDocId=${revision.id}`);
+    } else {
+      navigate(`/documents/revisions/new-standalone?sourceDocId=${revision.id}`);
+    }
+    setOpenDropdownId(null);
+  };
+
+  const handlePrintControlledCopy = (revision: Revision) => {
+    const relatedDocuments = revision.hasRelatedDocuments
+      ? [
+          {
+            id: revision.id,
+            documentId: revision.documentNumber,
+            title: revision.revisionName,
+            version: revision.revisionNumber,
+            status: revision.state as any,
+            isParent: true,
+          },
+        ]
+      : [];
+
+    navigate('/documents/controlled-copy/request', {
+      state: {
+        documentId: revision.documentNumber,
+        documentTitle: revision.revisionName,
+        documentVersion: revision.revisionNumber,
+        relatedDocuments,
+      },
+    });
+    setOpenDropdownId(null);
+  };
+
   const handleMenuAction = (action: string, id: string) => {
     setOpenDropdownId(null);
 
@@ -338,6 +384,18 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         return <span className="text-slate-600">{revision.documentName}</span>;
       case "type":
         return revision.type;
+      case "relatedDocuments":
+        return revision.hasRelatedDocuments ? (
+          <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+        ) : (
+          <span className="text-slate-600 font-medium">No</span>
+        );
+      case "correlatedDocuments":
+        return revision.hasCorrelatedDocuments ? (
+          <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+        ) : (
+          <span className="text-slate-600 font-medium">No</span>
+        );
       case "department":
         return revision.department;
       case "author":
@@ -552,8 +610,11 @@ export const RevisionsOwnedByMeView: React.FC = () => {
       </div>
 
       {/* Dropdown Menu */}
-      {openDropdownId &&
-        createPortal(
+      {openDropdownId && (() => {
+        const currentRevision = MOCK_MY_REVISIONS.find(r => r.id === openDropdownId);
+        const isEffective = currentRevision?.state === "Effective";
+
+        return createPortal(
           <>
             <div
               className="fixed inset-0 z-40 animate-in fade-in duration-150"
@@ -584,6 +645,30 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                   <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
                   <span className="font-medium">View Details</span>
                 </button>
+                {isEffective && currentRevision && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNewRevision(currentRevision);
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                    >
+                      <FilePlusCorner className="h-4 w-4 flex-shrink-0" />
+                      <span className="font-medium">New Revision</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePrintControlledCopy(currentRevision);
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                    >
+                      <FileStack className="h-4 w-4 flex-shrink-0" />
+                      <span className="font-medium">Request Controlled Copy</span>
+                    </button>
+                  </>
+                )}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -608,7 +693,8 @@ export const RevisionsOwnedByMeView: React.FC = () => {
             </div>
           </>,
           document.body,
-        )}
+        );
+      })()}
     </div>
   );
 };

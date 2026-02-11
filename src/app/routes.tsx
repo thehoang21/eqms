@@ -26,9 +26,7 @@ const NotificationsView = lazy(() => import('@/features/notifications').then(m =
 const DetailDocumentView = lazy(() => import('@/features/documents').then(m => ({ default: m.DetailDocumentView })));
 const ArchivedDocumentsView = lazy(() => import('@/features/documents/archived-documents').then(m => ({ default: m.ArchivedDocumentsView })));
 const DocumentsView = lazy(() => import('@/features/documents/document-list').then(m => ({ default: m.DocumentsView })));
-const NewDocumentView = lazy(() => import('@/features/documents/document-list/new-document').then(m => ({ default: m.NewDocumentView })));
-const DocumentReviewView = lazy(() => import('@/features/documents/document-list/review-document').then(m => ({ default: m.DocumentReviewView })));
-const DocumentApprovalView = lazy(() => import('@/features/documents/document-list/approval-document').then(m => ({ default: m.DocumentApprovalView })));
+const NewDocumentView = lazy(() => import('@/features/documents/document-list/document-creation').then(m => ({ default: m.NewDocumentView })));
 
 // Document Revisions
 const RevisionListView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionListView })));
@@ -44,7 +42,7 @@ const StandaloneRevisionView = lazy(() => import('@/features/documents/document-
 const ControlledCopiesView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.ControlledCopiesView })));
 const ControlledCopyDetailView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.ControlledCopyDetailView })));
 const DestroyControlledCopyView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.DestroyControlledCopyView })));
-const RequestControlledCopyView = lazy(() => import('@/features/documents/views/RequestControlledCopyView').then(m => ({ default: m.RequestControlledCopyView })));
+const RequestControlledCopyView = lazy(() => import('@/features/documents/document-revisions/views/RequestControlledCopyView').then(m => ({ default: m.RequestControlledCopyView })));
 
 // Settings
 const ProfileView = lazy(() => import('@/features/settings').then(m => ({ default: m.ProfileView })));
@@ -96,32 +94,6 @@ const DetailDocumentViewWrapper = () => (
     )} 
   />
 );
-
-const DocumentReviewViewWrapper = () => {
-  const { user } = useAuth();
-  return (
-    <RouteWrapper 
-      render={(id, navigate) => (
-        <Suspense fallback={<LoadingFallback />}>
-          <DocumentReviewView documentId={id} onBack={() => navigate(-1)} currentUserId={user?.id || ''} />
-        </Suspense>
-      )} 
-    />
-  );
-};
-
-const DocumentApprovalViewWrapper = () => {
-  const { user } = useAuth();
-  return (
-    <RouteWrapper 
-      render={(id, navigate) => (
-        <Suspense fallback={<LoadingFallback />}>
-          <DocumentApprovalView documentId={id} onBack={() => navigate(-1)} currentUserId={user?.id || ''} />
-        </Suspense>
-      )} 
-    />
-  );
-};
 
 const RevisionReviewViewWrapper = () => {
   const { user } = useAuth();
@@ -208,8 +180,6 @@ export const AppRoutes: React.FC = () => {
           
           {/* Document Detail & Actions */}
           <Route path=":id" element={<DetailDocumentViewWrapper />} />
-          <Route path=":id/review" element={<DocumentReviewViewWrapper />} />
-          <Route path=":id/approval" element={<DocumentApprovalViewWrapper />} />
           
           {/* Document Revisions */}
           <Route path="revisions">
@@ -227,7 +197,10 @@ export const AppRoutes: React.FC = () => {
           
           {/* Controlled Copies */}
           <Route path="controlled-copies">
-            <Route index element={<Suspense fallback={<LoadingFallback />}><ControlledCopiesView /></Suspense>} />
+            <Route index element={<Navigate to="/documents/controlled-copies/all" replace />} />
+            <Route path="all" element={<Suspense fallback={<LoadingFallback />}><ControlledCopiesView viewType="all" /></Suspense>} />
+            <Route path="ready" element={<Suspense fallback={<LoadingFallback />}><ControlledCopiesView viewType="ready" /></Suspense>} />
+            <Route path="distributed" element={<Suspense fallback={<LoadingFallback />}><ControlledCopiesView viewType="distributed" /></Suspense>} />
             <Route path=":id" element={<ControlledCopyDetailViewWrapper />} />
             <Route path=":id/destroy" element={<Suspense fallback={<LoadingFallback />}><DestroyControlledCopyView /></Suspense>} />
             <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />

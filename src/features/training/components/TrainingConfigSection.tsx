@@ -2,7 +2,6 @@ import React from "react";
 import { BookOpen, ClipboardCheck } from "lucide-react";
 import { TrainingConfig } from "../types";
 import { cn } from '@/components/ui/utils';
-import { MultiSelect } from '@/components/ui/select/MultiSelect';
 
 interface TrainingConfigSectionProps {
     config: TrainingConfig;
@@ -87,40 +86,6 @@ export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ co
 
                 {/* Configuration Fields */}
                 <div className="space-y-6">
-                    {/* Distribution List */}
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">
-                            Distribution List
-                        </label>
-                        <MultiSelect
-                            value={config.distributionList}
-                            onChange={(selected) => onUpdate({ distributionList: selected as string[] })}
-                            options={[
-                                { label: "Quality Assurance (QA)", value: "qa" },
-                                { label: "Quality Control (QC)", value: "qc" },
-                                { label: "Production", value: "production" },
-                                { label: "Research & Development (R&D)", value: "rnd" },
-                                { label: "Regulatory Affairs", value: "regulatory" },
-                                { label: "Warehouse", value: "warehouse" },
-                                { label: "Maintenance", value: "maintenance" },
-                                { label: "Engineering", value: "engineering" },
-                                { label: "Human Resources (HR)", value: "hr" },
-                                { label: "Finance & Accounting", value: "finance" },
-                                { label: "Procurement", value: "procurement" },
-                                { label: "Logistics", value: "logistics" },
-                                { label: "IT Department", value: "it" },
-                                { label: "Safety & Environment", value: "safety" },
-                                { label: "Management", value: "management" },
-                            ]}
-                            placeholder="Select departments to distribute training..."
-                            enableSearch
-                            maxVisibleTags={3}
-                        />
-                        <p className="text-xs text-slate-500 mt-1.5">
-                            Select which departments will receive this training
-                        </p>
-                    </div>
-
                     {/* Numeric Fields Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {isTestMode && (

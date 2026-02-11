@@ -268,7 +268,7 @@ export const DestroyControlledCopyView: React.FC = () => {
               disabled={isLoading}
               className="bg-red-600 hover:bg-red-700 text-white border-red-600 hover:border-red-700"
             >
-              Submit & Sign
+              Submit
             </Button>
           </div>
         </div>

@@ -11,6 +11,8 @@ import {
   Home,
   ThumbsUp,
   Download,
+  FilePlusCorner,
+  FileStack,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { StatusBadge, StatusType } from '@/components/ui/statusbadge/StatusBadge';
@@ -38,6 +40,8 @@ interface Revision {
   documentName: string;
   type: DocumentType;
   department: string;
+  hasRelatedDocuments?: boolean;
+  hasCorrelatedDocuments?: boolean;
 }
 
 // Helper to map status string to StatusType
@@ -121,21 +125,26 @@ export const MOCK_REVISIONS: Revision[] = [
     department: "R&D",
   },
   // Other statuses for variety
-  ...Array.from({ length: 41 }, (_, i) => ({
-    id: `${i + 5}`,
-    documentNumber: `SOP.${String(i + 5).padStart(4, "0")}.0${(i % 3) + 1}`,
-    revisionNumber: `${Math.floor(i / 3) + 1}.${i % 3}`,
-    created: new Date(Date.now() - Math.random() * 10000000000).toISOString().split("T")[0],
-    openedBy: ["John Smith", "Jane Doe", "Alice Johnson", "Bob Williams"][i % 4],
-    revisionName: `Revision ${i + 5}`,
-    state: ["Draft", "Approved", "Effective", "Archive"][i % 4] as DocumentStatus,
-    author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Brown", "David Lee"][i % 4],
-    effectiveDate: new Date(Date.now() + Math.random() * 10000000000).toISOString().split("T")[0],
-    validUntil: new Date(Date.now() + Math.random() * 20000000000).toISOString().split("T")[0],
-    documentName: `Standard Operating Procedure ${i + 5}`,
-    type: ["SOP", "Policy", "Form", "Report"][i % 4] as DocumentType,
-    department: ["Quality Assurance", "Production", "R&D", "Regulatory Affairs"][i % 4],
-  })),
+  ...Array.from({ length: 41 }, (_, i) => {
+    const status = ["Draft", "Approved", "Effective", "Archive"][i % 4] as DocumentStatus;
+    return {
+      id: `${i + 5}`,
+      documentNumber: `SOP.${String(i + 5).padStart(4, "0")}.0${(i % 3) + 1}`,
+      revisionNumber: `${Math.floor(i / 3) + 1}.${i % 3}`,
+      created: new Date(Date.now() - Math.random() * 10000000000).toISOString().split("T")[0],
+      openedBy: ["John Smith", "Jane Doe", "Alice Johnson", "Bob Williams"][i % 4],
+      revisionName: `Revision ${i + 5}`,
+      state: status,
+      author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Brown", "David Lee"][i % 4],
+      effectiveDate: new Date(Date.now() + Math.random() * 10000000000).toISOString().split("T")[0],
+      validUntil: new Date(Date.now() + Math.random() * 20000000000).toISOString().split("T")[0],
+      documentName: `Standard Operating Procedure ${i + 5}`,
+      type: ["SOP", "Policy", "Form", "Report"][i % 4] as DocumentType,
+      department: ["Quality Assurance", "Production", "R&D", "Regulatory Affairs"][i % 4],
+      hasRelatedDocuments: status === "Effective" && i % 3 === 0, // Some Effective revisions have related docs
+      hasCorrelatedDocuments: i % 2 === 0, // Some revisions have correlated docs
+    };
+  }),
 ];
 
 
@@ -282,6 +291,40 @@ export const RevisionListView: React.FC = () => {
     setOpenDropdownId(id);
   };
 
+  const handleNewRevision = (revision: Revision) => {
+    if (revision.hasRelatedDocuments) {
+      navigate(`/documents/revisions/new?sourceDocId=${revision.id}`);
+    } else {
+      navigate(`/documents/revisions/new-standalone?sourceDocId=${revision.id}`);
+    }
+    setOpenDropdownId(null);
+  };
+
+  const handlePrintControlledCopy = (revision: Revision) => {
+    const relatedDocuments = revision.hasRelatedDocuments
+      ? [
+          {
+            id: revision.id,
+            documentId: revision.documentNumber,
+            title: revision.revisionName,
+            version: revision.revisionNumber,
+            status: revision.state as any,
+            isParent: true,
+          },
+        ]
+      : [];
+
+    navigate('/documents/controlled-copy/request', {
+      state: {
+        documentId: revision.documentNumber,
+        documentTitle: revision.revisionName,
+        documentVersion: revision.revisionNumber,
+        relatedDocuments,
+      },
+    });
+    setOpenDropdownId(null);
+  };
+
   const handleMenuAction = (action: string, id: string) => {
     setOpenDropdownId(null);
     
@@ -318,14 +361,14 @@ export const RevisionListView: React.FC = () => {
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <IconSmartHome className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
-            <button className="hover:text-slate-700 transition-colors hidden sm:inline">
+            <span className="hidden sm:inline">
               Document Control
-            </button>
+            </span>
             <span className="sm:hidden">...</span>
             <span className="text-slate-400 mx-1">/</span>
-            <button className="hover:text-slate-700 transition-colors hidden sm:inline">
+            <span className="hidden sm:inline">
               Document Revisions
-            </button>
+            </span>
             <span className="sm:hidden">...</span>
             <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">All Revisions</span>
@@ -427,6 +470,8 @@ export const RevisionListView: React.FC = () => {
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">State</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Name</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Type</th>
+                  <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Related Document</th>
+                  <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Correlated Document</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Department</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Author</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Effective Date</th>
@@ -458,6 +503,20 @@ export const RevisionListView: React.FC = () => {
                     </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">{revision.documentName}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.type}</td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                      {revision.hasRelatedDocuments ? (
+                        <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+                      ) : (
+                        <span className="text-slate-600 font-medium">No</span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                      {revision.hasCorrelatedDocuments ? (
+                        <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+                      ) : (
+                        <span className="text-slate-600 font-medium">No</span>
+                      )}
+                    </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.department}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.author}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.effectiveDate}</td>
@@ -523,6 +582,7 @@ export const RevisionListView: React.FC = () => {
         const currentRevision = MOCK_REVISIONS.find(r => r.id === openDropdownId);
         const isPendingReview = currentRevision?.state === "Pending Review";
         const isPendingApproval = currentRevision?.state === "Pending Approval";
+        const isEffective = currentRevision?.state === "Effective";
 
         return createPortal(
           <>
@@ -577,6 +637,30 @@ export const RevisionListView: React.FC = () => {
                     <IconChecks className="h-4 w-4 text-slate-500" />
                     <span>Approve Revision</span>
                   </button>
+                )}
+                {isEffective && currentRevision && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNewRevision(currentRevision);
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
+                    >
+                      <FilePlusCorner className="h-4 w-4 text-slate-500" />
+                      <span>New Revision</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePrintControlledCopy(currentRevision);
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
+                    >
+                      <FileStack className="h-4 w-4 text-slate-500" />
+                      <span>Request Controlled Copy</span>
+                    </button>
+                  </>
                 )}
                 <button
                   onClick={(e) => {

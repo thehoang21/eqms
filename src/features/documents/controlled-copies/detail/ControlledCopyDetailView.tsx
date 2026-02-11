@@ -13,7 +13,6 @@ import {
   Eye,
   Trash2,
   Upload,
-  Download,
   ChevronLeft,
   AlertTriangle,
   Check,
@@ -244,7 +243,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
   const [controlledCopy] = useState<ControlledCopy>(MOCK_CONTROLLED_COPY);
   const [timeline] = useState<TimelineEvent[]>(MOCK_TIMELINE);
   const [isDestructionModalOpen, setIsDestructionModalOpen] = useState(false);
-  const [isESignModalOpen, setIsESignModalOpen] = useState(false);
   const [isDistributeModalOpen, setIsDistributeModalOpen] = useState(false);
   const [isReportLostDamagedModalOpen, setIsReportLostDamagedModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
@@ -283,33 +281,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
     alert(
       `Controlled copy marked as destroyed.\nMethod: ${formData.destructionMethod}\nExecutor: ${formData.destructedBy}\nSupervisor: ${formData.destructionSupervisor}`
     );
-  };
-
-  const handleDownloadPDF = () => {
-    // Mở modal ký điện tử trước khi download
-    setIsESignModalOpen(true);
-  };
-
-  const handleESignSuccess = (reason: string) => {
-    // Đóng modal
-    setIsESignModalOpen(false);
-    
-    // Hiển thị toast thành công
-    showToast({
-      type: "success",
-      title: "E-Signature Verified",
-      message: "Document download started successfully.",
-      duration: 3500,
-    });
-
-    // Thực hiện download
-    console.log("E-Signature reason:", reason);
-    console.log("Download controlled copy PDF");
-    // TODO: Call API to log e-signature event and download PDF
-    // Generate download file
-    setTimeout(() => {
-      alert("Downloading controlled copy document...");
-    }, 500);
   };
 
   const handleDistribute = () => {
@@ -387,14 +358,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
               className="gap-1.5 shadow-sm hover:border-emerald-200 hover:text-emerald-700 hover:bg-emerald-50"
             >
               View Original
-            </Button>
-            <Button
-              onClick={handleDownloadPDF}
-              variant="outline"
-              size="sm"
-              className="gap-1.5 shadow-sm"
-            >
-              Download
             </Button>
             {controlledCopy.status === "Ready for Distribution" && (
               <Button
@@ -530,14 +493,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         >
           View Original
         </Button>
-        <Button
-          onClick={handleDownloadPDF}
-          variant="outline"
-          size="sm"
-          className="gap-1.5 shadow-sm"
-        >
-          Download
-        </Button>
         {controlledCopy.status === "Ready for Distribution" && (
           <Button
             onClick={handleDistribute}
@@ -560,14 +515,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
           </Button>
         )}
       </div>
-
-      {/* E-Signature Modal for Download */}
-      <ESignatureModal
-        isOpen={isESignModalOpen}
-        onClose={() => setIsESignModalOpen(false)}
-        onConfirm={handleESignSuccess}
-        actionTitle="Download Controlled Copy"
-      />
 
       {/* E-Signature Modal for Distribute */}
       <ESignatureModal

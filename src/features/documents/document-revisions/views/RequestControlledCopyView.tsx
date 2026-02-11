@@ -229,19 +229,14 @@ export const RequestControlledCopyView: React.FC = () => {
                 <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
                   <IconSmartHome className="h-4 w-4" />
                   <span className="text-slate-400 mx-1">/</span>
-                  <button
-                    className="transition-colors hidden sm:inline"
-                  >
+                  <span className="hidden sm:inline">
                     Document Control
-                  </button>
+                  </span>
                   <span className="sm:hidden">...</span>
                   <span className="text-slate-400 mx-1">/</span>
-                  <button
-                    onClick={() => navigate('/documents/all')}
-                    className="hover:text-slate-700 transition-colors"
-                  >
-                    All Documents
-                  </button>
+                  <span>
+                    Document Revisions
+                  </span>
                   <span className="text-slate-400 mx-1">/</span>
                   <span className="text-slate-700 font-medium">{documentId}</span>
                 </div>

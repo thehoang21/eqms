@@ -33,6 +33,7 @@ interface DocumentFiltersProps {
     showDepartmentFilter?: boolean;
     disableStatusFilter?: boolean;
     authorFilterDisabled?: boolean;
+    allowedStatuses?: DocumentStatus[];
 }
 
 export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
@@ -62,7 +63,31 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
     showDepartmentFilter = true,
     disableStatusFilter = false,
     authorFilterDisabled = false,
+    allowedStatuses,
 }) => {
+    // Default status options for All Revisions view
+    const defaultStatusOptions = [
+        { label: "All", value: "All" },
+        { label: "Draft", value: "Draft" },
+        { label: "Pending Review", value: "Pending Review" },
+        { label: "Pending Approval", value: "Pending Approval" },
+        { label: "Approved", value: "Approved" },
+        { label: "Pending Training", value: "Pending Training" },
+        { label: "Ready for Publishing", value: "Ready for Publishing" },
+        { label: "Published", value: "Published" },
+        { label: "Effective", value: "Effective" },
+        { label: "Archive", value: "Archive" },
+        { label: "Obsoleted", value: "Obsoleted" },
+        { label: "Closed - Cancelled", value: "Closed - Cancelled" },
+    ];
+
+    // Filter status options based on allowedStatuses prop
+    const statusOptions = allowedStatuses
+        ? [
+            { label: "All", value: "All" },
+            ...allowedStatuses.map(status => ({ label: status, value: status }))
+          ]
+        : defaultStatusOptions;
     return (
         <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
             {/* Primary Filters — Always visible */}
@@ -92,18 +117,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         label="Status"
                         value={statusFilter}
                         onChange={(value) => !disableStatusFilter && onStatusChange(value as DocumentStatus | "All")}
-                        options={[
-                            { label: "All", value: "All" },
-                            { label: "Draft", value: "Draft" },
-                            { label: "Pending Review", value: "Pending Review" },
-                            { label: "Pending Approval", value: "Pending Approval" },
-                            { label: "Approved", value: "Approved" },
-                            { label: "Pending Training", value: "Pending Training" },
-                            { label: "Ready for Publishing", value: "Ready for Publishing" },
-                            { label: "Published", value: "Published" },
-                            { label: "Effective", value: "Effective" },
-                            { label: "Archive", value: "Archive" },
-                        ]}
+                        options={statusOptions}
                         placeholder="Select status"
                         searchPlaceholder="Search status..."
                         disabled={disableStatusFilter}

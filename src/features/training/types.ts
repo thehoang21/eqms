@@ -52,6 +52,16 @@ export interface TrainingConfig {
     questions: Question[];
 }
 
+export interface TrainingFile {
+    id: string;
+    file: File;
+    name: string;
+    size: number;
+    type: string;
+    progress: number;
+    status: "uploading" | "success" | "error";
+}
+
 export interface TrainingRecord {
   id: string;
   trainingId: string;

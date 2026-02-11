@@ -1,1 +1,0 @@
-export { DocumentApprovalView } from './DocumentApprovalView';

@@ -65,17 +65,12 @@ export {
 // =============================================================================
 // DOCUMENT LIST & VIEWS
 // =============================================================================
-export { DocumentsView } from './views/DocumentsView';
+export { DocumentsView } from './document-list/DocumentsView';
 export { DetailDocumentView } from './document-detail/DetailDocumentView';
 
 // Document Creation
-export { NewDocumentView } from './document-list/single-document/NewDocumentView';
-export { SingleDocumentView } from './document-list/single-document/SingleDocumentView';
-
-// Document Review & Approval
-export { DocumentReviewView } from './document-list/review-document/DocumentReviewView';
-export { DocumentReviewViewWithBatch } from './document-list/review-document/DocumentReviewViewWithBatch';
-export { DocumentApprovalView } from './document-list/approval-document/DocumentApprovalView';
+export { NewDocumentView } from './document-list/document-creation/NewDocumentView';
+export { SingleDocumentView } from './document-list/document-creation/SingleDocumentView';
 
 // =============================================================================
 // DOCUMENT REVISIONS
@@ -95,7 +90,7 @@ export { RevisionApprovalView } from './document-revisions/approval-revision/Rev
 export { ControlledCopiesView } from './controlled-copies/ControlledCopiesView';
 export { ControlledCopyDetailView } from './controlled-copies/detail/ControlledCopyDetailView';
 export { DestroyControlledCopyView } from './controlled-copies/components/DestroyControlledCopyView';
-export { RequestControlledCopyView } from './views/RequestControlledCopyView';
+export { RequestControlledCopyView } from './document-revisions/views/RequestControlledCopyView';
 
 
 // =============================================================================

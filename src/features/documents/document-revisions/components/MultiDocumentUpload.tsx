@@ -183,7 +183,7 @@ export const MultiDocumentUpload: React.FC<MultiDocumentUploadProps> = ({
                                                 </p>
                                             )}
                                         </div>
-                                    ) : (
+                                    ) : slot.file && (
                                         <div className="flex items-center gap-2 md:gap-3">
                                             <div className="flex-1 sm:flex-initial sm:text-right sm:min-w-[200px]">
                                                 <div className="flex items-center sm:justify-end gap-1.5 md:gap-2 mb-0.5 md:mb-1">

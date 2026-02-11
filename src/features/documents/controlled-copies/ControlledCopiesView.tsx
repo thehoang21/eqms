@@ -1,6 +1,6 @@
 import React, { useState, useMemo, createRef, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Home,
   Download,
@@ -183,6 +183,411 @@ const MOCK_ALL_CONTROLLED_COPIES: ControlledCopy[] = [
     version: "2.0",
     department: "Engineering",
     reason: "Project cancelled",
+  },
+  {
+    id: "cc-011",
+    documentNumber: "CC-2024-011",
+    createdDate: "2024-02-01",
+    createdTime: "08:15:30",
+    openedBy: "Thomas Anderson",
+    name: "CAPA Investigation Procedure",
+    status: "Ready for Distribution",
+    validUntil: "2025-02-01",
+    document: "SOP.0245.01",
+    distributionList: "Quality Assurance, Production",
+    version: "1.0",
+    location: "QA Office",
+    department: "Quality Assurance",
+    reason: "New procedure implementation",
+  },
+  {
+    id: "cc-012",
+    documentNumber: "CC-2024-012",
+    createdDate: "2024-02-03",
+    createdTime: "13:45:12",
+    openedBy: "Maria Garcia",
+    name: "Deviation Management SOP",
+    status: "Distributed",
+    validUntil: "2025-02-03",
+    document: "SOP.0189.02",
+    distributionList: "All Departments",
+    version: "2.0",
+    recipientName: "Department Heads",
+    distributedDate: "2024-02-04",
+    distributedBy: "QA Director",
+    department: "Quality Assurance",
+  },
+  {
+    id: "cc-013",
+    documentNumber: "CC-2024-013",
+    createdDate: "2024-02-05",
+    createdTime: "09:20:45",
+    openedBy: "Robert Johnson",
+    name: "Aseptic Processing Guidelines",
+    status: "Ready for Distribution",
+    validUntil: "2025-08-05",
+    document: "SOP.0334.03",
+    distributionList: "Manufacturing, QC",
+    version: "3.0",
+    location: "Aseptic Processing Area",
+    department: "Manufacturing",
+    reason: "Updated to comply with new regulations",
+  },
+  {
+    id: "cc-014",
+    documentNumber: "CC-2024-014",
+    createdDate: "2024-02-07",
+    createdTime: "14:30:22",
+    openedBy: "Jennifer White",
+    name: "Laboratory Safety Protocol",
+    status: "Distributed",
+    validUntil: "2025-02-07",
+    document: "PROT.0056.01",
+    distributionList: "Laboratory Staff",
+    version: "1.0",
+    recipientName: "Lab Safety Officer",
+    distributedDate: "2024-02-08",
+    distributedBy: "Safety Manager",
+    department: "Safety & Compliance",
+  },
+  {
+    id: "cc-015",
+    documentNumber: "CC-2024-015",
+    createdDate: "2024-02-10",
+    createdTime: "11:10:55",
+    openedBy: "Daniel Kim",
+    name: "Supplier Audit Checklist",
+    status: "Ready for Distribution",
+    validUntil: "2025-02-10",
+    document: "FORM.0123.02",
+    distributionList: "Supply Chain, QA",
+    version: "2.0",
+    location: "Supply Chain Office",
+    department: "Supply Chain",
+    reason: "Enhanced audit requirements",
+  },
+  {
+    id: "cc-016",
+    documentNumber: "CC-2024-016",
+    createdDate: "2024-02-12",
+    createdTime: "10:05:18",
+    openedBy: "Susan Miller",
+    name: "Change Control Approval Form",
+    status: "Distributed",
+    validUntil: "2024-12-12",
+    document: "FORM.0078.01",
+    distributionList: "Change Control Board",
+    version: "1.0",
+    recipientName: "CCB Members",
+    distributedDate: "2024-02-13",
+    distributedBy: "Change Control Coordinator",
+    department: "Quality Management",
+  },
+  {
+    id: "cc-017",
+    documentNumber: "CC-2023-145",
+    createdDate: "2023-10-20",
+    createdTime: "16:40:12",
+    openedBy: "Kevin Brown",
+    name: "Old Packaging Specification",
+    status: "Obsolete",
+    validUntil: "2023-12-20",
+    document: "SPEC.0089.04",
+    distributionList: "Packaging, QC",
+    version: "4.0",
+    department: "Packaging",
+    reason: "New packaging material approved",
+  },
+  {
+    id: "cc-018",
+    documentNumber: "CC-2024-018",
+    createdDate: "2024-02-15",
+    createdTime: "09:55:30",
+    openedBy: "Rachel Green",
+    name: "Product Release Procedure",
+    status: "Ready for Distribution",
+    validUntil: "2025-02-15",
+    document: "SOP.0412.01",
+    distributionList: "QA Release, Warehouse",
+    version: "1.0",
+    location: "QA Release Department",
+    department: "Quality Assurance",
+    reason: "New GMP requirement",
+  },
+  {
+    id: "cc-019",
+    documentNumber: "CC-2024-019",
+    createdDate: "2024-02-16",
+    createdTime: "13:25:45",
+    openedBy: "William Davis",
+    name: "Complaint Investigation Work Instruction",
+    status: "Distributed",
+    validUntil: "2025-02-16",
+    document: "WI.0145.02",
+    distributionList: "Customer Service, QA",
+    version: "2.0",
+    recipientName: "Complaint Handler",
+    distributedDate: "2024-02-17",
+    distributedBy: "QA Manager",
+    department: "Quality Assurance",
+  },
+  {
+    id: "cc-020",
+    documentNumber: "CC-2023-178",
+    createdDate: "2023-09-10",
+    createdTime: "11:30:20",
+    openedBy: "Amanda Lopez",
+    name: "Outdated Training Module - GMP Basics",
+    status: "Closed - Cancelled",
+    validUntil: "2023-12-10",
+    document: "TM.0089.01",
+    distributionList: "Training Department",
+    version: "1.0",
+    department: "Training",
+    reason: "Replaced by e-learning platform",
+  },
+  {
+    id: "cc-021",
+    documentNumber: "CC-2026-021",
+    createdDate: "2026-01-20",
+    createdTime: "08:30:15",
+    openedBy: "Christopher Lee",
+    name: "Annual Product Quality Review Template",
+    status: "Ready for Distribution",
+    validUntil: "2027-01-20",
+    document: "TEMP.0234.01",
+    distributionList: "QA, Regulatory Affairs",
+    version: "1.0",
+    location: "QA Review Team",
+    department: "Quality Assurance",
+    reason: "Annual review cycle",
+  },
+  {
+    id: "cc-022",
+    documentNumber: "CC-2026-022",
+    createdDate: "2026-01-22",
+    createdTime: "10:15:40",
+    openedBy: "Patricia Wilson",
+    name: "Stability Testing Protocol",
+    status: "Distributed",
+    validUntil: "2027-01-22",
+    document: "PROT.0167.03",
+    distributionList: "Stability Lab, R&D",
+    version: "3.0",
+    recipientName: "Stability Manager",
+    distributedDate: "2026-01-23",
+    distributedBy: "Lab Director",
+    department: "Quality Control",
+  },
+  {
+    id: "cc-023",
+    documentNumber: "CC-2026-023",
+    createdDate: "2026-01-25",
+    createdTime: "14:45:55",
+    openedBy: "Charles Martinez",
+    name: "Master Batch Record - Product A",
+    status: "Ready for Distribution",
+    validUntil: "2027-01-25",
+    document: "MBR.0456.02",
+    distributionList: "Production, Quality Control",
+    version: "2.0",
+    location: "Production Floor",
+    department: "Manufacturing",
+    reason: "Process optimization update",
+  },
+  {
+    id: "cc-024",
+    documentNumber: "CC-2026-024",
+    createdDate: "2026-01-28",
+    createdTime: "09:10:30",
+    openedBy: "Michelle Taylor",
+    name: "Document Control SOP",
+    status: "Distributed",
+    validUntil: "2027-01-28",
+    document: "SOP.0001.05",
+    distributionList: "All Departments",
+    version: "5.0",
+    recipientName: "All Staff",
+    distributedDate: "2026-01-29",
+    distributedBy: "Document Control Manager",
+    department: "Quality Management",
+  },
+  {
+    id: "cc-025",
+    documentNumber: "CC-2026-025",
+    createdDate: "2026-02-01",
+    createdTime: "11:20:45",
+    openedBy: "Steven Anderson",
+    name: "Water System Maintenance Schedule",
+    status: "Ready for Distribution",
+    validUntil: "2027-02-01",
+    document: "SCH.0089.01",
+    distributionList: "Engineering, QA",
+    version: "1.0",
+    location: "Utilities Department",
+    department: "Engineering",
+    reason: "Preventive maintenance planning",
+  },
+  {
+    id: "cc-026",
+    documentNumber: "CC-2026-026",
+    createdDate: "2026-02-03",
+    createdTime: "15:35:20",
+    openedBy: "Barbara Thompson",
+    name: "Vendor Qualification Procedure",
+    status: "Distributed",
+    validUntil: "2027-02-03",
+    document: "SOP.0278.02",
+    distributionList: "Procurement, QA",
+    version: "2.0",
+    recipientName: "Procurement Manager",
+    distributedDate: "2026-02-04",
+    distributedBy: "QA Director",
+    department: "Supply Chain",
+  },
+  {
+    id: "cc-027",
+    documentNumber: "CC-2025-234",
+    createdDate: "2025-08-15",
+    createdTime: "13:50:10",
+    openedBy: "Richard Garcia",
+    name: "Obsolete Equipment Cleaning Log",
+    status: "Obsolete",
+    validUntil: "2025-12-15",
+    document: "LOG.0156.02",
+    distributionList: "Production",
+    version: "2.0",
+    department: "Manufacturing",
+    reason: "Equipment retired from service",
+  },
+  {
+    id: "cc-028",
+    documentNumber: "CC-2026-028",
+    createdDate: "2026-02-05",
+    createdTime: "08:40:35",
+    openedBy: "Nancy Rodriguez",
+    name: "Risk Assessment Template",
+    status: "Ready for Distribution",
+    validUntil: "2027-02-05",
+    document: "TEMP.0345.01",
+    distributionList: "Quality Management, Operations",
+    version: "1.0",
+    location: "Risk Management Office",
+    department: "Quality Management",
+    reason: "ISO compliance requirement",
+  },
+  {
+    id: "cc-029",
+    documentNumber: "CC-2026-029",
+    createdDate: "2026-02-07",
+    createdTime: "12:15:50",
+    openedBy: "Joseph Hernandez",
+    name: "Batch Sampling Procedure",
+    status: "Distributed",
+    validUntil: "2027-02-07",
+    document: "SOP.0389.01",
+    distributionList: "Production, QC Lab",
+    version: "1.0",
+    recipientName: "Lab Technicians",
+    distributedDate: "2026-02-08",
+    distributedBy: "QC Manager",
+    department: "Quality Control",
+  },
+  {
+    id: "cc-030",
+    documentNumber: "CC-2024-130",
+    createdDate: "2024-06-20",
+    createdTime: "10:25:15",
+    openedBy: "Linda Moore",
+    name: "Cancelled Project Protocol - Phase II",
+    status: "Closed - Cancelled",
+    validUntil: "2024-09-20",
+    document: "PROT.0234.01",
+    distributionList: "R&D, Project Team",
+    version: "1.0",
+    department: "Research & Development",
+    reason: "Project discontinued by management",
+  },
+  {
+    id: "cc-031",
+    documentNumber: "CC-2026-031",
+    createdDate: "2026-02-08",
+    createdTime: "14:55:30",
+    openedBy: "Mark Jackson",
+    name: "Out of Specification Investigation",
+    status: "Ready for Distribution",
+    validUntil: "2027-02-08",
+    document: "SOP.0456.02",
+    distributionList: "QC, QA, Production",
+    version: "2.0",
+    location: "Quality Department",
+    department: "Quality Control",
+    reason: "Enhanced investigation requirements",
+  },
+  {
+    id: "cc-032",
+    documentNumber: "CC-2026-032",
+    createdDate: "2026-02-09",
+    createdTime: "09:35:45",
+    openedBy: "Karen White",
+    name: "Internal Audit Checklist - Manufacturing",
+    status: "Distributed",
+    validUntil: "2026-12-09",
+    document: "FORM.0234.01",
+    distributionList: "Audit Team",
+    version: "1.0",
+    recipientName: "Lead Auditor",
+    distributedDate: "2026-02-10",
+    distributedBy: "QA Manager",
+    department: "Quality Assurance",
+  },
+  {
+    id: "cc-033",
+    documentNumber: "CC-2026-033",
+    createdDate: "2026-02-10",
+    createdTime: "11:40:20",
+    openedBy: "Brian Clark",
+    name: "Analytical Method Validation Protocol",
+    status: "Ready for Distribution",
+    validUntil: "2027-02-10",
+    document: "PROT.0289.01",
+    distributionList: "QC Lab, Method Development",
+    version: "1.0",
+    location: "Analytical Laboratory",
+    department: "Quality Control",
+    reason: "New analytical method implementation",
+  },
+  {
+    id: "cc-034",
+    documentNumber: "CC-2026-034",
+    createdDate: "2026-02-11",
+    createdTime: "13:20:55",
+    openedBy: "Elizabeth Lewis",
+    name: "Data Integrity Procedure",
+    status: "Distributed",
+    validUntil: "2027-02-11",
+    document: "SOP.0512.01",
+    distributionList: "All Departments",
+    version: "1.0",
+    recipientName: "All Users",
+    distributedDate: "2026-02-11",
+    distributedBy: "IT & QA Director",
+    department: "IT & Quality",
+  },
+  {
+    id: "cc-035",
+    documentNumber: "CC-2025-189",
+    createdDate: "2025-07-10",
+    createdTime: "15:10:40",
+    openedBy: "George Hall",
+    name: "Deprecated Equipment Manual - Model X200",
+    status: "Obsolete",
+    validUntil: "2025-10-10",
+    document: "MAN.0167.01",
+    distributionList: "Engineering",
+    version: "1.0",
+    department: "Engineering",
+    reason: "Equipment model no longer in use",
   },
 ];
 
@@ -398,13 +803,16 @@ const DropdownMenu: React.FC<{
 
 // ==================== MAIN COMPONENT ====================
 
-export const ControlledCopiesView: React.FC = () => {
+interface ControlledCopiesViewProps {
+  viewType?: ViewType;
+}
+
+export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ viewType: propViewType = "all" }) => {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Get view type from URL params, default to "all"
-  const viewType = (searchParams.get("view") as ViewType) || "all";
+  // Use prop viewType instead of URL params
+  const viewType = propViewType;
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -444,13 +852,6 @@ export const ControlledCopiesView: React.FC = () => {
       buttonRefs.current[id] = createRef<HTMLButtonElement>();
     }
     return buttonRefs.current[id];
-  };
-
-  // Change view type handler
-  const handleViewChange = (view: ViewType) => {
-    setSearchParams({ view });
-    setCurrentPage(1);
-    setStatusFilter("All");
   };
 
   // Get filtered data based on view type
@@ -702,43 +1103,8 @@ export const ControlledCopiesView: React.FC = () => {
         </div>
       </div>
 
-      {/* Filters & Tabs Combined */}
+      {/* Filters */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        {/* Tab Navigation */}
-        <div className="flex gap-2 border-b border-slate-200">
-          <button
-            onClick={() => handleViewChange("all")}
-            className={`px-4 py-2.5 text-sm font-medium transition-colors relative ${
-              viewType === "all"
-                ? "text-emerald-600 border-b-2 border-emerald-600"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            All Controlled Copies
-          </button>
-          <button
-            onClick={() => handleViewChange("ready")}
-            className={`px-4 py-2.5 text-sm font-medium transition-colors relative ${
-              viewType === "ready"
-                ? "text-emerald-600 border-b-2 border-emerald-600"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Ready for Distribution
-          </button>
-          <button
-            onClick={() => handleViewChange("distributed")}
-            className={`px-4 py-2.5 text-sm font-medium transition-colors relative ${
-              viewType === "distributed"
-                ? "text-emerald-600 border-b-2 border-emerald-600"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Distributed
-          </button>
-        </div>
-
-        {/* Filters Section */}
         <div className="p-5">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
             <div className="md:col-span-2 xl:col-span-6">

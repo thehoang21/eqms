@@ -1,19 +1,16 @@
 /**
- * New Document Module
+ * Document Creation Module
  * 
  * Components and utilities for creating new documents.
+ * Simple single-step document creation workflow.
  */
 
 // Document views
-export { NewDocumentView } from '../single-document/NewDocumentView';
+export { NewDocumentView } from './NewDocumentView';
+export { SingleDocumentView } from './SingleDocumentView';
 
 // Workflow layout (re-export from shared)
 export { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from '@/features/documents/shared/layouts';
-
-// Review & Approval views
-export { DocumentReviewView } from '../review-document/DocumentReviewView';
-export { DocumentReviewViewWithBatch } from '../review-document/DocumentReviewViewWithBatch';
-export { DocumentApprovalView } from '../approval-document/DocumentApprovalView';
 
 // Batch navigation hook (re-export from hooks)
 export { useBatchNavigation } from '@/features/documents/hooks';

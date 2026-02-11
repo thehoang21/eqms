@@ -20,5 +20,8 @@ export { RevisionReviewView } from './review-revision/RevisionReviewView';
 export { RevisionReviewViewWithBatch } from './review-revision/RevisionReviewViewWithBatch';
 export { RevisionApprovalView } from './approval-revision/RevisionApprovalView';
 
+// Controlled Copy
+export { RequestControlledCopyView } from './views/RequestControlledCopyView';
+
 // Tabs
 export * from './revision-tabs';

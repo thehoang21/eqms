@@ -127,12 +127,9 @@ export const AddUserView: React.FC = () => {
               <span className="hidden md:inline">Settings</span>
               <span className="md:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <button
-                onClick={() => navigate(USER_MANAGEMENT_ROUTES.LIST)}
-                className="hidden md:inline hover:text-slate-700 transition-colors"
-              >
+              <span className="hidden md:inline">
                 User Management
-              </button>
+              </span>
               <span className="md:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">Add User</span>

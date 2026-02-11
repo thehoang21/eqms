@@ -18,7 +18,7 @@ import { cn } from "@/components/ui/utils";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 
-// Import tabs from new-document (reusing the same tabs)
+// Import tabs (reusing shared revision tabs)
 import {
     GeneralTab,
     TrainingTab,
@@ -444,8 +444,8 @@ export const RevisionWorkspaceView: React.FC = () => {
 
     const tabs = [
         { id: "general" as TabType, label: "General Information" },
+        { id: "training" as TabType, label: "Training Information" },
         { id: "document" as TabType, label: "Document" },
-        { id: "training" as TabType, label: "Training" },
         { id: "signatures" as TabType, label: "Signatures" },
         { id: "audit" as TabType, label: "Audit Trail" },
     ];
@@ -482,12 +482,9 @@ export const RevisionWorkspaceView: React.FC = () => {
                             <span className="hidden sm:inline">Document Control</span>
                             <span className="sm:hidden">...</span>
                             <span className="text-slate-400 mx-1">/</span>
-                            <button
-                                onClick={() => navigate("/documents/revisions/all")}
-                                className="hover:text-slate-700 transition-colors hidden sm:inline"
-                            >
+                            <span className="hidden sm:inline">
                                 All Revisions
-                            </button>
+                            </span>
                             <span className="sm:hidden">...</span>
                             <span className="text-slate-400 mx-1">/</span>
                             <span className="text-slate-700 font-medium">

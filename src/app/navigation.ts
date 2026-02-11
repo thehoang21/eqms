@@ -104,7 +104,23 @@ const FOUNDATION_MODULES: NavItem[] = [
       {
         id: "controlled-copies",
         label: "Controlled Copies",
-        path: "/documents/controlled-copies",
+        children: [
+          {
+            id: "cc-all",
+            label: "All Controlled Copies",
+            path: "/documents/controlled-copies/all",
+          },
+          {
+            id: "cc-ready",
+            label: "Ready for Distribution",
+            path: "/documents/controlled-copies/ready",
+          },
+          {
+            id: "cc-distributed",
+            label: "Distributed Copies",
+            path: "/documents/controlled-copies/distributed",
+          },
+        ],
       },
       {
         id: "archive-documents",

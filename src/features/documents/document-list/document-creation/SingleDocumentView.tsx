@@ -20,7 +20,7 @@ import {
     type UploadedFile,
     type ParentDocument,
     type RelatedDocument,
-} from "@/features/documents/document-list/new-document/new-tabs";
+} from "@/features/documents/document-list/document-creation/new-tabs";
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconSmartHome } from "@tabler/icons-react";
 
@@ -159,8 +159,8 @@ export const SingleDocumentView: React.FC = () => {
 
     const tabs = [
         { id: "general" as TabType, label: "General Information" },
+        { id: "training" as TabType, label: "Training Information" },
         { id: "document" as TabType, label: "Document" },
-        { id: "training" as TabType, label: "Training" },
         { id: "signatures" as TabType, label: "Signatures" },
         { id: "audit" as TabType, label: "Audit Trail" },
     ];
@@ -177,18 +177,15 @@ export const SingleDocumentView: React.FC = () => {
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
                             <IconSmartHome className="h-4 w-4" />
                             <span className="text-slate-400 mx-1">/</span>
-                            <button className="hover:text-slate-700 transition-colors">
+                            <span>
                                 <span className="hidden md:inline">Document Control</span>
                                 <span className="md:hidden">...</span>
-                            </button>
+                            </span>
                             <span className="text-slate-400 mx-1">/</span>
-                            <button
-                                onClick={() => navigate("/documents/all")}
-                                className="hover:text-slate-700 transition-colors"
-                            >
+                            <span>
                                 <span className="hidden md:inline">All Documents</span>
                                 <span className="md:hidden">...</span>
-                            </button>
+                            </span>
                             <span className="text-slate-400 mx-1">/</span>
                             <span className="text-slate-700 font-medium">New Document</span>
                         </div>

@@ -14,6 +14,7 @@ export type StatusType =
   | 'readyForPublishing' 
   | 'published' 
   | 'effective' 
+  | 'active'
   | 'archived' 
   | 'obsolete'
   | 'current'
@@ -69,12 +70,16 @@ const STATUS_CONFIG: Record<StatusType, { label: string; className: string }> = 
     label: 'Effective', 
     className: 'bg-emerald-100 text-emerald-800 border-emerald-300' 
   },
+  active: {
+    label: 'Active',
+    className: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+  },
   archived: {
-    label: 'Archived',
-    className: 'bg-gray-50 text-gray-700 border-gray-200'
+    label: 'Closed - Cancelled',
+    className: 'bg-gray-100 text-gray-700 border-gray-200'
   },
   obsolete: { 
-    label: 'Obsolete', 
+    label: 'Obsoleted', 
     className: 'bg-rose-50 text-rose-700 border-rose-200' 
   }
 };

@@ -1,1 +1,0 @@
-export { DocumentReviewView } from './DocumentReviewView';

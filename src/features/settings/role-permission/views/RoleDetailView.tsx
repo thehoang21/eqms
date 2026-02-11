@@ -275,10 +275,7 @@ export const RoleDetailView: React.FC = () => {
             <span className="hidden sm:inline">Settings</span>
             <span className="sm:hidden">...</span>
             <span className="text-slate-400 mx-1">/</span>
-            <span
-              onClick={() => navigate("/settings/role-permission")}
-              className="text-slate-500 hover:text-slate-700 cursor-pointer"
-            >
+            <span>
               Role & Permissions
             </span>
             <span className="text-slate-400 mx-1">/</span>

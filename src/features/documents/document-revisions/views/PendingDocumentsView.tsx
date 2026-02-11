@@ -26,7 +26,7 @@ import {
 } from "@tabler/icons-react";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
-import { MOCK_DOCUMENTS as ALL_DOCUMENTS } from "@/features/documents/views/DocumentsView";
+import { MOCK_DOCUMENTS as ALL_DOCUMENTS } from "@/features/documents/document-list/DocumentsView";
 import { MOCK_REVISIONS as ALL_REVISIONS } from "@/features/documents/document-revisions/views/RevisionListView";
 
 // --- Types ---
@@ -54,6 +54,8 @@ interface Revision {
   department: string;
   reviewers?: ReviewerApprover[];
   approvers?: ReviewerApprover[];
+  hasRelatedDocuments?: boolean;
+  hasCorrelatedDocuments?: boolean;
 }
 
 // --- Mock Data ---
@@ -81,6 +83,8 @@ const convertDocumentToRevision = (doc: any, isReview: boolean): Revision => {
     documentName: doc.title,
     type: doc.type,
     department: doc.department,
+    hasRelatedDocuments: doc.hasRelatedDocuments,
+    hasCorrelatedDocuments: doc.hasCorrelatedDocuments,
     // Assign current user as reviewer/approver for documents with matching status
     ...(isReview
       ? {
@@ -752,6 +756,12 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
                     <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Document Type
                     </th>
+                    <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                      Related Document
+                    </th>
+                    <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                      Correlated Document
+                    </th>
                     <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Department
                     </th>
@@ -810,6 +820,20 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
                           </td>
                           <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                             {rev.type}
+                          </td>
+                          <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                            {rev.hasRelatedDocuments ? (
+                              <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+                            ) : (
+                              <span className="text-slate-600 font-medium">No</span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                            {rev.hasCorrelatedDocuments ? (
+                              <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+                            ) : (
+                              <span className="text-slate-600 font-medium">No</span>
+                            )}
                           </td>
                           <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                             {rev.department}

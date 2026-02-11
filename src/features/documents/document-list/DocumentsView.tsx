@@ -8,8 +8,6 @@ import {
   Download,
   History,
   Link2,
-  FilePlusCorner,
-  FileStack,
   SquarePen,
 } from "lucide-react";
 import {
@@ -57,6 +55,7 @@ interface Document {
   openedBy: string;
   description?: string;
   hasRelatedDocuments?: boolean;
+  hasCorrelatedDocuments?: boolean;
 }
 
 // --- Mock Data ---
@@ -67,7 +66,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Standard Operating Procedure for Quality Control Testing",
     type: "SOP",
     version: "3.0",
-    status: "Effective",
+    status: "Active",
     effectiveDate: "2023-06-15",
     validUntil: "2024-06-15",
     author: "Dr. Sarah Johnson",
@@ -76,6 +75,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     openedBy: "QA Admin",
     description: "Comprehensive procedure for conducting quality control tests on pharmaceutical products",
     hasRelatedDocuments: true,
+    hasCorrelatedDocuments: true,
   },
   {
     id: "2",
@@ -83,7 +83,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Quality Management System Policy",
     type: "Policy",
     version: "2.1",
-    status: "Approved",
+    status: "Draft",
     effectiveDate: "2023-08-01",
     validUntil: "2024-08-01",
     author: "Michael Chen",
@@ -92,6 +92,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     openedBy: "System Admin",
     description: "Organization-wide quality management policy framework",
     hasRelatedDocuments: false,
+    hasCorrelatedDocuments: false,
   },
   {
     id: "3",
@@ -99,7 +100,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Batch Production Record Procedure",
     type: "SOP",
     version: "4.2",
-    status: "Pending Review",
+    status: "Active",
     effectiveDate: "2023-09-10",
     validUntil: "2024-09-10",
     author: "Emma Williams",
@@ -108,6 +109,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     openedBy: "Production Lead",
     description: "Guidelines for maintaining and reviewing batch production records",
     hasRelatedDocuments: true,
+    hasCorrelatedDocuments: false,
   },
   {
     id: "4",
@@ -115,14 +117,15 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Deviation Report Form",
     type: "Form",
     version: "1.5",
-    status: "Effective",
-    effectiveDate: "2023-05-20",
-    validUntil: "2024-05-20",
+    status: "Obsoleted",
+    effectiveDate: "2022-05-20",
+    validUntil: "2023-05-20",
     author: "John Davis",
     department: "Quality Assurance",
-    created: "2023-04-15",
+    created: "2022-04-15",
     openedBy: "QA Manager",
     hasRelatedDocuments: false,
+    hasCorrelatedDocuments: true,
   },
   {
     id: "5",
@@ -130,7 +133,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Raw Material Specification - API Grade A",
     type: "Specification",
     version: "2.0",
-    status: "Effective",
+    status: "Active",
     effectiveDate: "2023-07-01",
     validUntil: "2024-07-01",
     author: "Dr. Lisa Park",
@@ -138,6 +141,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     created: "2023-06-01",
     openedBy: "QC Supervisor",
     hasRelatedDocuments: true,
+    hasCorrelatedDocuments: true,
   },
   {
     id: "6",
@@ -145,7 +149,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Cleaning Validation Protocol",
     type: "Protocol",
     version: "3.1",
-    status: "Approved",
+    status: "Draft",
     effectiveDate: "2023-04-15",
     validUntil: "2024-04-15",
     author: "Robert Taylor",
@@ -153,6 +157,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     created: "2023-03-10",
     openedBy: "Validation Team",
     hasRelatedDocuments: false,
+    hasCorrelatedDocuments: false,
   },
   {
     id: "7",
@@ -160,7 +165,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Internal Audit Report Q2 2023",
     type: "Report",
     version: "1.0",
-    status: "Effective",
+    status: "Closed - Cancelled",
     effectiveDate: "2023-06-30",
     validUntil: "2024-06-30",
     author: "Amanda Martinez",
@@ -168,6 +173,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     created: "2023-06-20",
     openedBy: "Audit Team",
     hasRelatedDocuments: true,
+    hasCorrelatedDocuments: false,
   },
   {
     id: "8",
@@ -175,7 +181,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Equipment Calibration Procedure",
     type: "SOP",
     version: "5.0",
-    status: "Effective",
+    status: "Active",
     effectiveDate: "2023-08-15",
     validUntil: "2024-08-15",
     author: "David Brown",
@@ -183,6 +189,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     created: "2023-07-25",
     openedBy: "Engineering Lead",
     hasRelatedDocuments: false,
+    hasCorrelatedDocuments: true,
   },
   {
     id: "9",
@@ -197,6 +204,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     department: "Human Resources",
     created: "2023-09-15",
     openedBy: "HR Manager",
+    hasCorrelatedDocuments: false,
   },
   {
     id: "10",
@@ -204,13 +212,14 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Data Integrity Policy",
     type: "Policy",
     version: "1.0",
-    status: "Pending Review",
-    effectiveDate: "2023-09-01",
-    validUntil: "2024-09-01",
+    status: "Obsoleted",
+    effectiveDate: "2022-09-01",
+    validUntil: "2023-09-01",
     author: "Dr. Sarah Johnson",
     department: "Quality Management",
-    created: "2023-08-10",
+    created: "2022-08-10",
     openedBy: "QM Director",
+    hasCorrelatedDocuments: true,
   },
   {
     id: "11",
@@ -218,7 +227,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Good Manufacturing Practice Guidelines",
     type: "SOP",
     version: "4.2",
-    status: "Pending Approval",
+    status: "Closed - Cancelled",
     effectiveDate: "2023-10-15",
     validUntil: "2024-10-15",
     author: "Michael Chen",
@@ -226,15 +235,15 @@ export const MOCK_DOCUMENTS: Document[] = [
     created: "2023-09-01",
     openedBy: "Manufacturing Manager",
     description: "Comprehensive GMP guidelines for pharmaceutical manufacturing",
+    hasCorrelatedDocuments: false,
   },
-  // Documents for testing Review (Single Document)
   {
     id: "12",
     documentId: "SOP-QA-001",
     title: "Standard Operating Procedure for Quality Control Testing",
     type: "SOP",
     version: "1.0",
-    status: "Pending Review",
+    status: "Active",
     effectiveDate: "2026-02-01",
     validUntil: "2028-02-01",
     author: "John Smith",
@@ -243,15 +252,15 @@ export const MOCK_DOCUMENTS: Document[] = [
     openedBy: "Nguyen Van A",
     description: "This SOP outlines the procedures for quality control testing of pharmaceutical products.",
     hasRelatedDocuments: false,
+    hasCorrelatedDocuments: true,
   },
-  // Documents for testing Batch Review
   {
     id: "13",
     documentId: "SOP-QA-002",
     title: "Quality Assurance Documentation Standards",
     type: "SOP",
     version: "2.0",
-    status: "Pending Review",
+    status: "Draft",
     effectiveDate: "2026-02-05",
     validUntil: "2028-02-05",
     author: "Jane Doe",
@@ -260,6 +269,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     openedBy: "Nguyen Van A",
     description: "Standards for maintaining QA documentation in compliance with regulatory requirements.",
     hasRelatedDocuments: true,
+    hasCorrelatedDocuments: false,
   },
   {
     id: "14",
@@ -267,7 +277,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Environmental Monitoring Procedures",
     type: "SOP",
     version: "1.5",
-    status: "Pending Review",
+    status: "Obsoleted",
     effectiveDate: "2026-02-10",
     validUntil: "2028-02-10",
     author: "Robert Lee",
@@ -276,6 +286,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     openedBy: "Nguyen Van A",
     description: "Procedures for environmental monitoring in controlled manufacturing areas.",
     hasRelatedDocuments: false,
+    hasCorrelatedDocuments: true,
   },
   {
     id: "15",
@@ -283,7 +294,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Calibration and Maintenance of Equipment",
     type: "SOP",
     version: "3.0",
-    status: "Pending Review",
+    status: "Closed - Cancelled",
     effectiveDate: "2026-02-15",
     validUntil: "2028-02-15",
     author: "Emily Chen",
@@ -292,6 +303,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     openedBy: "Nguyen Van A",
     description: "Guidelines for calibration and preventive maintenance of laboratory equipment.",
     hasRelatedDocuments: true,
+    hasCorrelatedDocuments: true,
   },
   {
     id: "16",
@@ -299,7 +311,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     title: "Deviation Management Procedures",
     type: "SOP",
     version: "1.0",
-    status: "Pending Review",
+    status: "Active",
     effectiveDate: "2026-02-20",
     validUntil: "2028-02-20",
     author: "David Park",
@@ -308,7 +320,75 @@ export const MOCK_DOCUMENTS: Document[] = [
     openedBy: "Nguyen Van A",
     description: "Procedures for identifying, investigating, and resolving deviations from SOPs.",
     hasRelatedDocuments: false,
+    hasCorrelatedDocuments: false,
   },
+  {
+    id: "17",
+    documentId: "SOP-QA-006",
+    title: "Change Control Procedures",
+    type: "SOP",
+    version: "2.1",
+    status: "Draft",
+    effectiveDate: "2026-03-01",
+    validUntil: "2028-03-01",
+    author: "Sarah Jones",
+    department: "Quality Assurance",
+    created: "2026-01-15",
+    openedBy: "Nguyen Van A",
+    description: "Procedures for managing changes to documents, equipment, and processes.",
+    hasRelatedDocuments: true,
+    hasCorrelatedDocuments: true,
+  },
+  {
+    id: "18",
+    documentId: "SOP-QA-007",
+    title: "Customer Complaint Handling",
+    type: "SOP",
+    version: "1.3",
+    status: "Active",
+    effectiveDate: "2026-03-05",
+    validUntil: "2028-03-05",
+    author: "Mike Brown",
+    department: "Quality Assurance",
+    created: "2026-01-20",
+    openedBy: "Nguyen Van A",
+    description: "Procedures for receiving, investigating, and resolving customer complaints.",
+    hasRelatedDocuments: false,
+    hasCorrelatedDocuments: false,
+  },
+  {
+    id: "19",
+    documentId: "SOP-QA-008",
+    title: "Vendor Qualification",
+    type: "SOP",
+    version: "3.2",
+    status: "Obsoleted",
+    effectiveDate: "2026-03-10",
+    validUntil: "2028-03-10",
+    author: "Lisa Wilson",
+    department: "Quality Assurance",
+    created: "2026-01-25",
+    openedBy: "Nguyen Van A",
+    description: "Procedures for qualifying and monitoring vendors of raw materials and services.",
+    hasRelatedDocuments: true,
+    hasCorrelatedDocuments: false,
+  },
+  {
+    id: "20",
+    documentId: "SOP-QA-009",
+    title: "Product Recall Procedures",
+    type: "SOP",
+    version: "1.1",
+    status: "Closed - Cancelled",
+    effectiveDate: "2026-03-15",
+    validUntil: "2028-03-15",
+    author: "Tom Clark",
+    department: "Quality Assurance",
+    created: "2026-01-30",
+    openedBy: "Nguyen Van A",
+    description: "Procedures for initiating and managing product recalls.",
+    hasRelatedDocuments: false,
+  }
 ];
 
 // Mock current user
@@ -323,6 +403,8 @@ const CURRENT_USER = {
 // Map DocumentStatus to StatusType for StatusBadge component
 const mapDocumentStatusToStatusType = (status: DocumentStatus): StatusType => {
   switch (status) {
+    case "Active":
+      return "active";
     case "Effective":
       return "effective";
     case "Approved":
@@ -344,6 +426,7 @@ const mapDocumentStatusToStatusType = (status: DocumentStatus): StatusType => {
 
 const getStatusColor = (status: DocumentStatus) => {
   switch (status) {
+    case "Active":
     case "Effective":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
     case "Pending Approval":
@@ -399,7 +482,6 @@ interface DropdownMenuProps {
   position: { top: number; left: number; showAbove?: boolean };
   onViewDocument?: (documentId: string, tab?: string) => void;
   navigate: ReturnType<typeof useNavigate>;
-  onPrintControlledCopy?: (document: Document) => void;
   onCreateLink?: (document: Document) => void;
 }
 
@@ -410,32 +492,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   position,
   onViewDocument,
   navigate,
-  onPrintControlledCopy,
   onCreateLink,
 }) => {
-  const [isNavigating, setIsNavigating] = useState(false);
-
   if (!isOpen) return null;
-
-  // Check if document has parent-child relationships
-  const hasRelationships = (doc: Document): boolean => {
-    return doc.hasRelatedDocuments === true;
-  };
-
-  // Handle New Revision with relationship check
-  const handleNewRevision = (doc: Document) => {
-    if (doc.status === "Effective" && doc.hasRelatedDocuments) {
-      // Navigate to NewRevisionView (multi-document with related documents)
-      navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
-    } else if (doc.status === "Effective") {
-      // Navigate to StandaloneRevisionView (single document)
-      navigate(`/documents/revisions/new-standalone?sourceDocId=${doc.id}`);
-    } else {
-      // Fallback for non-Effective documents
-      navigate(`/documents/revisions/new?sourceDocId=${doc.id}`);
-    }
-    onClose();
-  };
 
   // Dynamic menu items based on document status
   const getMenuItems = () => {
@@ -492,27 +551,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         });
         break;
 
+      case "Active":
       case "Effective":
-        items.push(
-          {
-            icon: FilePlusCorner,
-            label: "New Revision",
-            onClick: () => handleNewRevision(document),
-            color: "text-slate-500",
-            disabled: isNavigating
-          },
-          {
-            icon: FileStack,
-            label: "Request Controlled Copy",
-            onClick: () => {
-              onPrintControlledCopy?.(document);
-              onClose();
-            },
-            color: "text-slate-500"
-          }
-        );
-        break;
-
       case "Obsoleted":
       case "Closed - Cancelled":
         break;
@@ -573,14 +613,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 key={index}
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!item.disabled) {
-                    item.onClick();
-                  }
+                  item.onClick();
                 }}
-                disabled={item.disabled}
                 className={cn(
                   "flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors",
-                  item.disabled && "opacity-50 cursor-not-allowed",
                   item.color
                 )}
               >
@@ -618,6 +654,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           filterDocuments: (docs: Document[]) => docs,
           authorFilterDisabled: false,
           defaultAuthorFilter: "All" as string,
+          allowedStatuses: ["Draft", "Active", "Obsoleted", "Closed - Cancelled"] as DocumentStatus[],
           defaultColumns: [
             { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
             { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
@@ -627,11 +664,12 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
             { id: 'status', label: 'State', visible: true, order: 5 },
             { id: 'type', label: 'Document Type', visible: true, order: 6 },
             { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
-            { id: 'department', label: 'Department', visible: true, order: 8 },
-            { id: 'author', label: 'Author', visible: true, order: 9 },
-            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 10 },
-            { id: 'validUntil', label: 'Valid Until', visible: true, order: 11 },
-            { id: 'action', label: 'Action', visible: true, order: 12, locked: true },
+            { id: 'correlatedDocuments', label: 'Correlated Document', visible: true, order: 8 },
+            { id: 'department', label: 'Department', visible: true, order: 9 },
+            { id: 'author', label: 'Author', visible: true, order: 10 },
+            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 11 },
+            { id: 'validUntil', label: 'Valid Until', visible: true, order: 12 },
+            { id: 'action', label: 'Action', visible: true, order: 13, locked: true },
           ] as TableColumn[],
         };
       case "owned-by-me":
@@ -643,6 +681,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           filterDocuments: (docs: Document[]) => docs.filter(doc => doc.author === CURRENT_USER.name),
           authorFilterDisabled: true,
           defaultAuthorFilter: CURRENT_USER.name,
+          allowedStatuses: ["Draft", "Active", "Obsoleted", "Closed - Cancelled"] as DocumentStatus[],
           defaultColumns: [
             { id: 'no', label: 'No.', visible: true, order: 0, locked: true },
             { id: 'documentId', label: 'Document Number', visible: true, order: 1 },
@@ -652,11 +691,12 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
             { id: 'status', label: 'State', visible: true, order: 5 },
             { id: 'type', label: 'Document Type', visible: true, order: 6 },
             { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
-            { id: 'department', label: 'Department', visible: true, order: 8 },
-            { id: 'author', label: 'Author', visible: true, order: 9 },
-            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 10 },
-            { id: 'validUntil', label: 'Valid Until', visible: true, order: 11 },
-            { id: 'action', label: 'Action', visible: true, order: 12, locked: true },
+            { id: 'correlatedDocuments', label: 'Correlated Document', visible: true, order: 8 },
+            { id: 'department', label: 'Department', visible: true, order: 9 },
+            { id: 'author', label: 'Author', visible: true, order: 10 },
+            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 11 },
+            { id: 'validUntil', label: 'Valid Until', visible: true, order: 12 },
+            { id: 'action', label: 'Action', visible: true, order: 13, locked: true },
           ] as TableColumn[],
         };
     }
@@ -718,77 +758,6 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
     setIsCreateLinkModalOpen(true);
   };
 
-  const handlePrintControlledCopy = (document: Document) => {
-    const relatedDocuments = document.hasRelatedDocuments
-      ? (() => {
-          const relatedDocs = [
-            {
-              id: document.id,
-              documentId: document.documentId,
-              title: document.title,
-              version: document.version,
-              status: document.status as any,
-              isParent: true,
-            },
-          ];
-
-          if (document.documentId.startsWith('SOP.0001')) {
-            relatedDocs.push(
-              {
-                id: "child-1",
-                documentId: "FORM-QC-001",
-                title: "Quality Control Test Form",
-                version: "2.0",
-                status: "Effective" as any,
-                isParent: false,
-              },
-              {
-                id: "child-2",
-                documentId: "SPEC-QC-002",
-                title: "Test Specification Document",
-                version: "1.5",
-                status: "Effective" as any,
-                isParent: false,
-              }
-            );
-          } else if (document.documentId.startsWith('SOP.0012')) {
-            relatedDocs.push(
-              {
-                id: "child-3",
-                documentId: "FORM-PROD-001",
-                title: "Batch Record Template",
-                version: "3.0",
-                status: "Effective" as any,
-                isParent: false,
-              }
-            );
-          } else if (document.documentId.startsWith('SPEC.0045')) {
-            relatedDocs.push(
-              {
-                id: "child-4",
-                documentId: "SOP-QC-015",
-                title: "Raw Material Testing SOP",
-                version: "2.1",
-                status: "Effective" as any,
-                isParent: false,
-              }
-            );
-          }
-
-          return relatedDocs;
-        })()
-      : [];
-
-    navigate('/documents/controlled-copy/request', {
-      state: {
-        documentId: document.documentId,
-        documentTitle: document.title,
-        documentVersion: document.version,
-        relatedDocuments,
-      },
-    });
-  };
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -800,6 +769,11 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
   const filteredDocuments = useMemo(() => {
     // First apply viewType-specific filtering
     let docs = config.filterDocuments(MOCK_DOCUMENTS);
+
+    // Filter by allowed statuses for the current view
+    if (config.allowedStatuses) {
+      docs = docs.filter(doc => config.allowedStatuses!.includes(doc.status));
+    }
 
     // Then apply user filters
     return docs.filter((doc) => {
@@ -899,10 +873,17 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
     return buttonRefs.current[docId];
   };
 
-  if (selectedDocumentId) {
+  const selectedDocument = useMemo(() => 
+    MOCK_DOCUMENTS.find(doc => doc.id === selectedDocumentId),
+    [selectedDocumentId]
+  );
+
+  if (selectedDocumentId && selectedDocument) {
     return (
       <DetailDocumentView
         documentId={selectedDocumentId}
+        initialStatus={selectedDocument.status}
+        customStatusSteps={["Draft", "Active", "Obsoleted", "Closed - Cancelled"]}
         onBack={() => {
           setSelectedDocumentId(null);
           setSelectedDocumentTab("general");
@@ -984,6 +965,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           setCurrentPage(1);
         }}
         authorFilterDisabled={config.authorFilterDisabled}
+        allowedStatuses={config.allowedStatuses}
         createdFromDate={createdFromDate}
         onCreatedFromDateChange={(dateStr) => {
           setCreatedFromDate(dateStr);
@@ -1116,6 +1098,19 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                           </td>
                         );
                       }
+                      if (col.id === 'correlatedDocuments') {
+                        return (
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                            {doc.hasCorrelatedDocuments ? (
+                              <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
+                                Yes
+                              </span>
+                            ) : (
+                              <span className="text-slate-600 font-medium">No</span>
+                            )}
+                          </td>
+                        );
+                      }
                       if (col.id === 'department') {
                         return (
                           <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
@@ -1169,7 +1164,6 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                               position={dropdownPosition}
                               onViewDocument={handleViewDocument}
                               navigate={navigate}
-                              onPrintControlledCopy={handlePrintControlledCopy}
                               onCreateLink={handleCreateLink}
                             />
                           </td>

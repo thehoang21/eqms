@@ -57,6 +57,8 @@ interface DetailDocumentViewProps {
   documentId: string;
   onBack: () => void;
   initialTab?: TabType;
+  customStatusSteps?: DocumentStatus[];
+  initialStatus?: DocumentStatus;
 }
 
 // --- Helper Functions ---
@@ -68,7 +70,12 @@ const getStatusColor = (status: DocumentStatus) => {
       return "bg-amber-50 text-amber-700 border-amber-200";
     case "Pending Approval":
       return "bg-blue-50 text-blue-700 border-blue-200";
+    case "Pending Training":
+      return "bg-purple-50 text-purple-700 border-purple-200";
+    case "Ready for Publishing":
+      return "bg-indigo-50 text-indigo-700 border-indigo-200";
     case "Effective":
+    case "Active":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
     case "Obsoleted":
       return "bg-orange-50 text-orange-700 border-orange-200";
@@ -85,8 +92,11 @@ const getStatusIcon = (status: DocumentStatus) => {
       return <Clock className="h-4 w-4" />;
     case "Pending Review":
     case "Pending Approval":
+    case "Pending Training":
+    case "Ready for Publishing":
       return <AlertCircle className="h-4 w-4" />;
     case "Effective":
+    case "Active":
       return <CheckCircle2 className="h-4 w-4" />;
     case "Obsoleted":
     case "Closed - Cancelled":
@@ -156,6 +166,8 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
   documentId,
   onBack,
   initialTab = "general",
+  customStatusSteps,
+  initialStatus,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -165,12 +177,12 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
   // Override status if coming from archive
   const document = {
     ...MOCK_DOCUMENT,
-    status: state?.initialStatus || MOCK_DOCUMENT.status,
+    status: initialStatus || state?.initialStatus || MOCK_DOCUMENT.status,
   };
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
   // Status workflow steps
-  const statusSteps: DocumentStatus[] = [
+  const statusSteps: DocumentStatus[] = customStatusSteps || [
     "Draft",
     "Pending Review",
     "Pending Approval",
@@ -180,7 +192,9 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
     "Obsoleted",
     "Closed - Cancelled",
   ];
-  const currentStepIndex = statusSteps.indexOf(document.status);
+  const currentStepIndex = statusSteps.indexOf(document.status) !== -1 
+    ? statusSteps.indexOf(document.status) 
+    : statusSteps.indexOf("Effective"); // Fallback for mock if mismatched
 
   const handleShare = () => {
     console.log("Share document:", documentId);
@@ -194,8 +208,8 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
 
   const tabs = [
     { id: "general" as TabType, label: "General Information" },
+    { id: "training" as TabType, label: "Training Information" },
     { id: "document" as TabType, label: "Document" },
-    { id: "training" as TabType, label: "Training" },
     { id: "signatures" as TabType, label: "Signatures" },
     { id: "audit" as TabType, label: "Audit Trail" },
   ];
@@ -212,20 +226,14 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
               <IconSmartHome className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="hover:text-slate-700 transition-colors hidden sm:inline"
-              >
+              <span className="hidden sm:inline">
                 Dashboard
-              </button>
+              </span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <button
-                onClick={() => navigate('/documents/all')}
-                className="hover:text-slate-700 transition-colors"
-              >
+              <span>
                 All Documents
-              </button>
+              </span>
               <ChevronRight className="h-4 w-4 text-slate-400" />
               <span className="text-slate-700 font-medium">
                 {document.documentId}

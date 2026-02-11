@@ -5,16 +5,11 @@
  */
 
 // Main document list view
-export { DocumentsView } from '../views/DocumentsView';
+export { DocumentsView } from './DocumentsView';
 
 // Single document creation
-export { NewDocumentView } from './single-document/NewDocumentView';
-export { SingleDocumentView } from './single-document/SingleDocumentView';
+export { NewDocumentView } from './document-creation/NewDocumentView';
+export { SingleDocumentView } from './document-creation/SingleDocumentView';
 
-// Review & Approval
-export { DocumentReviewView } from './review-document/DocumentReviewView';
-export { DocumentReviewViewWithBatch } from './review-document/DocumentReviewViewWithBatch';
-export { DocumentApprovalView } from './approval-document/DocumentApprovalView';
-
-// Tabs (re-exported from new-document for backwards compatibility)
-export * from './new-document/new-tabs';
+// Tabs (re-exported from document-creation for backwards compatibility)
+export * from './document-creation/new-tabs';
