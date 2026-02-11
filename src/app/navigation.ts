@@ -1,7 +1,7 @@
 /**
  * Navigation Configuration
  * Defines the application navigation structure
- * 
+ *
  * @module navigation
  * @description Modular navigation config organized by functional domains
  */
@@ -69,6 +69,11 @@ const FOUNDATION_MODULES: NavItem[] = [
     label: "Document Control",
     icon: IconFileDescription,
     children: [
+      {
+        id: "knowledge-base",
+        label: "Knowledge",
+        path: "/documents/knowledge",
+      },
       {
         id: "doc-owned-me",
         label: "Documents Owned By Me",
@@ -287,7 +292,7 @@ export const NAV_CONFIG: NavItem[] = [
 export const findNodeAndBreadcrumbs = (
   items: NavItem[],
   targetId: string,
-  currentPath: { label: string; id: string }[] = []
+  currentPath: { label: string; id: string }[] = [],
 ): { label: string; id: string }[] | null => {
   for (const item of items) {
     const newPath = [...currentPath, { label: item.label, id: item.id }];
@@ -305,7 +310,7 @@ export const findNodeAndBreadcrumbs = (
 // Helper to find nav item by path
 export const findNodeByPath = (
   items: NavItem[],
-  targetPath: string
+  targetPath: string,
 ): NavItem | null => {
   for (const item of items) {
     if (item.path === targetPath) {

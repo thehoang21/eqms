@@ -97,3 +97,8 @@ export { RequestControlledCopyView } from './document-revisions/views/RequestCon
 // ARCHIVED DOCUMENTS
 // =============================================================================
 export { ArchivedDocumentsView } from './archived-documents/ArchivedDocumentsView';
+
+// =============================================================================
+// KNOWLEDGE BASE
+// =============================================================================
+export { KnowledgeView } from './knowledge';

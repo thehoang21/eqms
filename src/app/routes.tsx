@@ -27,6 +27,8 @@ const DetailDocumentView = lazy(() => import('@/features/documents').then(m => (
 const ArchivedDocumentsView = lazy(() => import('@/features/documents/archived-documents').then(m => ({ default: m.ArchivedDocumentsView })));
 const DocumentsView = lazy(() => import('@/features/documents/document-list').then(m => ({ default: m.DocumentsView })));
 const NewDocumentView = lazy(() => import('@/features/documents/document-list/document-creation').then(m => ({ default: m.NewDocumentView })));
+const KnowledgeView = lazy(() => import('@/features/documents/knowledge').then(m => ({ default: m.KnowledgeView })));
+
 
 // Document Revisions
 const RevisionListView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionListView })));
@@ -177,6 +179,9 @@ export const AppRoutes: React.FC = () => {
           <Route path="all" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
           <Route path="all/new" element={<Suspense fallback={<LoadingFallback />}><NewDocumentView /></Suspense>} />
           <Route path="archived" element={<Suspense fallback={<LoadingFallback />}><ArchivedDocumentsView /></Suspense>} />
+          
+          {/* Knowledge Base */}
+          <Route path="knowledge" element={<Suspense fallback={<LoadingFallback />}><KnowledgeView /></Suspense>} />
           
           {/* Document Detail & Actions */}
           <Route path=":id" element={<DetailDocumentViewWrapper />} />
