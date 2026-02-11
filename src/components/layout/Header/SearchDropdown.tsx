@@ -150,7 +150,7 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ className, onClo
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
-              "block w-full pl-9 sm:pl-10 py-2 md:py-2.5 rounded-lg border leading-5 transition-all duration-200",
+              "block w-full h-10 pl-9 sm:pl-10 py-2 md:py-2.5 rounded-lg border leading-5 transition-all duration-200",
               "text-sm md:text-[14px]",
               "placeholder-slate-400 focus:outline-none",
               isSearchFocused 
