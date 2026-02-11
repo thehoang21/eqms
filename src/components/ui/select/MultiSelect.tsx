@@ -281,7 +281,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         disabled={disabled}
         className={cn(
           "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm transition-colors",
-          "min-h-[44px]",
+          "min-h-[40px]",
           disabled
             ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200"
             : isOpen

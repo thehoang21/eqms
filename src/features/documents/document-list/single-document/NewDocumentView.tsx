@@ -7,6 +7,7 @@ import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { UploadRevisionModal } from "./modals/UploadRevisionModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/toast";
 import { TrainingTab, SignaturesTab, AuditTab } from "@/features/documents/shared/tabs";
 import {
     DocumentRevisionsTab,
@@ -53,6 +54,7 @@ interface Approver {
 export const NewDocumentView: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { showToast } = useToast();
     const [activeTab, setActiveTab] = useState<TabType>("general");
     const [isSaving, setIsSaving] = useState(false);
     const [isValidationModalOpen, setIsValidationModalOpen] = useState(false);
@@ -105,7 +107,11 @@ export const NewDocumentView: React.FC = () => {
     // Auto-generated fields
     const [documentNumber, setDocumentNumber] = useState<string>("");
     const [createdDateTime, setCreatedDateTime] = useState<string>("");
-    const [openedBy, setOpenedBy] = useState<string>("");
+    
+    // Set openedBy immediately with current user fullname
+    const [openedBy] = useState<string>(
+        user ? `${user.firstName} ${user.lastName}`.trim() : "Current User"
+    );
 
     // Reviewers and Approvers state
     const [reviewers, setReviewers] = useState<Reviewer[]>([]);
@@ -150,13 +156,8 @@ export const NewDocumentView: React.FC = () => {
         isTemplate: false,
     });
 
-    // Auto-transition to Active when all conditions are met:
-    // 1. Document has been saved (isSaved = true)
-    // 2. All required fields are filled (missingRequiredFields.length === 0)
-    // 3. At least one file is uploaded
-    // 4. At least one reviewer is added
-    // 5. At least one approver is added
     // Calculate current step index based on document status
+    // Document starts in Draft and requires workflow completion to move to Active
     const currentStepIndex = useMemo(() => {
         const statusSteps: DocumentStatus[] = ["Draft", "Active", "Obsoleted", "Closed - Cancelled"];
         return statusSteps.indexOf(documentStatus);
@@ -190,7 +191,22 @@ export const NewDocumentView: React.FC = () => {
 
     const handleCancelConfirm = () => {
         setIsCancelModalOpen(false);
-        navigate("/documents/all");
+        
+        // Update document status to Closed - Cancelled
+        setDocumentStatus("Closed - Cancelled");
+        
+        // Show toast notification
+        showToast({
+            type: "info",
+            title: "Document Cancelled",
+            message: "The document has been moved to Closed - Cancelled status.",
+            duration: 3000
+        });
+        
+        // Navigate back to list after a short delay to show status update
+        setTimeout(() => {
+            navigate("/documents/all");
+        }, 1500);
     };
 
     const handleSaveDraft = () => {
@@ -211,18 +227,18 @@ export const NewDocumentView: React.FC = () => {
                 
                 setDocumentNumber(docNum);
                 setCreatedDateTime(created);
-                setOpenedBy("Current User"); // TODO: Replace with actual logged-in user
+                // openedBy is already set from user context on component mount
                 setIsSaved(true);
                 
                 console.log("Document created:", {
                     documentNumber: docNum,
                     created,
-                    openedBy: "Current User",
+                    openedBy,
                     ...formData
                 });
             } else {
-                // Second save: transition to Active (only possible when reviewers and approvers are selected)
-                setDocumentStatus("Active");
+                // Second save: keep document in Draft status
+                // Document remains in Draft until it goes through review/approval workflow
                 console.log("Document saved:", formData);
             }
             
@@ -465,7 +481,7 @@ export const NewDocumentView: React.FC = () => {
                             documentNumber={documentNumber}
                             createdDateTime={createdDateTime}
                             openedBy={openedBy}
-                            isObsoleted={documentStatus === "Obsoleted"}
+                            isObsoleted={documentStatus === "Obsoleted" || documentStatus === "Closed - Cancelled"}
                         />
                     )}
 
@@ -480,7 +496,7 @@ export const NewDocumentView: React.FC = () => {
                             selectedFile={selectedFile}
                             onSelectFile={setSelectedFile}
                             maxFiles={1}
-                            isObsoleted={documentStatus === "Obsoleted"}
+                            isObsoleted={documentStatus === "Obsoleted" || documentStatus === "Closed - Cancelled"}
                             parentDocument={parentDocument}
                             onParentDocumentChange={setParentDocument}
                             relatedDocuments={relationshipDocs}
@@ -517,8 +533,8 @@ export const NewDocumentView: React.FC = () => {
                             </Button>
                         )}
 
-                        {/* Cancel button - hidden when obsoleted */}
-                        {documentStatus !== "Obsoleted" && (
+                        {/* Cancel button - only show after Next Step (isSaved = true) and not obsoleted/cancelled */}
+                        {isSaved && documentStatus !== "Obsoleted" && documentStatus !== "Closed - Cancelled" && (
                             <Button
                                 onClick={handleCancel}
                                 variant="outline"
@@ -529,11 +545,24 @@ export const NewDocumentView: React.FC = () => {
                             </Button>
                         )}
 
-                        {/* Save/Next Step button - always shown but disabled when obsoleted */}
+                        {/* Back to List button - shown when cancelled */}
+                        {documentStatus === "Closed - Cancelled" && (
+                            <Button
+                                onClick={handleBackToList}
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-2"
+                            >
+                                Back to List
+                            </Button>
+                        )}
+
+                        {/* Save/Next Step button - always shown but disabled when obsoleted or cancelled */}
                         <Button
                             onClick={handleSaveDraft}
                             disabled={
                                 documentStatus === "Obsoleted" ||
+                                documentStatus === "Closed - Cancelled" ||
                                 missingRequiredFields.length > 0 ||
                                 (isSaved && (reviewers.length === 0 || approvers.length === 0)) ||
                                 isSaving
@@ -547,7 +576,7 @@ export const NewDocumentView: React.FC = () => {
                                     : "Processing..."
                                 : isSaved
                                     ? "Save"
-                                    : "Next Step"}
+                                    : "Save & Next"}
                         </Button>
 
                         {/* Obsolete button - only show when document is Active */}
@@ -561,13 +590,13 @@ export const NewDocumentView: React.FC = () => {
                             </Button>
                         )}
 
-                        {/* Divider - only show when saved and not obsoleted */}
-                        {isSaved && documentStatus !== "Obsoleted" && (
+                        {/* Divider - only show when saved and not obsoleted or cancelled */}
+                        {isSaved && documentStatus !== "Obsoleted" && documentStatus !== "Closed - Cancelled" && (
                             <div className=" w-px h-8 bg-slate-500 mx-1" />
                         )}
 
-                        {/* Other action buttons - only show after saved and not obsoleted */}
-                        {isSaved && documentStatus !== "Obsoleted" && (
+                        {/* Other action buttons - only show after saved and not obsoleted or cancelled */}
+                        {isSaved && documentStatus !== "Obsoleted" && documentStatus !== "Closed - Cancelled" && (
                             <>
                                 <Button
                                     onClick={() => setIsUploadRevisionModalOpen(true)}
@@ -738,19 +767,19 @@ export const NewDocumentView: React.FC = () => {
                 onClose={() => setIsCancelModalOpen(false)}
                 onConfirm={handleCancelConfirm}
                 type="warning"
-                title="Cancel Creation?"
+                title="Cancel Document Creation?"
                 description={
                     <div className="space-y-3">
-                        <p>Are you sure you want to cancel document creation?</p>
+                        <p>Are you sure you want to cancel this document creation?</p>
                         <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
                             <p className="text-amber-800">
-                                ⚠️ <span className="font-semibold">Warning:</span> All unsaved changes will be lost.
+                                ⚠️ <span className="font-semibold">Note:</span> The document will be moved to <strong>Closed - Cancelled</strong> status.
                             </p>
                         </div>
                     </div>
                 }
-                confirmText="Yes, Cancel"
-                cancelText="No, Stay"
+                confirmText="Yes, Cancel Document"
+                cancelText="No, Continue Editing"
                 showCancel={true}
             />
 
@@ -759,13 +788,13 @@ export const NewDocumentView: React.FC = () => {
                 onClose={() => setShowSaveModal(false)}
                 onConfirm={handleConfirmSave}
                 type="confirm"
-                title={isSaved ? "Save Document?" : "Proceed to Next Step?"}
+                title={isSaved ? "Save Document?" : "Save & Proceed to Next Step?"}
                 description={
                     <div className="space-y-3">
                         <p>{isSaved ? "Are you sure you want to save this document?" : "This will create the document and generate Document Number. You can then add Reviewers and Approvers."}</p>
                     </div>
                 }
-                confirmText={isSaved ? "Save" : "Next Step"}
+                confirmText={isSaved ? "Save" : "Save & Next"}
                 cancelText="Cancel"
                 isLoading={isSaving}
                 showCancel={true}

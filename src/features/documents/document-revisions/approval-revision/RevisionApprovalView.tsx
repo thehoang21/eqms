@@ -12,6 +12,7 @@ import {
 import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
+import { AlertModal } from '@/components/ui/modal/AlertModal';
 import { useToast } from '@/components/ui/toast';
 import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
@@ -161,6 +162,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [activeTab, setActiveTab] = useState<TabType>("general");
     const [showESignModal, setShowESignModal] = useState(false);
+    const [showRejectWarning, setShowRejectWarning] = useState(false);
     const [eSignAction, setESignAction] = useState<'approve' | 'reject'>('approve');
     
     // GeneralTab state
@@ -194,6 +196,11 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const handleReject = () => {
         if (!approver) return;
         setESignAction('reject');
+        setShowRejectWarning(true);
+    };
+
+    const handleRejectWarningConfirm = () => {
+        setShowRejectWarning(false);
         setShowESignModal(true);
     };
 
@@ -415,6 +422,16 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
             {activeTab === "approvers" && <ReviewSignaturesTab type="approvers" />}
             {activeTab === "signatures" && <SignaturesTab />}
             {activeTab === "audit" && <AuditTab />}
+
+            {/* Reject Warning Modal */}
+            <AlertModal
+                isOpen={showRejectWarning}
+                onClose={() => setShowRejectWarning(false)}
+                onConfirm={handleRejectWarningConfirm}
+                type="warning"
+                title="Reject Revision?"
+                description="When rejecting this revision at Pending Approval stage, the document will return to Pending Review status. Are you sure you want to continue?"
+            />
 
             {/* E-Signature Modal */}
             <ESignatureModal

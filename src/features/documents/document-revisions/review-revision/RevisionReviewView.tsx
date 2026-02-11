@@ -16,6 +16,7 @@ import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
+import { AlertModal } from "@/components/ui/modal/AlertModal";
 import {
   DocumentWorkflowLayout,
   DEFAULT_WORKFLOW_TABS,
@@ -190,6 +191,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
   const [activeTab, setActiveTab] = useState<TabType>("general");
   const [isWorkflowExpanded, setIsWorkflowExpanded] = useState(true);
   const [showESignModal, setShowESignModal] = useState(false);
+  const [showRejectWarning, setShowRejectWarning] = useState(false);
   const [eSignAction, setESignAction] = useState<"approve" | "reject">(
     "approve"
   );
@@ -215,6 +217,11 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
   const handleReject = () => {
     if (!currentReviewer) return;
     setESignAction("reject");
+    setShowRejectWarning(true);
+  };
+
+  const handleRejectWarningConfirm = () => {
+    setShowRejectWarning(false);
     setShowESignModal(true);
   };
 
@@ -682,6 +689,16 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
       {activeTab === "approvers" && <ReviewSignaturesTab type="approvers" />}
       {activeTab === "signatures" && <SignaturesTab />}
       {activeTab === "audit" && <AuditTrailTab />}
+
+      {/* Reject Warning Modal */}
+      <AlertModal
+        isOpen={showRejectWarning}
+        onClose={() => setShowRejectWarning(false)}
+        onConfirm={handleRejectWarningConfirm}
+        type="warning"
+        title="Reject Revision?"
+        description="When rejecting this revision at Pending Review stage, the document will return to Draft status. Are you sure you want to continue?"
+      />
 
       {/* E-Signature Modal */}
       <ESignatureModal

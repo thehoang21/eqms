@@ -3,6 +3,7 @@ import React from "react";
 interface SignatureEntry {
   id: string;
   name: string;
+  username: string;
   signedOn: string; // dd/MM/yyyy HH:mm:ss
 }
 
@@ -13,13 +14,13 @@ interface ReviewSignaturesTabProps {
 
 // Mock data
 const MOCK_REVIEWERS: SignatureEntry[] = [
-  { id: "1", name: "Nguyen Van A", signedOn: "15/01/2026 09:30:45" },
-  { id: "2", name: "Tran Thi B", signedOn: "15/01/2026 10:15:22" },
-  { id: "3", name: "Le Van C", signedOn: "" },
+  { id: "1", name: "Nguyen Van A", username: "nguyenvana", signedOn: "15/01/2026 09:30:45" },
+  { id: "2", name: "Tran Thi B", username: "tranthib", signedOn: "15/01/2026 10:15:22" },
+  { id: "3", name: "Le Van C", username: "levanc", signedOn: "" },
 ];
 
 const MOCK_APPROVERS: SignatureEntry[] = [
-  { id: "1", name: "Pham Thi D", signedOn: "" },
+  { id: "1", name: "Pham Thi D", username: "phamthid", signedOn: "" },
 ];
 
 export const ReviewSignaturesTab: React.FC<ReviewSignaturesTabProps> = ({
@@ -45,6 +46,9 @@ export const ReviewSignaturesTab: React.FC<ReviewSignaturesTabProps> = ({
                     Name
                   </th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    Username
+                  </th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                     Signed On
                   </th>
                 </tr>
@@ -57,6 +61,9 @@ export const ReviewSignaturesTab: React.FC<ReviewSignaturesTabProps> = ({
                     </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                       <span className="font-medium text-slate-900">{sig.name}</span>
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <span className="text-slate-700">{sig.username}</span>
                     </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                       {sig.signedOn ? (
