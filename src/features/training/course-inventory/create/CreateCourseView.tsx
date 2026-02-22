@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IconSmartHome } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
-import { TrainingConfig, TrainingType, TrainingFile } from "../../types";
+import { TrainingConfig, TrainingType, TrainingFile, TrainingMethod, Recurrence } from "../../types";
 import { BasicInfoTab } from "./BasicInfoTab";
 import { DocumentTab } from "./DocumentTab";
 import { ConfigTab } from "./ConfigTab";
@@ -24,12 +24,23 @@ export const CreateCourseView: React.FC = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [trainingType, setTrainingType] = useState<TrainingType>("GMP");
+    const [trainingMethod, setTrainingMethod] = useState<TrainingMethod>("Read & Understood");
     const [instructorType, setInstructorType] = useState<"internal" | "external">("internal");
     const [instructor, setInstructor] = useState("");
     const [scheduledDate, setScheduledDate] = useState("");
     const [duration, setDuration] = useState(4);
     const [location, setLocation] = useState("");
     const [capacity, setCapacity] = useState(30);
+
+    // Linked document
+    const [linkedDocumentId, setLinkedDocumentId] = useState("");
+    const [linkedDocumentTitle, setLinkedDocumentTitle] = useState("");
+
+    // Recurrence
+    const [recurrence, setRecurrence] = useState<Recurrence>({ enabled: false, intervalMonths: 12 });
+
+    // Evidence upload
+    const [evidenceFiles, setEvidenceFiles] = useState<File[]>([])
 
     // Distribution List
     const [distributionList, setDistributionList] = useState<string[]>([]);
@@ -82,6 +93,8 @@ export const CreateCourseView: React.FC = () => {
                         setDescription={setDescription}
                         trainingType={trainingType}
                         setTrainingType={setTrainingType}
+                        trainingMethod={trainingMethod}
+                        setTrainingMethod={setTrainingMethod}
                         instructorType={instructorType}
                         setInstructorType={setInstructorType}
                         instructor={instructor}
@@ -96,6 +109,14 @@ export const CreateCourseView: React.FC = () => {
                         setCapacity={setCapacity}
                         distributionList={distributionList}
                         setDistributionList={setDistributionList}
+                        recurrence={recurrence}
+                        setRecurrence={setRecurrence}
+                        linkedDocumentId={linkedDocumentId}
+                        setLinkedDocumentId={setLinkedDocumentId}
+                        linkedDocumentTitle={linkedDocumentTitle}
+                        setLinkedDocumentTitle={setLinkedDocumentTitle}
+                        evidenceFiles={evidenceFiles}
+                        setEvidenceFiles={setEvidenceFiles}
                     />
                 );
             case "document-training":
@@ -108,6 +129,7 @@ export const CreateCourseView: React.FC = () => {
             case "training-config":
                 return (
                     <ConfigTab
+                        trainingMethod={trainingMethod}
                         hasQuiz={hasQuiz}
                         setHasQuiz={setHasQuiz}
                         config={config}

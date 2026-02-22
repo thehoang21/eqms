@@ -24,7 +24,7 @@ const MOCK_PENDING_APPROVAL: CourseApproval[] = [
     courseTitle: "HPLC Operation Advanced",
     relatedSOP: "SOP-LAB-005: HPLC Standard Method",
     sopDocumentId: "DOC-003",
-    trainingMethod: "Quiz",
+    trainingMethod: "Theory Quiz",
     submittedBy: "Dr. Michael Chen",
     submittedAt: "2026-02-08",
     department: "QC Lab",
@@ -81,7 +81,7 @@ const MOCK_PENDING_APPROVAL: CourseApproval[] = [
     courseTitle: "Deviation & Non-Conformance Handling",
     relatedSOP: "SOP-QA-007: Deviation Management",
     sopDocumentId: "DOC-008",
-    trainingMethod: "Quiz",
+    trainingMethod: "Theory Quiz",
     submittedBy: "Alice Pham",
     submittedAt: "2026-02-19",
     department: "Quality Assurance",
@@ -104,10 +104,12 @@ const MOCK_PENDING_APPROVAL: CourseApproval[] = [
   },
 ];
 
-const getMethodBadge = (method: "Read & Understood" | "Quiz") =>
-  method === "Quiz"
+const getMethodBadge = (method: "Read & Understood" | "Theory Quiz" | "Hands-on/OJT") =>
+  method === "Theory Quiz"
     ? "bg-blue-50 text-blue-700 border-blue-200"
-    : "bg-purple-50 text-purple-700 border-purple-200";
+    : method === "Hands-on/OJT"
+    ? "bg-amber-50 text-amber-700 border-amber-200"
+    : "bg-slate-50 text-slate-700 border-slate-200";
 
 const formatDate = (dateString: string) =>
   new Date(dateString).toLocaleDateString("en-US", {
@@ -118,7 +120,8 @@ const formatDate = (dateString: string) =>
 
 const METHOD_OPTIONS = [
   { label: "All Methods", value: "All" },
-  { label: "Quiz", value: "Quiz" },
+  { label: "Theory Quiz", value: "Theory Quiz" },
+  { label: "Hands-on / OJT", value: "Hands-on/OJT" },
   { label: "Read & Understood", value: "Read & Understood" },
 ];
 

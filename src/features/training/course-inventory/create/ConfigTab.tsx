@@ -3,12 +3,13 @@ import { Plus, AlertCircle } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
-import { TrainingConfig, Question } from "../../types";
+import { TrainingConfig, Question, TrainingMethod } from "../../types";
 import { redistributePoints } from "./utils/helpers";
 import { ConfigSection } from "./components/ConfigSection";
 import { QuestionCard } from "./components/QuestionCard";
 
 interface TrainingConfigTabProps {
+    trainingMethod: TrainingMethod;
     hasQuiz: boolean;
     setHasQuiz: (v: boolean) => void;
     config: TrainingConfig;
@@ -16,6 +17,7 @@ interface TrainingConfigTabProps {
 }
 
 export const ConfigTab: React.FC<TrainingConfigTabProps> = ({
+    trainingMethod,
     hasQuiz,
     setHasQuiz,
     config,
@@ -106,21 +108,55 @@ export const ConfigTab: React.FC<TrainingConfigTabProps> = ({
 
     return (
         <div className="p-4 lg:p-6 space-y-6">
-            {/* Quiz Toggle */}
-            <div>
-                <Checkbox
-                    id="has-quiz"
-                    label="Include Quiz/Test"
-                    checked={hasQuiz}
-                    onChange={setHasQuiz}
-                />
-                <p className="text-xs text-slate-500 mt-1.5 ml-6">
-                    Enable this option to add a quiz or certification test to the training course.
-                </p>
-            </div>
 
-            {/* Quiz Configuration Section */}
-            {hasQuiz && (
+            {/* Read & Understood: simple notice */}
+            {trainingMethod === "Read & Understood" && (
+                <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                    <div className="h-8 w-8 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                        <span className="text-blue-700 text-lg">📄</span>
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-blue-900">Read &amp; Understood</p>
+                        <p className="text-sm text-blue-700 mt-0.5">
+                            Employee will read the linked document, then confirm they have understood it by e-signature. No quiz required.
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* Hands-on/OJT: trainer sign-off notice */}
+            {trainingMethod === "Hands-on/OJT" && (
+                <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                    <div className="h-8 w-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+                        <span className="text-amber-700 text-lg">🔧</span>
+                    </div>
+                    <div>
+                        <p className="text-sm font-semibold text-amber-900">Hands-on / OJT</p>
+                        <p className="text-sm text-amber-700 mt-0.5">
+                            Trainer must sign off to confirm the employee has demonstrated practical competency. The employee <strong>cannot self-complete</strong> this course.
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* Theory Quiz: quiz builder */}
+            {trainingMethod === "Theory Quiz" && (
+                <>
+                    {/* Quiz Toggle */}
+                    <div>
+                        <Checkbox
+                            id="has-quiz"
+                            label="Include Quiz/Test"
+                            checked={hasQuiz}
+                            onChange={setHasQuiz}
+                        />
+                        <p className="text-xs text-slate-500 mt-1.5 ml-6">
+                            Enable this option to add a quiz or certification test to the training course.
+                        </p>
+                    </div>
+
+                    {/* Quiz Configuration Section */}
+                    {hasQuiz && (
                 <>
                     <div className="border-t border-slate-200 pt-6">
                         <ConfigSection
@@ -192,6 +228,8 @@ export const ConfigTab: React.FC<TrainingConfigTabProps> = ({
                                 )}
                             </div>
                         </div>
+                    )}
+                </>
                     )}
                 </>
             )}

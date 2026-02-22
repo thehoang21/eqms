@@ -18,13 +18,24 @@ export type TrainingType =
   | "SOP" 
   | "Software";
 
+// Training Method: defines how employees complete the course
+export type TrainingMethod =
+  | "Read & Understood"  // Employee reads, then confirms + e-sign
+  | "Theory Quiz"        // Multiple choice quiz
+  | "Hands-on/OJT";      // On-the-job training requiring trainer sign-off
+
+export interface Recurrence {
+  enabled: boolean;
+  intervalMonths: number; // e.g. 12 = annual retraining
+}
+
 export type AttendanceStatus = 
   | "Registered" 
   | "Attended" 
   | "Absent" 
   | "Excused";
 
-// Quiz/Test Types
+// Quiz/Test Types — used inside Theory Quiz method
 export type QuestionType = "multiple_choice" | "essay";
 export type TrainingTestType = "read_understand" | "test_certification";
 
@@ -68,6 +79,7 @@ export interface TrainingRecord {
   title: string;
   description: string;
   type: TrainingType;
+  trainingMethod: TrainingMethod;    // NEW: how employees complete the course
   status: TrainingStatus;
   instructor: string;
   scheduledDate: string;
@@ -78,7 +90,10 @@ export interface TrainingRecord {
   department: string;
   mandatory: boolean;
   passScore: number;
-  config?: TrainingConfig; // Training configuration with quiz
+  recurrence?: Recurrence;           // NEW: periodic retraining schedule
+  linkedDocumentId?: string;         // NEW: linked SOP/document ID
+  linkedDocumentTitle?: string;      // NEW: linked SOP/document title
+  config?: TrainingConfig;
   attendees?: Attendee[];
   createdBy: string;
   createdAt: string;
@@ -122,7 +137,10 @@ export interface CourseApproval {
   courseTitle: string;
   relatedSOP: string;
   sopDocumentId: string;
-  trainingMethod: "Read & Understood" | "Quiz";
+  trainingMethod: TrainingMethod;    // updated: full TrainingMethod type
+  recurrence?: Recurrence;           // NEW
+  linkedDocumentId?: string;         // NEW
+  linkedDocumentTitle?: string;      // NEW
   submittedBy: string;
   submittedAt: string;
   department: string;

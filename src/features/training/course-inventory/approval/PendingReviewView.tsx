@@ -24,7 +24,7 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseTitle: "GMP Basic Principles",
     relatedSOP: "SOP-QA-001: Good Manufacturing Practices",
     sopDocumentId: "DOC-001",
-    trainingMethod: "Quiz",
+    trainingMethod: "Theory Quiz",
     submittedBy: "John Smith",
     submittedAt: "2026-02-10",
     department: "Quality Assurance",
@@ -91,7 +91,7 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseTitle: "HPLC Operation Advanced",
     relatedSOP: "SOP-LAB-005: HPLC Standard Method",
     sopDocumentId: "DOC-003",
-    trainingMethod: "Quiz",
+    trainingMethod: "Theory Quiz",
     submittedBy: "Dr. Michael Chen",
     submittedAt: "2026-02-08",
     department: "QC Lab",
@@ -133,7 +133,7 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseTitle: "ISO 9001:2015 Requirements",
     relatedSOP: "SOP-QMS-010: Quality Management System",
     sopDocumentId: "DOC-004",
-    trainingMethod: "Quiz",
+    trainingMethod: "Theory Quiz",
     submittedBy: "Emma Wilson",
     submittedAt: "2026-02-15",
     department: "All Departments",
@@ -174,10 +174,12 @@ const MOCK_APPROVALS: CourseApproval[] = [
   },
 ];
 
-const getMethodBadge = (method: "Read & Understood" | "Quiz") => {
-  return method === "Quiz"
+const getMethodBadge = (method: "Read & Understood" | "Theory Quiz" | "Hands-on/OJT") => {
+  return method === "Theory Quiz"
     ? "bg-blue-50 text-blue-700 border-blue-200"
-    : "bg-purple-50 text-purple-700 border-purple-200";
+    : method === "Hands-on/OJT"
+    ? "bg-amber-50 text-amber-700 border-amber-200"
+    : "bg-slate-50 text-slate-700 border-slate-200";
 };
 
 const formatDate = (dateString: string) => {
@@ -192,7 +194,8 @@ const formatDate = (dateString: string) => {
 // --- Constants ---
 const METHOD_OPTIONS = [
   { label: "All Methods", value: "All" },
-  { label: "Quiz", value: "Quiz" },
+  { label: "Theory Quiz", value: "Theory Quiz" },
+  { label: "Hands-on / OJT", value: "Hands-on/OJT" },
   { label: "Read & Understood", value: "Read & Understood" },
 ];
 

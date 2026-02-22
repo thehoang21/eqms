@@ -31,7 +31,7 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseTitle: "GMP Basic Principles",
     relatedSOP: "SOP-QA-001: Good Manufacturing Practices",
     sopDocumentId: "DOC-001",
-    trainingMethod: "Quiz",
+    trainingMethod: "Theory Quiz",
     submittedBy: "John Smith",
     submittedAt: "2026-02-10",
     department: "Quality Assurance",
@@ -98,7 +98,7 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseTitle: "HPLC Operation Advanced",
     relatedSOP: "SOP-LAB-005: HPLC Standard Method",
     sopDocumentId: "DOC-003",
-    trainingMethod: "Quiz",
+    trainingMethod: "Theory Quiz",
     submittedBy: "Dr. Michael Chen",
     submittedAt: "2026-02-08",
     department: "QC Lab",
@@ -378,7 +378,7 @@ export const ApprovalDetailView: React.FC = () => {
                 <span
                   className={cn(
                     "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
-                    approval.trainingMethod === "Quiz"
+                    approval.trainingMethod === "Theory Quiz"
                       ? "bg-blue-50 text-blue-700 border-blue-200"
                       : "bg-purple-50 text-purple-700 border-purple-200"
                   )}
@@ -452,7 +452,7 @@ export const ApprovalDetailView: React.FC = () => {
           )}
 
           {/* Questions & Answers Section */}
-          {approval.trainingMethod === "Quiz" && approval.questions.length > 0 && (
+          {approval.trainingMethod === "Theory Quiz" && approval.questions.length > 0 && (
             <div className="border border-slate-200 rounded-xl overflow-hidden">
               {/* Section Header */}
               <button
