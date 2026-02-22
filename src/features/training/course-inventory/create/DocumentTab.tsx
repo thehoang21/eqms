@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from "react";
 import { Upload, Trash2 } from "lucide-react";
 import { cn } from "@/components/ui/utils";
-import { TrainingFile } from "../types";
+import { TrainingFile } from "../../types";
 
 import pdfIcon from "@/assets/images/image-file/pdf.png";
 import docIcon from "@/assets/images/image-file/doc.png";
@@ -54,7 +54,7 @@ const formatFileSize = (bytes: number) => {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-export const DocumentTrainingTab: React.FC<DocumentTrainingTabProps> = ({
+export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
     trainingFiles,
     setTrainingFiles,
 }) => {

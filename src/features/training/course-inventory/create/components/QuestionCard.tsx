@@ -12,7 +12,7 @@ import {
     AlertCircle
 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
-import { Question, QuestionOption } from "../types";
+import { Question, QuestionOption } from "../../../types";
 
 interface QuestionCardProps {
     question: Question;

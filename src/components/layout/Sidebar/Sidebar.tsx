@@ -1,38 +1,16 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { NavItem } from '@/types';
 import { NAV_CONFIG } from '@/app/constants';
 import { cn } from '@/components/ui/utils';
+import { useAuth } from '@/contexts/AuthContext';
 import { SearchDropdown } from '../Header/SearchDropdown';
 import logoFull from '@/assets/images/logo_nobg.png';
 import logoCollapsed from '@/assets/images/LOGO.png';
 import './Sidebar.module.css';
 
-// Inject keyframes for animations
-if (typeof document !== 'undefined') {
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes slideInLeft {
-      from {
-        opacity: 0;
-        transform: translateX(-12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-  `;
-  if (!document.head.querySelector('[data-sidebar-animations]')) {
-    style.setAttribute('data-sidebar-animations', 'true');
-    document.head.appendChild(style);
-  }
-}
+
 
 // Constants
 const BASE_PADDING = 12;
@@ -41,6 +19,18 @@ const MENU_WIDTH = 280;
 const MENU_GAP = 8;
 const SAFE_PADDING = 16;
 const MAX_MENU_HEIGHT = 600;
+
+// Filter nav items by user role (recursive)
+const filterNavByRole = (items: NavItem[], userRole?: string): NavItem[] => {
+  return items
+    .filter(item => !item.allowedRoles || (userRole && item.allowedRoles.includes(userRole as any)))
+    .map(item => {
+      if (item.children) {
+        return { ...item, children: filterNavByRole(item.children, userRole) };
+      }
+      return item;
+    });
+};
 
 // Helper function to find parent IDs of active item
 const findParentIds = (items: NavItem[], targetId: string, path: string[] = []): string[] => {
@@ -87,6 +77,11 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
   onToggleSidebar,
 }) => {
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const { user } = useAuth();
+
+  // Filter nav items based on user role
+  const filteredNav = useMemo(() => filterNavByRole(NAV_CONFIG, user?.role), [user?.role]);
+
   const [hoverMenu, setHoverMenu] = useState<HoverMenuState>({
     isOpen: false,
     item: null,
@@ -286,9 +281,6 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
     const Icon = item.icon;
 
     const paddingLeft = isCollapsed ? 0 : (level === 0 ? BASE_PADDING : (level * LEVEL_PADDING + BASE_PADDING));
-    
-    // Staggered animation delay for mobile sidebar opening
-    const staggerDelay = level === 0 && isMobileOpen && window.innerWidth < 768 ? index * 30 : 0;
 
     return (
       <>
@@ -325,8 +317,6 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           style={{ 
             paddingLeft: isCollapsed ? 0 : `${paddingLeft}px`,
             WebkitTapHighlightColor: 'transparent',
-            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-            animation: staggerDelay > 0 ? `slideInLeft 300ms cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms backwards` : 'none'
           }}
         >
           {/* Active indicator */}
@@ -446,7 +436,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
 
     return createPortal(
       <div
-        className="fixed z-[60] px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg whitespace-nowrap pointer-events-none shadow-lg animate-in fade-in duration-150"
+        className="fixed z-[60] px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg whitespace-nowrap pointer-events-none shadow-lg"
         style={{
           top: `${tooltip.position.top}px`,
           left: `${tooltip.position.left}px`,
@@ -555,13 +545,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         
         {/* Menu content */}
         <div
-          className={cn(
-            "fixed z-50 min-w-[240px] max-w-[280px] bg-white rounded-xl border border-slate-200 shadow-xl",
-            "origin-left",
-            hoverMenu.position.showAbove
-              ? "animate-in fade-in slide-in-from-bottom-2 duration-200"
-              : "animate-in fade-in slide-in-from-left-2 duration-200"
-          )}
+          className="fixed z-50 min-w-[240px] max-w-[280px] bg-white rounded-xl border border-slate-200 shadow-xl origin-left"
           style={{
             top: `${hoverMenu.position.top}px`,
             left: `${hoverMenu.position.left}px`,
@@ -730,7 +714,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
             // Mobile: Larger spacing between items
             "space-y-1 md:space-y-0.5"
           )}>
-            {NAV_CONFIG.map((item, index) => renderMenuItem(item, 0, index))}
+            {filteredNav.map((item, index) => renderMenuItem(item, 0, index))}
           </nav>
           
           {/* Extra spacer at bottom for mobile/tablet to ensure last items are accessible */}

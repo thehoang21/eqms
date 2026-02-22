@@ -58,8 +58,18 @@ const RoleListView = lazy(() => import('@/features/settings/role-permission').th
 const RoleDetailView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RoleDetailView })));
 
 // Quality Management
-const TrainingView = lazy(() => import('@/features/training').then(m => ({ default: m.TrainingView })));
-const CreateTrainingView = lazy(() => import('@/features/training').then(m => ({ default: m.CreateTrainingView })));
+// Training Management Views
+const CourseListView = lazy(() => import('@/features/training/course-inventory/CourseListView').then(m => ({ default: m.CourseListView })));
+const MaterialsView = lazy(() => import('@/features/training/course-inventory/MaterialsView').then(m => ({ default: m.MaterialsView })));
+const TrainingMatrixView = lazy(() => import('@/features/training/compliance-tracking/TrainingMatrixView').then(m => ({ default: m.TrainingMatrixView })));
+const CourseStatusView = lazy(() => import('@/features/training/compliance-tracking/CourseStatusView').then(m => ({ default: m.CourseStatusView })));
+const EmployeeTrainingFilesView = lazy(() => import('@/features/training/records-archive/EmployeeTrainingFilesView').then(m => ({ default: m.EmployeeTrainingFilesView })));
+const ExportRecordsView = lazy(() => import('@/features/training/records-archive/ExportRecordsView').then(m => ({ default: m.ExportRecordsView })));
+const CreateCourseView = lazy(() => import('@/features/training').then(m => ({ default: m.CreateCourseView })));
+const PendingReviewView = lazy(() => import('@/features/training/course-inventory/approval/PendingReviewView').then(m => ({ default: m.PendingReviewView })));
+const PendingApprovalView = lazy(() => import('@/features/training/course-inventory/approval/PendingApprovalView').then(m => ({ default: m.PendingApprovalView })));
+const ApprovalDetailView = lazy(() => import('@/features/training/course-inventory/approval/ApprovalDetailView').then(m => ({ default: m.ApprovalDetailView })));
+
 const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
 const ReportView = lazy(() => import('@/features/report').then(m => ({ default: m.ReportView })));
@@ -233,9 +243,25 @@ export const AppRoutes: React.FC = () => {
         
         {/* ===== TRAINING MANAGEMENT ===== */}
         <Route path="training-management">
-          <Route path="courses" element={<Suspense fallback={<LoadingFallback />}><TrainingView /></Suspense>} />
-          <Route path="create" element={<Suspense fallback={<LoadingFallback />}><CreateTrainingView /></Suspense>} />
-          <Route index element={<Navigate to="/training-management/courses" replace />} />
+          {/* Course Inventory */}
+          <Route path="courses-list" element={<Suspense fallback={<LoadingFallback />}><CourseListView /></Suspense>} />
+          <Route path="courses/create" element={<Suspense fallback={<LoadingFallback />}><CreateCourseView /></Suspense>} />
+          <Route path="training-materials" element={<Suspense fallback={<LoadingFallback />}><MaterialsView /></Suspense>} />
+          <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingReviewView /></Suspense>} />
+          <Route path="pending-review/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
+          <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingApprovalView /></Suspense>} />
+          <Route path="pending-approval/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
+          
+          {/* Compliance Tracking */}
+          <Route path="training-matrix" element={<Suspense fallback={<LoadingFallback />}><TrainingMatrixView /></Suspense>} />
+          <Route path="course-status" element={<Suspense fallback={<LoadingFallback />}><CourseStatusView /></Suspense>} />
+          
+          {/* Records & Archive */}
+          <Route path="employee-training-files" element={<Suspense fallback={<LoadingFallback />}><EmployeeTrainingFilesView /></Suspense>} />
+          <Route path="export-records" element={<Suspense fallback={<LoadingFallback />}><ExportRecordsView /></Suspense>} />
+          
+          {/* Default redirect */}
+          <Route index element={<Navigate to="/training-management/courses-list" replace />} />
         </Route>
         
         {/* ===== DEVIATION & NCs ===== */}

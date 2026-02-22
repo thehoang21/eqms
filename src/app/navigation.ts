@@ -140,9 +140,64 @@ const FOUNDATION_MODULES: NavItem[] = [
     icon: IconPresentationAnalytics,
     children: [
       {
-        id: "courses-list",
-        label: "Courses List",
-        path: "/training-management/courses",
+        id: "course-inventory",
+        label: "Course Inventory",
+        children: [
+          {
+            id: "courses-list",
+            label: "Courses List",
+            path: "/training-management/courses-list",
+          },
+          {
+            id: "training-materials",
+            label: "Training Materials",
+            path: "/training-management/training-materials",
+          },
+          {
+            id: "training-pending-review",
+            label: "Pending Review",
+            path: "/training-management/pending-review",
+            allowedRoles: ["admin", "manager"],
+          },
+          {
+            id: "training-pending-approval",
+            label: "Pending Approval",
+            path: "/training-management/pending-approval",
+            allowedRoles: ["admin", "manager"],
+          },
+        ],
+      },
+      {
+        id: "compliance-tracking",
+        label: "Compliance Tracking",
+        children: [
+          {
+            id: "training-matrix",
+            label: "Training Matrix",
+            path: "/training-management/training-matrix",
+          },
+          {
+            id: "course-status",
+            label: "Course Status",
+            path: "/training-management/course-status",
+          },
+        ],
+      },
+      {
+        id: "records-archive",
+        label: "Records & Archive",
+        children: [
+          {
+            id: "employee-training-files",
+            label: "Employee Training Files",
+            path: "/training-management/employee-training-files",
+          },
+          {
+            id: "export-records",
+            label: "Export Records",
+            path: "/training-management/export-records",
+          },
+        ],
       },
     ],
   },

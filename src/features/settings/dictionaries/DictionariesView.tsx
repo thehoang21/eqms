@@ -103,7 +103,7 @@ export const DictionariesView: React.FC = () => {
                   )}
                 >
                   <Icon className="h-4 w-4 shrink-0" />
-                  <span className="hidden md:inline">{dict.label}</span>
+                  <span>{dict.label}</span>
                 </button>
               );
             })}

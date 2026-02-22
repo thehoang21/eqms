@@ -21,7 +21,6 @@ import { IconSmartHome, IconPlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
-import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
@@ -30,38 +29,37 @@ import {
   TrainingFilters,
   TrainingStatus,
   TrainingType,
-} from "./types";
+} from "../types";
 
 // Mock Data
 const MOCK_TRAININGS: TrainingRecord[] = [
   {
     id: "1",
     trainingId: "TRN-2026-001",
-    title: "GMP Basic Training",
-    description:
-      "Introduction to Good Manufacturing Practice principles and requirements",
+    title: "GMP Basic Principles",
+    description: "Introduction to Good Manufacturing Practices",
     type: "GMP",
-    status: "Scheduled",
-    instructor: "Dr. John Smith",
+    status: "In-Progress",
+    instructor: "John Smith",
     scheduledDate: "2026-02-15",
     duration: 4,
     location: "Training Room A",
     capacity: 30,
     enrolled: 25,
-    department: "Production",
+    department: "Quality Assurance",
     mandatory: true,
     passScore: 80,
     createdBy: "Admin",
-    createdAt: "2026-01-20",
-    updatedAt: "2026-01-24",
+    createdAt: "2026-01-15",
+    updatedAt: "2026-01-20",
   },
   {
     id: "2",
     trainingId: "TRN-2026-002",
-    title: "Cleanroom Behavior & Hygiene",
-    description: "Essential practices for maintaining cleanroom standards",
-    type: "Safety",
-    status: "In-Progress",
+    title: "Cleanroom Qualification",
+    description: "Training on cleanroom operations and aseptic techniques",
+    type: "Technical",
+    status: "Scheduled",
     instructor: "Sarah Johnson",
     scheduledDate: "2026-01-26",
     duration: 3,
@@ -138,7 +136,7 @@ const MOCK_TRAININGS: TrainingRecord[] = [
   },
 ];
 
-export const TrainingView: React.FC = () => {
+export const CourseListView: React.FC = () => {
   const navigate = useNavigate();
   
   // Filters
@@ -158,91 +156,67 @@ export const TrainingView: React.FC = () => {
   const typeOptions = [
     { label: "All Types", value: "All" },
     { label: "GMP", value: "GMP" },
-    { label: "Safety", value: "Safety" },
     { label: "Technical", value: "Technical" },
     { label: "Compliance", value: "Compliance" },
     { label: "SOP", value: "SOP" },
-    { label: "Software", value: "Software" },
+    { label: "Safety", value: "Safety" },
   ];
 
   const statusOptions = [
     { label: "All Status", value: "All" },
     { label: "Scheduled", value: "Scheduled" },
-    { label: "In-Progress", value: "In-Progress" },
+    { label: "In Progress", value: "In Progress" },
     { label: "Completed", value: "Completed" },
-    { label: "Cancelled", value: "Cancelled" },
     { label: "Overdue", value: "Overdue" },
+    { label: "Cancelled", value: "Cancelled" },
   ];
 
   // Filtered Data
   const filteredData = useMemo(() => {
     return MOCK_TRAININGS.filter((training) => {
       const matchesSearch =
-        training.title
-          .toLowerCase()
-          .includes(filters.searchQuery.toLowerCase()) ||
-        training.trainingId
-          .toLowerCase()
-          .includes(filters.searchQuery.toLowerCase()) ||
-        training.instructor
-          .toLowerCase()
-          .includes(filters.searchQuery.toLowerCase());
+        training.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+        training.trainingId.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+        training.instructor.toLowerCase().includes(filters.searchQuery.toLowerCase());
+      const matchesType = filters.typeFilter === "All" || training.type === filters.typeFilter;
+      const matchesStatus = filters.statusFilter === "All" || training.status === filters.statusFilter;
+      
+      let matchesDateFrom = true;
+      let matchesDateTo = true;
+      
+      if (filters.dateFrom) {
+        matchesDateFrom = new Date(training.scheduledDate) >= new Date(filters.dateFrom);
+      }
+      if (filters.dateTo) {
+        matchesDateTo = new Date(training.scheduledDate) <= new Date(filters.dateTo);
+      }
 
-      const matchesType =
-        filters.typeFilter === "All" || training.type === filters.typeFilter;
-      const matchesStatus =
-        filters.statusFilter === "All" ||
-        training.status === filters.statusFilter;
-
-      const matchesDateFrom =
-        !filters.dateFrom || training.scheduledDate >= filters.dateFrom;
-      const matchesDateTo =
-        !filters.dateTo || training.scheduledDate <= filters.dateTo;
-
-      return (
-        matchesSearch &&
-        matchesType &&
-        matchesStatus &&
-        matchesDateFrom &&
-        matchesDateTo
-      );
+      return matchesSearch && matchesType && matchesStatus && matchesDateFrom && matchesDateTo;
     });
-  }, [MOCK_TRAININGS, filters]);
+  }, [filters]);
 
   // Paginated Data
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return filteredData.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredData, currentPage]);
+  }, [filteredData, currentPage, itemsPerPage]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  // Status Badge Mapping
-  const getStatusColor = (
-    status: TrainingStatus,
-  ): "draft" | "pendingReview" | "approved" | "effective" | "archived" => {
+  const getStatusColor = (status: TrainingStatus): string => {
     switch (status) {
       case "Scheduled":
-        return "pendingReview";
+        return "bg-cyan-50 text-cyan-700 border-cyan-200";
       case "In-Progress":
-        return "approved";
+        return "bg-blue-50 text-blue-700 border-blue-200";
       case "Completed":
-        return "effective";
+        return "bg-emerald-50 text-emerald-700 border-emerald-200";
       case "Overdue":
-        return "archived";
+        return "bg-red-50 text-red-700 border-red-200";
+      case "Cancelled":
+        return "bg-slate-50 text-slate-700 border-slate-200";
       default:
-        return "draft";
-    }
-  };
-
-  const getTypeIcon = (type: TrainingType) => {
-    switch (type) {
-      case "GMP":
-        return <Award className="h-3.5 w-3.5" />;
-      case "Safety":
-        return <FileText className="h-3.5 w-3.5" />;
-      default:
-        return <GraduationCap className="h-3.5 w-3.5" />;
+        return "bg-slate-50 text-slate-700 border-slate-200";
     }
   };
 
@@ -252,14 +226,18 @@ export const TrainingView: React.FC = () => {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
         <div className="flex-1 min-w-0">
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Training Management
+            Courses List
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <IconSmartHome className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">
-              Training Management
-            </span>
+            <span className="hidden sm:inline">Training Management</span>
+            <span className="sm:hidden">...</span>
+            <span className="text-slate-400 mx-1">/</span>
+            <span className="hidden sm:inline">Course Inventory</span>
+            <span className="sm:hidden">...</span>
+            <span className="text-slate-400 mx-1">/</span>
+            <span className="text-slate-700 font-medium">Courses List</span>
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
@@ -273,7 +251,7 @@ export const TrainingView: React.FC = () => {
             Export
           </Button>
           <Button
-            onClick={() => navigate("/training-management/create")}
+            onClick={() => navigate("/training-management/courses/create")}
             size="sm"
             className="whitespace-nowrap gap-2"
           >
@@ -293,29 +271,26 @@ export const TrainingView: React.FC = () => {
               Search
             </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by title, ID, or instructor..."
                 value={filters.searchQuery}
                 onChange={(e) =>
-                  setFilters({ ...filters, searchQuery: e.target.value })
+                  setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))
                 }
-                className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
           </div>
 
-          {/* Type Filter */}
+          {/* Training Type */}
           <div className="xl:col-span-3">
             <Select
-              label="Type"
+              label="Training Type"
               value={filters.typeFilter}
-              onChange={(value) =>
-                setFilters({
-                  ...filters,
-                  typeFilter: value as TrainingType | "All",
-                })
+              onChange={(val) =>
+                setFilters((prev) => ({ ...prev, typeFilter: val as TrainingType | "All" }))
               }
               options={typeOptions}
             />
@@ -323,38 +298,39 @@ export const TrainingView: React.FC = () => {
         </div>
 
         {/* Row 2: Status + Date Range */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 items-end mt-4">
-          {/* Status Filter */}
-          <div className="xl:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-end mt-4">
+          {/* Status */}
+          <div>
             <Select
               label="Status"
               value={filters.statusFilter}
-              onChange={(value) =>
-                setFilters({
-                  ...filters,
-                  statusFilter: value as TrainingStatus | "All",
-                })
+              onChange={(val) =>
+                setFilters((prev) => ({ ...prev, statusFilter: val as TrainingStatus | "All" }))
               }
               options={statusOptions}
             />
           </div>
 
           {/* Date From */}
-          <div className="xl:col-span-2">
+          <div>
             <DateTimePicker
               label="From Date"
               value={filters.dateFrom}
-              onChange={(value) => setFilters({ ...filters, dateFrom: value })}
+              onChange={(val) =>
+                setFilters((prev) => ({ ...prev, dateFrom: val }))
+              }
               placeholder="Select start date"
             />
           </div>
 
           {/* Date To */}
-          <div className="xl:col-span-2">
+          <div>
             <DateTimePicker
               label="To Date"
               value={filters.dateTo}
-              onChange={(value) => setFilters({ ...filters, dateTo: value })}
+              onChange={(val) =>
+                setFilters((prev) => ({ ...prev, dateTo: val }))
+              }
               placeholder="Select end date"
             />
           </div>
@@ -370,7 +346,7 @@ export const TrainingView: React.FC = () => {
             </div>
             <div>
               <p className="text-xs text-slate-600 font-medium">
-                Total Trainings
+                Total Courses
               </p>
               <p className="text-2xl font-bold text-slate-900">
                 {MOCK_TRAININGS.length}
@@ -401,10 +377,7 @@ export const TrainingView: React.FC = () => {
             <div>
               <p className="text-xs text-slate-600 font-medium">In Progress</p>
               <p className="text-2xl font-bold text-slate-900">
-                {
-                  MOCK_TRAININGS.filter((t) => t.status === "In-Progress")
-                    .length
-                }
+                {MOCK_TRAININGS.filter((t) => t.status === "In-Progress").length}
               </p>
             </div>
           </div>
@@ -426,21 +399,19 @@ export const TrainingView: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
-        {paginatedData.length > 0 ? (
-          <>
-            <div className="overflow-x-auto">
+      <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
+        <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b-2 border-slate-200">
+            <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
                   No.
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Training ID
+                  Course ID
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Title
+                  Course Title
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Type
@@ -466,65 +437,72 @@ export const TrainingView: React.FC = () => {
               {paginatedData.map((training, index) => (
                 <tr
                   key={training.id}
-                  className="hover:bg-slate-50 transition-colors"
+                  className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+                  onClick={() => console.log("View training:", training.id)}
                 >
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
+                  <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-500 font-medium">
                     {(currentPage - 1) * itemsPerPage + index + 1}
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className="font-mono text-slate-900">
+                    <span className="font-medium text-slate-900">
                       {training.trainingId}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-medium">
-                    {training.title}
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <div className="flex items-start gap-2">
+                      <GraduationCap className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium text-slate-900">
+                          {training.title}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {training.description}
+                        </p>
+                      </div>
+                    </div>
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                      {getTypeIcon(training.type)}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-blue-50 text-blue-700 border-blue-200">
                       {training.type}
                     </span>
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                    <StatusBadge status={getStatusColor(training.status)} />
+                    <span className={cn(
+                      "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+                      getStatusColor(training.status)
+                    )}>
+                      {training.status}
+                    </span>
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
                     {training.instructor}
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
-                    {new Date(training.scheduledDate).toLocaleDateString(
-                      "en-GB",
-                      {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      },
-                    )}
+                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                    {new Date(training.scheduledDate).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </td>
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 text-slate-400" />
                       <span className="text-slate-900 font-medium">
                         {training.enrolled}/{training.capacity}
                       </span>
-                      <div className="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div
-                          className={cn(
-                            "h-full transition-all rounded-full",
-                            training.enrolled >= training.capacity
-                              ? "bg-emerald-500"
-                              : training.enrolled >= training.capacity * 0.8
-                                ? "bg-amber-500"
-                                : "bg-cyan-500",
-                          )}
-                          style={{
-                            width: `${(training.enrolled / training.capacity) * 100}%`,
-                          }}
-                        />
-                      </div>
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 text-sm text-center sticky right-0 bg-white z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] hover:bg-slate-50">
-                    <button className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors">
+                  <td
+                    onClick={(e) => e.stopPropagation()}
+                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                  >
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("Action clicked");
+                      }}
+                      className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                    >
                       <MoreVertical className="h-4 w-4 text-slate-600" />
                     </button>
                   </td>
@@ -535,16 +513,20 @@ export const TrainingView: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <TablePagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={filteredData.length}
-          itemsPerPage={itemsPerPage}
-          onPageChange={setCurrentPage}
-          onItemsPerPageChange={setItemsPerPage}
-        />
-          </>
-        ) : (
+        {filteredData.length > 0 && (
+          <TablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={filteredData.length}
+            itemsPerPage={itemsPerPage}
+            onItemsPerPageChange={setItemsPerPage}
+            showItemCount={true}
+          />
+        )}
+
+        {/* Empty State */}
+        {filteredData.length === 0 && (
           <TableEmptyState
             title="No Training Records Found"
             description="We couldn't find any training records matching your filters. Try adjusting your search criteria or clear filters."

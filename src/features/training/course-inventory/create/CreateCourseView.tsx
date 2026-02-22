@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { IconSmartHome } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
-import { TrainingConfig, TrainingType, TrainingFile } from "../types";
+import { TrainingConfig, TrainingType, TrainingFile } from "../../types";
 import { BasicInfoTab } from "./BasicInfoTab";
-import { DocumentTrainingTab } from "./DocumentTrainingTab";
-import { TrainingConfigTab } from "./TrainingConfigTab";
+import { DocumentTab } from "./DocumentTab";
+import { ConfigTab } from "./ConfigTab";
 
 type TabType = "basic-info" | "document-training" | "training-config";
 
@@ -16,7 +16,7 @@ const TABS: { id: TabType; label: string }[] = [
     { id: "training-config", label: "Training Configuration" },
 ];
 
-export const CreateTrainingView: React.FC = () => {
+export const CreateCourseView: React.FC = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<TabType>("basic-info");
 
@@ -68,7 +68,7 @@ export const CreateTrainingView: React.FC = () => {
             config: hasQuiz ? config : undefined,
         });
 
-        navigate("/training-management/courses");
+        navigate("/training-management/courses-list");
     };
 
     const renderTabContent = () => {
@@ -100,14 +100,14 @@ export const CreateTrainingView: React.FC = () => {
                 );
             case "document-training":
                 return (
-                    <DocumentTrainingTab
+                    <DocumentTab
                         trainingFiles={trainingFiles}
                         setTrainingFiles={setTrainingFiles}
                     />
                 );
             case "training-config":
                 return (
-                    <TrainingConfigTab
+                    <ConfigTab
                         hasQuiz={hasQuiz}
                         setHasQuiz={setHasQuiz}
                         config={config}
@@ -130,7 +130,11 @@ export const CreateTrainingView: React.FC = () => {
                     <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
                         <IconSmartHome className="h-4 w-4" />
                         <span className="text-slate-400 mx-1">/</span>
-                        <span>Training Management</span>
+                        <span className="hidden sm:inline">Training Management</span>
+                        <span className="sm:hidden">...</span>
+                        <span className="text-slate-400 mx-1">/</span>
+                        <span className="hidden sm:inline">Course Inventory</span>
+                        <span className="sm:hidden">...</span>
                         <span className="text-slate-400 mx-1">/</span>
                         <span className="text-slate-700 font-medium">Create Training</span>
                     </div>
@@ -138,7 +142,7 @@ export const CreateTrainingView: React.FC = () => {
                 <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                     <Button
                         variant="outline"
-                        onClick={() => navigate("/training-management/courses")}
+                        onClick={() => navigate("/training-management/courses-list")}
                         size="sm"
                         className="whitespace-nowrap gap-2"
                     >

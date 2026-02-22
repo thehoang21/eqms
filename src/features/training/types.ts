@@ -103,3 +103,33 @@ export interface TrainingFilters {
   dateFrom: string;
   dateTo: string;
 }
+
+// Course Workflow Types
+export type CourseWorkflowStatus =
+  | "Draft"
+  | "Pending Review"
+  | "Pending Approval"
+  | "Approved"
+  | "Rejected";
+
+// Alias kept for backward compatibility
+export type CourseApprovalStatus = CourseWorkflowStatus;
+
+export interface CourseApproval {
+  id: string;
+  courseId: string;
+  trainingId: string;
+  courseTitle: string;
+  relatedSOP: string;
+  sopDocumentId: string;
+  trainingMethod: "Read & Understood" | "Quiz";
+  submittedBy: string;
+  submittedAt: string;
+  department: string;
+  approvalStatus: CourseWorkflowStatus;
+  approvedBy?: string;
+  approvedAt?: string;
+  rejectionReason?: string;
+  passScore: number;
+  questions: Question[];
+}

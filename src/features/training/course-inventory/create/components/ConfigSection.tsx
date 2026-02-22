@@ -1,6 +1,6 @@
 import React from "react";
 import { BookOpen, ClipboardCheck } from "lucide-react";
-import { TrainingConfig } from "../types";
+import { TrainingConfig } from "../../../types";
 import { cn } from '@/components/ui/utils';
 
 interface TrainingConfigSectionProps {
@@ -8,7 +8,7 @@ interface TrainingConfigSectionProps {
     onUpdate: (updates: Partial<TrainingConfig>) => void;
 }
 
-export const TrainingConfigSection: React.FC<TrainingConfigSectionProps> = ({ config, onUpdate }) => {
+export const ConfigSection: React.FC<TrainingConfigSectionProps> = ({ config, onUpdate }) => {
     const isTestMode = config.trainingType === "test_certification";
 
     return (

@@ -4,7 +4,7 @@ import { MultiSelect } from "@/components/ui/select/MultiSelect";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { Input, Textarea } from "@/components/ui/form/ResponsiveForm";
 import { RadioGroup } from "@/components/ui/radio";
-import { TrainingType } from "../types";
+import { TrainingType } from "../../types";
 
 interface BasicInfoTabProps {
     title: string;

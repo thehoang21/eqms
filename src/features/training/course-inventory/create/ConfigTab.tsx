@@ -3,10 +3,10 @@ import { Plus, AlertCircle } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
-import { TrainingConfig, Question } from "../types";
-import { redistributePoints } from "../utils/trainingHelpers";
-import { TrainingConfigSection } from "../components/TrainingConfigSection";
-import { QuestionCard } from "../components/QuestionCard";
+import { TrainingConfig, Question } from "../../types";
+import { redistributePoints } from "./utils/helpers";
+import { ConfigSection } from "./components/ConfigSection";
+import { QuestionCard } from "./components/QuestionCard";
 
 interface TrainingConfigTabProps {
     hasQuiz: boolean;
@@ -15,7 +15,7 @@ interface TrainingConfigTabProps {
     setConfig: React.Dispatch<React.SetStateAction<TrainingConfig>>;
 }
 
-export const TrainingConfigTab: React.FC<TrainingConfigTabProps> = ({
+export const ConfigTab: React.FC<TrainingConfigTabProps> = ({
     hasQuiz,
     setHasQuiz,
     config,
@@ -123,7 +123,7 @@ export const TrainingConfigTab: React.FC<TrainingConfigTabProps> = ({
             {hasQuiz && (
                 <>
                     <div className="border-t border-slate-200 pt-6">
-                        <TrainingConfigSection
+                        <ConfigSection
                             config={config}
                             onUpdate={(updates) => setConfig(prev => ({ ...prev, ...updates }))}
                         />

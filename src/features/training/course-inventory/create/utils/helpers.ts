@@ -1,4 +1,4 @@
-import { Question } from "./types";
+import { Question } from "../../../types";
 
 /**
  * Redistributes points evenly across all questions to total 10 points.

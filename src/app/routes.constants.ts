@@ -56,7 +56,19 @@ export const ROUTES = {
   },
 
   // Training
-  TRAINING: '/training-management',
+  TRAINING: {
+    BASE: '/training-management',
+    // Course Inventory
+    COURSES_LIST: '/training-management/courses-list',
+    TRAINING_MATERIALS: '/training-management/training-materials',
+    COURSES_CREATE: '/training-management/courses/create',
+    // Compliance Tracking
+    TRAINING_MATRIX: '/training-management/training-matrix',
+    COURSE_STATUS: '/training-management/course-status',
+    // Records & Archive
+    EMPLOYEE_TRAINING_FILES: '/training-management/employee-training-files',
+    EXPORT_RECORDS: '/training-management/export-records',
+  },
 
   // Deviation & NCs
   DEVIATIONS: '/deviations-ncs',
