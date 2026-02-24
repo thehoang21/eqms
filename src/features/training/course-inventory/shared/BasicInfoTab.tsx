@@ -85,9 +85,18 @@ const ReadOnlyField: React.FC<{ value: string | number | undefined | null; place
     </p>
 );
 
+/** Auto-generate a course ID (prefix + timestamp-based suffix) */
+const generateCourseId = (): string => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const seq = String(Math.floor(Math.random() * 900) + 100);
+    return `TRN-${year}-${seq}`;
+};
+
 interface BasicInfoTabProps {
     readOnly?: boolean;
     // Data props
+    courseId: string;
     title: string;
     description: string;
     trainingType: TrainingType;
@@ -104,6 +113,7 @@ interface BasicInfoTabProps {
     linkedDocumentTitle: string;
     evidenceFiles: File[];
     // Setter props (optional — only needed when not readOnly)
+    setCourseId?: (v: string) => void;
     setTitle?: (v: string) => void;
     setDescription?: (v: string) => void;
     setTrainingType?: (v: TrainingType) => void;
@@ -123,6 +133,8 @@ interface BasicInfoTabProps {
 
 export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
     readOnly = false,
+    courseId,
+    setCourseId,
     title,
     setTitle,
     description,
@@ -163,11 +175,21 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
     return (
         <div className="p-4 lg:p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Title */}
-                <div className="md:col-span-2">
+                {/* Course ID */}
+                <div>
                     <div className="flex flex-col gap-1.5">
                         <label className="text-sm font-medium text-slate-700">
-                            Course Name/ID {!readOnly && <span className="text-red-500">*</span>}
+                            Course ID
+                        </label>
+                        <ReadOnlyField value={courseId} placeholder="Auto-generated" />
+                    </div>
+                </div>
+
+                {/* Course Name */}
+                <div>
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-sm font-medium text-slate-700">
+                            Course Name {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
                             <ReadOnlyField value={title} />
@@ -176,7 +198,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                                 type="text"
                                 value={title}
                                 onChange={(e) => setTitle?.(e.target.value)}
-                                placeholder="e.g., GMP-TRN-001 or GMP Basic Training"
+                                placeholder="e.g., GMP Basic Training"
                                 className="text-xs md:text-sm"
                             />
                         )}

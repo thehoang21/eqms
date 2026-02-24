@@ -442,6 +442,7 @@ export const ApprovalDetailView: React.FC = () => {
         return (
           <BasicInfoTab
             readOnly
+            courseId={approval.trainingId}
             title={approval.courseTitle}
             description={approval.description || ""}
             trainingType={approval.trainingType as any || "GMP"}

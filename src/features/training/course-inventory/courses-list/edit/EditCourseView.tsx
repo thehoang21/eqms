@@ -247,6 +247,7 @@ export const EditCourseView: React.FC = () => {
       case "basic-info":
         return (
           <BasicInfoTab
+            courseId={courseData.trainingId}
             title={title}
             setTitle={setTitle}
             description={description}

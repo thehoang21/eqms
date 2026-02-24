@@ -277,6 +277,7 @@ export const CourseDetailView: React.FC = () => {
         return (
           <BasicInfoTab
             readOnly
+            courseId={course.trainingId}
             title={course.title}
             description={course.description || ""}
             trainingType={course.type}

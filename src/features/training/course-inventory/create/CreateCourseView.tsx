@@ -5,10 +5,10 @@ import { Check } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
 import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
-import { TrainingConfig, TrainingType, TrainingFile, TrainingMethod, Recurrence } from "../../../types";
-import { BasicInfoTab } from "../../shared/BasicInfoTab";
-import { DocumentTab } from "../../shared/DocumentTab";
-import { ConfigTab } from "../../shared/ConfigTab";
+import { TrainingConfig, TrainingType, TrainingFile, TrainingMethod, Recurrence } from "../../types";
+import { BasicInfoTab } from "../shared/BasicInfoTab";
+import { DocumentTab } from "../shared/DocumentTab";
+import { ConfigTab } from "../shared/ConfigTab";
 
 type TabType = "basic-info" | "document-training" | "training-config";
 
