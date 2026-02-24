@@ -38,7 +38,7 @@ export const RoleDetailView: React.FC = () => {
   const { showToast } = useToast();
   const { id } = useParams<{ id: string }>();
 
-  const isNewRole = id === "new";
+  const isNewRole = window.location.pathname.endsWith("/new");
   const isEditMode = window.location.pathname.includes("/edit");
   const isViewMode = !isNewRole && !isEditMode;
 
@@ -143,11 +143,11 @@ export const RoleDetailView: React.FC = () => {
     });
 
     setHasUnsavedChanges(false);
-    navigate("/settings/role-permission");
+    navigate("/settings/roles");
   };
 
   const handleDiscard = () => {
-    navigate("/settings/role-permission");
+    navigate("/settings/roles");
   };
 
   const getGroupPermissionCount = (group: PermissionGroup) => {
@@ -280,7 +280,7 @@ export const RoleDetailView: React.FC = () => {
             </span>
             <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">
-              {isNewRole ? "New Role" : isEditMode ? "Edit Role" : roleName}
+              {isNewRole ? "New Role" : isEditMode ? "Edit Role" : "Role Details"}
             </span>
           </div>
         </div>
@@ -290,7 +290,7 @@ export const RoleDetailView: React.FC = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate("/settings/role-permission")}
+                onClick={() => navigate("/settings/roles")}
                 className="text-slate-600 hover:text-slate-900"
               >
                 Back
@@ -298,7 +298,7 @@ export const RoleDetailView: React.FC = () => {
               <Button
                 variant="default"
                 size="sm"
-                onClick={() => navigate(`/settings/role-permission/${id}/edit`)}
+                onClick={() => navigate(`/settings/roles/${id}/edit`)}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[100px]"
               >
                 Edit Role

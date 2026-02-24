@@ -11,7 +11,7 @@ import { ProtectedRoute } from '@/middleware/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Features - Auth (eager load for login page)
-import { LoginView } from '@/features/auth';
+import { LoginView, ForgotPasswordView, ContactAdminView } from '@/features/auth';
 import { UnderConstruction } from './UnderConstruction';
 
 // ==================== LAZY LOADED FEATURES ====================
@@ -69,6 +69,7 @@ const CreateCourseView = lazy(() => import('@/features/training').then(m => ({ d
 const PendingReviewView = lazy(() => import('@/features/training/course-inventory/approval/PendingReviewView').then(m => ({ default: m.PendingReviewView })));
 const PendingApprovalView = lazy(() => import('@/features/training/course-inventory/approval/PendingApprovalView').then(m => ({ default: m.PendingApprovalView })));
 const ApprovalDetailView = lazy(() => import('@/features/training/course-inventory/approval/ApprovalDetailView').then(m => ({ default: m.ApprovalDetailView })));
+const ResultEntryPage = lazy(() => import('@/features/training/course-inventory/ResultEntryPage').then(m => ({ default: m.ResultEntryPage })));
 
 const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
@@ -168,11 +169,35 @@ export const AppRoutes: React.FC = () => {
     navigate('/dashboard');
   };
 
+  const handleForgotPassword = () => {
+    navigate('/forgot-password');
+  };
+
+  const handleBackToLogin = () => {
+    navigate('/login');
+  };
+
+  const handlePasswordResetRequest = (email: string, reason: string) => {
+    console.log('Password reset request:', { email, reason });
+    // TODO: Implement API call to send request to admin
+  };
+
+  const handleContactAdmin = () => {
+    navigate('/contact-admin');
+  };
+
+  const handleAccountRequest = (data: any) => {
+    console.log('Account request:', data);
+    // TODO: Implement API call to send request to admin
+  };
+
   return (
     <Routes>
       {/* ==================== PUBLIC ROUTES ==================== */}
       <Route path="/" element={<Navigate to="/login" replace />} />
-      <Route path="/login" element={<LoginView onLogin={handleLogin} />} />
+      <Route path="/login" element={<LoginView onLogin={handleLogin} onForgotPassword={handleForgotPassword} onContactAdmin={handleContactAdmin} />} />
+      <Route path="/forgot-password" element={<ForgotPasswordView onBackToLogin={handleBackToLogin} onRequestSubmit={handlePasswordResetRequest} />} />
+      <Route path="/contact-admin" element={<ContactAdminView onBackToLogin={handleBackToLogin} onRequestSubmit={handleAccountRequest} />} />
       
       {/* ==================== PROTECTED ROUTES (WITH LAYOUT) ==================== */}
       <Route path="/" element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
@@ -225,20 +250,20 @@ export const AppRoutes: React.FC = () => {
         
         {/* ===== SETTINGS ===== */}
         <Route path="settings">
-          <Route path="user-management">
+          <Route path="users">
             <Route index element={<Suspense fallback={<LoadingFallback />}><UserManagementView /></Suspense>} />
             <Route path="add" element={<Suspense fallback={<LoadingFallback />}><AddUserView /></Suspense>} />
             <Route path="edit/:userId" element={<Suspense fallback={<LoadingFallback />}><EditUserView /></Suspense>} />
           </Route>
-          <Route path="role-permission">
+          <Route path="roles">
             <Route index element={<Suspense fallback={<LoadingFallback />}><RoleListView /></Suspense>} />
             <Route path="new" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
             <Route path=":id/edit" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
             <Route path=":id" element={<Suspense fallback={<LoadingFallback />}><RoleDetailView /></Suspense>} />
           </Route>
           <Route path="dictionaries" element={<Suspense fallback={<LoadingFallback />}><DictionariesView /></Suspense>} />
-          <Route path="config" element={<Suspense fallback={<LoadingFallback />}><ConfigurationView /></Suspense>} />
-          <Route path="info-system" element={<Suspense fallback={<LoadingFallback />}><SystemInformationView /></Suspense>} />
+          <Route path="configuration" element={<Suspense fallback={<LoadingFallback />}><ConfigurationView /></Suspense>} />
+          <Route path="system-info" element={<Suspense fallback={<LoadingFallback />}><SystemInformationView /></Suspense>} />
         </Route>
         
         {/* ===== TRAINING MANAGEMENT ===== */}
@@ -251,6 +276,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="pending-review/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
           <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingApprovalView /></Suspense>} />
           <Route path="pending-approval/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
+          <Route path="courses/:courseId/result-entry" element={<Suspense fallback={<LoadingFallback />}><ResultEntryPage /></Suspense>} />
           
           {/* Compliance Tracking */}
           <Route path="training-matrix" element={<Suspense fallback={<LoadingFallback />}><TrainingMatrixView /></Suspense>} />

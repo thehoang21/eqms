@@ -1,5 +1,5 @@
 import React from "react";
-import { BookOpen, ClipboardCheck } from "lucide-react";
+import { ClipboardCheck } from "lucide-react";
 import { TrainingConfig } from "../../../types";
 import { cn } from '@/components/ui/utils';
 
@@ -12,78 +12,7 @@ export const ConfigSection: React.FC<TrainingConfigSectionProps> = ({ config, on
     const isTestMode = config.trainingType === "test_certification";
 
     return (
-        <div>
-            <div className="flex items-center gap-3 mb-6">
-                <div>
-                    <h3 className="text-lg font-semibold text-slate-900">Training Configuration</h3>
-                </div>
-            </div>
-
             <div className="space-y-6">
-                {/* Training Type Selector */}
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Training Type</label>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <button
-                            onClick={() => onUpdate({ trainingType: "read_understand" })}
-                            className={cn(
-                                "flex items-center gap-3 p-4 rounded-lg border text-left transition-all",
-                                config.trainingType === "read_understand"
-                                    ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500"
-                                    : "border-slate-200 bg-white hover:border-emerald-300"
-                            )}
-                        >
-                            <div className={cn(
-                                "p-2 rounded-lg",
-                                config.trainingType === "read_understand" ? "bg-emerald-100" : "bg-slate-100"
-                            )}>
-                                <BookOpen className={cn(
-                                    "h-5 w-5",
-                                    config.trainingType === "read_understand" ? "text-emerald-600" : "text-slate-500"
-                                )} />
-                            </div>
-                            <div>
-                                <div className={cn(
-                                    "text-sm font-semibold",
-                                    config.trainingType === "read_understand" ? "text-emerald-900" : "text-slate-900"
-                                )}>
-                                    Read & Understand
-                                </div>
-                                <div className="text-xs text-slate-500 mt-0.5">Document review without test</div>
-                            </div>
-                        </button>
-
-                        <button
-                            onClick={() => onUpdate({ trainingType: "test_certification" })}
-                            className={cn(
-                                "flex items-center gap-3 p-4 rounded-lg border text-left transition-all",
-                                config.trainingType === "test_certification"
-                                    ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500"
-                                    : "border-slate-200 bg-white hover:border-emerald-300"
-                            )}
-                        >
-                            <div className={cn(
-                                "p-2 rounded-lg",
-                                config.trainingType === "test_certification" ? "bg-emerald-100" : "bg-slate-100"
-                            )}>
-                                <ClipboardCheck className={cn(
-                                    "h-5 w-5",
-                                    config.trainingType === "test_certification" ? "text-emerald-600" : "text-slate-500"
-                                )} />
-                            </div>
-                            <div>
-                                <div className={cn(
-                                    "text-sm font-semibold",
-                                    config.trainingType === "test_certification" ? "text-emerald-900" : "text-slate-900"
-                                )}>
-                                    Test & Certification
-                                </div>
-                                <div className="text-xs text-slate-500 mt-0.5">Quiz with passing score</div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-
                 {/* Configuration Fields */}
                 <div className="space-y-6">
                     {/* Numeric Fields Grid */}
@@ -136,6 +65,6 @@ export const ConfigSection: React.FC<TrainingConfigSectionProps> = ({ config, on
                 </div>
             </div>
         </div>
-        </div>
+
     );
 };

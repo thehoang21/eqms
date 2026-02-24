@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
-import { Upload, Trash2 } from "lucide-react";
+import { Upload, Trash2, FileText, Film, Presentation, Eye, Download } from "lucide-react";
+import { Textarea } from "@/components/ui/form/ResponsiveForm";
 import { cn } from "@/components/ui/utils";
 import { TrainingFile } from "../../types";
 
@@ -14,8 +15,11 @@ import pngIcon from "@/assets/images/image-file/png.png";
 import fileIcon from "@/assets/images/image-file/file.png";
 
 interface DocumentTrainingTabProps {
+    readOnly?: boolean;
     trainingFiles: TrainingFile[];
-    setTrainingFiles: React.Dispatch<React.SetStateAction<TrainingFile[]>>;
+    setTrainingFiles?: React.Dispatch<React.SetStateAction<TrainingFile[]>>;
+    instruction: string;
+    setInstruction?: (v: string) => void;
 }
 
 const ACCEPTED_TYPES = [
@@ -28,9 +32,12 @@ const ACCEPTED_TYPES = [
     "image/png",
     "image/gif",
     "image/webp",
+    "video/mp4",
+    "video/webm",
+    "video/quicktime",
 ];
-const ACCEPTED_EXTENSIONS = ".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp";
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const ACCEPTED_EXTENSIONS = ".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.mov";
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
 const FILE_ICON_MAP: Record<string, string> = {
     pdf: pdfIcon,
@@ -55,13 +62,17 @@ const formatFileSize = (bytes: number) => {
 };
 
 export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
+    readOnly = false,
     trainingFiles,
     setTrainingFiles,
+    instruction,
+    setInstruction,
 }) => {
     const [isDragOver, setIsDragOver] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const processFiles = useCallback((files: FileList | File[]) => {
+        if (!setTrainingFiles) return;
         const validFiles = Array.from(files).filter(file => {
             if (!ACCEPTED_TYPES.includes(file.type)) {
                 alert(`"${file.name}" is not a supported file type.`);
@@ -94,11 +105,11 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
-                    setTrainingFiles(prev =>
+                    setTrainingFiles!(prev =>
                         prev.map(f => f.id === tf.id ? { ...f, progress: 100, status: "success" } : f)
                     );
                 } else {
-                    setTrainingFiles(prev =>
+                    setTrainingFiles!(prev =>
                         prev.map(f => f.id === tf.id ? { ...f, progress: Math.round(progress) } : f)
                     );
                 }
@@ -122,11 +133,94 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
     };
 
     const removeFile = (id: string) => {
-        setTrainingFiles(prev => prev.filter(f => f.id !== id));
+        setTrainingFiles?.(prev => prev.filter(f => f.id !== id));
     };
 
+    // ─── Read-Only Mode ────────────────────────────────────────────
+    if (readOnly) {
+        return (
+            <div className="p-4 lg:p-6 space-y-6">
+                {/* Training Files */}
+                <div className="space-y-4">
+                    {trainingFiles.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-12 text-center">
+                            <Upload className="h-12 w-12 text-slate-300 mb-4" />
+                            <p className="text-sm font-medium text-slate-900">No training materials uploaded</p>
+                            <p className="text-xs text-slate-500 mt-1">
+                                Training documents will appear here once uploaded.
+                            </p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="flex items-center justify-between mb-2">
+                                <p className="text-sm font-medium text-slate-700">
+                                    {trainingFiles.length} file{trainingFiles.length > 1 ? "s" : ""} uploaded
+                                </p>
+                            </div>
+                            <div className="space-y-2">
+                                {trainingFiles.map((file) => (
+                                    <div
+                                        key={file.id}
+                                        className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors"
+                                    >
+                                        <img
+                                            src={getFileIconSrc(file.name)}
+                                            alt=""
+                                            className="h-10 w-10 object-contain"
+                                            onError={(e) => { (e.target as HTMLImageElement).src = fileIcon; }}
+                                        />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-slate-900 truncate">{file.name}</p>
+                                            <p className="text-xs text-slate-500">{formatFileSize(file.size)}</p>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <button
+                                                className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-200 transition-colors"
+                                                title="Preview"
+                                            >
+                                                <Eye className="h-4 w-4 text-slate-600" />
+                                            </button>
+                                            <button
+                                                className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-200 transition-colors"
+                                                title="Download"
+                                            >
+                                                <Download className="h-4 w-4 text-slate-600" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {/* Instruction (read-only) */}
+                {instruction && (
+                    <div className="border-t border-slate-200 pt-6">
+                        <div className="rounded-xl border border-slate-200 bg-white p-5">
+                            <div className="flex items-center gap-2 mb-3">
+                                <FileText className="h-4 w-4 text-slate-500" />
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                    Instruction
+                                </span>
+                            </div>
+                            <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{instruction}</p>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    // ─── Edit Mode ─────────────────────────────────────────────────
+
     return (
-        <div className="p-4 lg:p-6 space-y-4">
+        <div className="p-4 lg:p-6 space-y-6">
+            {/* Section Header */}
+            <div>
+                <h3 className="text-base font-semibold text-slate-900">Upload Training Materials</h3>
+                <p className="text-sm text-slate-500 mt-1">Upload SOP documents (PDF), presentation slides, or training videos for this course.</p>
+            </div>
             {/* Drop Zone */}
             <div
                 onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
@@ -156,13 +250,15 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                     {isDragOver ? "Drop files here" : "Click to upload or drag and drop"}
                 </p>
                 <p className="text-xs text-slate-400 mt-1">
-                    PDF, Word, PowerPoint, Images (max 50MB each)
+                    PDF, Word, PowerPoint, Videos (max 100MB each)
                 </p>
             </div>
 
             {/* File List */}
             {trainingFiles.length > 0 && (
-                <div className="space-y-2">
+                <div>
+                    <h4 className="text-sm font-medium text-slate-700 mb-2">Uploaded Files ({trainingFiles.length})</h4>
+                    <div className="space-y-2">
                     {trainingFiles.map(file => (
                         <div
                             key={file.id}
@@ -217,8 +313,25 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                             </button>
                         </div>
                     ))}
+                    </div>
                 </div>
             )}
+
+            {/* Instruction / Notes */}
+            <div className="border-t border-slate-200 pt-6">
+                <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-medium text-slate-700">
+                        Instruction
+                    </label>
+                    <Textarea
+                        value={instruction}
+                        onChange={(e) => setInstruction?.(e.target.value)}
+                        rows={4}
+                        placeholder="e.g., Focus on Chapter 3 – Cleaning Validation Procedures. Pay special attention to Appendix B for equipment handling."
+                    />
+                    <p className="text-xs text-slate-500">Provide notes to help employees focus on specific sections or key points in the training materials.</p>
+                </div>
+            </div>
         </div>
     );
 };

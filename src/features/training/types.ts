@@ -20,9 +20,9 @@ export type TrainingType =
 
 // Training Method: defines how employees complete the course
 export type TrainingMethod =
-  | "Read & Understood"  // Employee reads, then confirms + e-sign
-  | "Theory Quiz"        // Multiple choice quiz
-  | "Hands-on/OJT";      // On-the-job training requiring trainer sign-off
+  | "Read & Understood"           // Employee reads, then confirms + e-sign
+  | "Quiz (Paper-based/Manual)"   // Paper or manual quiz graded offline
+  | "Hands-on/OJT";               // On-the-job training requiring trainer sign-off
 
 export interface Recurrence {
   enabled: boolean;
@@ -135,12 +135,13 @@ export interface CourseApproval {
   courseId: string;
   trainingId: string;
   courseTitle: string;
-  relatedSOP: string;
-  sopDocumentId: string;
-  trainingMethod: TrainingMethod;    // updated: full TrainingMethod type
-  recurrence?: Recurrence;           // NEW
-  linkedDocumentId?: string;         // NEW
-  linkedDocumentTitle?: string;      // NEW
+  relatedDocument: string;           // Linked document title (e.g., SOP, WI)
+  relatedDocumentId: string;         // Linked document ID
+  trainingMethod: TrainingMethod;    // How employees complete the course
+  trainingType?: TrainingType;       // Training category
+  recurrence?: Recurrence;           // Periodic retraining schedule
+  linkedDocumentId?: string;         // Legacy field
+  linkedDocumentTitle?: string;      // Legacy field
   submittedBy: string;
   submittedAt: string;
   department: string;
@@ -150,4 +151,18 @@ export interface CourseApproval {
   rejectionReason?: string;
   passScore: number;
   questions: Question[];
+  trainingFiles?: TrainingFile[];    // Training materials/documents
+  description?: string;              // Course description
+  instructor?: string;               // Instructor name
+  instructorType?: "internal" | "external"; // Instructor type
+  duration?: number;                 // Duration in hours
+  location?: string;                 // Training location
+  scheduledDate?: string;            // Scheduled date
+  capacity?: number;                 // Max participants
+  distributionList?: string[];       // Target departments
+  instruction?: string;              // Training instruction/notes
+  examTemplate?: string;             // Exam template file name
+  answerKey?: string;                // Answer key file name
+  passingGradeType?: "pass_fail" | "score_10" | "percentage"; // Passing grade type
+  maxAttempts?: number;              // Max exam attempts
 }

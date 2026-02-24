@@ -328,7 +328,7 @@ export const MaterialsView: React.FC = () => {
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
                   No.

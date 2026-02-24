@@ -1,7 +1,7 @@
 // Export Training Management components
 
 // Course Inventory
-export { CourseListView, MaterialsView, CreateCourseView, PendingReviewView, PendingApprovalView, ApprovalDetailView } from './course-inventory';
+export { CourseListView, MaterialsView, CreateCourseView, PendingReviewView, PendingApprovalView, ApprovalDetailView, ResultEntryPage } from './course-inventory';
 
 // Compliance Tracking
 export { TrainingMatrixView } from './compliance-tracking/TrainingMatrixView';

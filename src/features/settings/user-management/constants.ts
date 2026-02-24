@@ -2,9 +2,9 @@ import { TableColumn } from "./types";
 
 // Routes
 export const USER_MANAGEMENT_ROUTES = {
-  LIST: "/settings/user-management",
-  ADD: "/settings/user-management/add",
-  EDIT: (userId: string) => `/settings/user-management/edit/${userId}`,
+  LIST: "/settings/users",
+  ADD: "/settings/users/add",
+  EDIT: (userId: string) => `/settings/users/edit/${userId}`,
 } as const;
 
 // Business Units and their Departments mapping

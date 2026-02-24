@@ -1,26 +1,62 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  CheckCircle2,
   XCircle,
-  FileText,
-  BookOpen,
   ClipboardCheck,
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
   Check,
-  ClipboardList,
-  ShieldCheck,
 } from "lucide-react";
 import { IconSmartHome } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
+import { Radio } from "@/components/ui/radio/Radio";
 import { cn } from "@/components/ui/utils";
-import { CourseApproval } from "../../types";
+import { CourseApproval, TrainingFile } from "../../types";
+import { BasicInfoTab } from "../shared/BasicInfoTab";
+import { DocumentTab } from "../shared/DocumentTab";
+import { ConfigTab } from "../shared/ConfigTab";
+
+// Tab types
+type TabType = "basic-info" | "document-training" | "training-config";
+
+const TABS: { id: TabType; label: string }[] = [
+  { id: "basic-info", label: "Basic Information" },
+  { id: "document-training", label: "Training Materials" },
+  { id: "training-config", label: "Assessment Config" },
+];
 
 // Workflow stepper steps (Rejected is an exception, shown as a banner)
 const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved"] as const;
+
+// Mock training files
+const MOCK_TRAINING_FILES: TrainingFile[] = [
+  {
+    id: "tf-001",
+    file: null as any,
+    name: "GMP_Training_Materials_2026.pdf",
+    size: 2456789,
+    type: "application/pdf",
+    progress: 100,
+    status: "success",
+  },
+  {
+    id: "tf-002",
+    file: null as any,
+    name: "GMP_Presentation_Slides.pptx",
+    size: 8765432,
+    type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    progress: 100,
+    status: "success",
+  },
+  {
+    id: "tf-003",
+    file: null as any,
+    name: "Quick_Reference_Guide.docx",
+    size: 567890,
+    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    progress: 100,
+    status: "success",
+  },
+];
 
 // Mock data - In real app, fetch by ID from API
 const MOCK_APPROVALS: CourseApproval[] = [
@@ -29,14 +65,30 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseId: "1",
     trainingId: "TRN-2026-001",
     courseTitle: "GMP Basic Principles",
-    relatedSOP: "SOP-QA-001: Good Manufacturing Practices",
-    sopDocumentId: "DOC-001",
-    trainingMethod: "Theory Quiz",
+    relatedDocument: "SOP-QA-001: Good Manufacturing Practices",
+    relatedDocumentId: "DOC-001",
+    trainingType: "GMP",
+    trainingMethod: "Quiz (Paper-based/Manual)",
+    instructorType: "internal",
     submittedBy: "John Smith",
     submittedAt: "2026-02-10",
     department: "Quality Assurance",
     approvalStatus: "Pending Review",
     passScore: 80,
+    description: "This comprehensive training covers the fundamental principles of Good Manufacturing Practice (GMP) required for all personnel working in pharmaceutical manufacturing environments.",
+    instructor: "Dr. Sarah Williams",
+    duration: 4,
+    location: "Training Room A",
+    scheduledDate: "2026-03-15",
+    capacity: 25,
+    distributionList: ["Quality Assurance", "Production", "Quality Control"],
+    recurrence: { enabled: true, intervalMonths: 12 },
+    trainingFiles: MOCK_TRAINING_FILES,
+    instruction: "Focus on Chapter 3 (Cleaning Validation) and Appendix B (Equipment Handling). Review all SOPs referenced in Section 2.4 before the training session.",
+    examTemplate: "GMP_Exam_Template_2026.pdf",
+    answerKey: "GMP_Answer_Key_2026.pdf",
+    passingGradeType: "score_10",
+    maxAttempts: 3,
     questions: [
       {
         id: "q1",
@@ -81,14 +133,38 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseId: "2",
     trainingId: "TRN-2026-006",
     courseTitle: "Cleanroom Qualification",
-    relatedSOP: "SOP-CR-002: Cleanroom Operations",
-    sopDocumentId: "DOC-002",
+    relatedDocument: "SOP-CR-002: Cleanroom Operations",
+    relatedDocumentId: "DOC-002",
+    trainingType: "SOP",
     trainingMethod: "Read & Understood",
+    instructorType: "internal",
     submittedBy: "Sarah Johnson",
     submittedAt: "2026-02-12",
     department: "Production",
     approvalStatus: "Pending Review",
     passScore: 100,
+    description: "Training on cleanroom classification, gowning procedures, and environmental monitoring requirements.",
+    instructor: "Michael Chen",
+    duration: 2,
+    location: "Cleanroom Facility",
+    scheduledDate: "2026-03-20",
+    capacity: 15,
+    distributionList: ["Production", "Quality Control"],
+    recurrence: { enabled: false, intervalMonths: 0 },
+    trainingFiles: [
+      {
+        id: "tf-004",
+        file: null as any,
+        name: "Cleanroom_SOP_Manual.pdf",
+        size: 3456789,
+        type: "application/pdf",
+        progress: 100,
+        status: "success",
+      },
+    ],
+    instruction: "Pay special attention to gowning procedures in Section 3 and environmental monitoring protocols in Section 5.",
+    passingGradeType: "pass_fail",
+    maxAttempts: 1,
     questions: [],
   },
   {
@@ -96,14 +172,49 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseId: "3",
     trainingId: "TRN-2026-007",
     courseTitle: "HPLC Operation Advanced",
-    relatedSOP: "SOP-LAB-005: HPLC Standard Method",
-    sopDocumentId: "DOC-003",
-    trainingMethod: "Theory Quiz",
+    relatedDocument: "SOP-LAB-005: HPLC Standard Method",
+    relatedDocumentId: "DOC-003",
+    trainingType: "Technical",
+    trainingMethod: "Quiz (Paper-based/Manual)",
+    instructorType: "external",
     submittedBy: "Dr. Michael Chen",
     submittedAt: "2026-02-08",
     department: "QC Lab",
     approvalStatus: "Pending Approval",
     passScore: 85,
+    description: "Advanced HPLC operation training covering method development, troubleshooting, and maintenance procedures.",
+    instructor: "Dr. Emily Parker",
+    duration: 8,
+    location: "QC Laboratory",
+    scheduledDate: "2026-03-25",
+    capacity: 10,
+    distributionList: ["QC Lab", "R&D"],
+    recurrence: { enabled: true, intervalMonths: 24 },
+    trainingFiles: [
+      {
+        id: "tf-005",
+        file: null as any,
+        name: "HPLC_Advanced_Training.pdf",
+        size: 5678901,
+        type: "application/pdf",
+        progress: 100,
+        status: "success",
+      },
+      {
+        id: "tf-006",
+        file: null as any,
+        name: "HPLC_Troubleshooting_Guide.pdf",
+        size: 2345678,
+        type: "application/pdf",
+        progress: 100,
+        status: "success",
+      },
+    ],
+    instruction: "Review Chapter 4 (Method Development) and practice troubleshooting scenarios in Appendix C before the hands-on session.",
+    examTemplate: "HPLC_Exam_2026.pdf",
+    answerKey: "HPLC_Answer_Key_2026.pdf",
+    passingGradeType: "percentage",
+    maxAttempts: 2,
     questions: [
       {
         id: "q1",
@@ -131,23 +242,111 @@ const MOCK_APPROVALS: CourseApproval[] = [
       },
     ],
   },
+  {
+    id: "CA-006",
+    courseId: "6",
+    trainingId: "TRN-2026-011",
+    courseTitle: "ISO 14001 Environmental Management",
+    relatedDocument: "SOP-ENV-001: Environmental Management System",
+    relatedDocumentId: "DOC-006",
+    trainingType: "Compliance",
+    trainingMethod: "Read & Understood",
+    instructorType: "internal",
+    submittedBy: "Kevin Tran",
+    submittedAt: "2026-02-18",
+    department: "HSE",
+    approvalStatus: "Pending Approval",
+    passScore: 100,
+    description: "This training covers the ISO 14001 Environmental Management System requirements, environmental policy, objectives and targets, and compliance monitoring procedures.",
+    instructor: "Lisa Nguyen",
+    duration: 3,
+    location: "HSE Training Center",
+    scheduledDate: "2026-03-28",
+    capacity: 30,
+    distributionList: ["HSE", "Production", "Maintenance"],
+    recurrence: { enabled: true, intervalMonths: 12 },
+    trainingFiles: [
+      {
+        id: "tf-007",
+        file: null as any,
+        name: "ISO14001_Environmental_Management.pdf",
+        size: 4567890,
+        type: "application/pdf",
+        progress: 100,
+        status: "success",
+      },
+    ],
+    questions: [],
+  },
+  {
+    id: "CA-008",
+    courseId: "8",
+    trainingId: "TRN-2026-013",
+    courseTitle: "Deviation & Non-Conformance Handling",
+    relatedDocument: "SOP-QA-007: Deviation Management",
+    relatedDocumentId: "DOC-008",
+    trainingType: "Compliance",
+    trainingMethod: "Quiz (Paper-based/Manual)",
+    instructorType: "internal",
+    submittedBy: "Alice Pham",
+    submittedAt: "2026-02-19",
+    department: "Quality Assurance",
+    approvalStatus: "Pending Approval",
+    passScore: 80,
+    description: "Training on deviation detection, documentation, investigation, root cause analysis, and CAPA implementation procedures.",
+    instructor: "Dr. Sarah Williams",
+    duration: 4,
+    location: "Training Room B",
+    scheduledDate: "2026-04-01",
+    capacity: 20,
+    distributionList: ["Quality Assurance", "Production", "QC Lab"],
+    recurrence: { enabled: true, intervalMonths: 12 },
+    trainingFiles: [
+      {
+        id: "tf-008",
+        file: null as any,
+        name: "Deviation_Management_SOP.pdf",
+        size: 3456789,
+        type: "application/pdf",
+        progress: 100,
+        status: "success",
+      },
+    ],
+    questions: [
+      {
+        id: "q1",
+        text: "What is the first step when a deviation is detected?",
+        type: "multiple_choice",
+        points: 10,
+        options: [
+          { id: "a", text: "Document and notify QA immediately", isCorrect: true },
+          { id: "b", text: "Continue production", isCorrect: false },
+          { id: "c", text: "Correct the deviation without reporting", isCorrect: false },
+          { id: "d", text: "Wait for the next shift", isCorrect: false },
+        ],
+      },
+      {
+        id: "q2",
+        text: "What tool is commonly used for root cause analysis?",
+        type: "multiple_choice",
+        points: 10,
+        options: [
+          { id: "a", text: "SWOT Analysis", isCorrect: false },
+          { id: "b", text: "Fishbone (Ishikawa) Diagram", isCorrect: true },
+          { id: "c", text: "Balance Scorecard", isCorrect: false },
+          { id: "d", text: "Gantt Chart", isCorrect: false },
+        ],
+      },
+    ],
+  },
 ];
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
 
 export const ApprovalDetailView: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
+  const [activeTab, setActiveTab] = useState<TabType>("basic-info");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [expandedQuestions, setExpandedQuestions] = useState(true);
   const [showESignModal, setShowESignModal] = useState(false);
   const [eSignAction, setESignAction] = useState<"confirm-review" | "approve" | "reject" | null>(null);
 
@@ -238,6 +437,147 @@ export const ApprovalDetailView: React.FC = () => {
     : WORKFLOW_STEPS.indexOf(approval.approvalStatus as typeof WORKFLOW_STEPS[number]);
 
   const totalPoints = approval.questions.reduce((sum, q) => sum + q.points, 0);
+  const trainingFiles = approval.trainingFiles || [];
+
+  /** Render the Questions & Answers section (Quiz only, specific to approval review) */
+  const renderQuestionsSection = () => {
+    if (approval.trainingMethod !== "Quiz (Paper-based/Manual)") return null;
+
+    if (approval.questions.length === 0) {
+      return (
+        <div className="px-4 lg:px-6 pb-6">
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <ClipboardCheck className="h-12 w-12 text-slate-300 mb-4" />
+            <p className="text-sm font-medium text-slate-900">No quiz questions configured</p>
+            <p className="text-xs text-slate-500 mt-1">Quiz questions will appear here once added.</p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="px-4 lg:px-6 pb-6">
+        <div className="border border-slate-200 rounded-xl overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50 border-b border-slate-200">
+            <div className="flex items-center gap-2">
+              <ClipboardCheck className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-semibold text-slate-900">
+                Test Content ({approval.questions.length} questions — Total: {totalPoints} points)
+              </span>
+            </div>
+          </div>
+          <div className="max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+            <div className="divide-y divide-slate-100">
+              {approval.questions.map((question, qIndex) => (
+                <div key={question.id} className="px-5 py-4">
+                  <div className="flex items-start gap-3">
+                    <span className="flex items-center justify-center h-6 w-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold shrink-0 mt-0.5">
+                      {qIndex + 1}
+                    </span>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-medium text-slate-900 leading-relaxed flex-1">
+                          {question.text}
+                        </p>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 text-xs font-semibold shrink-0">
+                          {question.points} pts
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-1">
+                        {question.type === "multiple_choice" ? "Multiple Choice" : "Essay"}
+                      </p>
+                      {question.options && question.options.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          {question.options.map((option) => (
+                            <div
+                              key={option.id}
+                              className={cn(
+                                "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm border",
+                                option.isCorrect
+                                  ? "bg-emerald-50 border-emerald-200"
+                                  : "bg-white border-slate-200"
+                              )}
+                            >
+                              <Radio
+                                name={`question-${question.id}`}
+                                value={option.id}
+                                checked={option.isCorrect}
+                                label={option.text}
+                                className={cn(
+                                  "pointer-events-none",
+                                  option.isCorrect ? "[&_label]:text-emerald-800" : "[&_label]:text-slate-700"
+                                )}
+                              />
+                              {option.isCorrect && (
+                                <span className="ml-auto text-xs font-medium text-emerald-600">
+                                  Correct Answer
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "basic-info":
+        return (
+          <BasicInfoTab
+            readOnly
+            title={approval.courseTitle}
+            description={approval.description || ""}
+            trainingType={approval.trainingType as any || "GMP"}
+            trainingMethod={approval.trainingMethod as any || "Read & Understood"}
+            instructorType={approval.instructorType || "internal"}
+            instructor={approval.instructor || ""}
+            scheduledDate={approval.scheduledDate || ""}
+            duration={approval.duration || 0}
+            location={approval.location || ""}
+            capacity={approval.capacity || 0}
+            distributionList={approval.distributionList || []}
+            recurrence={approval.recurrence || { enabled: false, intervalMonths: 0 }}
+            linkedDocumentId={approval.relatedDocumentId || ""}
+            linkedDocumentTitle={approval.relatedDocument || ""}
+            evidenceFiles={[]}
+          />
+        );
+      case "document-training":
+        return (
+          <DocumentTab
+            readOnly
+            trainingFiles={trainingFiles}
+            instruction={approval.instruction || ""}
+          />
+        );
+      case "training-config":
+        return (
+          <>
+            <ConfigTab
+              readOnly
+              trainingMethod={approval.trainingMethod as any || "Read & Understood"}
+              examTemplateName={approval.examTemplate}
+              answerKeyName={approval.answerKey}
+              passingGradeType={approval.passingGradeType}
+              passingScore={approval.passScore}
+              maxAttempts={approval.maxAttempts}
+            />
+            {renderQuestionsSection()}
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
@@ -247,7 +587,7 @@ export const ApprovalDetailView: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 lg:gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-              {approval.courseTitle}
+              {queueLabel}
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
               <IconSmartHome className="h-4 w-4" />
@@ -258,10 +598,7 @@ export const ApprovalDetailView: React.FC = () => {
               <span className="hidden sm:inline">Course Inventory</span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">{queueLabel}</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="text-slate-700 font-medium">{approval.trainingId}</span>
+              <span className="text-slate-700 font-medium">{queueLabel}</span>
             </div>
           </div>
 
@@ -277,9 +614,8 @@ export const ApprovalDetailView: React.FC = () => {
                   <span className="sm:hidden">{isSubmitting ? "..." : "Reject"}</span>
                 </Button>
                 <Button size="sm" onClick={handleConfirmReview} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
-                  <ClipboardList className="h-4 w-4" />
-                  <span className="hidden sm:inline">{isSubmitting ? "Processing..." : "Confirm Review"}</span>
-                  <span className="sm:hidden">{isSubmitting ? "..." : "Confirm"}</span>
+                  <span className="hidden sm:inline">{isSubmitting ? "Processing..." : "Review"}</span>
+                  <span className="sm:hidden">{isSubmitting ? "..." : "Review"}</span>
                 </Button>
               </>
             )}
@@ -290,7 +626,6 @@ export const ApprovalDetailView: React.FC = () => {
                   <span className="sm:hidden">{isSubmitting ? "..." : "Reject"}</span>
                 </Button>
                 <Button size="sm" onClick={handleApprove} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
-                  <ShieldCheck className="h-4 w-4" />
                   <span className="hidden sm:inline">{isSubmitting ? "Processing..." : "Approve"}</span>
                   <span className="sm:hidden">{isSubmitting ? "..." : "Approve"}</span>
                 </Button>
@@ -348,256 +683,74 @@ export const ApprovalDetailView: React.FC = () => {
         )}
       </div>
 
-      {/* Content Card */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
-        <div className="px-6 py-5 space-y-6">
-          {/* Course Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Related SOP */}
-            <div className="rounded-xl border border-slate-200 p-4 bg-slate-50/50">
-              <div className="flex items-center gap-2 mb-2">
-                <FileText className="h-4 w-4 text-blue-600" />
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                  Related SOP
-                </span>
-              </div>
-              <p className="text-sm font-medium text-slate-900 leading-relaxed">
-                {approval.relatedSOP}
-              </p>
-            </div>
-
-            {/* Training Method */}
-            <div className="rounded-xl border border-slate-200 p-4 bg-slate-50/50">
-              <div className="flex items-center gap-2 mb-2">
-                <BookOpen className="h-4 w-4 text-purple-600" />
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                  Training Method
-                </span>
-              </div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span
+      {/* Tab Container */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* Tab Navigation */}
+        <div className="border-b border-slate-200">
+          <div className="flex overflow-x-auto">
+            {TABS.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
-                    approval.trainingMethod === "Theory Quiz"
-                      ? "bg-blue-50 text-blue-700 border-blue-200"
-                      : "bg-purple-50 text-purple-700 border-purple-200"
+                    "flex items-center gap-2 px-4 md:px-6 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors border-r border-slate-200 last:border-r-0",
+                    isActive
+                      ? "border-b-emerald-600 text-emerald-700 bg-emerald-50/50"
+                      : "border-b-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                   )}
                 >
-                  {approval.trainingMethod}
-                </span>
-                <span className="text-sm text-slate-600">
-                  Pass Score: <span className="font-semibold text-slate-900">{approval.passScore}%</span>
-                </span>
-              </div>
-            </div>
-
-            {/* Submitted By */}
-            <div className="rounded-xl border border-slate-200 p-4 bg-slate-50/50">
-              <div className="flex items-center gap-2 mb-2">
-                <ClipboardCheck className="h-4 w-4 text-emerald-600" />
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                  Submitted By
-                </span>
-              </div>
-              <p className="text-sm font-medium text-slate-900">{approval.submittedBy}</p>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {approval.department} — {formatDate(approval.submittedAt)}
-              </p>
-            </div>
-
-            {/* Status */}
-            <div className="rounded-xl border border-slate-200 p-4 bg-slate-50/50">
-              <div className="flex items-center gap-2 mb-2">
-                {(isPendingReview || isPendingApproval) ? (
-                  <AlertTriangle className={cn("h-4 w-4", isPendingReview ? "text-amber-600" : "text-blue-600")} />
-                ) : approval.approvalStatus === "Approved" ? (
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                ) : (
-                  <XCircle className="h-4 w-4 text-red-600" />
-                )}
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                  Status
-                </span>
-              </div>
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                  isPendingReview && "bg-amber-50 text-amber-700 border-amber-200",
-                  isPendingApproval && "bg-blue-50 text-blue-700 border-blue-200",
-                  approval.approvalStatus === "Approved" &&
-                    "bg-emerald-50 text-emerald-700 border-emerald-200",
-                  isRejected && "bg-red-50 text-red-700 border-red-200"
-                )}
-              >
-                {approval.approvalStatus}
-              </span>
-              {approval.approvedBy && (
-                <p className="text-xs text-slate-500 mt-1.5">
-                  By {approval.approvedBy} on {formatDate(approval.approvedAt!)}
-                </p>
-              )}
-            </div>
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
-
-          {/* Previous Rejection Reason */}
-          {isRejected && approval.rejectionReason && (
-            <div className="rounded-xl border border-red-200 bg-red-50/50 p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-semibold text-red-700 uppercase tracking-wider">
-                  Rejection Reason
-                </span>
-              </div>
-              <p className="text-sm text-red-800 leading-relaxed">{approval.rejectionReason}</p>
-            </div>
-          )}
-
-          {/* Questions & Answers Section */}
-          {approval.trainingMethod === "Theory Quiz" && approval.questions.length > 0 && (
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
-              {/* Section Header */}
-              <button
-                onClick={() => setExpandedQuestions(!expandedQuestions)}
-                className="w-full flex items-center justify-between px-5 py-3.5 bg-slate-50 hover:bg-slate-100 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <ClipboardCheck className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-semibold text-slate-900">
-                    Test Content ({approval.questions.length} questions — Total: {totalPoints} points)
-                  </span>
-                </div>
-                {expandedQuestions ? (
-                  <ChevronUp className="h-4 w-4 text-slate-500" />
-                ) : (
-                  <ChevronDown className="h-4 w-4 text-slate-500" />
-                )}
-              </button>
-
-              {/* Questions List */}
-              {expandedQuestions && (
-                <div className="divide-y divide-slate-100">
-                  {approval.questions.map((question, qIndex) => (
-                    <div key={question.id} className="px-5 py-4">
-                      <div className="flex items-start gap-3">
-                        <span className="flex items-center justify-center h-6 w-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold shrink-0 mt-0.5">
-                          {qIndex + 1}
-                        </span>
-                        <div className="flex-1">
-                          <div className="flex items-start justify-between gap-3">
-                            <p className="text-sm font-medium text-slate-900 leading-relaxed flex-1">
-                              {question.text}
-                            </p>
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 text-xs font-semibold shrink-0">
-                              {question.points} pts
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-500 mt-1">
-                            {question.type === "multiple_choice" ? "Multiple Choice" : "Essay"}
-                          </p>
-
-                          {/* Options */}
-                          {question.options && question.options.length > 0 && (
-                            <div className="mt-3 space-y-2">
-                              {question.options.map((option) => (
-                                <div
-                                  key={option.id}
-                                  className={cn(
-                                    "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm border",
-                                    option.isCorrect
-                                      ? "bg-emerald-50 border-emerald-200 text-emerald-800"
-                                      : "bg-white border-slate-200 text-slate-600"
-                                  )}
-                                >
-                                  <div
-                                    className={cn(
-                                      "h-4 w-4 rounded-full border-2 shrink-0 flex items-center justify-center",
-                                      option.isCorrect
-                                        ? "border-emerald-500 bg-emerald-500"
-                                        : "border-slate-300"
-                                    )}
-                                  >
-                                    {option.isCorrect && (
-                                      <CheckCircle2 className="h-3 w-3 text-white" />
-                                    )}
-                                  </div>
-                                  <span>{option.text}</span>
-                                  {option.isCorrect && (
-                                    <span className="ml-auto text-xs font-medium text-emerald-600">
-                                      Correct Answer
-                                    </span>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Read & Understood - No questions */}
-          {approval.trainingMethod === "Read & Understood" && (
-            <div className="rounded-xl border border-purple-200 bg-purple-50/50 p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <BookOpen className="h-4 w-4 text-purple-600" />
-                <span className="text-xs font-semibold text-purple-700 uppercase tracking-wider">
-                  Training Method Note
-                </span>
-              </div>
-              <p className="text-sm text-purple-800 leading-relaxed">
-                This course uses the <strong>Read &amp; Understood</strong> method. Trainees will
-                read the related SOP document and confirm acknowledgment. No quiz questions are
-                required.
-              </p>
-            </div>
-          )}
-
-
         </div>
 
-        {/* E-Signature Modal */}
-        <ESignatureModal
-          isOpen={showESignModal}
-          onClose={() => {
-            setShowESignModal(false);
-            setESignAction(null);
-          }}
-          onConfirm={handleESignConfirm}
-          actionTitle={eSignAction === "confirm-review" ? "Confirm Content Review" : eSignAction === "approve" ? "Approve Course" : "Reject Course"}
-        />
-
-        {/* Footer Actions */}
-        {isActionable && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50/50">
-            <Button variant="outline" size="sm" onClick={handleBack}>Cancel</Button>
-            {isPendingReview && (
-              <>
-                <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
-                  {isSubmitting ? "Processing..." : "Reject"}
-                </Button>
-                <Button size="sm" onClick={handleConfirmReview} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
-                  <ClipboardList className="h-4 w-4" />
-                  {isSubmitting ? "Processing..." : "Confirm Review"}
-                </Button>
-              </>
-            )}
-            {isPendingApproval && (
-              <>
-                <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
-                  {isSubmitting ? "Processing..." : "Reject"}
-                </Button>
-                <Button size="sm" onClick={handleApprove} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
-                  <ShieldCheck className="h-4 w-4" />
-                  {isSubmitting ? "Processing..." : "Approve"}
-                </Button>
-              </>
-            )}
-          </div>
-        )}
+        {/* Tab Content */}
+        <div className="animate-in fade-in duration-200">
+          {renderTabContent()}
+        </div>
       </div>
+
+      {/* Footer Actions */}
+      {isActionable && (
+        <div className="flex items-center justify-start gap-3">
+          <Button variant="outline" size="sm" onClick={handleBack}>Cancel</Button>
+          {isPendingReview && (
+            <>
+              <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
+                {isSubmitting ? "Processing..." : "Reject"}
+              </Button>
+              <Button size="sm" onClick={handleConfirmReview} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
+                {isSubmitting ? "Processing..." : "Review"}
+              </Button>
+            </>
+          )}
+          {isPendingApproval && (
+            <>
+              <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
+                {isSubmitting ? "Processing..." : "Reject"}
+              </Button>
+              <Button size="sm" onClick={handleApprove} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
+                {isSubmitting ? "Processing..." : "Approve"}
+              </Button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* E-Signature Modal */}
+      <ESignatureModal
+        isOpen={showESignModal}
+        onClose={() => {
+          setShowESignModal(false);
+          setESignAction(null);
+        }}
+        onConfirm={handleESignConfirm}
+        actionTitle={eSignAction === "confirm-review" ? "Confirm Content Review" : eSignAction === "approve" ? "Approve Course" : "Reject Course"}
+      />
     </div>
   );
 };

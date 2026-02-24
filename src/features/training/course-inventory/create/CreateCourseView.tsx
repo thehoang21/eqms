@@ -1,24 +1,37 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IconSmartHome } from "@tabler/icons-react";
+import { Check } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
+import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
 import { TrainingConfig, TrainingType, TrainingFile, TrainingMethod, Recurrence } from "../../types";
-import { BasicInfoTab } from "./BasicInfoTab";
-import { DocumentTab } from "./DocumentTab";
-import { ConfigTab } from "./ConfigTab";
+import { BasicInfoTab } from "../shared/BasicInfoTab";
+import { DocumentTab } from "../shared/DocumentTab";
+import { ConfigTab } from "../shared/ConfigTab";
 
 type TabType = "basic-info" | "document-training" | "training-config";
 
 const TABS: { id: TabType; label: string }[] = [
     { id: "basic-info", label: "Basic Information" },
-    { id: "document-training", label: "Document Training" },
-    { id: "training-config", label: "Training Configuration" },
+    { id: "document-training", label: "Training Materials" },
+    { id: "training-config", label: "Assessment Config" },
 ];
+
+// Workflow stepper steps
+const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved"] as const;
 
 export const CreateCourseView: React.FC = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<TabType>("basic-info");
+
+    // Modal state
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<AlertModalType>("info");
+    const [modalTitle, setModalTitle] = useState("");
+    const [modalDescription, setModalDescription] = useState("");
+    const [modalAction, setModalAction] = useState<(() => void) | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Basic Training Info
     const [title, setTitle] = useState("");
@@ -47,6 +60,7 @@ export const CreateCourseView: React.FC = () => {
 
     // Training Materials
     const [trainingFiles, setTrainingFiles] = useState<TrainingFile[]>([]);
+    const [instruction, setInstruction] = useState("");
 
     // Quiz Configuration
     const [hasQuiz, setHasQuiz] = useState(false);
@@ -59,27 +73,113 @@ export const CreateCourseView: React.FC = () => {
         questions: []
     });
 
-    const handleSave = () => {
+    const handleCancel = () => {
+        setModalType("confirm");
+        setModalTitle("Discard Changes?");
+        setModalDescription("Are you sure you want to cancel? All unsaved changes will be lost.");
+        setModalAction(() => () => {
+            navigate("/training-management/courses-list");
+        });
+        setIsModalOpen(true);
+    };
+
+    const handleSave = async () => {
+        // Validation
         if (!title.trim()) {
-            alert("Please enter training title");
+            setModalType("error");
+            setModalTitle("Validation Error");
+            setModalDescription("Please enter training title.");
+            setModalAction(null);
+            setIsModalOpen(true);
             return;
         }
 
-        console.log({
-            title,
-            description,
-            trainingType,
-            instructor,
-            scheduledDate,
-            duration,
-            location,
-            capacity,
-            trainingFiles: trainingFiles.map(f => ({ name: f.name, size: f.size, type: f.type })),
-            hasQuiz,
-            config: hasQuiz ? config : undefined,
-        });
+        if (!instructor.trim()) {
+            setModalType("error");
+            setModalTitle("Validation Error");
+            setModalDescription("Please enter instructor name.");
+            setModalAction(null);
+            setIsModalOpen(true);
+            return;
+        }
 
-        navigate("/training-management/courses-list");
+        if (!scheduledDate) {
+            setModalType("error");
+            setModalTitle("Validation Error");
+            setModalDescription("Please select scheduled date.");
+            setModalAction(null);
+            setIsModalOpen(true);
+            return;
+        }
+
+        if (!location.trim()) {
+            setModalType("error");
+            setModalTitle("Validation Error");
+            setModalDescription("Please enter training location.");
+            setModalAction(null);
+            setIsModalOpen(true);
+            return;
+        }
+
+        if (trainingFiles.length === 0) {
+            setModalType("warning");
+            setModalTitle("No Training Materials");
+            setModalDescription("You haven't uploaded any training materials. Do you want to continue?");
+            setModalAction(() => async () => {
+                await performSave();
+            });
+            setIsModalOpen(true);
+            return;
+        }
+
+        await performSave();
+    };
+
+    const performSave = async () => {
+        setIsLoading(true);
+        
+        try {
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const courseData = {
+                title,
+                description,
+                trainingType,
+                trainingMethod,
+                instructorType,
+                instructor,
+                scheduledDate,
+                duration,
+                location,
+                capacity,
+                linkedDocumentId,
+                linkedDocumentTitle,
+                distributionList,
+                recurrence,
+                trainingFiles: trainingFiles.map(f => ({ name: f.name, size: f.size, type: f.type })),
+                hasQuiz,
+                config: hasQuiz ? config : undefined,
+            };
+
+            console.log("Saved course:", courseData);
+
+            setIsLoading(false);
+            setModalType("success");
+            setModalTitle("Course Created Successfully");
+            setModalDescription("The training course has been created and will be sent for review.");
+            setModalAction(() => () => {
+                navigate("/training-management/courses-list");
+            });
+            setIsModalOpen(true);
+        } catch (error) {
+            setIsLoading(false);
+            setModalType("error");
+            setModalTitle("Save Failed");
+            setModalDescription("An error occurred while saving the course. Please try again.");
+            setModalAction(null);
+            setIsModalOpen(true);
+        }
     };
 
     const renderTabContent = () => {
@@ -124,16 +224,14 @@ export const CreateCourseView: React.FC = () => {
                     <DocumentTab
                         trainingFiles={trainingFiles}
                         setTrainingFiles={setTrainingFiles}
+                        instruction={instruction}
+                        setInstruction={setInstruction}
                     />
                 );
             case "training-config":
                 return (
                     <ConfigTab
                         trainingMethod={trainingMethod}
-                        hasQuiz={hasQuiz}
-                        setHasQuiz={setHasQuiz}
-                        config={config}
-                        setConfig={setConfig}
                     />
                 );
             default:
@@ -164,7 +262,7 @@ export const CreateCourseView: React.FC = () => {
                 <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                     <Button
                         variant="outline"
-                        onClick={() => navigate("/training-management/courses-list")}
+                        onClick={handleCancel}
                         size="sm"
                         className="whitespace-nowrap gap-2"
                     >
@@ -175,9 +273,56 @@ export const CreateCourseView: React.FC = () => {
                         onClick={handleSave}
                         size="sm"
                         className="whitespace-nowrap gap-2"
+                        disabled={isLoading}
                     >
-                        Save
+                        {isLoading ? "Saving..." : "Save"}
                     </Button>
+                </div>
+            </div>
+
+            {/* Status Workflow Stepper */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
+                    <div className="flex items-stretch min-w-full">
+                        {WORKFLOW_STEPS.map((step, index) => {
+                            const isCompleted = false; // No steps completed yet in draft
+                            const isCurrent = index === 0; // Draft is current
+                            const isFirst = index === 0;
+                            const isLast = index === WORKFLOW_STEPS.length - 1;
+                            return (
+                                <div
+                                    key={step}
+                                    className="relative flex-1 flex items-center justify-center min-w-[140px]"
+                                    style={{ minHeight: "56px" }}
+                                >
+                                    <div
+                                        className={cn(
+                                            "absolute inset-0 transition-all",
+                                            isCurrent ? "bg-emerald-600" : "bg-slate-100"
+                                        )}
+                                        style={{
+                                            clipPath: isFirst
+                                                ? "polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%)"
+                                                : isLast
+                                                ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 20px 50%)"
+                                                : "polygon(0% 0%, calc(100% - 20px) 0%, 100% 50%, calc(100% - 20px) 100%, 0% 100%, 20px 50%)",
+                                        }}
+                                    />
+                                    <div className="relative z-10 flex items-center gap-2 px-6">
+                                        {isCompleted && <Check className="h-4 w-4 text-emerald-600 shrink-0" />}
+                                        <span
+                                            className={cn(
+                                                "text-xs md:text-sm font-medium text-center whitespace-nowrap",
+                                                isCurrent ? "text-white" : "text-slate-400"
+                                            )}
+                                        >
+                                            {step}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 
@@ -211,6 +356,21 @@ export const CreateCourseView: React.FC = () => {
                     {renderTabContent()}
                 </div>
             </div>
+
+            {/* Alert Modal */}
+            <AlertModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={modalAction ? () => {
+                    modalAction();
+                    setIsModalOpen(false);
+                } : undefined}
+                type={modalType}
+                title={modalTitle}
+                description={modalDescription}
+                isLoading={isLoading}
+                confirmText={modalType === "success" ? "OK" : modalType === "confirm" ? "Discard" : undefined}
+            />
         </div>
     );
 };

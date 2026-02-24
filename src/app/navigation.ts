@@ -14,6 +14,7 @@ import {
   Users,
   ShieldCheck,
   BookText,
+  GraduationCap,
 } from "lucide-react";
 
 import {
@@ -137,7 +138,7 @@ const FOUNDATION_MODULES: NavItem[] = [
   {
     id: "training-management",
     label: "Training Management",
-    icon: IconPresentationAnalytics,
+    icon: GraduationCap,
     children: [
       {
         id: "course-inventory",
@@ -217,13 +218,13 @@ const QUALITY_MODULES: NavItem[] = [
     id: "capa-management",
     label: "CAPA Management",
     icon: IconClipboardCheck,
-    path: "/capa-management",
+    path: "/capa",
   },
   {
     id: "change-control",
     label: "Change Controls",
     icon: IconReplace,
-    path: "/change-control",
+    path: "/changes",
   },
   {
     id: "complaints-management",
@@ -235,7 +236,7 @@ const QUALITY_MODULES: NavItem[] = [
     id: "risk-management",
     label: "Risk Management",
     icon: IconAlertSquareRounded,
-    path: "/risk-management",
+    path: "/risks",
   },
 ];
 
@@ -259,7 +260,7 @@ const OPERATIONS_MODULES: NavItem[] = [
     id: "product-management",
     label: "Product Management",
     icon: Package,
-    path: "/product",
+    path: "/products",
   },
 ];
 
@@ -301,13 +302,13 @@ const SYSTEM_MODULES: NavItem[] = [
         id: "user-management",
         label: "User Management",
         icon: Users,
-        path: "/settings/user-management",
+        path: "/settings/users",
       },
       {
         id: "roles",
         label: "Roles & Permissions",
         icon: ShieldCheck,
-        path: "/settings/role-permission",
+        path: "/settings/roles",
       },
       {
         id: "dictionaries",
@@ -319,13 +320,13 @@ const SYSTEM_MODULES: NavItem[] = [
         id: "config",
         label: "Configuration",
         icon: IconDeviceDesktopCog,
-        path: "/settings/config",
+        path: "/settings/configuration",
       },
       {
         id: "info-sys",
         label: "System Information",
         icon: IconInfoCircle,
-        path: "/settings/info-system",
+        path: "/settings/system-info",
       },
     ],
   },

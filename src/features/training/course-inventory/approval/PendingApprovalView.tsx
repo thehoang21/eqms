@@ -10,6 +10,7 @@ import {
 import { IconSmartHome } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
+import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
@@ -22,9 +23,9 @@ const MOCK_PENDING_APPROVAL: CourseApproval[] = [
     courseId: "3",
     trainingId: "TRN-2026-007",
     courseTitle: "HPLC Operation Advanced",
-    relatedSOP: "SOP-LAB-005: HPLC Standard Method",
-    sopDocumentId: "DOC-003",
-    trainingMethod: "Theory Quiz",
+    relatedDocument: "SOP-LAB-005: HPLC Standard Method",
+    relatedDocumentId: "DOC-003",
+    trainingMethod: "Quiz (Paper-based/Manual)",
     submittedBy: "Dr. Michael Chen",
     submittedAt: "2026-02-08",
     department: "QC Lab",
@@ -64,8 +65,8 @@ const MOCK_PENDING_APPROVAL: CourseApproval[] = [
     courseId: "6",
     trainingId: "TRN-2026-011",
     courseTitle: "ISO 14001 Environmental Management",
-    relatedSOP: "SOP-ENV-001: Environmental Management System",
-    sopDocumentId: "DOC-006",
+    relatedDocument: "SOP-ENV-001: Environmental Management System",
+    relatedDocumentId: "DOC-006",
     trainingMethod: "Read & Understood",
     submittedBy: "Kevin Tran",
     submittedAt: "2026-02-18",
@@ -79,9 +80,9 @@ const MOCK_PENDING_APPROVAL: CourseApproval[] = [
     courseId: "8",
     trainingId: "TRN-2026-013",
     courseTitle: "Deviation & Non-Conformance Handling",
-    relatedSOP: "SOP-QA-007: Deviation Management",
-    sopDocumentId: "DOC-008",
-    trainingMethod: "Theory Quiz",
+    relatedDocument: "SOP-QA-007: Deviation Management",
+    relatedDocumentId: "DOC-008",
+    trainingMethod: "Quiz (Paper-based/Manual)",
     submittedBy: "Alice Pham",
     submittedAt: "2026-02-19",
     department: "Quality Assurance",
@@ -104,9 +105,9 @@ const MOCK_PENDING_APPROVAL: CourseApproval[] = [
   },
 ];
 
-const getMethodBadge = (method: "Read & Understood" | "Theory Quiz" | "Hands-on/OJT") =>
-  method === "Theory Quiz"
-    ? "bg-blue-50 text-blue-700 border-blue-200"
+const getMethodBadge = (method: "Read & Understood" | "Quiz (Paper-based/Manual)" | "Hands-on/OJT") =>
+  method === "Quiz (Paper-based/Manual)"
+    ? "bg-purple-50 text-purple-700 border-purple-200"
     : method === "Hands-on/OJT"
     ? "bg-amber-50 text-amber-700 border-amber-200"
     : "bg-slate-50 text-slate-700 border-slate-200";
@@ -120,9 +121,23 @@ const formatDate = (dateString: string) =>
 
 const METHOD_OPTIONS = [
   { label: "All Methods", value: "All" },
-  { label: "Theory Quiz", value: "Theory Quiz" },
+  { label: "Quiz (Paper-based/Manual)", value: "Quiz (Paper-based/Manual)" },
   { label: "Hands-on / OJT", value: "Hands-on/OJT" },
   { label: "Read & Understood", value: "Read & Understood" },
+];
+
+const INSTRUCTOR_OPTIONS = [
+  { label: "All Instructors", value: "All" },
+  { label: "Dr. Michael Chen", value: "Dr. Michael Chen" },
+  { label: "Kevin Tran", value: "Kevin Tran" },
+  { label: "Alice Pham", value: "Alice Pham" },
+];
+
+const DEPARTMENT_OPTIONS = [
+  { label: "All Departments", value: "All" },
+  { label: "Quality Assurance", value: "Quality Assurance" },
+  { label: "QC Lab", value: "QC Lab" },
+  { label: "HSE", value: "HSE" },
 ];
 
 export const PendingApprovalView: React.FC = () => {
@@ -130,6 +145,10 @@ export const PendingApprovalView: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [methodFilter, setMethodFilter] = useState<string>("All");
+  const [instructorFilter, setInstructorFilter] = useState<string>("All");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("All");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -138,12 +157,24 @@ export const PendingApprovalView: React.FC = () => {
       const matchesSearch =
         item.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.trainingId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.relatedSOP.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.relatedDocument.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.submittedBy.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesMethod = methodFilter === "All" || item.trainingMethod === methodFilter;
-      return matchesSearch && matchesMethod;
+      const matchesInstructor = instructorFilter === "All" || item.submittedBy === instructorFilter;
+      const matchesDepartment = departmentFilter === "All" || item.department === departmentFilter;
+      
+      let matchesDateFrom = true;
+      let matchesDateTo = true;
+      if (dateFrom) {
+        matchesDateFrom = new Date(item.submittedAt) >= new Date(dateFrom);
+      }
+      if (dateTo) {
+        matchesDateTo = new Date(item.submittedAt) <= new Date(dateTo);
+      }
+      
+      return matchesSearch && matchesMethod && matchesInstructor && matchesDepartment && matchesDateFrom && matchesDateTo;
     });
-  }, [searchQuery, methodFilter]);
+  }, [searchQuery, methodFilter, instructorFilter, departmentFilter, dateFrom, dateTo]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice(
@@ -164,9 +195,6 @@ export const PendingApprovalView: React.FC = () => {
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
               Pending Approval
             </h1>
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
-              {MOCK_PENDING_APPROVAL.length} Awaiting
-            </span>
           </div>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <IconSmartHome className="h-4 w-4" />
@@ -183,10 +211,11 @@ export const PendingApprovalView: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-          <div className="xl:col-span-9">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+      <div className="bg-white p-3 sm:p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
+        {/* Row 1: Search + Method + Instructor */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 lg:gap-4 items-end">
+          <div className="xl:col-span-6">
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
@@ -196,8 +225,8 @@ export const PendingApprovalView: React.FC = () => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Search by course title, training ID, SOP, or submitter..."
-                className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                placeholder="Search by title, ID..."
+                className="w-full h-10 sm:h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -212,6 +241,54 @@ export const PendingApprovalView: React.FC = () => {
               options={METHOD_OPTIONS}
             />
           </div>
+          <div className="xl:col-span-3">
+            <Select
+              label="Instructor"
+              value={instructorFilter}
+              onChange={(val) => {
+                setInstructorFilter(val);
+                setCurrentPage(1);
+              }}
+              options={INSTRUCTOR_OPTIONS}
+            />
+          </div>
+        </div>
+
+        {/* Row 2: Department + Date Range */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4 items-end mt-3 lg:mt-4">
+          <div>
+            <Select
+              label="Department"
+              value={departmentFilter}
+              onChange={(val) => {
+                setDepartmentFilter(val);
+                setCurrentPage(1);
+              }}
+              options={DEPARTMENT_OPTIONS}
+            />
+          </div>
+          <div>
+            <DateTimePicker
+              label="From Date"
+              value={dateFrom}
+              onChange={(val) => {
+                setDateFrom(val);
+                setCurrentPage(1);
+              }}
+              placeholder="Select start date"
+            />
+          </div>
+          <div>
+            <DateTimePicker
+              label="To Date"
+              value={dateTo}
+              onChange={(val) => {
+                setDateTo(val);
+                setCurrentPage(1);
+              }}
+              placeholder="Select end date"
+            />
+          </div>
         </div>
       </div>
 
@@ -219,7 +296,7 @@ export const PendingApprovalView: React.FC = () => {
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-12">
                   No.
@@ -231,7 +308,7 @@ export const PendingApprovalView: React.FC = () => {
                   Course Title
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
-                  Related SOP
+                  Related Document
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                   Method
@@ -278,7 +355,7 @@ export const PendingApprovalView: React.FC = () => {
                       <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                         <div className="flex items-center gap-1.5">
                           <FileText className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                          <span className="max-w-[200px] truncate">{item.relatedSOP}</span>
+                          <span>{item.relatedDocument}</span>
                         </div>
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap hidden lg:table-cell">
@@ -320,7 +397,6 @@ export const PendingApprovalView: React.FC = () => {
                             }}
                             className="hidden sm:inline-flex bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
                           >
-                            <ShieldCheck className="h-3.5 w-3.5" />
                             Approve
                           </Button>
                         </div>
@@ -341,8 +417,7 @@ export const PendingApprovalView: React.FC = () => {
             itemsPerPage={itemsPerPage}
             onPageChange={setCurrentPage}
             onItemsPerPageChange={setItemsPerPage}
-            showPageNumbers={true}
-            showItemsPerPageSelector={true}
+            showItemCount={true}
           />
         )}
       </div>

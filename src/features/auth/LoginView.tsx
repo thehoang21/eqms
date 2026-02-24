@@ -61,6 +61,8 @@ const ERROR_MESSAGES = {
 
 interface LoginViewProps {
   onLogin?: (username: string, password: string, rememberMe: boolean) => void;
+  onForgotPassword?: () => void;
+  onContactAdmin?: () => void;
 }
 
 interface FormData {
@@ -127,7 +129,7 @@ const isFormValid = (errors: FormErrors): boolean => {
  * }} />
  * ```
  */
-export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
+export const LoginView: React.FC<LoginViewProps> = ({ onLogin, onForgotPassword, onContactAdmin }) => {
   // ========================================================================
   // STATE
   // ========================================================================
@@ -189,6 +191,24 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const handleSlideChange = useCallback((index: number) => {
     setCurrentSlide(index);
   }, []);
+
+  const handleForgotPasswordClick = useCallback(() => {
+    blurActiveInput();
+    resetViewportZoom();
+    
+    if (onForgotPassword) {
+      onForgotPassword();
+    }
+  }, [onForgotPassword]);
+
+  const handleContactAdminClick = useCallback(() => {
+    blurActiveInput();
+    resetViewportZoom();
+    
+    if (onContactAdmin) {
+      onContactAdmin();
+    }
+  }, [onContactAdmin]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -364,7 +384,6 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   role="alert"
                   aria-live="assertive"
                 >
-                  <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center shrink-0" aria-hidden="true"></div>
                   <div className="flex-1 min-w-0 pt-0.5">
                     <p className="text-sm font-semibold text-red-900">
                       Authentication Failed
@@ -486,6 +505,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                   />
                   <button
                     type="button"
+                    onClick={handleForgotPasswordClick}
                     className="text-sm font-medium text-emerald-600 hover:text-emerald-700 hover:underline transition-colors focus:outline-none focus:underline"
                     disabled={isLoading}
                     aria-label="Forgot password"
@@ -533,6 +553,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                 <p className="text-sm text-slate-500">
                   Don't have an account?{" "}
                   <button
+                    type="button"
+                    onClick={handleContactAdminClick}
                     className="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors hover:underline focus:outline-none focus:underline"
                     aria-label="Contact administrator to create an account"
                   >

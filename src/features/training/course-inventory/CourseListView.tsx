@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, createRef, RefObject } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
@@ -16,6 +17,8 @@ import {
   FileText,
   Award,
   Download,
+  ClipboardList,
+  BarChart3,
 } from "lucide-react";
 import { IconSmartHome, IconPlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
@@ -40,7 +43,7 @@ const MOCK_TRAININGS: TrainingRecord[] = [
     title: "GMP Basic Principles",
     description: "Introduction to Good Manufacturing Practices",
     type: "GMP",
-    trainingMethod: "Theory Quiz",
+    trainingMethod: "Quiz (Paper-based/Manual)",
     status: "In-Progress",
     instructor: "John Smith",
     scheduledDate: "2026-02-15",
@@ -154,6 +157,7 @@ export const CourseListView: React.FC = () => {
     dateTo: "",
   });
   const [methodFilter, setMethodFilter] = useState<TrainingMethod | "All">("All");
+  const [instructorFilter, setInstructorFilter] = useState<string>("All");
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -172,7 +176,7 @@ export const CourseListView: React.FC = () => {
   const methodOptions = [
     { label: "All Methods", value: "All" },
     { label: "Read & Understood", value: "Read & Understood" },
-    { label: "Theory Quiz", value: "Theory Quiz" },
+    { label: "Quiz (Paper-based/Manual)", value: "Quiz (Paper-based/Manual)" },
     { label: "Hands-on / OJT", value: "Hands-on/OJT" },
   ];
 
@@ -185,6 +189,17 @@ export const CourseListView: React.FC = () => {
     { label: "Cancelled", value: "Cancelled" },
   ];
 
+  const instructorOptions = useMemo(() => {
+    const uniqueInstructors = Array.from(new Set(MOCK_TRAININGS.map(t => t.instructor)));
+    return [
+      { label: "All Instructors", value: "All" },
+      ...uniqueInstructors.map(instructor => ({
+        label: instructor,
+        value: instructor
+      }))
+    ];
+  }, []);
+
   // Filtered Data
   const filteredData = useMemo(() => {
     return MOCK_TRAININGS.filter((training) => {
@@ -195,6 +210,7 @@ export const CourseListView: React.FC = () => {
       const matchesType = filters.typeFilter === "All" || training.type === filters.typeFilter;
       const matchesStatus = filters.statusFilter === "All" || training.status === filters.statusFilter;
       const matchesMethod = methodFilter === "All" || training.trainingMethod === methodFilter;
+      const matchesInstructor = instructorFilter === "All" || training.instructor === instructorFilter;
       
       let matchesDateFrom = true;
       let matchesDateTo = true;
@@ -206,9 +222,9 @@ export const CourseListView: React.FC = () => {
         matchesDateTo = new Date(training.scheduledDate) <= new Date(filters.dateTo);
       }
 
-      return matchesSearch && matchesType && matchesStatus && matchesMethod && matchesDateFrom && matchesDateTo;
+      return matchesSearch && matchesType && matchesStatus && matchesMethod && matchesInstructor && matchesDateFrom && matchesDateTo;
     });
-  }, [filters, methodFilter]);
+  }, [filters, methodFilter, instructorFilter]);
 
   // Paginated Data
   const paginatedData = useMemo(() => {
@@ -231,10 +247,86 @@ export const CourseListView: React.FC = () => {
 
   const getMethodConfig = (method: TrainingMethod) => {
     switch (method) {
-      case "Read & Understood": return { label: "Read & Understood", className: "bg-slate-50 text-slate-700 border-slate-200", icon: "📄" };
-      case "Theory Quiz":       return { label: "Theory Quiz",       className: "bg-purple-50 text-purple-700 border-purple-200", icon: "📝" };
-      case "Hands-on/OJT":     return { label: "Hands-on / OJT",    className: "bg-amber-50 text-amber-700 border-amber-200",  icon: "🔧" };
+      case "Read & Understood": return { label: "Read & Understood", className: "bg-slate-50 text-slate-700 border-slate-200" };
+      case "Quiz (Paper-based/Manual)": return { label: "Quiz (Manual)", className: "bg-purple-50 text-purple-700 border-purple-200" };
+      case "Hands-on/OJT":     return { label: "Hands-on / OJT",    className: "bg-amber-50 text-amber-700 border-amber-200" };
     }
+  };
+
+  // Action Dropdown
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
+
+  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    
+    if (openDropdownId === id) {
+      setOpenDropdownId(null);
+    } else {
+      const rect = event.currentTarget.getBoundingClientRect();
+      
+      // Menu dimensions (varies by content, estimate max)
+      const menuHeight = 220;
+      const menuWidth = 200;
+      const safeMargin = 8;
+      
+      // Check available space
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      
+      // Show above if not enough space below AND there's more space above
+      const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+      
+      // Calculate vertical position
+      let top: number;
+      if (shouldShowAbove) {
+        top = rect.top + window.scrollY - 4;
+      } else {
+        top = rect.bottom + window.scrollY + 4;
+      }
+      
+      // Calculate horizontal position with safe margins
+      const viewportWidth = window.innerWidth;
+      let left = rect.right + window.scrollX - menuWidth;
+      
+      // Ensure menu doesn't overflow right edge
+      if (left + menuWidth > viewportWidth - safeMargin) {
+        left = viewportWidth - menuWidth - safeMargin + window.scrollX;
+      }
+      
+      // Ensure menu doesn't overflow left edge
+      if (left < safeMargin + window.scrollX) {
+        left = safeMargin + window.scrollX;
+      }
+      
+      setDropdownPosition({ top, left, showAbove: shouldShowAbove });
+      setOpenDropdownId(id);
+    }
+  };
+
+  const handleViewCourse = (id: string) => {
+    console.log("View course:", id);
+    setOpenDropdownId(null);
+  };
+
+  const handleEditCourse = (id: string) => {
+    console.log("Edit course:", id);
+    setOpenDropdownId(null);
+  };
+
+  const handleResultEntry = (id: string) => {
+    navigate(`/training-management/courses/${id}/result-entry`);
+    setOpenDropdownId(null);
+  };
+
+  const handleViewProgress = (id: string) => {
+    console.log("View progress:", id);
+    setOpenDropdownId(null);
+  };
+
+  const handleExportPDF = (id: string) => {
+    console.log("Export PDF:", id);
+    setOpenDropdownId(null);
   };
 
   return (
@@ -280,10 +372,10 @@ export const CourseListView: React.FC = () => {
 
       {/* Filters */}
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
-        {/* Row 1: Search + Type */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 items-end">
+        {/* Row 1: Search + Type + Instructor */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-3">
+          <div className="xl:col-span-6">
             <label className="text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
@@ -310,6 +402,16 @@ export const CourseListView: React.FC = () => {
                 setFilters((prev) => ({ ...prev, typeFilter: val as TrainingType | "All" }))
               }
               options={typeOptions}
+            />
+          </div>
+
+          {/* Instructor */}
+          <div className="xl:col-span-3">
+            <Select
+              label="Instructor"
+              value={instructorFilter}
+              onChange={(val) => setInstructorFilter(val)}
+              options={instructorOptions}
             />
           </div>
         </div>
@@ -429,7 +531,7 @@ export const CourseListView: React.FC = () => {
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
                   No.
@@ -504,7 +606,6 @@ export const CourseListView: React.FC = () => {
                           "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
                           cfg.className
                         )}>
-                          <span>{cfg.icon}</span>
                           {cfg.label}
                         </span>
                       );
@@ -541,11 +642,9 @@ export const CourseListView: React.FC = () => {
                     className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                   >
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Action clicked");
-                      }}
+                      onClick={(e) => handleDropdownToggle(training.id, e)}
                       className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                      aria-label="Actions"
                     >
                       <MoreVertical className="h-4 w-4 text-slate-600" />
                     </button>
@@ -583,11 +682,96 @@ export const CourseListView: React.FC = () => {
                 dateFrom: "",
                 dateTo: "",
               });
+              setMethodFilter("All");
+              setInstructorFilter("All");
               setCurrentPage(1);
             }}
           />
         )}
       </div>
+
+      {/* Action Dropdown Portal */}
+      {openDropdownId && createPortal(
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-40 animate-in fade-in duration-150"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpenDropdownId(null);
+            }}
+            aria-hidden="true"
+          />
+          {/* Menu */}
+          <div
+            className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+            style={{
+              top: `${dropdownPosition.top}px`,
+              left: `${dropdownPosition.left}px`,
+              transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none'
+            }}
+          >
+            <div className="py-1">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewCourse(openDropdownId);
+                  setOpenDropdownId(null);
+                }}
+                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+              >
+                <Eye className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">View Detail Course</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEditCourse(openDropdownId);
+                  setOpenDropdownId(null);
+                }}
+                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+              >
+                <Edit className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">Edit Course</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleResultEntry(openDropdownId);
+                  setOpenDropdownId(null);
+                }}
+                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+              >
+                <ClipboardList className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">Result Entry</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewProgress(openDropdownId);
+                  setOpenDropdownId(null);
+                }}
+                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+              >
+                <BarChart3 className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">View Progress</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleExportPDF(openDropdownId);
+                  setOpenDropdownId(null);
+                }}
+                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+              >
+                <Download className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">Export PDF</span>
+              </button>
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
     </div>
   );
 };

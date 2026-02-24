@@ -87,116 +87,138 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             onDrop={onDrop}
             onDragEnd={onDragEnd}
             className={cn(
-                "bg-white rounded-xl border transition-all duration-200",
+                "bg-white rounded-xl border-2 transition-all duration-200",
                 isActive
-                    ? "border-emerald-500 ring-1 ring-emerald-500 shadow-md"
-                    : "border-slate-200 shadow-sm hover:border-emerald-300",
-                isDragging && "opacity-50 cursor-grabbing",
-                isDragOver && "border-emerald-400 ring-2 ring-emerald-400 bg-emerald-50/20"
+                    ? "border-emerald-500 ring-2 ring-emerald-500/20 shadow-lg"
+                    : "border-slate-200 shadow-sm hover:border-emerald-300 hover:shadow-md",
+                isDragging && "opacity-50 cursor-grabbing scale-95",
+                isDragOver && "border-emerald-400 ring-2 ring-emerald-400/30 bg-emerald-50/30"
             )}
         >
             {/* Question Header */}
             <div
-                className="flex items-start gap-2 md:gap-4 p-3 md:p-4 cursor-pointer"
+                className={cn(
+                    "flex items-center gap-3 p-4 cursor-pointer transition-colors",
+                    isActive ? "bg-emerald-50/50" : "hover:bg-slate-50/50"
+                )}
                 onClick={onToggle}
             >
-                <GripVertical className="h-4 w-4 md:h-5 md:w-5 text-slate-400 cursor-grab shrink-0 mt-0.5" />
+                <GripVertical className="h-5 w-5 text-slate-400 cursor-grab shrink-0" />
+                
+                <div className="flex items-center gap-2 shrink-0">
+                    <div className={cn(
+                        "h-7 w-7 rounded-lg flex items-center justify-center text-xs font-bold",
+                        isActive ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600"
+                    )}>
+                        {index + 1}
+                    </div>
+                </div>
+
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-start gap-2 flex-wrap">
-                        <span className="text-xs md:text-sm font-semibold text-slate-900">
-                            Q{index + 1}
-                        </span>
+                    <div className="flex items-center gap-2">
                         {question.type === "multiple_choice" ? (
-                            <ListChecks className="h-3.5 w-3.5 md:h-4 md:w-4 text-emerald-600 shrink-0" />
+                            <ListChecks className="h-4 w-4 text-emerald-600 shrink-0" />
                         ) : (
-                            <AlignLeft className="h-3.5 w-3.5 md:h-4 md:w-4 text-blue-600 shrink-0" />
+                            <AlignLeft className="h-4 w-4 text-blue-600 shrink-0" />
                         )}
-                        <span className="text-xs md:text-sm text-slate-600 truncate flex-1">
-                            {question.text}
+                        <span className="text-sm font-medium text-slate-900 truncate">
+                            {question.text || "Untitled Question"}
                         </span>
                     </div>
                 </div>
+
                 <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
-                        {question.points.toFixed(2)}pt
+                    <span className={cn(
+                        "text-xs font-semibold px-3 py-1.5 rounded-full",
+                        isActive 
+                            ? "bg-emerald-600 text-white" 
+                            : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                    )}>
+                        {question.points.toFixed(2)} pts
                     </span>
                 </div>
             </div>
 
             {/* Question Body (Expanded) */}
             {isActive && (
-                <div className="px-3 md:px-4 pb-3 md:pb-4 space-y-3 md:space-y-4 border-t border-slate-100">
+                <div className="px-4 pb-4 space-y-5 border-t-2 border-slate-100 bg-slate-50/30">
                     {/* Question Type Selector */}
-                    <div className="flex flex-col sm:flex-row gap-2 pt-3 md:pt-4">
-                        <button
-                            onClick={() => onUpdate({ type: "multiple_choice" })}
-                            className={cn(
-                                "flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors text-sm flex-1",
-                                question.type === "multiple_choice"
-                                    ? "border-emerald-500 bg-emerald-50 text-emerald-700"
-                                    : "border-slate-200 text-slate-600 hover:border-emerald-300"
-                            )}
-                        >
-                            <ListChecks className="h-4 w-4" />
-                            <span className="font-medium">Multiple Choice</span>
-                        </button>
-                        <button
-                            onClick={() => onUpdate({ type: "essay" })}
-                            className={cn(
-                                "flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors text-sm flex-1",
-                                question.type === "essay"
-                                    ? "border-blue-500 bg-blue-50 text-blue-700"
-                                    : "border-slate-200 text-slate-600 hover:border-blue-300"
-                            )}
-                        >
-                            <AlignLeft className="h-4 w-4" />
-                            <span className="font-medium">Essay</span>
-                        </button>
+                    <div className="pt-4">
+                        <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 block">
+                            Question Type
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                            <button
+                                onClick={() => onUpdate({ type: "multiple_choice" })}
+                                className={cn(
+                                    "flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all text-sm font-medium",
+                                    question.type === "multiple_choice"
+                                        ? "border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm"
+                                        : "border-slate-200 bg-white text-slate-600 hover:border-emerald-300 hover:bg-emerald-50/30"
+                                )}
+                            >
+                                <ListChecks className="h-4 w-4" />
+                                <span>Multiple Choice</span>
+                            </button>
+                            <button
+                                onClick={() => onUpdate({ type: "essay" })}
+                                className={cn(
+                                    "flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-2 transition-all text-sm font-medium",
+                                    question.type === "essay"
+                                        ? "border-blue-500 bg-blue-50 text-blue-700 shadow-sm"
+                                        : "border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:bg-blue-50/30"
+                                )}
+                            >
+                                <AlignLeft className="h-4 w-4" />
+                                <span>Essay</span>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Question Text */}
                     <div>
-                        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                            Question
+                        <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 block">
+                            Question Text
                         </label>
                         <textarea
                             value={question.text}
                             onChange={(e) => onUpdate({ text: e.target.value })}
-                            rows={2}
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none text-sm"
-                            placeholder="Enter question text..."
+                            rows={3}
+                            className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none resize-none text-sm bg-white transition-all"
+                            placeholder="Enter your question here..."
                         />
                     </div>
 
                     {/* Image Upload */}
                     <div>
-                        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                        <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 block">
                             Image (Optional)
                         </label>
                         {question.imageUrl ? (
-                            <div className="relative">
+                            <div className="relative rounded-lg overflow-hidden border-2 border-slate-200 bg-white">
                                 <img
                                     src={question.imageUrl}
                                     alt="Question"
-                                    className="w-full h-48 object-contain border border-slate-200 rounded-lg bg-slate-50"
+                                    className="w-full h-48 object-contain bg-slate-50"
                                 />
                                 <button
                                     onClick={removeImage}
-                                    className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                                    className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-md"
                                 >
                                     <X className="h-4 w-4" />
                                 </button>
                             </div>
                         ) : (
-                            <label className="flex items-center justify-center gap-2 h-24 border-2 border-dashed border-slate-300 rounded-lg hover:border-emerald-400 transition-colors cursor-pointer bg-slate-50 hover:bg-emerald-50/30">
+                            <label className="flex flex-col items-center justify-center gap-2 h-32 border-2 border-dashed border-slate-300 rounded-lg hover:border-emerald-400 transition-all cursor-pointer bg-white hover:bg-emerald-50/50 group">
                                 <input
                                     type="file"
                                     accept="image/*"
                                     onChange={handleImageUpload}
                                     className="hidden"
                                 />
-                                <ImageIcon className="h-5 w-5 text-slate-400" />
-                                <span className="text-sm text-slate-600">Upload image</span>
+                                <ImageIcon className="h-8 w-8 text-slate-400 group-hover:text-emerald-500 transition-colors" />
+                                <span className="text-sm font-medium text-slate-600 group-hover:text-emerald-600 transition-colors">Click to upload image</span>
+                                <span className="text-xs text-slate-400">PNG, JPG up to 5MB</span>
                             </label>
                         )}
                     </div>
@@ -204,50 +226,58 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     {/* Options (for multiple choice) */}
                     {question.type === "multiple_choice" && (
                         <div>
-                            <div className="flex items-center justify-between mb-2">
-                                <label className="text-sm font-medium text-slate-700">
-                                    Options
+                            <div className="flex items-center justify-between mb-3">
+                                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                                    Answer Options
                                 </label>
                                 <button
                                     onClick={addOption}
-                                    className="flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors border border-emerald-200"
                                 >
                                     <Plus className="h-3.5 w-3.5" />
                                     Add Option
                                 </button>
                             </div>
                             <div className="space-y-2">
-                                {question.options?.map((option) => (
-                                    <div key={option.id} className="flex items-start gap-2">
+                                {question.options?.map((option, idx) => (
+                                    <div key={option.id} className="flex items-center gap-3 bg-white p-3 rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-all">
                                         <button
                                             onClick={() => updateOption(option.id, { isCorrect: !option.isCorrect })}
-                                            className="mt-2.5 shrink-0"
+                                            className="shrink-0 transition-transform hover:scale-110"
+                                            title={option.isCorrect ? "Correct answer" : "Mark as correct"}
                                         >
                                             {option.isCorrect ? (
-                                                <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                                                <CheckCircle2 className="h-6 w-6 text-emerald-600" />
                                             ) : (
-                                                <Circle className="h-5 w-5 text-slate-300" />
+                                                <Circle className="h-6 w-6 text-slate-300 hover:text-slate-400" />
                                             )}
                                         </button>
+                                        <div className={cn(
+                                            "h-6 w-6 rounded flex items-center justify-center text-xs font-bold shrink-0",
+                                            option.isCorrect ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"
+                                        )}>
+                                            {String.fromCharCode(65 + idx)}
+                                        </div>
                                         <input
                                             type="text"
                                             value={option.text}
                                             onChange={(e) => updateOption(option.id, { text: e.target.value })}
-                                            className="flex-1 h-10 px-3 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
-                                            placeholder="Option text..."
+                                            className="flex-1 h-9 px-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm bg-slate-50 focus:bg-white transition-all"
+                                            placeholder={`Option ${String.fromCharCode(65 + idx)}`}
                                         />
                                         <button
                                             onClick={() => removeOption(option.id)}
-                                            className="mt-2 text-red-600 hover:text-red-700 shrink-0"
+                                            className="shrink-0 p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Remove option"
                                         >
                                             <X className="h-5 w-5" />
                                         </button>
                                     </div>
                                 ))}
                                 {(!question.options || question.options.length === 0) && (
-                                    <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                                        <AlertCircle className="h-4 w-4 text-amber-600" />
-                                        <span className="text-sm text-amber-700">Please add at least one option</span>
+                                    <div className="flex items-center gap-3 p-4 bg-amber-50 border-2 border-amber-200 rounded-lg">
+                                        <AlertCircle className="h-5 w-5 text-amber-600 shrink-0" />
+                                        <span className="text-sm font-medium text-amber-700">Please add at least one answer option</span>
                                     </div>
                                 )}
                             </div>
@@ -255,29 +285,33 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     )}
 
                     {/* Points */}
-                    <div>
-                        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
-                            Points
-                        </label>
-                        <input
-                            type="number"
-                            min="0"
-                            max="10"
-                            step="0.01"
-                            value={question.points}
-                            onChange={(e) => onUpdate({ points: parseFloat(e.target.value) || 0 })}
-                            className="w-full h-10 px-3 border border-slate-200 rounded-lg focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
-                        />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 block">
+                                Points Value
+                            </label>
+                            <input
+                                type="number"
+                                min="0"
+                                max="10"
+                                step="0.01"
+                                value={question.points}
+                                onChange={(e) => onUpdate({ points: parseFloat(e.target.value) || 0 })}
+                                className="w-full h-11 px-4 border-2 border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm font-medium bg-white transition-all"
+                            />
+                        </div>
                     </div>
 
                     {/* Delete Button */}
-                    <button
-                        onClick={onRemove}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
-                    >
-                        <Trash2 className="h-4 w-4" />
-                        Delete Question
-                    </button>
+                    <div className="pt-2 border-t-2 border-slate-200">
+                        <button
+                            onClick={onRemove}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 border-2 border-red-200 hover:border-red-300 transition-all text-sm font-semibold"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                            Delete Question
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

@@ -155,15 +155,15 @@ export const RoleListView: React.FC = () => {
 
   // Handlers
   const handleViewRole = (id: string) => {
-    navigate(`/settings/role-permission/${id}`);
+    navigate(`/settings/roles/${id}`);
   };
 
-  const handleEditRole = (id: string) => {
-    navigate(`/settings/role-permission/${id}/edit`);
+  const handleEdit = (id: string) => {
+    navigate(`/settings/roles/${id}/edit`);
   };
 
-  const handleNewRole = () => {
-    navigate("/settings/role-permission/new");
+  const handleCreateNew = () => {
+    navigate("/settings/roles/new");
   };
 
   const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
@@ -272,7 +272,7 @@ export const RoleListView: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleNewRole}>
+          <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleCreateNew}>
             <Plus className="h-4 w-4" />
             New Role
           </Button>
@@ -426,7 +426,7 @@ export const RoleListView: React.FC = () => {
           onClose={() => setOpenDropdownId(null)}
           position={dropdownPosition}
           onView={() => handleViewRole(openDropdownId)}
-          onEdit={() => handleEditRole(openDropdownId)}
+          onEdit={() => handleEdit(openDropdownId)}
           onDelete={() => openDeleteModal(openDropdownId)}
           canDelete={roles.find((r) => r.id === openDropdownId)?.type !== "system"}
         />

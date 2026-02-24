@@ -10,6 +10,7 @@ import {
 import { IconSmartHome } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
+import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
@@ -22,9 +23,9 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseId: "1",
     trainingId: "TRN-2026-001",
     courseTitle: "GMP Basic Principles",
-    relatedSOP: "SOP-QA-001: Good Manufacturing Practices",
-    sopDocumentId: "DOC-001",
-    trainingMethod: "Theory Quiz",
+    relatedDocument: "SOP-QA-001: Good Manufacturing Practices",
+    relatedDocumentId: "DOC-001",
+    trainingMethod: "Quiz (Paper-based/Manual)",
     submittedBy: "John Smith",
     submittedAt: "2026-02-10",
     department: "Quality Assurance",
@@ -74,8 +75,8 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseId: "2",
     trainingId: "TRN-2026-006",
     courseTitle: "Cleanroom Qualification",
-    relatedSOP: "SOP-CR-002: Cleanroom Operations",
-    sopDocumentId: "DOC-002",
+    relatedDocument: "SOP-CR-002: Cleanroom Operations",
+    relatedDocumentId: "DOC-002",
     trainingMethod: "Read & Understood",
     submittedBy: "Sarah Johnson",
     submittedAt: "2026-02-12",
@@ -89,9 +90,9 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseId: "3",
     trainingId: "TRN-2026-007",
     courseTitle: "HPLC Operation Advanced",
-    relatedSOP: "SOP-LAB-005: HPLC Standard Method",
-    sopDocumentId: "DOC-003",
-    trainingMethod: "Theory Quiz",
+    relatedDocument: "SOP-LAB-005: HPLC Standard Method",
+    relatedDocumentId: "DOC-003",
+    trainingMethod: "Quiz (Paper-based/Manual)",
     submittedBy: "Dr. Michael Chen",
     submittedAt: "2026-02-08",
     department: "QC Lab",
@@ -131,9 +132,9 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseId: "4",
     trainingId: "TRN-2026-008",
     courseTitle: "ISO 9001:2015 Requirements",
-    relatedSOP: "SOP-QMS-010: Quality Management System",
-    sopDocumentId: "DOC-004",
-    trainingMethod: "Theory Quiz",
+    relatedDocument: "SOP-QMS-010: Quality Management System",
+    relatedDocumentId: "DOC-004",
+    trainingMethod: "Quiz (Paper-based/Manual)",
     submittedBy: "Emma Wilson",
     submittedAt: "2026-02-15",
     department: "All Departments",
@@ -159,8 +160,8 @@ const MOCK_APPROVALS: CourseApproval[] = [
     courseId: "5",
     trainingId: "TRN-2026-009",
     courseTitle: "SOP Review & Update Procedures",
-    relatedSOP: "SOP-DC-003: Document Change Control",
-    sopDocumentId: "DOC-005",
+    relatedDocument: "SOP-DC-003: Document Change Control",
+    relatedDocumentId: "DOC-005",
     trainingMethod: "Read & Understood",
     submittedBy: "David Brown",
     submittedAt: "2026-02-05",
@@ -174,9 +175,9 @@ const MOCK_APPROVALS: CourseApproval[] = [
   },
 ];
 
-const getMethodBadge = (method: "Read & Understood" | "Theory Quiz" | "Hands-on/OJT") => {
-  return method === "Theory Quiz"
-    ? "bg-blue-50 text-blue-700 border-blue-200"
+const getMethodBadge = (method: "Read & Understood" | "Quiz (Paper-based/Manual)" | "Hands-on/OJT") => {
+  return method === "Quiz (Paper-based/Manual)"
+    ? "bg-purple-50 text-purple-700 border-purple-200"
     : method === "Hands-on/OJT"
     ? "bg-amber-50 text-amber-700 border-amber-200"
     : "bg-slate-50 text-slate-700 border-slate-200";
@@ -194,9 +195,26 @@ const formatDate = (dateString: string) => {
 // --- Constants ---
 const METHOD_OPTIONS = [
   { label: "All Methods", value: "All" },
-  { label: "Theory Quiz", value: "Theory Quiz" },
+  { label: "Quiz (Paper-based/Manual)", value: "Quiz (Paper-based/Manual)" },
   { label: "Hands-on / OJT", value: "Hands-on/OJT" },
   { label: "Read & Understood", value: "Read & Understood" },
+];
+
+const INSTRUCTOR_OPTIONS = [
+  { label: "All Instructors", value: "All" },
+  { label: "John Smith", value: "John Smith" },
+  { label: "Sarah Johnson", value: "Sarah Johnson" },
+  { label: "Dr. Michael Chen", value: "Dr. Michael Chen" },
+  { label: "Emma Wilson", value: "Emma Wilson" },
+  { label: "David Brown", value: "David Brown" },
+];
+
+const DEPARTMENT_OPTIONS = [
+  { label: "All Departments", value: "All" },
+  { label: "Quality Assurance", value: "Quality Assurance" },
+  { label: "Production", value: "Production" },
+  { label: "QC Lab", value: "QC Lab" },
+  { label: "Documentation", value: "Documentation" },
 ];
 
 // --- Component ---
@@ -206,6 +224,10 @@ export const PendingReviewView: React.FC = () => {
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
   const [methodFilter, setMethodFilter] = useState<string>("All");
+  const [instructorFilter, setInstructorFilter] = useState<string>("All");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("All");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
@@ -215,11 +237,23 @@ export const PendingReviewView: React.FC = () => {
       const matchesSearch =
         item.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.trainingId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.relatedSOP.toLowerCase().includes(searchQuery.toLowerCase());
+        item.relatedDocument.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesMethod = methodFilter === "All" || item.trainingMethod === methodFilter;
-      return matchesSearch && matchesMethod;
+      const matchesInstructor = instructorFilter === "All" || item.submittedBy === instructorFilter;
+      const matchesDepartment = departmentFilter === "All" || item.department === departmentFilter;
+      
+      let matchesDateFrom = true;
+      let matchesDateTo = true;
+      if (dateFrom) {
+        matchesDateFrom = new Date(item.submittedAt) >= new Date(dateFrom);
+      }
+      if (dateTo) {
+        matchesDateTo = new Date(item.submittedAt) <= new Date(dateTo);
+      }
+      
+      return matchesSearch && matchesMethod && matchesInstructor && matchesDepartment && matchesDateFrom && matchesDateTo;
     });
-  }, [searchQuery, methodFilter]);
+  }, [searchQuery, methodFilter, instructorFilter, departmentFilter, dateFrom, dateTo]);
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -254,21 +288,13 @@ export const PendingReviewView: React.FC = () => {
         </div>
       </div>
 
-      {/* Info Banner */}
-      <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-        <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
-        <p className="text-sm text-blue-800 leading-relaxed">
-          <span className="font-semibold">Reviewer Queue:</span> Các khóa học dưới đây đang chờ được soát xét nội dung trước khi trình QA Manager phê duyệt. Nhấn{" "}
-          <span className="font-semibold">Confirm Review</span> sau khi đã kiểm tra nội dung bài kiểm tra và tài liệu SOP liên quan.
-        </p>
-      </div>
-
       {/* Filters */}
-      <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+      <div className="bg-white p-3 sm:p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
+        {/* Row 1: Search + Method + Instructor */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 lg:gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-9">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+          <div className="xl:col-span-6">
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
@@ -278,8 +304,8 @@ export const PendingReviewView: React.FC = () => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Search by course title, training ID, or SOP..."
-                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                placeholder="Search by title, ID..."
+                className="w-full h-10 sm:h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -296,6 +322,61 @@ export const PendingReviewView: React.FC = () => {
               options={METHOD_OPTIONS}
             />
           </div>
+
+          {/* Instructor Filter */}
+          <div className="xl:col-span-3">
+            <Select
+              label="Instructor"
+              value={instructorFilter}
+              onChange={(val) => {
+                setInstructorFilter(val);
+                setCurrentPage(1);
+              }}
+              options={INSTRUCTOR_OPTIONS}
+            />
+          </div>
+        </div>
+
+        {/* Row 2: Department + Date Range */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4 items-end mt-3 lg:mt-4">
+          {/* Department Filter */}
+          <div>
+            <Select
+              label="Department"
+              value={departmentFilter}
+              onChange={(val) => {
+                setDepartmentFilter(val);
+                setCurrentPage(1);
+              }}
+              options={DEPARTMENT_OPTIONS}
+            />
+          </div>
+
+          {/* Date From */}
+          <div>
+            <DateTimePicker
+              label="From Date"
+              value={dateFrom}
+              onChange={(val) => {
+                setDateFrom(val);
+                setCurrentPage(1);
+              }}
+              placeholder="Select start date"
+            />
+          </div>
+
+          {/* Date To */}
+          <div>
+            <DateTimePicker
+              label="To Date"
+              value={dateTo}
+              onChange={(val) => {
+                setDateTo(val);
+                setCurrentPage(1);
+              }}
+              placeholder="Select end date"
+            />
+          </div>
         </div>
       </div>
 
@@ -303,7 +384,7 @@ export const PendingReviewView: React.FC = () => {
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-12">
                   No.
@@ -315,7 +396,7 @@ export const PendingReviewView: React.FC = () => {
                   Course Title
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
-                  Related SOP
+                  Related Document
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                   Method
@@ -362,8 +443,8 @@ export const PendingReviewView: React.FC = () => {
                       </td>
                       <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                         <div className="flex items-center gap-1.5">
-                          <FileText className="h-3.5 w-3.5 text-slate-400" />
-                          <span className="max-w-[200px] truncate">{item.relatedSOP}</span>
+                          <FileText className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                          <span>{item.relatedDocument}</span>
                         </div>
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap hidden lg:table-cell">
@@ -405,7 +486,6 @@ export const PendingReviewView: React.FC = () => {
                             }}
                             className="hidden sm:inline-flex bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
                           >
-                            <ClipboardList className="h-3.5 w-3.5" />
                             Review
                           </Button>
                         </div>
@@ -427,8 +507,7 @@ export const PendingReviewView: React.FC = () => {
             itemsPerPage={itemsPerPage}
             onPageChange={setCurrentPage}
             onItemsPerPageChange={setItemsPerPage}
-            showPageNumbers={false}
-            showItemsPerPageSelector={true}
+            showItemCount={true}
           />
         )}
       </div>

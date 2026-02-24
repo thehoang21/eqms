@@ -104,12 +104,12 @@ export const AddUserView: React.FC = () => {
 
   const handleConfirmCancel = () => {
     setShowCancelModal(false);
-    navigate("/settings/user-management");
+    navigate(USER_MANAGEMENT_ROUTES.LIST);
   };
 
   const handleCredentialsClose = () => {
     setShowCredentialsModal(false);
-    navigate("/settings/user-management");
+    navigate(USER_MANAGEMENT_ROUTES.LIST);
   };
 
   return (
