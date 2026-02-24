@@ -466,67 +466,6 @@ export const CourseListView: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 lg:gap-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
-              <GraduationCap className="h-5 w-5 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-600 font-medium">
-                Total Courses
-              </p>
-              <p className="text-2xl font-bold text-slate-900">
-                {MOCK_TRAININGS.length}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center">
-              <Calendar className="h-5 w-5 text-cyan-600" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-600 font-medium">Scheduled</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {MOCK_TRAININGS.filter((t) => t.status === "Scheduled").length}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-              <Users className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-600 font-medium">In Progress</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {MOCK_TRAININGS.filter((t) => t.status === "In-Progress").length}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center">
-              <Clock className="h-5 w-5 text-red-600" />
-            </div>
-            <div>
-              <p className="text-xs text-slate-600 font-medium">Overdue</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {MOCK_TRAININGS.filter((t) => t.status === "Overdue").length}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Table */}
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
         <div className="overflow-x-auto">

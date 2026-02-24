@@ -374,82 +374,6 @@ export const CourseDetailView: React.FC = () => {
         </div>
       </div>
 
-      {/* Course Summary Card */}
-      <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-xs text-slate-500 font-mono">{course.trainingId}</span>
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                  getStatusColor(course.status)
-                )}
-              >
-                {course.status}
-              </span>
-              {course.mandatory && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">
-                  Mandatory
-                </span>
-              )}
-            </div>
-            <h2 className="text-base lg:text-lg font-semibold text-slate-900 mt-1">
-              {course.title}
-            </h2>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                <Users className="h-4 w-4 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-xs text-slate-500">Enrolled</p>
-                <p className="text-sm font-semibold text-slate-900">
-                  {course.enrolled}/{course.capacity}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-cyan-100 flex items-center justify-center">
-                <Calendar className="h-4 w-4 text-cyan-600" />
-              </div>
-              <div>
-                <p className="text-xs text-slate-500">Date</p>
-                <p className="text-sm font-semibold text-slate-900">
-                  {new Date(course.scheduledDate).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
-                <Clock className="h-4 w-4 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-xs text-slate-500">Duration</p>
-                <p className="text-sm font-semibold text-slate-900">{course.duration}h</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
-                <MapPin className="h-4 w-4 text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-xs text-slate-500">Location</p>
-                <p className="text-sm font-semibold text-slate-900 truncate max-w-[100px]">
-                  {course.location}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Status Workflow Stepper */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
@@ -494,6 +418,29 @@ export const CourseDetailView: React.FC = () => {
             })}
           </div>
         </div>
+      </div>
+
+      {/* Course Summary Card */}
+      <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-xs text-slate-500 font-mono">{course.trainingId}</span>
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+              getStatusColor(course.status)
+            )}
+          >
+            {course.status}
+          </span>
+          {course.mandatory && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">
+              Mandatory
+            </span>
+          )}
+        </div>
+        <h2 className="text-base lg:text-lg font-semibold text-slate-900 mt-1">
+          {course.title}
+        </h2>
       </div>
 
       {/* Tab Container */}
