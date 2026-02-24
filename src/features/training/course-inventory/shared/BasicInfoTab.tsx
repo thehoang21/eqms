@@ -80,7 +80,7 @@ const formatDate = (dateString: string) => {
 
 /** Read-only display field */
 const ReadOnlyField: React.FC<{ value: string | number | undefined | null; placeholder?: string }> = ({ value, placeholder }) => (
-    <p className="text-sm text-slate-900 min-h-[2.75rem] flex items-center px-3 bg-slate-50 border border-slate-200 rounded-lg">
+    <p className="text-sm text-slate-900 h-10 flex items-center px-3 bg-slate-50 border border-slate-200 rounded-lg">
         {value || <span className="text-slate-400">{placeholder || "—"}</span>}
     </p>
 );
@@ -486,9 +486,6 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                                     />
                                 </div>
                                 <label className="text-sm text-slate-700">months</label>
-                                <span className="text-xs text-slate-400">
-                                    ({recurrence.intervalMonths === 12 ? "Annual" : recurrence.intervalMonths === 6 ? "Semi-annual" : recurrence.intervalMonths === 24 ? "Biennial" : `Every ${recurrence.intervalMonths} months`})
-                                </span>
                             </div>
                         )}
                         {recurrence.enabled && (

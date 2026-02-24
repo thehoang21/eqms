@@ -64,7 +64,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
           onChange={(e) => handleDocumentNameChange(e.target.value)}
           placeholder="Enter document name..."
           disabled={isReadOnly}
-          className="w-full h-11 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
+          className="w-full h-10 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
         />
       </div>
 
@@ -80,7 +80,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             onChange={(e) => handleDocumentNumberChange(e.target.value)}
             placeholder="Enter document number..."
             disabled={isReadOnly}
-            className="w-full h-11 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
+            className="w-full h-10 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
           />
         </div>
 
@@ -94,7 +94,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             onChange={(e) => handleDocumentCreatedChange(e.target.value)}
             placeholder="dd/MM/yyyy HH:mm:ss"
             disabled={isReadOnly}
-            className="w-full h-11 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
+            className="w-full h-10 px-4 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
           />
         </div>
       </div>

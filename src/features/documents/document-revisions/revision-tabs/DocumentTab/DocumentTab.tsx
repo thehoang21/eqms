@@ -22,17 +22,7 @@ import { FilePreview } from "./FilePreview";
 import { IconCloudUpload } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import "./docx-preview.css";
-import pdfIcon from "@/assets/images/image-file/pdf.png";
-import docIcon from "@/assets/images/image-file/doc.png";
-import docxIcon from "@/assets/images/image-file/docx.png";
-import xlsIcon from "@/assets/images/image-file/xls.png";
-import xlsxIcon from "@/assets/images/image-file/xlsx.png";
-import pptIcon from "@/assets/images/image-file/ppt.png";
-import pptxIcon from "@/assets/images/image-file/pptx.png";
-import fileIcon from "@/assets/images/image-file/file.png";
-import jpgIcon from "@/assets/images/image-file/jpg.png";
-import jpegIcon from "@/assets/images/image-file/jpeg.png";
-import pngIcon from "@/assets/images/image-file/png.png";
+import { getFileIconSrc, defaultFileIcon } from "@/utils/fileIcons";
 
 export interface UploadedFile {
   id: string;
@@ -504,21 +494,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                     {/* File Icon */}
                     <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shrink-0">
                       {(() => {
-                        const name = uploadedFile.file.name.toLowerCase();
-                        const ext = name.split(".").pop() || "";
-                        const iconMap: Record<string, string> = {
-                          pdf: pdfIcon,
-                          doc: docIcon,
-                          docx: docxIcon,
-                          xls: xlsIcon,
-                          xlsx: xlsxIcon,
-                          ppt: pptIcon,
-                          pptx: pptxIcon,
-                          jpg: jpgIcon,
-                          jpeg: jpegIcon,
-                          png: pngIcon,
-                        };
-                        const iconSrc = iconMap[ext] || fileIcon;
+                        const iconSrc = getFileIconSrc(uploadedFile.file.name);
                         return (
                           <img
                             src={iconSrc}

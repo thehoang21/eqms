@@ -65,7 +65,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
             checked
               ? 'bg-emerald-600 border-emerald-600'
               : 'bg-white border-slate-200 hover:border-emerald-400',
-            disabled && 'opacity-50 cursor-not-allowed'
+            disabled && 'cursor-not-allowed'
           )}
         >
           {checked && (
@@ -78,7 +78,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           htmlFor={checkboxId}
           className={cn(
             'text-sm font-medium text-slate-700 cursor-pointer select-none',
-            disabled && 'opacity-50 cursor-not-allowed'
+            disabled && 'cursor-not-allowed'
           )}
         >
           {label}

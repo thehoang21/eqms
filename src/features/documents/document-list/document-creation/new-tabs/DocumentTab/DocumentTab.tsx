@@ -3,17 +3,7 @@ import { Upload, File, X, CheckCircle2, AlertCircle } from "lucide-react";
 import { IconCloudUpload } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
 import { FilePreview } from "./FilePreview";
-import pdfIcon from "@/assets/images/image-file/pdf.png";
-import docIcon from "@/assets/images/image-file/doc.png";
-import docxIcon from "@/assets/images/image-file/docx.png";
-import xlsIcon from "@/assets/images/image-file/xls.png";
-import xlsxIcon from "@/assets/images/image-file/xlsx.png";
-import pptIcon from "@/assets/images/image-file/ppt.png";
-import fileIcon from "@/assets/images/image-file/file.png";
-// Map pptx to ppt icon; remove incorrect jpg mapping
-import jpgIcon from "@/assets/images/image-file/jpg.png";
-import jpegIcon from "@/assets/images/image-file/jpeg.png";
-import pngIcon from "@/assets/images/image-file/png.png";
+import { getFileIconSrc, defaultFileIcon } from "@/utils/fileIcons";
 import type { ParentDocument, RelatedDocument } from "@/features/documents/shared/tabs/GeneralTab/subtabs/types";
 
 export interface UploadedFile {
@@ -211,21 +201,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                     {/* File Icon */}
                     <div className="w-8 h-8 flex items-center justify-center shrink-0">
                       {(() => {
-                        const name = uploadedFile.file.name.toLowerCase();
-                        const ext = name.split(".").pop() || "";
-                        const iconMap: Record<string, string> = {
-                          pdf: pdfIcon,
-                          doc: docIcon,
-                          docx: docxIcon,
-                          xls: xlsIcon,
-                          xlsx: xlsxIcon,
-                          ppt: pptIcon,
-                          pptx: pptIcon,
-                          jpg: jpgIcon,
-                          jpeg: jpegIcon,
-                          png: pngIcon,
-                        };
-                        const iconSrc = iconMap[ext] || fileIcon;
+                        const iconSrc = getFileIconSrc(uploadedFile.file.name);
                         return (
                           <img
                             src={iconSrc}

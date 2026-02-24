@@ -125,7 +125,7 @@ export const ActionDropdown: React.FC<ActionDropdownProps> = ({
       <SmartDropdown
         isOpen={isOpen}
         onClose={handleClose}
-        triggerRef={triggerRef}
+        triggerRef={triggerRef as React.RefObject<HTMLElement>}
         minWidth={minWidth}
         className={dropdownClassName}
       >

@@ -22,7 +22,7 @@ import { CancelDistributionModal } from "./components/CancelDistributionModal";
 import { DestructionTypeSelectionModal } from "./components/DestructionTypeSelectionModal";
 import { useToast } from "@/components/ui/toast/Toast";
 import type { ControlledCopy, ControlledCopyStatus, TableColumn } from "./types";
-import { IconShare3, IconSmartHome } from "@tabler/icons-react";
+import { IconInfoCircle, IconShare3, IconSmartHome } from "@tabler/icons-react";
 
 // ==================== MOCK DATA ====================
 
@@ -702,7 +702,7 @@ const DropdownMenu: React.FC<{
             }}
             className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
-            <Info className="h-4 w-4 flex-shrink-0" />
+            <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
             <span className="font-medium">View Details</span>
           </button>
           <button

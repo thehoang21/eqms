@@ -1,13 +1,10 @@
 import React, { useState, useRef, useCallback } from "react";
-import { Upload, Trash2, FileText, Lock, Eye, EyeOff, Download, ClipboardCheck } from "lucide-react";
+import { Upload, Trash2, FileText, Lock, Download } from "lucide-react";
 import { Select } from "@/components/ui/select/Select";
 import { Input } from "@/components/ui/form/ResponsiveForm";
 import { cn } from "@/components/ui/utils";
 
-import pdfIcon from "@/assets/images/image-file/pdf.png";
-import docIcon from "@/assets/images/image-file/doc.png";
-import docxIcon from "@/assets/images/image-file/docx.png";
-import fileIcon from "@/assets/images/image-file/file.png";
+import { getFileIconSrc, defaultFileIcon } from "@/utils/fileIcons";
 
 interface UploadedFile {
     id: string;
@@ -44,17 +41,6 @@ const ACCEPTED_DOC_TYPES = [
 ];
 const ACCEPTED_DOC_EXTENSIONS = ".pdf,.doc,.docx";
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
-
-const FILE_ICON_MAP: Record<string, string> = {
-    pdf: pdfIcon,
-    doc: docIcon,
-    docx: docxIcon,
-};
-
-const getFileIconSrc = (fileName: string): string => {
-    const ext = fileName.split(".").pop()?.toLowerCase() || "";
-    return FILE_ICON_MAP[ext] || fileIcon;
-};
 
 const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
@@ -246,22 +232,6 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
         }
     };
 
-    const getGradingScaleDisplay = () => {
-        switch (passingGradeType) {
-            case "pass_fail": return "Pass / Fail";
-            case "score_10": return "Score (out of 10)";
-            case "percentage": return "Percentage (%)";
-        }
-    };
-
-    const getMinScoreDisplay = () => {
-        switch (passingGradeType) {
-            case "pass_fail": return null;
-            case "score_10": return `≥ ${passingScore}/10`;
-            case "percentage": return `≥ ${passingScore}%`;
-        }
-    };
-
     // ─── Read-Only Mode ────────────────────────────────────────────
     if (readOnly) {
         return (
@@ -282,7 +252,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                                     src={getFileIconSrc(examTemplateName)}
                                     alt=""
                                     className="h-10 w-10 object-contain"
-                                    onError={(e) => { (e.target as HTMLImageElement).src = fileIcon; }}
+                                    onError={(e) => { (e.target as HTMLImageElement).src = defaultFileIcon; }}
                                 />
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-slate-900 truncate">{examTemplateName}</p>
@@ -318,7 +288,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                                     src={getFileIconSrc(answerKeyName)}
                                     alt=""
                                     className="h-10 w-10 object-contain"
-                                    onError={(e) => { (e.target as HTMLImageElement).src = fileIcon; }}
+                                    onError={(e) => { (e.target as HTMLImageElement).src = defaultFileIcon; }}
                                 />
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-slate-900 truncate">{answerKeyName}</p>
@@ -337,30 +307,68 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                     </div>
                 </div>
 
-                {/* Passing Grade */}
-                <div className="rounded-xl border border-slate-200 bg-white p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                        <ClipboardCheck className="h-4 w-4 text-blue-600" />
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                            Passing Grade
-                        </span>
+                {/* Passing Grade (read-only form) */}
+                <div className="border-t border-slate-200 pt-6 space-y-4 pointer-events-none">
+                    <div>
+                        <h4 className="text-sm font-semibold text-slate-900">Passing Grade</h4>
+                        <p className="text-xs text-slate-500 mt-0.5">Define the minimum standard for employees to pass this assessment.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Grading Scale */}
                         <div>
-                            <label className="text-xs text-slate-500 uppercase tracking-wider">Grading Scale</label>
-                            <p className="text-sm font-medium text-slate-900 mt-1">{getGradingScaleDisplay()}</p>
+                            <Select
+                                label="Grading Scale"
+                                value={passingGradeType}
+                                onChange={() => {}}
+                                disabled
+                                options={[
+                                    { label: "Pass / Fail", value: "pass_fail" },
+                                    { label: "Score (out of 10)", value: "score_10" },
+                                    { label: "Percentage (%)", value: "percentage" },
+                                ]}
+                            />
                         </div>
+
+                        {/* Passing Score */}
                         {passingGradeType !== "pass_fail" && (
-                            <div>
-                                <label className="text-xs text-slate-500 uppercase tracking-wider">Minimum Score</label>
-                                <p className="text-sm font-medium text-slate-900 mt-1">{getMinScoreDisplay()}</p>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-sm font-medium text-slate-700">
+                                    {getPassingScoreLabel()}
+                                </label>
+                                <Input
+                                    type="number"
+                                    value={passingScore}
+                                    disabled
+                                    onChange={() => {}}
+                                    className="text-xs md:text-sm"
+                                />
+                                <p className="text-xs text-slate-500">
+                                    {passingGradeType === "score_10"
+                                        ? `Employees need at least ${passingScore}/10 to pass.`
+                                        : `Employees need at least ${passingScore}% to pass.`}
+                                </p>
                             </div>
                         )}
-                        <div>
-                            <label className="text-xs text-slate-500 uppercase tracking-wider">Max Attempts</label>
-                            <p className="text-sm font-medium text-slate-900 mt-1">
-                                {maxAttempts} attempt{maxAttempts > 1 ? "s" : ""}
-                            </p>
+
+                        {passingGradeType === "pass_fail" && (
+                            <div className="flex flex-col gap-1.5 justify-center">
+                                <p className="text-sm text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                    Trainer/Admin will mark each employee as <strong className="text-emerald-700">Pass</strong> or <strong className="text-red-700">Fail</strong> after grading.
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Max Attempts */}
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-medium text-slate-700">Max Attempts</label>
+                            <Input
+                                type="number"
+                                value={maxAttempts}
+                                disabled
+                                onChange={() => {}}
+                                className="text-xs md:text-sm"
+                            />
+                            <p className="text-xs text-slate-500">Maximum number of retake attempts allowed.</p>
                         </div>
                     </div>
                 </div>
@@ -372,24 +380,27 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
 
     return (
         <div className="space-y-6">
-            {/* Exam Template */}
-            <FileUploadZone
-                label="Exam Template"
-                description="Upload the exam/quiz paper (Word or PDF) that will be printed and distributed to employees."
-                file={examTemplate || null}
-                onFileSelect={(file) => setExamTemplate && simulateUpload(file, setExamTemplate)}
-                onRemove={() => setExamTemplate?.(null)}
-            />
+            {/* Exam Template & Answer Key */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Exam Template */}
+                <FileUploadZone
+                    label="Exam Template"
+                    description="Upload the exam/quiz paper (Word or PDF) that will be printed and distributed to employees."
+                    file={examTemplate || null}
+                    onFileSelect={(file) => setExamTemplate && simulateUpload(file, setExamTemplate)}
+                    onRemove={() => setExamTemplate?.(null)}
+                />
 
-            {/* Answer Key */}
-            <FileUploadZone
-                label="Answer Key (Optional)"
-                description="Upload the answer key for grading reference. Only visible to Admin and Reviewer roles."
-                file={answerKey || null}
-                onFileSelect={(file) => setAnswerKey && simulateUpload(file, setAnswerKey)}
-                onRemove={() => setAnswerKey?.(null)}
-                isRestricted
-            />
+                {/* Answer Key */}
+                <FileUploadZone
+                    label="Answer Key (Optional)"
+                    description="Upload the answer key for grading reference. Only visible to Admin and Reviewer roles."
+                    file={answerKey || null}
+                    onFileSelect={(file) => setAnswerKey && simulateUpload(file, setAnswerKey)}
+                    onRemove={() => setAnswerKey?.(null)}
+                    isRestricted
+                />
+            </div>
 
             {/* Passing Grade */}
             <div className="border-t border-slate-200 pt-6 space-y-4">
@@ -398,7 +409,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                     <p className="text-xs text-slate-500 mt-0.5">Define the minimum standard for employees to pass this assessment.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Grade Type */}
                     <div>
                         <Select
@@ -425,6 +436,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                                 max={getPassingScoreMax()}
                                 step={passingGradeType === "score_10" ? 0.5 : 1}
                                 value={passingScore}
+                                className="text-xs md:text-sm"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     const val = parseFloat(e.target.value);
                                     if (!isNaN(val)) {
@@ -447,10 +459,8 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                             </p>
                         </div>
                     )}
-                </div>
 
-                {/* Max Attempts */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Max Attempts */}
                     <div className="flex flex-col gap-1.5">
                         <label className="text-sm font-medium text-slate-700">Max Attempts</label>
                         <Input
@@ -458,6 +468,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                             min={1}
                             max={10}
                             value={maxAttempts}
+                            className="text-xs md:text-sm"
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMaxAttempts?.(parseInt(e.target.value) || 1)}
                         />
                         <p className="text-xs text-slate-500">Maximum number of retake attempts allowed.</p>

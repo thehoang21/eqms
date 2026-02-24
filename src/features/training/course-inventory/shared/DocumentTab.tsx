@@ -1,18 +1,13 @@
 import React, { useState, useRef, useCallback } from "react";
-import { Upload, Trash2, FileText, Film, Presentation, Eye, Download } from "lucide-react";
+import { createPortal } from "react-dom";
+import { Upload, Trash2, FileText, Eye, Download, Library } from "lucide-react";
 import { Textarea } from "@/components/ui/form/ResponsiveForm";
+import { Button } from "@/components/ui/button/Button";
+import { SelectFromLibraryModal, type LibraryItem } from "@/features/training/course-inventory/shared/SelectFromLibraryModal";
 import { cn } from "@/components/ui/utils";
 import { TrainingFile } from "../../types";
 
-import pdfIcon from "@/assets/images/image-file/pdf.png";
-import docIcon from "@/assets/images/image-file/doc.png";
-import docxIcon from "@/assets/images/image-file/docx.png";
-import pptIcon from "@/assets/images/image-file/ppt.png";
-import pptxIcon from "@/assets/images/image-file/pptx.png";
-import jpgIcon from "@/assets/images/image-file/jpg.png";
-import jpegIcon from "@/assets/images/image-file/jpeg.png";
-import pngIcon from "@/assets/images/image-file/png.png";
-import fileIcon from "@/assets/images/image-file/file.png";
+import { getFileIconSrc, defaultFileIcon } from "@/utils/fileIcons";
 
 interface DocumentTrainingTabProps {
     readOnly?: boolean;
@@ -39,26 +34,69 @@ const ACCEPTED_TYPES = [
 const ACCEPTED_EXTENSIONS = ".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.mov";
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
-const FILE_ICON_MAP: Record<string, string> = {
-    pdf: pdfIcon,
-    doc: docIcon,
-    docx: docxIcon,
-    ppt: pptIcon,
-    pptx: pptxIcon,
-    jpg: jpgIcon,
-    jpeg: jpegIcon,
-    png: pngIcon,
-};
-
-const getFileIconSrc = (fileName: string): string => {
-    const ext = fileName.split(".").pop()?.toLowerCase() || "";
-    return FILE_ICON_MAP[ext] || fileIcon;
-};
-
 const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+/* ─── Library Mock Data ─────────────────────────────────────────── */
+const LIBRARY_MATERIALS: LibraryItem[] = [
+    { id: "lib-1", code: "MAT-2026-001", title: "GMP Introduction Video", fileName: "GMP_Introduction_2026.mp4", type: "Video", fileSize: 131072000, category: "GMP" },
+    { id: "lib-2", code: "MAT-2026-002", title: "Cleanroom Operations Manual", fileName: "Cleanroom_Operations_Manual.pdf", type: "PDF", fileSize: 4718592, category: "Technical" },
+    { id: "lib-3", code: "MAT-2026-003", title: "Equipment Handling Guide", fileName: "Equipment_Handling_Guide.pdf", type: "PDF", fileSize: 8597504, category: "Technical" },
+    { id: "lib-4", code: "MAT-2026-004", title: "Safety Protocol Infographic", fileName: "Safety_Protocol_Infographic.png", type: "Image", fileSize: 2202009, category: "Safety" },
+    { id: "lib-5", code: "MAT-2026-005", title: "ISO 9001 Training Video", fileName: "ISO9001_Training_2026.mp4", type: "Video", fileSize: 220200960, category: "Compliance" },
+    { id: "lib-6", code: "MAT-2026-006", title: "SOP Template Pack", fileName: "SOP_Templates_v3.docx", type: "Document", fileSize: 1048576, category: "SOP" },
+    { id: "lib-7", code: "MAT-2026-007", title: "Chemical Handling Procedures", fileName: "Chemical_Handling_Procedures.pdf", type: "PDF", fileSize: 3145728, category: "Safety" },
+    { id: "lib-8", code: "MAT-2026-008", title: "HPLC Training Slides", fileName: "HPLC_Training_Slides.pptx", type: "Document", fileSize: 15728640, category: "Technical" },
+];
+
+/* ─── Save to Library Prompt ────────────────────────────────────── */
+const SaveToLibraryModal: React.FC<{
+    isOpen: boolean;
+    fileName: string;
+    onConfirm: () => void;
+    onSkip: () => void;
+}> = ({ isOpen, fileName, onConfirm, onSkip }) => {
+    if (!isOpen) return null;
+
+    return createPortal(
+        <>
+            <div className="fixed inset-0 z-50 bg-black/50 animate-in fade-in duration-200" onClick={onSkip} />
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div
+                    className="bg-white rounded-xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-200"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                                <Library className="h-5 w-5 text-blue-600" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-semibold text-slate-900">Save to Library?</h3>
+                            </div>
+                        </div>
+                        <p className="text-sm text-slate-600 leading-relaxed">
+                            Would you like to save <span className="font-medium text-slate-900">"{fileName}"</span> to
+                            the shared Training Materials Library? This will make the file available for reuse in other
+                            training courses.
+                        </p>
+                    </div>
+                    <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-slate-200">
+                        <Button variant="outline" size="sm" onClick={onSkip}>
+                            No, Skip
+                        </Button>
+                        <Button variant="default" size="sm" onClick={onConfirm}>
+                            Yes, Save to Library
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </>,
+        document.body
+    );
 };
 
 export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
@@ -69,7 +107,24 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
     setInstruction,
 }) => {
     const [isDragOver, setIsDragOver] = useState(false);
+    const [showLibraryModal, setShowLibraryModal] = useState(false);
+    const [showSaveToLibrary, setShowSaveToLibrary] = useState(false);
+    const [pendingSaveFileName, setPendingSaveFileName] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleLibrarySelect = useCallback((materials: LibraryItem[]) => {
+        if (!setTrainingFiles) return;
+        const newFiles: TrainingFile[] = materials.map((m) => ({
+            id: `lib-${m.id}-${Date.now()}`,
+            file: new File([], m.fileName),
+            name: m.fileName,
+            size: m.fileSize,
+            type: m.type === "PDF" ? "application/pdf" : m.type === "Video" ? "video/mp4" : "application/octet-stream",
+            progress: 100,
+            status: "success" as const,
+        }));
+        setTrainingFiles((prev) => [...prev, ...newFiles]);
+    }, [setTrainingFiles]);
 
     const processFiles = useCallback((files: FileList | File[]) => {
         if (!setTrainingFiles) return;
@@ -97,7 +152,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
 
         setTrainingFiles(prev => [...prev, ...newFiles]);
 
-        // Simulate upload progress
+        // Simulate upload progress & prompt save-to-library on completion
         newFiles.forEach(tf => {
             let progress = 0;
             const interval = setInterval(() => {
@@ -108,6 +163,11 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                     setTrainingFiles!(prev =>
                         prev.map(f => f.id === tf.id ? { ...f, progress: 100, status: "success" } : f)
                     );
+                    // prompt save to library for first completed file
+                    setTimeout(() => {
+                        setPendingSaveFileName(tf.name);
+                        setShowSaveToLibrary(true);
+                    }, 400);
                 } else {
                     setTrainingFiles!(prev =>
                         prev.map(f => f.id === tf.id ? { ...f, progress: Math.round(progress) } : f)
@@ -167,7 +227,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                                             src={getFileIconSrc(file.name)}
                                             alt=""
                                             className="h-10 w-10 object-contain"
-                                            onError={(e) => { (e.target as HTMLImageElement).src = fileIcon; }}
+                                            onError={(e) => { (e.target as HTMLImageElement).src = defaultFileIcon; }}
                                         />
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm font-medium text-slate-900 truncate">{file.name}</p>
@@ -197,14 +257,16 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                 {/* Instruction (read-only) */}
                 {instruction && (
                     <div className="border-t border-slate-200 pt-6">
-                        <div className="rounded-xl border border-slate-200 bg-white p-5">
-                            <div className="flex items-center gap-2 mb-3">
-                                <FileText className="h-4 w-4 text-slate-500" />
-                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Instruction
-                                </span>
-                            </div>
-                            <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{instruction}</p>
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-medium text-slate-700">
+                                Instruction
+                            </label>
+                            <Textarea
+                                value={instruction}
+                                readOnly
+                                rows={4}
+                                className="!text-sm"
+                            />
                         </div>
                     </div>
                 )}
@@ -219,8 +281,29 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
             {/* Section Header */}
             <div>
                 <h3 className="text-base font-semibold text-slate-900">Upload Training Materials</h3>
-                <p className="text-sm text-slate-500 mt-1">Upload SOP documents (PDF), presentation slides, or training videos for this course.</p>
+                <p className="text-sm text-slate-500 mt-1">Upload SOP documents (PDF), presentation slides, or training videos for this course, or select from the shared materials library.</p>
             </div>
+
+            {/* Action Buttons Row */}
+            <div className="flex items-center gap-3">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload from Computer
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowLibraryModal(true)}
+                >
+                    <Library className="h-4 w-4 mr-2" />
+                    Select from Library
+                </Button>
+            </div>
+
             {/* Drop Zone */}
             <div
                 onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
@@ -327,11 +410,36 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                         value={instruction}
                         onChange={(e) => setInstruction?.(e.target.value)}
                         rows={4}
+                        className="!text-sm"
                         placeholder="e.g., Focus on Chapter 3 – Cleaning Validation Procedures. Pay special attention to Appendix B for equipment handling."
                     />
                     <p className="text-xs text-slate-500">Provide notes to help employees focus on specific sections or key points in the training materials.</p>
                 </div>
             </div>
+
+            {/* Library Modal */}
+            <SelectFromLibraryModal
+                isOpen={showLibraryModal}
+                onClose={() => setShowLibraryModal(false)}
+                onSelect={handleLibrarySelect}
+                items={LIBRARY_MATERIALS}
+                excludeFileNames={trainingFiles.map((f) => f.name)}
+            />
+
+            {/* Save to Library Prompt */}
+            <SaveToLibraryModal
+                isOpen={showSaveToLibrary}
+                fileName={pendingSaveFileName}
+                onConfirm={() => {
+                    // In a real app, this would call an API to save to library
+                    setShowSaveToLibrary(false);
+                    setPendingSaveFileName("");
+                }}
+                onSkip={() => {
+                    setShowSaveToLibrary(false);
+                    setPendingSaveFileName("");
+                }}
+            />
         </div>
     );
 };

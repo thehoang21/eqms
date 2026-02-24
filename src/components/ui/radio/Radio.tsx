@@ -84,7 +84,7 @@ export const Radio: React.FC<RadioProps> = ({
           checked
             ? 'border-emerald-500 bg-emerald-50/50 ring-1 ring-emerald-500/20'
             : 'border-slate-200 bg-white hover:border-emerald-400',
-          disabled && 'opacity-50 cursor-not-allowed hover:border-slate-200',
+          disabled && 'cursor-not-allowed hover:border-slate-200',
           className
         )}
       >
@@ -149,7 +149,7 @@ export const Radio: React.FC<RadioProps> = ({
             checked
               ? 'bg-white border-emerald-600'
               : 'bg-white border-slate-200 hover:border-emerald-400',
-            disabled && 'opacity-50 cursor-not-allowed'
+            disabled && 'cursor-not-allowed'
           )}
         >
           {checked && (
@@ -164,7 +164,7 @@ export const Radio: React.FC<RadioProps> = ({
               htmlFor={radioId}
               className={cn(
                 'block text-sm font-medium text-slate-700 cursor-pointer select-none',
-                disabled && 'opacity-50 cursor-not-allowed'
+                disabled && 'cursor-not-allowed'
               )}
             >
               {label}
@@ -172,8 +172,7 @@ export const Radio: React.FC<RadioProps> = ({
           )}
           {description && (
             <p className={cn(
-              'text-sm text-slate-500 mt-0.5',
-              disabled && 'opacity-50'
+              'text-sm text-slate-500 mt-0.5'
             )}>
               {description}
             </p>

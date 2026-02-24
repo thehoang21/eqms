@@ -98,7 +98,7 @@ export const Input: React.FC<InputProps> = ({
           : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500',
         'focus:outline-none focus:ring-1',
         'placeholder:text-slate-400 placeholder:text-sm',
-        'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-500',
+        'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-900',
         'read-only:bg-slate-50 read-only:cursor-default',
         className
       )}

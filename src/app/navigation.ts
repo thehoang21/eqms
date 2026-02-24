@@ -145,14 +145,14 @@ const FOUNDATION_MODULES: NavItem[] = [
         label: "Course Inventory",
         children: [
           {
-            id: "courses-list",
-            label: "Courses List",
-            path: "/training-management/courses-list",
-          },
-          {
             id: "training-materials",
             label: "Training Materials",
             path: "/training-management/training-materials",
+          },
+          {
+            id: "courses-list",
+            label: "Courses List",
+            path: "/training-management/courses-list",
           },
           {
             id: "training-pending-review",

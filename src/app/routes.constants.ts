@@ -61,6 +61,8 @@ export const ROUTES = {
     // Course Inventory
     COURSES_LIST: '/training-management/courses-list',
     TRAINING_MATERIALS: '/training-management/training-materials',
+    UPLOAD_MATERIAL: '/training-management/training-materials/upload',
+    MATERIAL_DETAIL: (id: string) => `/training-management/training-materials/${id}`,
     COURSES_CREATE: '/training-management/courses/create',
     // Compliance Tracking
     TRAINING_MATRIX: '/training-management/training-matrix',

@@ -72,7 +72,7 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
             type="text"
             value={displayName}
             disabled
-            className="w-full h-11 px-4 border border-slate-200 rounded-lg bg-slate-50 text-slate-700 text-sm cursor-not-allowed"
+            className="w-full h-10 px-4 border border-slate-200 rounded-lg bg-slate-50 text-slate-700 text-sm cursor-not-allowed"
           />
           <p className="text-xs text-slate-500 mt-1.5">
             Note: The uploaded file will be renamed to the name above
@@ -88,7 +88,7 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
             type="text"
             value={revisionNumber}
             disabled
-            className="w-full h-11 px-4 border border-slate-200 rounded-lg bg-slate-50 text-slate-700 text-sm cursor-not-allowed"
+            className="w-full h-10 px-4 border border-slate-200 rounded-lg bg-slate-50 text-slate-700 text-sm cursor-not-allowed"
           />
         </div>
 

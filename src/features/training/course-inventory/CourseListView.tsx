@@ -20,7 +20,7 @@ import {
   ClipboardList,
   BarChart3,
 } from "lucide-react";
-import { IconSmartHome, IconPlus } from "@tabler/icons-react";
+import { IconSmartHome, IconPlus, IconInfoCircle } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
@@ -305,12 +305,12 @@ export const CourseListView: React.FC = () => {
   };
 
   const handleViewCourse = (id: string) => {
-    console.log("View course:", id);
+    navigate(`/training-management/courses/${id}`);
     setOpenDropdownId(null);
   };
 
   const handleEditCourse = (id: string) => {
-    console.log("Edit course:", id);
+    navigate(`/training-management/courses/${id}/edit`);
     setOpenDropdownId(null);
   };
 
@@ -320,7 +320,7 @@ export const CourseListView: React.FC = () => {
   };
 
   const handleViewProgress = (id: string) => {
-    console.log("View progress:", id);
+    navigate(`/training-management/courses/${id}/progress`);
     setOpenDropdownId(null);
   };
 
@@ -388,7 +388,7 @@ export const CourseListView: React.FC = () => {
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))
                 }
-                className="w-full h-11 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+                className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -570,7 +570,7 @@ export const CourseListView: React.FC = () => {
                 <tr
                   key={training.id}
                   className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
-                  onClick={() => console.log("View training:", training.id)}
+                  onClick={() => navigate(`/training-management/courses/${training.id}`)}
                 >
                   <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-500 font-medium">
                     {(currentPage - 1) * itemsPerPage + index + 1}
@@ -720,7 +720,7 @@ export const CourseListView: React.FC = () => {
                 }}
                 className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
               >
-                <Eye className="h-4 w-4 flex-shrink-0" />
+                <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
                 <span className="font-medium">View Detail Course</span>
               </button>
               <button

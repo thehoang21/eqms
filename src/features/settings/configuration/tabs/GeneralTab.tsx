@@ -277,7 +277,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                     type="time"
                     value={config.backupSettings.backupTime}
                     onChange={(e) => handleBackupSettingsChange('backupTime', e.target.value)}
-                    className="w-full h-11 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                   <p className="text-xs text-slate-500 mt-1">
                     System local time (24-hour format)

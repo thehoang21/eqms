@@ -7,7 +7,7 @@ import {
   ShieldCheck,
   Info,
 } from "lucide-react";
-import { IconSmartHome } from "@tabler/icons-react";
+import { IconInfoCircle, IconSmartHome } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
@@ -226,7 +226,7 @@ export const PendingApprovalView: React.FC = () => {
                   setCurrentPage(1);
                 }}
                 placeholder="Search by title, ID..."
-                className="w-full h-10 sm:h-11 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -387,7 +387,7 @@ export const PendingApprovalView: React.FC = () => {
                             className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors sm:hidden"
                             aria-label="View details"
                           >
-                            <Eye className="h-4 w-4 text-slate-600" />
+                            <IconInfoCircle className="h-4 w-4 text-slate-600" />
                           </button>
                           <Button
                             size="xs"

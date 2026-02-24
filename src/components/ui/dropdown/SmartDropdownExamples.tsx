@@ -10,7 +10,7 @@ import { Edit, Trash, Eye, Copy, Download, Share2 } from 'lucide-react';
  */
 export const SmartDropdownExample: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <div className="p-6 space-y-6">
@@ -30,7 +30,7 @@ export const SmartDropdownExample: React.FC = () => {
         <SmartDropdown
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          triggerRef={buttonRef}
+          triggerRef={buttonRef as React.RefObject<HTMLElement>}
           estimatedHeight={240} // 6 items * 40px
         >
           <DropdownItem icon={<Eye />} onClick={() => console.log('View')}>
@@ -115,7 +115,7 @@ export const SmartDropdownExample: React.FC = () => {
  */
 export const TableWithSmartDropdowns: React.FC = () => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement> }>({});
+  const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement | null> }>({});
 
   const getButtonRef = (id: string) => {
     if (!buttonRefs.current[id]) {
@@ -160,7 +160,7 @@ export const TableWithSmartDropdowns: React.FC = () => {
                   <SmartDropdown
                     isOpen={openDropdownId === row.id}
                     onClose={() => setOpenDropdownId(null)}
-                    triggerRef={getButtonRef(row.id)}
+                    triggerRef={getButtonRef(row.id) as React.RefObject<HTMLElement>}
                     estimatedHeight={160}
                   >
                     <DropdownItem 

@@ -378,7 +378,7 @@ const DropdownMenu: React.FC<{
               className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <IconEyeCheck className="h-4 w-4 flex-shrink-0" />
-              <span className="font-medium">Review</span>
+              <span className="font-medium">Review Revision</span>
             </button>
           ) : (
             <button
@@ -390,7 +390,7 @@ const DropdownMenu: React.FC<{
               className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <IconChecks className="h-4 w-4 flex-shrink-0" />
-              <span className="font-medium">Approve</span>
+              <span className="font-medium">Approve Revision</span>
             </button>
           )}
           <button

@@ -283,7 +283,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm transition-colors",
           "min-h-[40px]",
           disabled
-            ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200"
+            ? "bg-slate-50 text-slate-900 cursor-not-allowed border-slate-200"
             : isOpen
             ? "border-emerald-500 ring-2 ring-emerald-500/20"
             : "border-slate-200 hover:border-slate-400",

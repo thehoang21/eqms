@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   XCircle,
-  ClipboardCheck,
   Check,
 } from "lucide-react";
 import { IconSmartHome } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
-import { Radio } from "@/components/ui/radio/Radio";
 import { cn } from "@/components/ui/utils";
 import { CourseApproval, TrainingFile } from "../../types";
 import { BasicInfoTab } from "../shared/BasicInfoTab";
@@ -436,97 +434,7 @@ export const ApprovalDetailView: React.FC = () => {
     ? -1
     : WORKFLOW_STEPS.indexOf(approval.approvalStatus as typeof WORKFLOW_STEPS[number]);
 
-  const totalPoints = approval.questions.reduce((sum, q) => sum + q.points, 0);
   const trainingFiles = approval.trainingFiles || [];
-
-  /** Render the Questions & Answers section (Quiz only, specific to approval review) */
-  const renderQuestionsSection = () => {
-    if (approval.trainingMethod !== "Quiz (Paper-based/Manual)") return null;
-
-    if (approval.questions.length === 0) {
-      return (
-        <div className="px-4 lg:px-6 pb-6">
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <ClipboardCheck className="h-12 w-12 text-slate-300 mb-4" />
-            <p className="text-sm font-medium text-slate-900">No quiz questions configured</p>
-            <p className="text-xs text-slate-500 mt-1">Quiz questions will appear here once added.</p>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="px-4 lg:px-6 pb-6">
-        <div className="border border-slate-200 rounded-xl overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50 border-b border-slate-200">
-            <div className="flex items-center gap-2">
-              <ClipboardCheck className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-semibold text-slate-900">
-                Test Content ({approval.questions.length} questions — Total: {totalPoints} points)
-              </span>
-            </div>
-          </div>
-          <div className="max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
-            <div className="divide-y divide-slate-100">
-              {approval.questions.map((question, qIndex) => (
-                <div key={question.id} className="px-5 py-4">
-                  <div className="flex items-start gap-3">
-                    <span className="flex items-center justify-center h-6 w-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold shrink-0 mt-0.5">
-                      {qIndex + 1}
-                    </span>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm font-medium text-slate-900 leading-relaxed flex-1">
-                          {question.text}
-                        </p>
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 text-xs font-semibold shrink-0">
-                          {question.points} pts
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-500 mt-1">
-                        {question.type === "multiple_choice" ? "Multiple Choice" : "Essay"}
-                      </p>
-                      {question.options && question.options.length > 0 && (
-                        <div className="mt-3 space-y-2">
-                          {question.options.map((option) => (
-                            <div
-                              key={option.id}
-                              className={cn(
-                                "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm border",
-                                option.isCorrect
-                                  ? "bg-emerald-50 border-emerald-200"
-                                  : "bg-white border-slate-200"
-                              )}
-                            >
-                              <Radio
-                                name={`question-${question.id}`}
-                                value={option.id}
-                                checked={option.isCorrect}
-                                label={option.text}
-                                className={cn(
-                                  "pointer-events-none",
-                                  option.isCorrect ? "[&_label]:text-emerald-800" : "[&_label]:text-slate-700"
-                                )}
-                              />
-                              {option.isCorrect && (
-                                <span className="ml-auto text-xs font-medium text-emerald-600">
-                                  Correct Answer
-                                </span>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -561,18 +469,15 @@ export const ApprovalDetailView: React.FC = () => {
         );
       case "training-config":
         return (
-          <>
-            <ConfigTab
-              readOnly
-              trainingMethod={approval.trainingMethod as any || "Read & Understood"}
-              examTemplateName={approval.examTemplate}
-              answerKeyName={approval.answerKey}
-              passingGradeType={approval.passingGradeType}
-              passingScore={approval.passScore}
-              maxAttempts={approval.maxAttempts}
-            />
-            {renderQuestionsSection()}
-          </>
+          <ConfigTab
+            readOnly
+            trainingMethod={approval.trainingMethod as any || "Read & Understood"}
+            examTemplateName={approval.examTemplate}
+            answerKeyName={approval.answerKey}
+            passingGradeType={approval.passingGradeType}
+            passingScore={approval.passScore}
+            maxAttempts={approval.maxAttempts}
+          />
         );
       default:
         return null;
