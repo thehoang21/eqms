@@ -405,7 +405,7 @@ export const PendingReviewView: React.FC = () => {
                   Training ID
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Course Title
+                  Course Name
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                   Related Document
