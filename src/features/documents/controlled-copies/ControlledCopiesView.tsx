@@ -22,7 +22,7 @@ import { CancelDistributionModal } from "./components/CancelDistributionModal";
 import { DestructionTypeSelectionModal } from "./components/DestructionTypeSelectionModal";
 import { useToast } from "@/components/ui/toast/Toast";
 import type { ControlledCopy, ControlledCopyStatus, TableColumn } from "./types";
-import { IconInfoCircle, IconShare3, IconSmartHome } from "@tabler/icons-react";
+import { IconInfoCircle, IconShare3, IconLayoutDashboard } from "@tabler/icons-react";
 
 // ==================== MOCK DATA ====================
 
@@ -1075,7 +1075,7 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
           <div className="flex-1 min-w-0">
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">{getPageTitle()}</h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <IconSmartHome className="h-4 w-4" />
+              <IconLayoutDashboard className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">Document Control</span>
               <span className="sm:hidden">...</span>

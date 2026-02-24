@@ -17,7 +17,7 @@ import {
     formatRetentionPeriod,
     logAuditTrail
 } from './utils';
-import { IconInfoCircle, IconSmartHome } from '@tabler/icons-react';
+import { IconInfoCircle, IconLayoutDashboard } from '@tabler/icons-react';
 
 // Mock Data
 const MOCK_ARCHIVED_DOCS: ArchivedDocument[] = [
@@ -600,7 +600,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                 <div className="flex-1 min-w-0">
                     <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">Archived Documents</h1>
                     <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-1 whitespace-nowrap overflow-x-auto">
-                        <IconSmartHome className="h-4 w-4" />
+                        <IconLayoutDashboard className="h-4 w-4" />
                         <span className="text-slate-400 mx-1">/</span>
                         <span className="hidden sm:inline">Document Control</span>
                         <span className="sm:hidden">...</span>

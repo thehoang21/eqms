@@ -13,14 +13,14 @@ import {
   ImageIcon,
   ZoomIn,
 } from "lucide-react";
-import { IconSmartHome } from "@tabler/icons-react";
+import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { cn } from "@/components/ui/utils";
-import { TrainingMethod } from "../types";
+import { TrainingMethod } from "../../types";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -381,7 +381,7 @@ export const ResultEntryPage: React.FC = () => {
                 Result Entry
               </h1>
               <div className="flex items-center gap-1.5 text-slate-500 mt-0.5 text-xs whitespace-nowrap overflow-x-auto">
-                <IconSmartHome className="h-4 w-4" />
+                <IconLayoutDashboard className="h-4 w-4" />
                 <span className="text-slate-400 mx-1">/</span>
                 <span className="hidden sm:inline">Training Management</span>
                 <span className="sm:hidden">...</span>

@@ -20,7 +20,7 @@ import {
   ClipboardList,
   BarChart3,
 } from "lucide-react";
-import { IconSmartHome, IconPlus, IconInfoCircle } from "@tabler/icons-react";
+import { IconLayoutDashboard, IconPlus, IconInfoCircle } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
@@ -33,7 +33,7 @@ import {
   TrainingStatus,
   TrainingType,
   TrainingMethod,
-} from "../types";
+} from "../../types";
 
 // Mock Data
 const MOCK_TRAININGS: TrainingRecord[] = [
@@ -338,7 +338,7 @@ export const CourseListView: React.FC = () => {
             Courses List
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconSmartHome className="h-4 w-4" />
+            <IconLayoutDashboard className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Training Management</span>
             <span className="sm:hidden">...</span>

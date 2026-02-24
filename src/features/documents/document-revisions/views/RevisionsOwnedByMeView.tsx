@@ -38,7 +38,7 @@ import { cn } from "@/components/ui/utils";
 import {
   IconInfoCircle,
   IconFileExport,
-  IconSmartHome,
+  IconLayoutDashboard,
 } from "@tabler/icons-react";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
@@ -419,7 +419,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
               Revisions Owned By Me
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-1 whitespace-nowrap overflow-x-auto">
-              <IconSmartHome className="h-4 w-4" />
+              <IconLayoutDashboard className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">Document Control</span>
               <span className="sm:hidden">...</span>

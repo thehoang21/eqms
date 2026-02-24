@@ -1,16 +1,23 @@
-// Course list & materials
-export { CourseListView } from './CourseListView';
-export { MaterialsView } from './materials/MaterialsView';
-export { ResultEntryPage } from './ResultEntryPage';
-export { CourseDetailView } from './CourseDetailView';
-export { CourseProgressView } from './CourseProgressView';
-export { EditCourseView } from './edit';
-
-// Approval workflow
-export { PendingReviewView, PendingApprovalView, ApprovalDetailView } from './approval';
-
-// Create/edit wizard
-export { CreateCourseView } from './create';
+// Course list (consolidated in courses-list folder)
+export {
+  CourseListView,
+  CreateCourseView,
+  EditCourseView,
+  CourseDetailView,
+  CourseProgressView,
+  ResultEntryPage,
+} from "./courses-list";
 
 // Materials
-export { UploadMaterialView, MaterialDetailView } from './materials';
+export {
+  MaterialsView,
+  UploadMaterialView,
+  MaterialDetailView,
+} from "./materials";
+
+// Approval workflow
+export {
+  PendingReviewView,
+  PendingApprovalView,
+  ApprovalDetailView,
+} from "./approval";

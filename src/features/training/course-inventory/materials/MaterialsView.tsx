@@ -27,7 +27,7 @@ import {
   XCircle,
   FilePlusCorner,
 } from "lucide-react";
-import { IconSmartHome, IconPlus, IconChecks } from "@tabler/icons-react";
+import { IconLayoutDashboard, IconPlus, IconChecks } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { TablePagination } from "@/components/ui/table/TablePagination";
@@ -367,7 +367,7 @@ export const MaterialsView: React.FC = () => {
             Training Materials
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconSmartHome className="h-4 w-4" />
+            <IconLayoutDashboard className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Training Management</span>
             <span className="sm:hidden">...</span>
@@ -376,6 +376,15 @@ export const MaterialsView: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+          <Button
+            onClick={() => console.log("Export materials")}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
           <Button onClick={() => navigate("/training-management/training-materials/upload")} size="sm" className="whitespace-nowrap gap-2">
             <Upload className="h-4 w-4" />
             Upload Material

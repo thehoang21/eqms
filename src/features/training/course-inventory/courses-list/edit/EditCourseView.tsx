@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { IconSmartHome } from "@tabler/icons-react";
+import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Check } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
@@ -11,10 +11,10 @@ import {
   TrainingFile,
   TrainingMethod,
   Recurrence,
-} from "../../types";
-import { BasicInfoTab } from "../shared/BasicInfoTab";
-import { DocumentTab } from "../shared/DocumentTab";
-import { ConfigTab } from "../shared/ConfigTab";
+} from "../../../types";
+import { BasicInfoTab } from "../../shared/BasicInfoTab";
+import { DocumentTab } from "../../shared/DocumentTab";
+import { ConfigTab } from "../../shared/ConfigTab";
 
 type TabType = "basic-info" | "document-training" | "training-config";
 
@@ -304,7 +304,7 @@ export const EditCourseView: React.FC = () => {
             Edit Course
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconSmartHome className="h-4 w-4" />
+            <IconLayoutDashboard className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Training Management</span>
             <span className="sm:hidden">...</span>

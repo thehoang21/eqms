@@ -18,7 +18,7 @@ import {
   AuditTrailTab,
 } from "./tabs";
 import { Button } from "@/components/ui/button/Button";
-import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
+import { IconChevronLeft, IconLayoutDashboard } from "@tabler/icons-react";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 
@@ -224,7 +224,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
               Document Details
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <IconSmartHome className="h-4 w-4" />
+              <IconLayoutDashboard className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">
                 Dashboard

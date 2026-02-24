@@ -18,6 +18,7 @@ import {
   MoreVertical,
   Eye,
   ExternalLink,
+  Download,
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button/Button";
@@ -973,6 +974,15 @@ export const NotificationsView: React.FC = () => {
           </h1>
         </div>
         <div className="flex items-center gap-2 md:gap-3 shrink-0">
+          <Button
+            onClick={() => console.log("Export notifications")}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
           <Button
             variant="outline"
             size="sm"

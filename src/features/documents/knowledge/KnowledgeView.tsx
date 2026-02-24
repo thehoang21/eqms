@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { IconSmartHome, IconFolderFilled, IconFile, IconSearch, IconPlus, IconUpload, IconDownload, IconLayoutGrid, IconLayoutList } from "@tabler/icons-react";
+import { IconLayoutDashboard, IconFolderFilled, IconFile, IconSearch, IconPlus, IconUpload, IconDownload, IconLayoutGrid, IconLayoutList } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { cn } from "@/components/ui/utils";
 import { Search } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface Department {
     id: string;
@@ -32,84 +31,6 @@ const DEPARTMENTS: Department[] = [
     { id: "safety", name: "Safety & Environment", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 24, color: "text-rose-600" },
     { id: "management", name: "Management", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 42, color: "text-slate-600" },
 ];
-
-// Animation variants
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1,
-            delayChildren: 0.2,
-        }
-    }
-};
-
-const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-        opacity: 1, 
-        y: 0,
-        transition: {
-            type: "spring" as const,
-            stiffness: 100,
-            damping: 15
-        }
-    }
-};
-
-const statsVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (custom: number) => ({
-        opacity: 1,
-        y: 0,
-        transition: {
-            delay: custom * 0.1,
-            type: "spring" as const,
-            stiffness: 100,
-            damping: 15
-        }
-    })
-};
-
-const folderVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: (custom: number) => ({
-        opacity: 1,
-        scale: 1,
-        transition: {
-            delay: custom * 0.05,
-            type: "spring" as const,
-            stiffness: 200,
-            damping: 20
-        }
-    }),
-    hover: {
-        scale: 1.05,
-        transition: {
-            type: "spring" as const,
-            stiffness: 400,
-            damping: 10
-        }
-    },
-    tap: {
-        scale: 0.95
-    }
-};
-
-const searchVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            type: "spring" as const,
-            stiffness: 100,
-            damping: 15,
-            delay: 0.3
-        }
-    }
-};
 
 export const KnowledgeView: React.FC = () => {
     const navigate = useNavigate();
@@ -144,7 +65,7 @@ export const KnowledgeView: React.FC = () => {
                         Knowledge Base
                     </h1>
                     <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                        <IconSmartHome className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                        <IconLayoutDashboard className="h-3.5 w-3.5 md:h-4 md:w-4" />
                         <span className="text-slate-400 mx-1">/</span>
                         <span>Document Control</span>
                         <span className="text-slate-400 mx-1">/</span>
@@ -155,75 +76,36 @@ export const KnowledgeView: React.FC = () => {
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <motion.div 
-                    className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm"
-                    custom={0}
-                    initial="hidden"
-                    animate="visible"
-                    variants={statsVariants}
-                    whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.15)" }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
+                <div className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm">
                     <div className="flex items-center gap-3">
-                        <motion.div 
-                            className="h-10 w-10 md:h-12 md:w-12 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0"
-                            whileHover={{ scale: 1.1, rotate: 5 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                        >
+                        <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
                             <IconFolderFilled className="h-5 w-5 md:h-6 md:w-6 text-emerald-600" />
-                        </motion.div>
+                        </div>
                         <div>
                             <p className="text-xs md:text-sm text-slate-600">Total Departments</p>
-                            <motion.p 
-                                className="text-xl md:text-2xl font-bold text-slate-900"
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-                            >
+                            <p className="text-xl md:text-2xl font-bold text-slate-900">
                                 {DEPARTMENTS.length}
-                            </motion.p>
+                            </p>
                         </div>
                     </div>
-                </motion.div>
-                <motion.div 
-                    className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm"
-                    custom={1}
-                    initial="hidden"
-                    animate="visible"
-                    variants={statsVariants}
-                    whileHover={{ y: -4, boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.15)" }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
+                </div>
+                <div className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm">
                     <div className="flex items-center gap-3">
-                        <motion.div 
-                            className="h-10 w-10 md:h-12 md:w-12 rounded-lg bg-blue-100 flex items-center justify-center shrink-0"
-                            whileHover={{ scale: 1.1, rotate: -5 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                        >
+                        <div className="h-10 w-10 md:h-12 md:w-12 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                             <IconFile className="h-5 w-5 md:h-6 md:w-6 text-blue-600" />
-                        </motion.div>
+                        </div>
                         <div>
                             <p className="text-xs md:text-sm text-slate-600">Total Documents</p>
-                            <motion.p 
-                                className="text-xl md:text-2xl font-bold text-slate-900"
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-                            >
+                            <p className="text-xl md:text-2xl font-bold text-slate-900">
                                 {totalDocuments}
-                            </motion.p>
+                            </p>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </div>
 
             {/* Search Bar */}
-            <motion.div 
-                className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm"
-                initial="hidden"
-                animate="visible"
-                variants={searchVariants}
-            >
+            <div className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm">
                 <label className="text-sm font-medium text-slate-700 mb-1.5 block">
                     Search
                 </label>
@@ -237,7 +119,7 @@ export const KnowledgeView: React.FC = () => {
                         className="w-full pl-10 pr-4 h-10 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
                     />
                 </div>
-            </motion.div>
+            </div>
 
             {/* Department Folders Grid */}
             <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex-1">
@@ -294,42 +176,23 @@ export const KnowledgeView: React.FC = () => {
 
                 <div className="p-4 md:p-6">
                     {filteredDepartments.length === 0 ? (
-                        <motion.div 
-                            className="text-center py-8 md:py-12"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5 }}
-                        >
+                        <div className="text-center py-8 md:py-12">
                             <IconFolderFilled className="h-12 w-12 md:h-16 md:w-16 text-slate-300 mx-auto mb-3 md:mb-4" />
                             <p className="text-sm md:text-base text-slate-600 font-medium">No departments found</p>
                             <p className="text-xs md:text-sm text-slate-500 mt-1">Try adjusting your search query</p>
-                        </motion.div>
+                        </div>
                     ) : viewMode === "grid" ? (
-                        <motion.div 
-                            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4"
-                            initial="hidden"
-                            animate="visible"
-                            variants={containerVariants}
-                            key="grid"
-                        >
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                             {filteredDepartments.map((dept, index) => (
-                                <motion.button
+                                <button
                                     key={dept.id}
-                                    custom={index}
-                                    variants={folderVariants}
-                                    whileHover="hover"
-                                    whileTap="tap"
                                     onClick={() => navigate(`/documents/knowledge/${dept.id}`)}
                                     className="group relative bg-white border-2 border-slate-200 rounded-xl p-4 md:p-5 hover:border-emerald-500 hover:shadow-lg transition-all duration-200 text-left"
                                 >
                                     <div className="flex flex-col items-center gap-2 md:gap-3">
-                                        <motion.div 
-                                            className={cn("transition-colors", dept.color)}
-                                            whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.1 }}
-                                            transition={{ duration: 0.5 }}
-                                        >
+                                        <div className={cn("transition-colors", dept.color)}>
                                             <IconFolderFilled className="h-10 w-10 md:h-12 md:w-12" />
-                                        </motion.div>
+                                        </div>
                                         <div className="text-center w-full">
                                             <p className="font-semibold text-slate-900 text-xs md:text-sm line-clamp-2 mb-1">
                                                 {dept.name}
@@ -339,42 +202,24 @@ export const KnowledgeView: React.FC = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    <motion.div 
-                                        className="absolute top-2 md:top-3 right-2 md:right-3"
-                                        initial={{ opacity: 0, scale: 0 }}
-                                        whileHover={{ opacity: 1, scale: 1 }}
-                                    >
-                                        <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-600"></div>
-                                    </motion.div>
-                                </motion.button>
+                                    <div className="absolute top-2 md:top-3 right-2 md:right-3">
+                                        <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    </div>
+                                </button>
                             ))}
-                        </motion.div>
+                        </div>
                     ) : (
-                        <motion.div 
-                            className="space-y-2"
-                            initial="hidden"
-                            animate="visible"
-                            variants={containerVariants}
-                            key="list"
-                        >
+                        <div className="space-y-2">
                             {filteredDepartments.map((dept, index) => (
-                                <motion.button
+                                <button
                                     key={dept.id}
-                                    custom={index}
-                                    variants={itemVariants}
-                                    whileHover={{ x: 4, boxShadow: "0 4px 12px -2px rgba(0, 0, 0, 0.1)" }}
-                                    whileTap={{ scale: 0.98 }}
                                     onClick={() => navigate(`/documents/knowledge/${dept.id}`)}
                                     className="group w-full bg-white border border-slate-200 rounded-lg p-3 md:p-4 hover:border-emerald-500 hover:shadow-md transition-all duration-200 text-left"
                                 >
                                     <div className="flex items-center gap-3 md:gap-4">
-                                        <motion.div 
-                                            className={cn("transition-colors shrink-0", dept.color)}
-                                            whileHover={{ scale: 1.15, rotate: 5 }}
-                                            transition={{ type: "spring", stiffness: 400 }}
-                                        >
+                                        <div className={cn("transition-colors shrink-0", dept.color)}>
                                             <IconFolderFilled className="h-8 w-8 md:h-10 md:w-10" />
-                                        </motion.div>
+                                        </div>
                                         <div className="flex-1 min-w-0">
                                             <p className="font-semibold text-slate-900 text-xs md:text-sm mb-0.5">
                                                 {dept.name}
@@ -383,17 +228,13 @@ export const KnowledgeView: React.FC = () => {
                                                 {dept.documentCount} {dept.documentCount === 1 ? 'document' : 'documents'}
                                             </p>
                                         </div>
-                                        <motion.div 
-                                            className="shrink-0"
-                                            initial={{ opacity: 0, scale: 0 }}
-                                            whileHover={{ opacity: 1, scale: 1 }}
-                                        >
-                                            <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-600"></div>
-                                        </motion.div>
+                                        <div className="shrink-0">
+                                            <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                        </div>
                                     </div>
-                                </motion.button>
+                                </button>
                             ))}
-                        </motion.div>
+                        </div>
                     )}
                 </div>
             </div>

@@ -16,7 +16,7 @@ import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { useToast } from "@/components/ui/toast/Toast";
-import { IconSmartHome } from "@tabler/icons-react";
+import { IconLayoutDashboard } from "@tabler/icons-react";
 
 // Mock data - In production, fetch from API based on ID
 const MOCK_CONTROLLED_COPY = {
@@ -244,7 +244,7 @@ export const DestroyControlledCopyView: React.FC = () => {
               Report {destructionType} Controlled Copy
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <IconSmartHome className="h-4 w-4" />
+              <IconLayoutDashboard className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">Controlled Copies</span>
               <span className="sm:hidden">...</span>

@@ -34,7 +34,7 @@ import { Select } from '@/components/ui/select/Select';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 import { TablePagination } from '@/components/ui/table/TablePagination';
 import { cn } from '@/components/ui/utils';
-import { IconSmartHome } from '@tabler/icons-react';
+import { IconLayoutDashboard } from '@tabler/icons-react';
 
 // --- Types ---
 type ReportType = 'Document' | 'Training' | 'Deviation' | 'CAPA' | 'Change Control' | 'Complaint' | 'Audit' | 'Compliance' | 'All';
@@ -509,7 +509,7 @@ export const ReportView: React.FC = () => {
       <div className="flex flex-col gap-2">
         <h1 className="text-xl md:text-2xl font-bold text-slate-900">Reports & Analytics</h1>
         <div className="flex items-center gap-1.5 text-slate-500 text-sm">
-          <IconSmartHome className="h-4 w-4" />
+          <IconLayoutDashboard className="h-4 w-4" />
           <span className="text-slate-400 mx-1">/</span>
           <span className="text-slate-700 font-medium">Reports</span>
         </div>

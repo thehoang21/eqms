@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 import { useToast } from '@/components/ui/toast/Toast';
-import { IconChevronLeft, IconSmartHome } from '@tabler/icons-react';
+import { IconChevronLeft, IconLayoutDashboard } from '@tabler/icons-react';
 
 // --- Types ---
 interface DistributionLocation {
@@ -227,7 +227,7 @@ export const RequestControlledCopyView: React.FC = () => {
                   Request Controlled Copy
                 </h1>
                 <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                  <IconSmartHome className="h-4 w-4" />
+                  <IconLayoutDashboard className="h-4 w-4" />
                   <span className="text-slate-400 mx-1">/</span>
                   <span className="hidden sm:inline">
                     Document Control

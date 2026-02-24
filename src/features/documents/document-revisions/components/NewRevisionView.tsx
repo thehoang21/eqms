@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
-import { IconSmartHome } from '@tabler/icons-react';
+import { IconLayoutDashboard } from '@tabler/icons-react';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 
 // --- Types ---
@@ -176,7 +176,7 @@ export const NewRevisionView: React.FC = () => {
                             New Revision - Impact Analysis
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 text-xs whitespace-nowrap overflow-x-auto">
-                            <IconSmartHome className="h-4 w-4" />
+                            <IconLayoutDashboard className="h-4 w-4" />
                             <span className="text-slate-400 mx-1">/</span>
                             <button
                                 className="hover:text-slate-700 transition-colors hidden sm:inline"

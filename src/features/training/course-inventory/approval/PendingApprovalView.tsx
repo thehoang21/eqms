@@ -6,8 +6,9 @@ import {
   FileText,
   ShieldCheck,
   Info,
+  Download,
 } from "lucide-react";
-import { IconInfoCircle, IconSmartHome } from "@tabler/icons-react";
+import { IconInfoCircle, IconLayoutDashboard } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
@@ -197,7 +198,7 @@ export const PendingApprovalView: React.FC = () => {
             </h1>
           </div>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconSmartHome className="h-4 w-4" />
+            <IconLayoutDashboard className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Training Management</span>
             <span className="sm:hidden">...</span>
@@ -207,6 +208,17 @@ export const PendingApprovalView: React.FC = () => {
             <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">Pending Approval</span>
           </div>
+        </div>
+        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+          <Button
+            onClick={() => console.log("Export pending approval")}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
         </div>
       </div>
 

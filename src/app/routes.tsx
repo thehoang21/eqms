@@ -59,7 +59,7 @@ const RoleDetailView = lazy(() => import('@/features/settings/role-permission').
 
 // Quality Management
 // Training Management Views
-const CourseListView = lazy(() => import('@/features/training/course-inventory/CourseListView').then(m => ({ default: m.CourseListView })));
+const CourseListView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.CourseListView })));
 const MaterialsView = lazy(() => import('@/features/training/course-inventory/materials/MaterialsView').then(m => ({ default: m.MaterialsView })));
 const TrainingMatrixView = lazy(() => import('@/features/training/compliance-tracking/TrainingMatrixView').then(m => ({ default: m.TrainingMatrixView })));
 const CourseStatusView = lazy(() => import('@/features/training/compliance-tracking/CourseStatusView').then(m => ({ default: m.CourseStatusView })));
@@ -69,10 +69,10 @@ const CreateCourseView = lazy(() => import('@/features/training').then(m => ({ d
 const PendingReviewView = lazy(() => import('@/features/training/course-inventory/approval/PendingReviewView').then(m => ({ default: m.PendingReviewView })));
 const PendingApprovalView = lazy(() => import('@/features/training/course-inventory/approval/PendingApprovalView').then(m => ({ default: m.PendingApprovalView })));
 const ApprovalDetailView = lazy(() => import('@/features/training/course-inventory/approval/ApprovalDetailView').then(m => ({ default: m.ApprovalDetailView })));
-const ResultEntryPage = lazy(() => import('@/features/training/course-inventory/ResultEntryPage').then(m => ({ default: m.ResultEntryPage })));
-const CourseDetailView = lazy(() => import('@/features/training/course-inventory/CourseDetailView').then(m => ({ default: m.CourseDetailView })));
-const EditCourseView = lazy(() => import('@/features/training/course-inventory/edit').then(m => ({ default: m.EditCourseView })));
-const CourseProgressView = lazy(() => import('@/features/training/course-inventory/CourseProgressView').then(m => ({ default: m.CourseProgressView })));
+const ResultEntryPage = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.ResultEntryPage })));
+const CourseDetailView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.CourseDetailView })));
+const EditCourseView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.EditCourseView })));
+const CourseProgressView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.CourseProgressView })));
 const UploadMaterialView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.UploadMaterialView })));
 const MaterialDetailView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.MaterialDetailView })));
 

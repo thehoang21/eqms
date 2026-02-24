@@ -10,7 +10,7 @@ import { cn } from "@/components/ui/utils";
 import { NewUser } from "../types";
 import { BUSINESS_UNIT_DEPARTMENTS, USER_MANAGEMENT_ROUTES } from "../constants";
 import { removeAccents, generateUsername, generatePassword } from "../utils";
-import { IconSmartHome } from "@tabler/icons-react";
+import { IconLayoutDashboard } from "@tabler/icons-react";
 
 export const AddUserView: React.FC = () => {
   const navigate = useNavigate();
@@ -122,7 +122,7 @@ export const AddUserView: React.FC = () => {
               Add New User
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <IconSmartHome className="h-4 w-4" />
+              <IconLayoutDashboard className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <span className="hidden md:inline">Settings</span>
               <span className="md:hidden">...</span>

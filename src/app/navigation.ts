@@ -32,7 +32,7 @@ import {
   IconPresentationAnalytics,
   IconReplace,
   IconSettings2,
-  IconSmartHome,
+  IconLayoutDashboard,
 } from "@tabler/icons-react";
 import { NavItem } from "@/types";
 
@@ -43,7 +43,7 @@ const CORE_NAV: NavItem[] = [
   {
     id: "dashboard",
     label: "Dashboard",
-    icon: IconSmartHome,
+    icon: IconLayoutDashboard,
     path: "/dashboard",
   },
   {

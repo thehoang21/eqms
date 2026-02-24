@@ -18,7 +18,7 @@ import { Select } from '@/components/ui/select/Select';
 import { cn } from '@/components/ui/utils';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
-import { IconSmartHome } from "@tabler/icons-react";
+import { IconLayoutDashboard } from "@tabler/icons-react";
 
 // --- Types ---
 interface SourceDocument {
@@ -232,7 +232,7 @@ export const StandaloneRevisionView: React.FC = () => {
                             }
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                            <IconSmartHome className="h-4 w-4" />
+                            <IconLayoutDashboard className="h-4 w-4" />
                             <span className="text-slate-400 mx-1">/</span>
                             <span className="hidden sm:inline">
                                 Document Control

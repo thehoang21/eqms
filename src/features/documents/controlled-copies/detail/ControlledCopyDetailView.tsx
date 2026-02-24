@@ -26,7 +26,7 @@ import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { useToast } from "@/components/ui/toast/Toast";
 import { ControlledCopy, ControlledCopyStatus, CurrentStage } from "../types";
 import { DestructionTypeSelectionModal } from "../components/DestructionTypeSelectionModal";
-import { IconFileShredder, IconShare3, IconSmartHome } from "@tabler/icons-react";
+import { IconFileShredder, IconShare3, IconLayoutDashboard } from "@tabler/icons-react";
 import {
   DocumentInformationTab,
   DistributionInformationTab,
@@ -332,7 +332,7 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
               Controlled Copy Details
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <IconSmartHome className="h-4 w-4" />
+              <IconLayoutDashboard className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
               <span className="hidden sm:inline">Document Control</span>
               <span className="sm:hidden">...</span>

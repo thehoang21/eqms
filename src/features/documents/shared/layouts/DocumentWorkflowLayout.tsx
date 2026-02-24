@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Button } from "@/components/ui/button/Button";
-import { IconChevronLeft, IconSmartHome } from "@tabler/icons-react";
+import { IconChevronLeft, IconLayoutDashboard } from "@tabler/icons-react";
 
 import type { DocumentStatus } from "@/features/documents/types";
 
@@ -332,7 +332,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                             {breadcrumbs.map((item, index) => (
                                 <React.Fragment key={index}>
                                     {index === 0 ? (
-                                        <IconSmartHome className="h-4 w-4" />
+                                        <IconLayoutDashboard className="h-4 w-4" />
                                     ) : item.isActive ? (
                                         <span className="text-slate-700 font-medium">{item.label}</span>
                                     ) : (

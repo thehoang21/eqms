@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, createRef, RefObject } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { Plus, Search, MoreVertical, Users, Lock } from "lucide-react";
+import { Plus, Search, MoreVertical, Users, Lock, Download } from "lucide-react";
 import { IconEye, IconEdit, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
@@ -9,7 +9,7 @@ import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
-import { IconSmartHome } from "@tabler/icons-react";
+import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Role } from "../types";
 import { MOCK_ROLES, PERMISSION_GROUPS } from "../constants";
 
@@ -263,7 +263,7 @@ export const RoleListView: React.FC = () => {
             Role & Permissions
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconSmartHome className="h-4 w-4" />
+            <IconLayoutDashboard className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Settings</span>
             <span className="sm:hidden">...</span>
@@ -272,6 +272,15 @@ export const RoleListView: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+          <Button
+            onClick={() => console.log("Export roles")}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
           <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleCreateNew}>
             <Plus className="h-4 w-4" />
             New Role

@@ -10,7 +10,7 @@ import {
   Clock,
   MapPin,
 } from "lucide-react";
-import { IconSmartHome } from "@tabler/icons-react";
+import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import {
@@ -19,10 +19,10 @@ import {
   TrainingMethod,
   TrainingStatus,
   Recurrence,
-} from "../types";
-import { BasicInfoTab } from "./shared/BasicInfoTab";
-import { DocumentTab } from "./shared/DocumentTab";
-import { ConfigTab } from "./shared/ConfigTab";
+} from "../../types";
+import { BasicInfoTab } from "../shared/BasicInfoTab";
+import { DocumentTab } from "../shared/DocumentTab";
+import { ConfigTab } from "../shared/ConfigTab";
 
 // Tab types
 type TabType = "basic-info" | "document-training" | "training-config";
@@ -324,7 +324,7 @@ export const CourseDetailView: React.FC = () => {
             Course Detail
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconSmartHome className="h-4 w-4" />
+            <IconLayoutDashboard className="h-4 w-4" />
             <span className="text-slate-400 mx-1">/</span>
             <span className="hidden sm:inline">Training Management</span>
             <span className="sm:hidden">...</span>
@@ -343,7 +343,7 @@ export const CourseDetailView: React.FC = () => {
             size="sm"
             onClick={() => navigate("/training-management/courses-list")}
           >
-            Back to List
+            Back
           </Button>
           <Button
             variant="outline"
@@ -351,7 +351,6 @@ export const CourseDetailView: React.FC = () => {
             onClick={() => navigate(`/training-management/courses/${courseId}/edit`)}
             className="gap-1.5"
           >
-            <Edit className="h-4 w-4" />
             Edit Course
           </Button>
           <Button
@@ -360,7 +359,6 @@ export const CourseDetailView: React.FC = () => {
             onClick={() => navigate(`/training-management/courses/${courseId}/progress`)}
             className="gap-1.5"
           >
-            <BarChart3 className="h-4 w-4" />
             View Progress
           </Button>
           {course.trainingMethod === "Quiz (Paper-based/Manual)" && (
@@ -370,7 +368,6 @@ export const CourseDetailView: React.FC = () => {
               onClick={() => navigate(`/training-management/courses/${courseId}/result-entry`)}
               className="gap-1.5"
             >
-              <ClipboardList className="h-4 w-4" />
               Result Entry
             </Button>
           )}
