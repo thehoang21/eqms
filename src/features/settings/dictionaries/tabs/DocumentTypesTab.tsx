@@ -188,7 +188,7 @@ export const DocumentTypesTab: React.FC = () => {
                 placeholder="Search document types..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 sm:h-10 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 sm:h-9 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -537,7 +537,7 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="w-full h-10 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Enter name"
                 required
                 disabled={isSaving}
@@ -559,7 +559,7 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({
                   })
                 }
                 maxLength={4}
-                className="w-full h-10 px-3 border border-slate-200 rounded-lg text-sm uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm uppercase focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="e.g., SOP, POL"
                 required
                 disabled={isSaving}
@@ -585,7 +585,7 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({
                 }
                 min={0}
                 max={9999}
-                className="w-full h-10 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 px-3 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 required
                 disabled={isSaving}
               />

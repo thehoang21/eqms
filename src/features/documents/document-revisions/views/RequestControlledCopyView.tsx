@@ -458,8 +458,10 @@ export const RequestControlledCopyView: React.FC = () => {
                         Copies <span className="text-red-600">*</span>
                       </label>
                       <div className="flex items-center gap-2 lg:gap-3">
-                        <button
+                        <Button
                           type="button"
+                          variant="outline"
+                          size="icon-sm"
                           onClick={() => {
                             if (quantity > 1) {
                               setQuantity(quantity - 1);
@@ -468,11 +470,11 @@ export const RequestControlledCopyView: React.FC = () => {
                               }
                             }
                           }}
-                          className="h-9 w-9 lg:h-11 lg:w-11 rounded-lg border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={quantity <= 1}
+                          className="lg:h-11 lg:w-11"
                         >
                           <span className="text-base lg:text-lg font-medium text-slate-700">−</span>
-                        </button>
+                        </Button>
                         
                         <input
                           type="number"
@@ -487,15 +489,17 @@ export const RequestControlledCopyView: React.FC = () => {
                           }}
                           min={1}
                           max={50}
-                          className={`h-9 lg:h-10 w-20 lg:w-24 px-2 lg:px-3 py-2 border rounded-lg text-xs lg:text-sm text-center font-medium focus:outline-none focus:ring-1 transition-colors ${
+                          className={`h-9 lg:h-9 w-20 lg:w-24 px-2 lg:px-3 py-2 border rounded-lg text-xs lg:text-sm text-center font-medium focus:outline-none focus:ring-1 transition-colors ${
                             errors.quantity
                               ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
                               : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
                           }`}
                         />
                         
-                        <button
+                        <Button
                           type="button"
+                          variant="outline"
+                          size="icon-sm"
                           onClick={() => {
                             if (quantity < 50) {
                               setQuantity(quantity + 1);
@@ -504,11 +508,11 @@ export const RequestControlledCopyView: React.FC = () => {
                               }
                             }
                           }}
-                          className="h-9 w-9 lg:h-10 lg:w-11 rounded-lg border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={quantity >= 50}
+                          className="lg:h-11 lg:w-11"
                         >
                           <span className="text-base lg:text-lg font-medium text-slate-700">+</span>
-                        </button>
+                        </Button>
                       </div>
                       {errors.quantity && (
                         <p className="text-xs lg:text-sm text-red-600 mt-1.5 flex items-center gap-1">

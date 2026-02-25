@@ -478,7 +478,7 @@ export const ResultEntryPage: React.FC = () => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+                className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -686,7 +686,7 @@ export const ResultEntryPage: React.FC = () => {
                           onChange={(e) => handleScoreChange(row.userId, e.target.value)}
                           placeholder={course.passingGradeType === "score_10" ? "0-10" : "0-100"}
                           className={cn(
-                            "w-full h-10 px-3 border rounded-lg text-sm text-center focus:outline-none focus:ring-1 transition-colors",
+                            "w-full h-9 px-3 border rounded-lg text-sm text-center focus:outline-none focus:ring-1 transition-colors",
                             hasError
                               ? "border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50"
                               : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
@@ -753,7 +753,7 @@ export const ResultEntryPage: React.FC = () => {
                         <button
                           onClick={() => fileInputRefs.current[row.userId]?.click()}
                           className={cn(
-                            "mx-auto flex items-center gap-1.5 h-10 px-3 rounded-lg border-2 border-dashed transition-colors text-xs font-medium",
+                            "mx-auto flex items-center gap-1.5 h-9 px-3 rounded-lg border-2 border-dashed transition-colors text-xs font-medium",
                             hasError
                               ? "border-red-300 text-red-500 hover:bg-red-50 bg-red-50/50"
                               : "border-slate-200 text-slate-500 hover:bg-slate-50 hover:border-slate-300"

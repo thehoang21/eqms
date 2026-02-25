@@ -281,7 +281,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
             {/* Section Header */}
             <div>
                 <h3 className="text-base font-semibold text-slate-900">Upload Training Materials</h3>
-                <p className="text-sm text-slate-500 mt-1">Upload SOP documents (PDF), presentation slides, or training videos for this course, or select from the shared materials library.</p>
+                <p className="text-xs text-slate-500 mt-1">Upload SOP documents (PDF), presentation slides, or training videos for this course, or select from the shared materials library.</p>
             </div>
 
             {/* Action Buttons Row */}

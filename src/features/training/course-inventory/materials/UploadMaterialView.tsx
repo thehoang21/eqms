@@ -614,7 +614,7 @@ export const UploadMaterialView: React.FC = () => {
                         onChange={(e) => updateField("externalUrl", e.target.value)}
                         onBlur={handleAddLink}
                         placeholder="https://example.com/training-document.pdf"
-                        className="flex-1 h-10 px-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+                        className="flex-1 h-9 px-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
                       />
                     </div>
                     <p className="text-xs text-slate-400 mt-2">Supports any URL: YouTube, Google Drive, SharePoint, web pages, etc.</p>
@@ -677,7 +677,7 @@ export const UploadMaterialView: React.FC = () => {
                   value={formData.materialName}
                   onChange={(e) => updateField("materialName", e.target.value)}
                   placeholder="Enter material name..."
-                  className="w-full h-10 px-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+                  className="w-full h-9 px-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
                 />
               </div>
 
@@ -692,7 +692,7 @@ export const UploadMaterialView: React.FC = () => {
                     value={formData.materialCode}
                     onChange={(e) => updateField("materialCode", e.target.value)}
                     placeholder="Auto-generated (e.g., TM-PDF-001)"
-                    className="w-full h-10 px-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400 bg-slate-50"
+                    className="w-full h-9 px-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400 bg-slate-50"
                   />
                   <p className="text-xs text-slate-400 mt-1">Auto-generated based on file type. You can modify it.</p>
                 </div>
@@ -704,7 +704,7 @@ export const UploadMaterialView: React.FC = () => {
                     type="text"
                     value={formData.version}
                     disabled
-                    className="w-full h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 disabled:cursor-not-allowed"
+                    className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 disabled:cursor-not-allowed"
                   />
                   <p className="text-xs text-slate-400 mt-1">Default 1.0 for initial upload.</p>
                 </div>
@@ -719,7 +719,7 @@ export const UploadMaterialView: React.FC = () => {
                   type="text"
                   value={formData.author}
                   disabled
-                  className="w-full h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 disabled:cursor-not-allowed"
+                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 disabled:cursor-not-allowed"
                 />
                 <p className="text-xs text-slate-400 mt-1">Automatically set to the current logged-in user.</p>
               </div>

@@ -375,7 +375,7 @@ export const CourseListView: React.FC = () => {
         {/* Row 1: Search + Type + Instructor */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-6">
+          <div className="md:col-span-2 xl:col-span-6">
             <label className="text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
@@ -388,7 +388,7 @@ export const CourseListView: React.FC = () => {
                 onChange={(e) =>
                   setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))
                 }
-                className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+                className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
           </div>

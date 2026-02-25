@@ -259,8 +259,8 @@ LICENSE
       {/* Changelog Section */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-200">
-          <h2 className="text-lg font-semibold text-slate-900">System Changelog</h2>
-          <p className="text-sm text-slate-500 mt-1">
+          <h2 className="text-base font-semibold text-slate-900">System Changelog</h2>
+          <p className="text-xs text-slate-500 mt-1">
             Version history and release notes for system updates
           </p>
         </div>
@@ -290,26 +290,6 @@ LICENSE
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 text-xs">
-                      {hasFeatures && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          <CheckCircle2 className="h-3 w-3" />
-                          {entry.changes.features!.length} new
-                        </span>
-                      )}
-                      {hasImprovements && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                          <Wrench className="h-3 w-3" />
-                          {entry.changes.improvements!.length} improved
-                        </span>
-                      )}
-                      {hasBugFixes && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-                          <Bug className="h-3 w-3" />
-                          {entry.changes.bugFixes!.length} fixed
-                        </span>
-                      )}
-                    </div>
                     {isExpanded ? (
                       <ChevronUp className="h-5 w-5 text-slate-400" />
                     ) : (

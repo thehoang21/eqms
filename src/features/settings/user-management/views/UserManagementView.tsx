@@ -394,7 +394,7 @@ export const UserManagementView: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by name, username, email..."
-                className="w-full h-10 sm:h-10 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 sm:h-9 pl-10 pr-4 text-xs sm:text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -433,7 +433,7 @@ export const UserManagementView: React.FC = () => {
           </div>
 
           {/* Business Unit Filter */}
-          <div className="md:col-span-2 xl:col-span-6">
+          <div className="xl:col-span-6">
             <Select
               label="Business Unit"
               value={businessUnitFilter}
@@ -449,7 +449,7 @@ export const UserManagementView: React.FC = () => {
           </div>
 
           {/* Department Filter */}
-          <div className="md:col-span-2 xl:col-span-6">
+          <div className="xl:col-span-6">
             <Select
               label="Department"
               value={departmentFilter}

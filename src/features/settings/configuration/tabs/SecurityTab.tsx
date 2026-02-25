@@ -82,7 +82,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
               type="number"
               value={config.passwordMinLength}
               onChange={(e) => handleChange('passwordMinLength', parseInt(e.target.value))}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               min={8}
             />
             <p className="text-xs text-slate-500 mt-1">
@@ -97,7 +97,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
               type="number"
               value={config.sessionTimeoutMinutes}
               onChange={(e) => handleChange('sessionTimeoutMinutes', parseInt(e.target.value))}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
             />
             <p className="text-xs text-slate-500 mt-1">
               Idle time before automatic logout
@@ -163,7 +163,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                 type="number"
                 value={config.passwordExpiryDays}
                 onChange={(e) => handleChange('passwordExpiryDays', parseInt(e.target.value))}
-                className="w-full md:w-64 h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full md:w-64 h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 min={30}
                 max={365}
               />
@@ -192,7 +192,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                   type="number"
                   value={config.passwordHistoryCount}
                   onChange={(e) => handleChange('passwordHistoryCount', parseInt(e.target.value))}
-                  className="w-full md:w-64 h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full md:w-64 h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                   min={3}
                   max={24}
                 />
@@ -244,7 +244,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                   type="number"
                   value={config.autoLogoutMinutes}
                   onChange={(e) => handleChange('autoLogoutMinutes', parseInt(e.target.value))}
-                  className="w-full md:w-64 h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full md:w-64 h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                   min={1}
                   max={120}
                 />
@@ -275,7 +275,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                   type="number"
                   value={config.maxLoginAttempts}
                   onChange={(e) => handleChange('maxLoginAttempts', parseInt(e.target.value))}
-                  className="w-full md:w-64 h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full md:w-64 h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                   min={3}
                   max={10}
                 />
@@ -317,7 +317,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                     onChange={(e) => setNewIp(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addWhitelistedIp()}
                     placeholder="192.168.1.1 or 10.0.0.0/24"
-                    className="flex-1 h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                    className="flex-1 h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
                   />
                   <Button variant="default" size="sm" onClick={addWhitelistedIp} className="h-10">
                     <Plus className="h-4 w-4 mr-1.5" />
@@ -368,7 +368,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                       onChange={(e) => setNewCountry(e.target.value.toUpperCase())}
                       onKeyPress={(e) => e.key === 'Enter' && addBlockedCountry()}
                       placeholder="e.g., CN, RU, KP"
-                      className="flex-1 h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono uppercase"
+                      className="flex-1 h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono uppercase"
                       maxLength={2}
                     />
                     <Button variant="default" size="sm" onClick={addBlockedCountry} className="h-10">
@@ -448,7 +448,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                     type="number"
                     value={config.auditSettings.retainLogsForDays}
                     onChange={(e) => handleAuditSettingsChange('retainLogsForDays', parseInt(e.target.value))}
-                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     min={30}
                     max={3650}
                   />

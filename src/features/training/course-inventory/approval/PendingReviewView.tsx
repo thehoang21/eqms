@@ -305,7 +305,7 @@ export const PendingReviewView: React.FC = () => {
         {/* Row 1: Search + Method + Instructor */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 lg:gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-6">
+          <div className="md:col-span-2 xl:col-span-6">
             <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -317,7 +317,7 @@ export const PendingReviewView: React.FC = () => {
                   setCurrentPage(1);
                 }}
                 placeholder="Search by title, ID..."
-                className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>

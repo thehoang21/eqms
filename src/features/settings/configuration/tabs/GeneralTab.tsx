@@ -94,7 +94,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                 type="text"
                 value={config.systemName}
                 onChange={(e) => handleChange('systemName', e.target.value)}
-                className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="EQMS Enterprise"
               />
               <p className="text-xs text-slate-500 mt-1">
@@ -109,7 +109,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                 type="text"
                 value={config.systemDisplayName}
                 onChange={(e) => handleChange('systemDisplayName', e.target.value)}
-                className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="EQMS - Quality Management System"
               />
               <p className="text-xs text-slate-500 mt-1">
@@ -134,7 +134,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="email"
               value={config.adminEmail}
               onChange={(e) => handleChange('adminEmail', e.target.value)}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="admin@example.com"
             />
             <p className="text-xs text-slate-500 mt-1">
@@ -158,7 +158,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="text"
               value={config.companyInfo.companyName}
               onChange={(e) => handleCompanyInfoChange('companyName', e.target.value)}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="ACME Corporation"
             />
           </div>
@@ -170,7 +170,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="text"
               value={config.companyInfo.taxId}
               onChange={(e) => handleCompanyInfoChange('taxId', e.target.value)}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="TAX-123456789"
             />
           </div>
@@ -182,7 +182,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="text"
               value={config.companyInfo.companyAddress}
               onChange={(e) => handleCompanyInfoChange('companyAddress', e.target.value)}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="123 Business Street, Tech City, TC 12345"
             />
           </div>
@@ -194,7 +194,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="tel"
               value={config.companyInfo.companyPhone}
               onChange={(e) => handleCompanyInfoChange('companyPhone', e.target.value)}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="+1-555-0123"
             />
           </div>
@@ -206,7 +206,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="url"
               value={config.companyInfo.companyWebsite}
               onChange={(e) => handleCompanyInfoChange('companyWebsite', e.target.value)}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="https://www.company.com"
             />
           </div>
@@ -218,7 +218,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="text"
               value={config.companyInfo.industry}
               onChange={(e) => handleCompanyInfoChange('industry', e.target.value)}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="Pharmaceutical Manufacturing"
             />
           </div>
@@ -230,7 +230,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               type="text"
               value={config.companyInfo.regulatoryBody}
               onChange={(e) => handleCompanyInfoChange('regulatoryBody', e.target.value)}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="FDA, ISO 9001:2015"
             />
             <p className="text-xs text-slate-500 mt-1">
@@ -277,7 +277,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                     type="time"
                     value={config.backupSettings.backupTime}
                     onChange={(e) => handleBackupSettingsChange('backupTime', e.target.value)}
-                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                   <p className="text-xs text-slate-500 mt-1">
                     System local time (24-hour format)
@@ -291,7 +291,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                     type="number"
                     value={config.backupSettings.retentionDays}
                     onChange={(e) => handleBackupSettingsChange('retentionDays', parseInt(e.target.value))}
-                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     min={7}
                     max={365}
                   />

@@ -637,10 +637,10 @@ export const ReportView: React.FC = () => {
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">
+                <h2 className="text-base font-semibold text-slate-900">
                   {activeTab === 'compliance' ? 'Regulatory Compliance Reports' : 'Standard Report Templates'}
                 </h2>
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-xs text-slate-500 mt-1">
                   {activeTab === 'compliance'
                     ? 'Pre-configured reports for EU-GMP, FDA, and other regulatory requirements'
                     : 'Select a report template to generate insights from your QMS data'}
@@ -764,7 +764,7 @@ export const ReportView: React.FC = () => {
                     value={historySearch}
                     onChange={(e) => setHistorySearch(e.target.value)}
                     placeholder="Search by report name..."
-                    className="w-full h-10 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                    className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
                   />
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 </div>
@@ -945,8 +945,8 @@ export const ReportView: React.FC = () => {
         <>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">Automated Report Schedules</h2>
-              <p className="text-sm text-slate-500 mt-1">
+              <h2 className="text-base font-semibold text-slate-900">Automated Report Schedules</h2>
+              <p className="text-xs text-slate-500 mt-1">
                 Configure automatic report generation and distribution
               </p>
             </div>

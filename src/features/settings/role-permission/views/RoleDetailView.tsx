@@ -343,7 +343,7 @@ export const RoleDetailView: React.FC = () => {
               placeholder="Enter role name"
               disabled={isViewMode}
               className={cn(
-                "block w-full h-10 px-3 border rounded-lg bg-white focus:outline-none focus:ring-1 text-sm transition-all placeholder:text-slate-400",
+                "block w-full h-9 px-3 border rounded-lg bg-white focus:outline-none focus:ring-1 text-sm transition-all placeholder:text-slate-400",
                 nameError
                   ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                   : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500",
@@ -364,7 +364,7 @@ export const RoleDetailView: React.FC = () => {
               placeholder="Enter role description"
               disabled={isViewMode}
               className={cn(
-                "block w-full h-10 px-3 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400",
+                "block w-full h-9 px-3 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400",
                 isViewMode && "bg-slate-100 text-slate-600 cursor-not-allowed"
               )}
             />
@@ -405,14 +405,14 @@ export const RoleDetailView: React.FC = () => {
                 value={permissionSearch}
                 onChange={(e) => setPermissionSearch(e.target.value)}
                 placeholder="Search permissions..."
-                className="w-full h-10 pl-9 pr-4 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 pl-9 pr-4 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={areAllExpanded ? collapseAll : expandAll}
-              className="h-10 px-3 text-xs md:text-sm bg-white min-w-[120px]"
+              className="h-9 px-3 text-xs md:text-sm bg-white min-w-[120px]"
             >
               {areAllExpanded ? (
                 <>

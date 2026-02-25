@@ -93,7 +93,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
                 type="text"
                 value={data.baseUrl}
                 disabled
-                className="flex-1 h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+                className="flex-1 h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
               />
               <Button
                 onClick={handleCopyUrl}
@@ -124,14 +124,14 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
                 type="text"
                 value={data.version}
                 disabled
-                className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono font-semibold"
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono font-semibold"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
                 Average Response Time
               </label>
-              <div className="flex items-center h-10 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
+              <div className="flex items-center h-9 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
                 <span className="text-sm text-slate-700 font-semibold">{data.responseTime}</span>
               </div>
             </div>
@@ -172,7 +172,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
             <h4 className="text-sm font-medium text-blue-900 mb-1">API Documentation</h4>
             <p className="text-sm text-blue-700">
               For detailed API endpoint documentation, authentication methods, and integration guides,
-              please refer to the developer documentation portal or contact the IT department.
+              please refer to the developer documentation portal or contact the NTP Dev Team.
             </p>
           </div>
         </div>

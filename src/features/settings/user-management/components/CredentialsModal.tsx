@@ -54,7 +54,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={employeeId}
                   readOnly
-                  className="flex-1 h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <CopyButton text={employeeId} label="Employee ID" showToast={showToast} />
               </div>
@@ -70,7 +70,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={username}
                   readOnly
-                  className="flex-1 h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <CopyButton text={username} label="Username" showToast={showToast} />
               </div>
@@ -86,7 +86,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   type="text"
                   value={password}
                   readOnly
-                  className="flex-1 h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
+                  className="flex-1 h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-mono font-medium text-slate-900"
                 />
                 <Button
                   onClick={onRegeneratePassword}
@@ -139,7 +139,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
               });
             }
           }}
-          className="w-full flex items-center justify-center gap-2 h-10 px-4 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
+          className="w-full flex items-center justify-center gap-2 h-9 px-4 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium"
         >
           <Copy className="h-4 w-4" />
           Copy All Credentials

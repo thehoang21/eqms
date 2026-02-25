@@ -150,7 +150,7 @@ export const EditUserView: React.FC = () => {
                   type="text"
                   value={editUser.employeeId}
                   readOnly
-                  className="w-full h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-600 cursor-not-allowed"
+                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-600 cursor-not-allowed"
                 />
               </div>
 
@@ -163,7 +163,7 @@ export const EditUserView: React.FC = () => {
                   type="text"
                   value={editUser.username}
                   readOnly
-                  className="w-full h-10 px-4 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-600 cursor-not-allowed"
+                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-600 cursor-not-allowed"
                 />
               </div>
             </div>
@@ -179,7 +179,7 @@ export const EditUserView: React.FC = () => {
                 onChange={(e) => handleInputChange("fullName", e.target.value)}
                 placeholder="Enter full name"
                 className={cn(
-                  "w-full h-10 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+                  "w-full h-9 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
                   formErrors.fullName ? "border-red-300 bg-red-50" : "border-slate-200"
                 )}
               />
@@ -200,7 +200,7 @@ export const EditUserView: React.FC = () => {
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="email@example.com"
                   className={cn(
-                    "w-full h-10 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+                    "w-full h-9 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
                     formErrors.email ? "border-red-300 bg-red-50" : "border-slate-200"
                   )}
                 />
@@ -220,7 +220,7 @@ export const EditUserView: React.FC = () => {
                   onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="+84..."
                   className={cn(
-                    "w-full h-10 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
+                    "w-full h-9 px-4 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
                     formErrors.phone ? "border-red-300 bg-red-50" : "border-slate-200"
                   )}
                 />

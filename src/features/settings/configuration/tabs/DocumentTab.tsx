@@ -50,7 +50,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
               type="number"
               value={config.defaultRetentionPeriodDays}
               onChange={(e) => handleChange('defaultRetentionPeriodDays', parseInt(e.target.value))}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               min={0}
             />
             <p className="text-xs text-slate-500 mt-1">
@@ -65,7 +65,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
               type="number"
               value={config.maxFileSizeMB}
               onChange={(e) => handleChange('maxFileSizeMB', parseInt(e.target.value))}
-              className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
               min={1}
             />
             <p className="text-xs text-slate-500 mt-1">
@@ -130,7 +130,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
                     type="number"
                     value={config.versionControl.maxVersionsToKeep}
                     onChange={(e) => handleVersionControlChange('maxVersionsToKeep', parseInt(e.target.value))}
-                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     min={1}
                     max={50}
                   />
@@ -197,7 +197,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
                     type="number"
                     value={config.eSignature.signatureValidityDays}
                     onChange={(e) => handleESignatureChange('signatureValidityDays', parseInt(e.target.value))}
-                    className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                     min={30}
                     max={3650}
                   />

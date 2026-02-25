@@ -116,7 +116,7 @@ export const KnowledgeView: React.FC = () => {
                         placeholder="Search departments..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 h-10 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                        className="w-full pl-10 pr-4 h-9 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
                     />
                 </div>
             </div>
