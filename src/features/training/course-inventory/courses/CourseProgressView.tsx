@@ -237,9 +237,9 @@ export const CourseProgressView: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/training-management/courses/${courseId}`)}
+            onClick={() => navigate(`/training-management/courses-list`)}
           >
-            Back to Course
+            Back
           </Button>
           <Button variant="outline" size="sm" className="gap-1.5">
             <Download className="h-4 w-4" />
@@ -352,7 +352,7 @@ export const CourseProgressView: React.FC = () => {
       <div className="bg-white p-3 sm:p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 lg:gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-4">
+          <div className="xl:col-span-3">
             <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
@@ -372,7 +372,7 @@ export const CourseProgressView: React.FC = () => {
           </div>
 
           {/* Enrollment Status */}
-          <div className="xl:col-span-2">
+          <div className="xl:col-span-3">
             <Select
               label="Enrollment"
               value={statusFilter}
@@ -392,7 +392,7 @@ export const CourseProgressView: React.FC = () => {
           </div>
 
           {/* Result Status */}
-          <div className="xl:col-span-2">
+          <div className="xl:col-span-3">
             <Select
               label="Result"
               value={resultFilter}
@@ -411,7 +411,7 @@ export const CourseProgressView: React.FC = () => {
           </div>
 
           {/* Department */}
-          <div className="xl:col-span-4">
+          <div className="xl:col-span-3">
             <Select
               label="Department"
               value={departmentFilter}

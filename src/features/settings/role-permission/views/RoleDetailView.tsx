@@ -328,52 +328,70 @@ export const RoleDetailView: React.FC = () => {
         </div>
       </div>
 
-      {/* Role Info Section */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <h3 className="text-base font-semibold text-slate-900 mb-4">Role Information</h3>
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-          <div>
-            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
-              Role Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={roleName}
-              onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="Enter role name"
-              disabled={isViewMode}
-              className={cn(
-                "block w-full h-9 px-3 border rounded-lg bg-white focus:outline-none focus:ring-1 text-sm transition-all placeholder:text-slate-400",
-                nameError
-                  ? "border-red-300 focus:ring-red-500 focus:border-red-500"
-                  : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500",
-                isViewMode && "bg-slate-100 text-slate-600 cursor-not-allowed"
-              )}
-            />
-            {nameError && <p className="text-xs text-red-600 mt-1">{nameError}</p>}
-          </div>
-          <div>
-            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Description</label>
-            <input
-              type="text"
-              value={roleDescription}
-              onChange={(e) => {
-                setRoleDescription(e.target.value);
-                setHasUnsavedChanges(true);
-              }}
-              placeholder="Enter role description"
-              disabled={isViewMode}
-              className={cn(
-                "block w-full h-9 px-3 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400",
-                isViewMode && "bg-slate-100 text-slate-600 cursor-not-allowed"
-              )}
-            />
+      {/* Two-column layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+
+        {/* Left: Role Information */}
+        <div className="lg:col-span-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h3 className="text-base font-semibold text-slate-900 mb-4">Role Information</h3>
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
+                Role Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={roleName}
+                onChange={(e) => handleNameChange(e.target.value)}
+                placeholder="Enter role name"
+                disabled={isViewMode}
+                className={cn(
+                  "block w-full h-9 px-3 border rounded-lg bg-white focus:outline-none focus:ring-1 text-sm transition-all placeholder:text-slate-400",
+                  nameError
+                    ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                    : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500",
+                  isViewMode && "bg-slate-100 text-slate-600 cursor-not-allowed"
+                )}
+              />
+              {nameError && <p className="text-xs text-red-600 mt-1">{nameError}</p>}
+            </div>
+            <div>
+              <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Description</label>
+              <textarea
+                rows={4}
+                value={roleDescription}
+                onChange={(e) => {
+                  setRoleDescription(e.target.value);
+                  setHasUnsavedChanges(true);
+                }}
+                placeholder="Enter role description"
+                disabled={isViewMode}
+                className={cn(
+                  "block w-full px-3 py-2 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400 resize-none",
+                  isViewMode && "bg-slate-100 text-slate-600 cursor-not-allowed"
+                )}
+              />
+            </div>
+            {/* Summary */}
+            <div className="pt-3 border-t border-slate-100">
+              <p className="text-xs font-medium text-slate-500 mb-2">Permissions Summary</p>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full transition-all duration-500"
+                    style={{ width: `${permissionCount.total > 0 ? Math.round((permissionCount.selected / permissionCount.total) * 100) : 0}%` }}
+                  />
+                </div>
+                <span className="text-xs font-semibold text-slate-700 shrink-0">
+                  {permissionCount.selected} / {permissionCount.total}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Permission Section */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col min-h-[520px] lg:h-[calc(100vh-320px)]">
+        {/* Right: Permission Section */}
+        <div className="lg:col-span-8 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col min-h-[520px] lg:h-[calc(100vh-280px)]">
         {/* Header */}
         <div className="px-6 py-4 border-b border-slate-200 bg-white shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex-1">
@@ -396,7 +414,7 @@ export const RoleDetailView: React.FC = () => {
         </div>
 
         {/* Toolbar */}
-        <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex flex-col xl:flex-row xl:items-center gap-3 lg:gap-4 shrink-0">
+        <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex flex-col gap-3 shrink-0">
           <div className="flex flex-1 items-center gap-3">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -453,7 +471,7 @@ export const RoleDetailView: React.FC = () => {
                 variant="outline"
                 size="xs"
                 onClick={clearPermissionFilters}
-                className="h-7 px-2 text-xs bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
+                className="h-7 px-2 text-xs bg-red-500 text-white border-red-500 hover:bg-red-600 hover:border-red-600"
               >
                 Clear
               </Button>
@@ -557,7 +575,7 @@ export const RoleDetailView: React.FC = () => {
                         return (
                           <div
                             key={permission.id}
-                            className="flex items-start sm:items-center justify-between px-4 md:px-6 py-1.5 pl-[1rem] md:pl-[1.5rem] hover:bg-slate-50 transition-colors border-t border-slate-100 first:border-0 group/item gap-2"
+                            className="flex items-start sm:items-center justify-between px-4 md:px-6 py-3 pl-[1rem] md:pl-[1.5rem] hover:bg-slate-50 transition-colors border-t border-slate-100 first:border-0 group/item gap-2"
                           >
                             <div className="flex items-start sm:items-center gap-2 md:gap-3 flex-1 pr-3 md:pr-6 min-w-0">
                               <span className="text-xs text-slate-400 font-medium min-w-[1.5rem] shrink-0 pt-0.5 sm:pt-0">
@@ -608,6 +626,9 @@ export const RoleDetailView: React.FC = () => {
             })}
           </div>
         </div>
+      </div>
+
+      {/* end two-column grid */}
       </div>
 
       {/* Discard Changes Confirm */}

@@ -74,14 +74,31 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
   {
     id: "training",
     name: "Training Management",
-    description: "Training requirements, records and quizzes",
+    description: "Training courses, materials, result entry, compliance tracking and records",
     order: 6,
     permissions: [
-      { id: "train_view", module: "training", action: "view", label: "View My Training", description: "View personal training status", requiresAudit: false },
-      { id: "train_manage_view", module: "training", action: "view", label: "View All Training", description: "View organization-wide training matrix", requiresAudit: false },
-      { id: "train_create", module: "training", action: "create", label: "Create Courses", description: "Create training modules and quizzes", requiresAudit: true },
-      { id: "train_assign", module: "training", action: "assign", label: "Assign Training", description: "Assign training to users/roles", requiresAudit: true },
-      { id: "train_grade", module: "training", action: "review", label: "Grade Assessments", description: "Review and grade employee assessments", requiresAudit: true },
+      // ── General ──────────────────────────────────────────────────
+      { id: "train_view", module: "training", action: "view", label: "View My Training", description: "View personal training assignments and status", requiresAudit: false },
+      { id: "train_manage_view", module: "training", action: "view", label: "View All Training", description: "View organization-wide training records and matrix", requiresAudit: false },
+      { id: "train_assign", module: "training", action: "assign", label: "Assign Training", description: "Assign training courses to users or roles", requiresAudit: true },
+      // ── Course Inventory ─────────────────────────────────────────
+      { id: "train_course_create", module: "training", action: "create", label: "Create Courses", description: "Create new training courses and configure assessments", requiresAudit: true },
+      { id: "train_course_edit", module: "training", action: "edit", label: "Edit Courses", description: "Update course content, settings and enrolled participants", requiresAudit: true },
+      { id: "train_course_delete", module: "training", action: "delete", label: "Delete Courses", description: "Permanently remove training courses", requiresAudit: true },
+      { id: "train_course_review", module: "training", action: "review", label: "Review Courses", description: "Review submitted courses in the Pending Review queue", requiresAudit: true },
+      { id: "train_course_approve", module: "training", action: "approve", label: "Approve Courses", description: "Approve courses from the Pending Approval queue", requiresAudit: true },
+      { id: "train_result_entry", module: "training", action: "create", label: "Enter Training Results", description: "Record scores and evidence for quiz/paper-based courses", requiresAudit: true },
+      // ── Training Materials ───────────────────────────────────────
+      { id: "train_mat_view", module: "training", action: "view", label: "View Training Materials", description: "Browse and view the training materials library", requiresAudit: false },
+      { id: "train_mat_upload", module: "training", action: "create", label: "Upload Training Materials", description: "Upload new training files (PDF, Video, Image, Document)", requiresAudit: true },
+      { id: "train_mat_edit", module: "training", action: "edit", label: "Edit Training Materials", description: "Update material metadata and create new revisions", requiresAudit: true },
+      { id: "train_mat_delete", module: "training", action: "delete", label: "Delete Training Materials", description: "Remove training materials from the library", requiresAudit: true },
+      { id: "train_mat_review", module: "training", action: "review", label: "Review & Approve Materials", description: "Review and approve training materials in the workflow", requiresAudit: true },
+      { id: "train_mat_obsolete", module: "training", action: "archive", label: "Mark Materials Obsolete", description: "Mark training materials as obsolete with impact analysis", requiresAudit: true },
+      // ── Compliance Tracking & Records ────────────────────────────
+      { id: "train_matrix_view", module: "training", action: "view", label: "View Training Matrix", description: "View compliance tracking matrix for all users", requiresAudit: false },
+      { id: "train_compliance_view", module: "training", action: "view", label: "View Course Status", description: "View course completion status and compliance reports", requiresAudit: false },
+      { id: "train_records_export", module: "training", action: "export", label: "Export Training Records", description: "Export employee training files and compliance data", requiresAudit: true },
     ],
   },
   {
@@ -210,7 +227,11 @@ export const MOCK_ROLES: Role[] = [
     modifiedDate: "2024-06-20",
     permissions: [
       "doc_view", "doc_review", "doc_approve", "doc_archive", "doc_print",
-      "train_view", "train_create", "train_assign", "train_manage_view",
+      "train_view", "train_manage_view", "train_assign",
+      "train_course_create", "train_course_edit", "train_course_review", "train_course_approve",
+      "train_result_entry",
+      "train_mat_view", "train_mat_upload", "train_mat_edit", "train_mat_review", "train_mat_obsolete",
+      "train_matrix_view", "train_compliance_view", "train_records_export",
       "capa_view", "capa_approve", "capa_close",
       "cc_view", "cc_review", "cc_approve", "cc_close",
       "dev_view", "dev_approve",
@@ -233,7 +254,11 @@ export const MOCK_ROLES: Role[] = [
     modifiedDate: "2024-03-10",
     permissions: [
       "doc_view", "doc_create", "doc_edit", "doc_review", "doc_print",
-      "train_view", "train_assign", "train_grade",
+      "train_view", "train_manage_view", "train_assign",
+      "train_course_create", "train_course_edit", "train_course_review",
+      "train_result_entry",
+      "train_mat_view", "train_mat_upload", "train_mat_edit",
+      "train_matrix_view", "train_compliance_view", "train_records_export",
       "capa_view", "capa_create", "capa_edit", "capa_review",
       "cc_view", "cc_create", "cc_edit",
       "dev_view", "dev_create", "dev_edit",
@@ -254,7 +279,8 @@ export const MOCK_ROLES: Role[] = [
     modifiedDate: "2024-08-15",
     permissions: [
       "doc_view", "doc_create", "doc_edit",
-      "train_view",
+      "train_view", "train_mat_view", "train_mat_upload", "train_mat_edit",
+      "train_course_create", "train_result_entry", "train_compliance_view",
       "capa_view", "capa_create",
       "cc_view", "cc_create",
       "dev_view", "dev_create",
@@ -272,7 +298,7 @@ export const MOCK_ROLES: Role[] = [
     modifiedDate: "2024-05-22",
     permissions: [
       "doc_view", "doc_review",
-      "train_view",
+      "train_view", "train_mat_view", "train_mat_review", "train_course_review",
       "capa_view",
       "cc_view", "cc_review",
       "dev_view",
@@ -290,7 +316,7 @@ export const MOCK_ROLES: Role[] = [
     modifiedDate: "2024-01-15",
     permissions: [
       "doc_view",
-      "train_view",
+      "train_view", "train_mat_view",
       "capa_view",
       "cc_view",
       "dev_view",
@@ -308,7 +334,7 @@ export const MOCK_ROLES: Role[] = [
     modifiedDate: "2024-03-01",
     permissions: [
       "doc_view",
-      "train_view",
+      "train_view", "train_mat_view", "train_matrix_view", "train_compliance_view", "train_records_export",
       "capa_view",
       "cc_view",
       "dev_view",

@@ -1,4 +1,4 @@
-// Courses List Module - Consolidated exports
+// Courses Module
 export { CourseListView } from './CourseListView';
 export { CreateCourseView } from './create';
 export { EditCourseView } from './edit';

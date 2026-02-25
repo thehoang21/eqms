@@ -1,4 +1,4 @@
-// Course list (consolidated in courses-list folder)
+// Courses
 export {
   CourseListView,
   CreateCourseView,
@@ -6,14 +6,7 @@ export {
   CourseDetailView,
   CourseProgressView,
   ResultEntryPage,
-} from "./courses-list";
-
-// Materials
-export {
-  MaterialsView,
-  UploadMaterialView,
-  MaterialDetailView,
-} from "./materials";
+} from "./courses";
 
 // Approval workflow
 export {

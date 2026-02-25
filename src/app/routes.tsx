@@ -59,8 +59,8 @@ const RoleDetailView = lazy(() => import('@/features/settings/role-permission').
 
 // Quality Management
 // Training Management Views
-const CourseListView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.CourseListView })));
-const MaterialsView = lazy(() => import('@/features/training/course-inventory/materials/MaterialsView').then(m => ({ default: m.MaterialsView })));
+const CourseListView = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.CourseListView })));
+const MaterialsView = lazy(() => import('@/features/training/materials/MaterialsView').then(m => ({ default: m.MaterialsView })));
 const TrainingMatrixView = lazy(() => import('@/features/training/compliance-tracking/TrainingMatrixView').then(m => ({ default: m.TrainingMatrixView })));
 const CourseStatusView = lazy(() => import('@/features/training/compliance-tracking/CourseStatusView').then(m => ({ default: m.CourseStatusView })));
 const EmployeeTrainingFilesView = lazy(() => import('@/features/training/records-archive/EmployeeTrainingFilesView').then(m => ({ default: m.EmployeeTrainingFilesView })));
@@ -69,15 +69,16 @@ const CreateCourseView = lazy(() => import('@/features/training').then(m => ({ d
 const PendingReviewView = lazy(() => import('@/features/training/course-inventory/approval/PendingReviewView').then(m => ({ default: m.PendingReviewView })));
 const PendingApprovalView = lazy(() => import('@/features/training/course-inventory/approval/PendingApprovalView').then(m => ({ default: m.PendingApprovalView })));
 const ApprovalDetailView = lazy(() => import('@/features/training/course-inventory/approval/ApprovalDetailView').then(m => ({ default: m.ApprovalDetailView })));
-const ResultEntryPage = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.ResultEntryPage })));
-const CourseDetailView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.CourseDetailView })));
-const EditCourseView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.EditCourseView })));
-const CourseProgressView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.CourseProgressView })));
-const UploadMaterialView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.UploadMaterialView })));
-const MaterialDetailView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.MaterialDetailView })));
-const EditMaterialView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.EditMaterialView })));
-const NewMaterialRevisionView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.NewRevisionView })));
-const MaterialUsageReportView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.UsageReportView })));
+const ResultEntryPage = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.ResultEntryPage })));
+const CourseDetailView = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.CourseDetailView })));
+const EditCourseView = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.EditCourseView })));
+const CourseProgressView = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.CourseProgressView })));
+const UploadMaterialView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.UploadMaterialView })));
+const MaterialDetailView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.MaterialDetailView })));
+const EditMaterialView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.EditMaterialView })));
+const NewMaterialRevisionView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.NewRevisionView })));
+const MaterialUsageReportView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.UsageReportView })));
+const MaterialReviewApprovalView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.ReviewApprovalView })));
 
 const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
@@ -285,6 +286,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="training-materials/:materialId/edit" element={<Suspense fallback={<LoadingFallback />}><EditMaterialView /></Suspense>} />
           <Route path="training-materials/:materialId/new-revision" element={<Suspense fallback={<LoadingFallback />}><NewMaterialRevisionView /></Suspense>} />
           <Route path="training-materials/:materialId/usage-report" element={<Suspense fallback={<LoadingFallback />}><MaterialUsageReportView /></Suspense>} />
+          <Route path="training-materials/:materialId/review" element={<Suspense fallback={<LoadingFallback />}><MaterialReviewApprovalView /></Suspense>} />
           <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingReviewView /></Suspense>} />
           <Route path="pending-review/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
           <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingApprovalView /></Suspense>} />

@@ -28,7 +28,7 @@ import {
   FilePlusCorner,
   Link2,
 } from "lucide-react";
-import { MarkObsoleteModal, ObsoleteResult } from "./MarkObsoleteModal";
+import { MarkObsoleteModal, ObsoleteResult } from "./components/MarkObsoleteModal";
 import { IconLayoutDashboard, IconPlus, IconChecks, IconInfoCircle } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -363,8 +363,8 @@ export const MaterialsView: React.FC = () => {
   };
 
   const handleApprove = (id: string) => {
-    console.log("Approve material:", id);
     setOpenDropdownId(null);
+    navigate(`/training-management/training-materials/${id}/review`);
   };
 
   const handleObsolete = (id: string) => {

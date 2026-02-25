@@ -407,7 +407,7 @@ export const UploadMaterialView: React.FC = () => {
             {isLoading ? "Saving..." : "Save Draft" }
           </Button>
           <Button onClick={handleSubmitForReview} size="sm" className="whitespace-nowrap gap-2" disabled={isLoading}>
-            Submit for Review
+            Submit
           </Button>
         </div>
       </div>

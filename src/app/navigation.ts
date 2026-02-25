@@ -141,14 +141,14 @@ const FOUNDATION_MODULES: NavItem[] = [
     icon: GraduationCap,
     children: [
       {
+        id: "training-materials",
+        label: "Training Materials",
+        path: "/training-management/training-materials",
+      },
+      {
         id: "course-inventory",
         label: "Course Inventory",
         children: [
-          {
-            id: "training-materials",
-            label: "Training Materials",
-            path: "/training-management/training-materials",
-          },
           {
             id: "courses-list",
             label: "Courses List",

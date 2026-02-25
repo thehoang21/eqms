@@ -1,16 +1,13 @@
-import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  ArrowLeft,
   Search,
   Upload,
   Trash2,
-  Eye,
   X,
   CheckCircle2,
   XCircle,
   AlertCircle,
-  ImageIcon,
   ZoomIn,
 } from "lucide-react";
 import { IconLayoutDashboard } from "@tabler/icons-react";
@@ -18,6 +15,7 @@ import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
+import { ESignatureModal } from "@/components/ui/esignmodal";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { cn } from "@/components/ui/utils";
 import { TrainingMethod } from "../../types";
@@ -155,6 +153,9 @@ export const ResultEntryPage: React.FC = () => {
   const [modalDescription, setModalDescription] = useState("");
   const [modalAction, setModalAction] = useState<(() => void) | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // E-Signature
+  const [isESignOpen, setIsESignOpen] = useState(false);
 
   // Image Preview
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -311,6 +312,32 @@ export const ResultEntryPage: React.FC = () => {
     );
   };
 
+  /* ------ Save Draft ------ */
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API save call
+      await new Promise((r) => setTimeout(r, 800));
+      setIsLoading(false);
+      setModalType("success");
+      setModalTitle("Draft Saved");
+      setModalDescription(
+        `Your progress has been saved. ${resultsEntered} of ${rows.length} results recorded. You can continue entering results later.`
+      );
+      setModalAction(() => () => {
+        navigate("/training-management/courses-list");
+      });
+      setIsModalOpen(true);
+    } catch {
+      setIsLoading(false);
+      setModalType("error");
+      setModalTitle("Save Failed");
+      setModalDescription("An error occurred while saving. Please try again.");
+      setModalAction(null);
+      setIsModalOpen(true);
+    }
+  };
+
   /* ------ Submit ------ */
   const handleConfirmSubmit = () => {
     // Validate: all rows with scores must have images
@@ -335,38 +362,31 @@ export const ResultEntryPage: React.FC = () => {
       return;
     }
 
-    setModalType("confirm");
-    setModalTitle("Confirm & E-Sign");
-    setModalDescription(
-      `You are about to submit ${resultsEntered} of ${rows.length} results. This action requires your electronic signature and cannot be undone.`
-    );
-    setModalAction(() => async () => {
-      setIsLoading(true);
-      try {
-        await new Promise((r) => setTimeout(r, 1500));
-        setIsLoading(false);
-        setIsModalOpen(false);
+    // Open e-signature modal directly
+    setIsESignOpen(true);
+  };
 
-        // Show success
-        setTimeout(() => {
-          setModalType("success");
-          setModalTitle("Results Submitted");
-          setModalDescription("All results have been submitted and signed successfully.");
-          setModalAction(() => () => {
-            navigate("/training-management/courses-list");
-          });
-          setIsModalOpen(true);
-        }, 200);
-      } catch {
-        setIsLoading(false);
-        setModalType("error");
-        setModalTitle("Submission Failed");
-        setModalDescription("An error occurred. Please try again.");
-        setModalAction(null);
-        setIsModalOpen(true);
-      }
-    });
-    setIsModalOpen(true);
+  const handleESignConfirm = async (_reason: string) => {
+    setIsESignOpen(false);
+    setIsLoading(true);
+    try {
+      await new Promise((r) => setTimeout(r, 1500));
+      setIsLoading(false);
+      setModalType("success");
+      setModalTitle("Results Submitted");
+      setModalDescription(`${resultsEntered} result(s) have been submitted and signed successfully.`);
+      setModalAction(() => () => {
+        navigate("/training-management/courses-list");
+      });
+      setIsModalOpen(true);
+    } catch {
+      setIsLoading(false);
+      setModalType("error");
+      setModalTitle("Submission Failed");
+      setModalDescription("An error occurred. Please try again.");
+      setModalAction(null);
+      setIsModalOpen(true);
+    }
   };
 
   /* ------ Render ------ */
@@ -401,6 +421,14 @@ export const ResultEntryPage: React.FC = () => {
             onClick={() => navigate(-1)}
           >
             Cancel
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleSave}
+            disabled={isLoading}
+          >
+            Save Draft
           </Button>
           <Button
             variant="default"
@@ -784,6 +812,14 @@ export const ResultEntryPage: React.FC = () => {
           />
         )}
       </div>
+
+      {/* ===== E-Signature Modal ===== */}
+      <ESignatureModal
+        isOpen={isESignOpen}
+        onClose={() => setIsESignOpen(false)}
+        onConfirm={handleESignConfirm}
+        actionTitle={`Submit Results (${resultsEntered} / ${rows.length})`}
+      />
 
       {/* ===== Image Preview Modal ===== */}
       <ImagePreviewModal

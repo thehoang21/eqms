@@ -1,6 +1,5 @@
 export {
   CourseListView,
-  MaterialsView,
   CreateCourseView,
   PendingReviewView,
   PendingApprovalView,
@@ -9,9 +8,14 @@ export {
   CourseDetailView,
   CourseProgressView,
   EditCourseView,
+} from "./course-inventory";
+
+// Materials
+export {
+  MaterialsView,
   UploadMaterialView,
   MaterialDetailView,
-} from "./course-inventory";
+} from "./materials";
 
 // Compliance Tracking
 export { TrainingMatrixView } from "./compliance-tracking/TrainingMatrixView";

@@ -411,12 +411,6 @@ export const MaterialDetailView: React.FC = () => {
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-slate-900">Material Information</h3>
-              <span className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
-                getStatusBadge(material.status)
-              )}>
-                {material.status}
-              </span>
             </div>
             <div className="p-5 space-y-4">
               {/* File preview card */}
