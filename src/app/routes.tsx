@@ -75,6 +75,9 @@ const EditCourseView = lazy(() => import('@/features/training/course-inventory/c
 const CourseProgressView = lazy(() => import('@/features/training/course-inventory/courses-list').then(m => ({ default: m.CourseProgressView })));
 const UploadMaterialView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.UploadMaterialView })));
 const MaterialDetailView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.MaterialDetailView })));
+const EditMaterialView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.EditMaterialView })));
+const NewMaterialRevisionView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.NewRevisionView })));
+const MaterialUsageReportView = lazy(() => import('@/features/training/course-inventory/materials').then(m => ({ default: m.UsageReportView })));
 
 const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
@@ -279,6 +282,9 @@ export const AppRoutes: React.FC = () => {
           <Route path="training-materials" element={<Suspense fallback={<LoadingFallback />}><MaterialsView /></Suspense>} />
           <Route path="training-materials/upload" element={<Suspense fallback={<LoadingFallback />}><UploadMaterialView /></Suspense>} />
           <Route path="training-materials/:materialId" element={<Suspense fallback={<LoadingFallback />}><MaterialDetailView /></Suspense>} />
+          <Route path="training-materials/:materialId/edit" element={<Suspense fallback={<LoadingFallback />}><EditMaterialView /></Suspense>} />
+          <Route path="training-materials/:materialId/new-revision" element={<Suspense fallback={<LoadingFallback />}><NewMaterialRevisionView /></Suspense>} />
+          <Route path="training-materials/:materialId/usage-report" element={<Suspense fallback={<LoadingFallback />}><MaterialUsageReportView /></Suspense>} />
           <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingReviewView /></Suspense>} />
           <Route path="pending-review/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
           <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingApprovalView /></Suspense>} />

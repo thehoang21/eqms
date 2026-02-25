@@ -26,8 +26,10 @@ import {
   CheckCircle,
   XCircle,
   FilePlusCorner,
+  Link2,
 } from "lucide-react";
-import { IconLayoutDashboard, IconPlus, IconChecks } from "@tabler/icons-react";
+import { MarkObsoleteModal, ObsoleteResult } from "./MarkObsoleteModal";
+import { IconLayoutDashboard, IconPlus, IconChecks, IconInfoCircle } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { TablePagination } from "@/components/ui/table/TablePagination";
@@ -169,6 +171,13 @@ export const MaterialsView: React.FC = () => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
 
+  // Obsolete overrides (local state — persists for session)
+  const [obsoleteOverrides, setObsoleteOverrides] = useState<Record<string, { replacedBy: string }>>({});
+
+  // Mark Obsolete modal
+  const [obsoleteModalOpen, setObsoleteModalOpen] = useState(false);
+  const [obsoleteTargetId, setObsoleteTargetId] = useState<string | null>(null);
+
   const typeOptions = [
     { label: "All Types", value: "All" },
     { label: "Video", value: "Video" },
@@ -194,19 +203,24 @@ export const MaterialsView: React.FC = () => {
     { label: "Obsolete", value: "Obsolete" },
   ];
 
+  // Effective status helper
+  const getEffectiveStatus = (m: TrainingMaterial) =>
+    obsoleteOverrides[m.id] !== undefined ? "Obsolete" as const : m.status;
+
   // Filtered & Paginated
   const filteredData = useMemo(() => {
     return MOCK_MATERIALS.filter((m) => {
+      const effectiveStatus = obsoleteOverrides[m.id] !== undefined ? "Obsolete" : m.status;
       const matchesSearch =
         m.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
         m.materialId.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
         m.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
       const matchesType = filters.typeFilter === "All" || m.type === filters.typeFilter;
       const matchesDepartment = filters.departmentFilter === "All" || m.department === filters.departmentFilter;
-      const matchesStatus = filters.statusFilter === "All" || m.status === filters.statusFilter;
+      const matchesStatus = filters.statusFilter === "All" || effectiveStatus === filters.statusFilter;
       return matchesSearch && matchesType && matchesDepartment && matchesStatus;
     });
-  }, [filters]);
+  }, [filters, obsoleteOverrides]);
 
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -329,23 +343,23 @@ export const MaterialsView: React.FC = () => {
   };
 
   const handlePreview = (id: string) => {
-    console.log("Preview material:", id);
     setOpenDropdownId(null);
+    navigate(`/training-management/training-materials/${id}`);
   };
 
   const handleEdit = (id: string) => {
-    console.log("Edit material:", id);
     setOpenDropdownId(null);
+    navigate(`/training-management/training-materials/${id}/edit`);
   };
 
   const handleNewRevision = (id: string) => {
-    console.log("Create new revision:", id);
     setOpenDropdownId(null);
+    navigate(`/training-management/training-materials/${id}/new-revision`);
   };
 
   const handleUsageReport = (id: string) => {
-    console.log("View usage report:", id);
     setOpenDropdownId(null);
+    navigate(`/training-management/training-materials/${id}/usage-report`);
   };
 
   const handleApprove = (id: string) => {
@@ -354,8 +368,20 @@ export const MaterialsView: React.FC = () => {
   };
 
   const handleObsolete = (id: string) => {
-    console.log("Mark as obsolete:", id);
     setOpenDropdownId(null);
+    setObsoleteTargetId(id);
+    setObsoleteModalOpen(true);
+  };
+
+  const handleObsoleteConfirm = (result: ObsoleteResult) => {
+    if (obsoleteTargetId) {
+      setObsoleteOverrides((prev) => ({
+        ...prev,
+        [obsoleteTargetId]: { replacedBy: result.replacedByCode },
+      }));
+    }
+    setObsoleteModalOpen(false);
+    setObsoleteTargetId(null);
   };
 
   return (
@@ -691,8 +717,22 @@ export const MaterialsView: React.FC = () => {
                   {/* Material Title */}
                   <td className="py-3.5 px-4 text-sm">
                     <div>
-                      <p className="font-medium text-slate-900">{material.title}</p>
+                      <p className={cn("font-medium", getEffectiveStatus(material) === "Obsolete" ? "text-slate-400 line-through" : "text-slate-900")}>{material.title}</p>
                       <p className="text-xs text-slate-500 mt-0.5">{material.description}</p>
+                      {obsoleteOverrides[material.id]?.replacedBy && (
+                        <div className="flex items-center gap-1 mt-1">
+                          <Link2 className="h-3 w-3 text-emerald-600 flex-shrink-0" />
+                          <span className="text-xs text-emerald-700 font-medium">
+                            Replaced by{" "}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); }}
+                              className="underline hover:text-emerald-800 transition-colors"
+                            >
+                              {obsoleteOverrides[material.id].replacedBy}
+                            </button>
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </td>
                   {/* File Type (Text with icon) */}
@@ -708,9 +748,7 @@ export const MaterialsView: React.FC = () => {
                   </td>
                   {/* Version */}
                   <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-700 border border-slate-200">
-                      {material.version}
-                    </span>
+                    {material.version}
                   </td>
                   {/* Department */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
@@ -718,8 +756,8 @@ export const MaterialsView: React.FC = () => {
                   </td>
                   {/* Status */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
-                    <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border", getStatusBadge(material.status))}>
-                      {material.status}
+                    <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border", getStatusBadge(getEffectiveStatus(material)))}>
+                      {getEffectiveStatus(material)}
                     </span>
                   </td>
                   {/* Courses Using */}
@@ -808,19 +846,21 @@ export const MaterialsView: React.FC = () => {
                 }}
                 className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
               >
-                <Eye className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Preview</span>
+                <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">View Details</span>
               </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEdit(openDropdownId);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <Edit className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Edit Material</span>
-              </button>
+              {MOCK_MATERIALS.find((m) => m.id === openDropdownId)?.status === "Draft" && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(openDropdownId);
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                >
+                  <Edit className="h-4 w-4 flex-shrink-0" />
+                  <span className="font-medium">Edit Material</span>
+                </button>
+              )}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -849,23 +889,51 @@ export const MaterialsView: React.FC = () => {
                 className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
               >
                 <IconChecks className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Approve</span>
+                <span className="font-medium">Review & Approval</span>
               </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleObsolete(openDropdownId);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <XCircle className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Mark as Obsolete</span>
-              </button>
+              {(() => {
+                const dropdownMaterial = MOCK_MATERIALS.find((m) => m.id === openDropdownId);
+                const dropdownEffectiveStatus = dropdownMaterial
+                  ? (obsoleteOverrides[dropdownMaterial.id] !== undefined ? "Obsolete" : dropdownMaterial.status)
+                  : null;
+                return dropdownEffectiveStatus !== "Obsolete" ? (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleObsolete(openDropdownId);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-red-50 active:bg-red-100 transition-colors text-red-600"
+                  >
+                    <XCircle className="h-4 w-4 flex-shrink-0" />
+                    <span className="font-medium">Mark as Obsolete</span>
+                  </button>
+                ) : null;
+              })()}
             </div>
           </div>
         </>,
         document.body
       )}
+      <MarkObsoleteModal
+        isOpen={obsoleteModalOpen}
+        material={(() => {
+          const m = MOCK_MATERIALS.find((mat) => mat.id === obsoleteTargetId) ?? null;
+          if (!m) return null;
+          return {
+            id: m.id,
+            materialId: m.materialId,
+            title: m.title,
+            version: m.version,
+            type: m.type,
+            linkedCourses: m.linkedCourses,
+          };
+        })()}
+        onClose={() => {
+          setObsoleteModalOpen(false);
+          setObsoleteTargetId(null);
+        }}
+        onConfirm={handleObsoleteConfirm}
+      />
     </div>
   );
 };
