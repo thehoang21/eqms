@@ -342,7 +342,7 @@ const NotificationTabs: React.FC<{
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
           className={cn(
-            "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 flex-1 sm:flex-initial",
+            "flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 flex-1 sm:flex-initial",
             activeTab === tab.id
               ? "bg-white text-slate-900 shadow-sm"
               : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
