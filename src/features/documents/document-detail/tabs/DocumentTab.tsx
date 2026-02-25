@@ -116,7 +116,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
                         <ImageIcon className="h-4 w-4 text-slate-600" />
-                        <span className="text-sm font-medium text-slate-700">Image Preview</span>
+                        <span className="text-xs sm:text-sm font-medium text-slate-700">Image Preview</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Button
@@ -129,7 +129,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                             <ZoomOut className="h-4 w-4" />
                         </Button>
                         <div className="min-w-[70px] text-center">
-                            <span className="text-sm font-medium text-slate-700">{zoomLevel}%</span>
+                            <span className="text-xs sm:text-sm font-medium text-slate-700">{zoomLevel}%</span>
                         </div>
                         <Button
                             variant="outline"
@@ -180,7 +180,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-slate-600" />
-                        <span className="text-sm font-medium text-slate-700"></span>
+                        <span className="text-xs sm:text-sm font-medium text-slate-700"></span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Button
@@ -193,7 +193,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                             <ZoomOut className="h-4 w-4" />
                         </Button>
                         <div className="min-w-[70px] text-center">
-                            <span className="text-sm font-medium text-slate-700">{zoomLevel}%</span>
+                            <span className="text-xs sm:text-sm font-medium text-slate-700">{zoomLevel}%</span>
                         </div>
                         <Button
                             variant="outline"
@@ -245,7 +245,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                 <div className="flex items-center rounded-t-xl justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                     <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-slate-600" />
-                        <span className="text-sm font-medium text-slate-700">PDF Document Preview</span>
+                        <span className="text-xs sm:text-sm font-medium text-slate-700">PDF Document Preview</span>
                     </div>
                 </div>
                 <div className="flex-1">

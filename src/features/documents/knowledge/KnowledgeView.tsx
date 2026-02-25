@@ -106,7 +106,7 @@ export const KnowledgeView: React.FC = () => {
 
             {/* Search Bar */}
             <div className="bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm">
-                <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                     Search
                 </label>
                 <div className="relative">

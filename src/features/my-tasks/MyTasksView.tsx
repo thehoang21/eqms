@@ -363,7 +363,7 @@ const TaskFilters: React.FC<{
       <FilterCard.Row>
         {/* Row 1: Search, Module, Priority */}
         <FilterCard.Item span={6} mdSpan={2}>
-          <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+          <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
             Search
           </label>
           <div className="relative">

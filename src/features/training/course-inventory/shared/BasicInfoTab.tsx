@@ -178,7 +178,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Course ID */}
                 <div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Course ID
                         </label>
                         <ReadOnlyField value={courseId} placeholder="Auto-generated" />
@@ -188,7 +188,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Course Name */}
                 <div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Course Name {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
@@ -208,7 +208,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Description */}
                 <div className="md:col-span-2">
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Description {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
@@ -229,7 +229,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Training Type */}
                 <div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Training Type {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
@@ -247,7 +247,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Training Method */}
                 <div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Training Method {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
@@ -313,7 +313,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Scheduled Date */}
                 <div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Scheduled Date {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
@@ -331,7 +331,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Duration */}
                 <div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Duration (hours) {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
@@ -351,7 +351,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Location */}
                 <div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Location {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
@@ -371,7 +371,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Capacity */}
                 <div>
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Capacity {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
@@ -455,7 +455,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                 {/* Linked Document */}
                 <div className="md:col-span-2">
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">
                             Linked Document {!readOnly && <span className="text-xs font-normal text-slate-400">(optional)</span>}
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

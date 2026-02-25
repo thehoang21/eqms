@@ -87,7 +87,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
           {/* System Names */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 System Name (Internal)
               </label>
               <input
@@ -102,7 +102,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 Display Name (Browser Tab)
               </label>
               <input
@@ -127,7 +127,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Admin Email
             </label>
             <input
@@ -151,7 +151,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Company Name
             </label>
             <input
@@ -163,7 +163,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Tax ID / Registration Number
             </label>
             <input
@@ -175,7 +175,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Company Address
             </label>
             <input
@@ -187,7 +187,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Company Phone
             </label>
             <input
@@ -199,7 +199,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Company Website
             </label>
             <input
@@ -211,7 +211,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Industry
             </label>
             <input
@@ -223,7 +223,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Regulatory Body / Standards
             </label>
             <input
@@ -270,7 +270,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                   ]}
                 />
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Backup Time
                   </label>
                   <input
@@ -284,7 +284,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Retention Period (Days)
                   </label>
                   <input

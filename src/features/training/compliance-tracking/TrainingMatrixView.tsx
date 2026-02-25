@@ -176,7 +176,7 @@ export const TrainingMatrixView: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 items-end">
           {/* Search */}
           <div className="xl:col-span-4">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
             <div className="relative">

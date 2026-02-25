@@ -61,7 +61,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Database Type
             </label>
             <input
@@ -72,7 +72,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Version
             </label>
             <input
@@ -83,7 +83,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Host
             </label>
             <input
@@ -94,7 +94,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Port
             </label>
             <input
@@ -105,7 +105,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Database Name
             </label>
             <input
@@ -126,7 +126,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
         </h3>
         <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Last Backup
             </label>
             <p className="text-sm text-slate-900 font-medium">

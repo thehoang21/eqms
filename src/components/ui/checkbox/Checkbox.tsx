@@ -77,7 +77,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         <label
           htmlFor={checkboxId}
           className={cn(
-            'text-sm font-medium text-slate-700 cursor-pointer select-none',
+            'text-xs sm:text-sm font-medium text-slate-700 cursor-pointer select-none',
             disabled && 'cursor-not-allowed'
           )}
         >

@@ -48,7 +48,7 @@ export const SignaturesTab: React.FC = () => {
           <React.Fragment key={index}>
             {/* Action By Column */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-700">
+              <label className="text-xs sm:text-sm font-medium text-slate-700">
                 {record.actionBy}
               </label>
               <div className="h-9 px-3 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-900 flex items-center">
@@ -58,7 +58,7 @@ export const SignaturesTab: React.FC = () => {
 
             {/* Action On Column */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-700">
+              <label className="text-xs sm:text-sm font-medium text-slate-700">
                 {record.actionOn}
               </label>
               <div className="h-9 px-3 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-900 flex items-center">

@@ -36,7 +36,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Document Number */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Document Number
           </label>
           <input
@@ -49,7 +49,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Created */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Created
           </label>
           <input
@@ -62,7 +62,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Opened by */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Opened by
           </label>
           <input
@@ -75,7 +75,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Business Unit */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Business Unit
           </label>
           <input
@@ -88,7 +88,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Name - Full width */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Name
           </label>
           <input
@@ -101,7 +101,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Document */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Document
           </label>
           <input
@@ -114,7 +114,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Document Revision */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Document Revision
           </label>
           <input
@@ -127,7 +127,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Valid Until */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Valid Until
           </label>
           <input
@@ -140,7 +140,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Revision Number */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Revision Number
           </label>
           <input
@@ -153,7 +153,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Copy Number */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Copy Number
           </label>
           <div className="space-y-1.5">
@@ -171,7 +171,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Total Copies Number */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Total Copies Number
           </label>
           <div className="space-y-1.5">
@@ -189,7 +189,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Recall Date */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Recall Date
           </label>
           <input
@@ -202,7 +202,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Delivered By */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Delivered By
           </label>
           <input
@@ -215,7 +215,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
 
         {/* Comments - Full width */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Comments
           </label>
           <textarea

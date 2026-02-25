@@ -178,7 +178,7 @@ export const DocumentTypesTab: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search Input */}
           <div className="md:col-span-2 xl:col-span-6">
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Search
             </label>
             <div className="relative">
@@ -528,7 +528,7 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({
 
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 Name<span className="text-red-500 ml-1">*</span>
               </label>
               <input
@@ -545,7 +545,7 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 Short Code (3-4 characters)
                 <span className="text-red-500 ml-1">*</span>
               </label>
@@ -571,7 +571,7 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 Current Sequence<span className="text-red-500 ml-1">*</span>
               </label>
               <input
@@ -596,7 +596,7 @@ const DocumentTypeModal: React.FC<DocumentTypeModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 Description
               </label>
               <textarea

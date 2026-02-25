@@ -46,7 +46,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               License Type
             </label>
             <input
@@ -57,7 +57,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Company Name
             </label>
             <input
@@ -78,7 +78,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Issued Date
             </label>
             <input
@@ -89,7 +89,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Expiry Date
             </label>
             <input
@@ -104,7 +104,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Days Until Expiry
             </label>
             <div className={`flex items-center h-9 px-3.5 border rounded-lg ${

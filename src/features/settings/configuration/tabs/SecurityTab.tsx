@@ -75,7 +75,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Minimum Password Length
             </label>
             <input
@@ -90,7 +90,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
             </p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Session Timeout (Minutes)
             </label>
             <input
@@ -156,7 +156,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
           </p>
           {config.enablePasswordExpiry && (
             <div className="ml-7 mt-3">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 Password Expiry Period (Days)
               </label>
               <input
@@ -185,7 +185,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
             </p>
             {config.preventPasswordReuse && (
               <div className="ml-7 mt-3">
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Password History Count
                 </label>
                 <input
@@ -237,7 +237,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
             </p>
             {config.enableAutoLogout && (
               <div className="ml-7 mt-3">
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Auto Logout After (Minutes)
                 </label>
                 <input
@@ -268,7 +268,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
             </p>
             {config.enableAccountLockout && (
               <div className="ml-7 mt-3">
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Maximum Login Attempts
                 </label>
                 <input
@@ -307,7 +307,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
           {config.ipSecurity.enableIpWhitelisting && (
             <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-2">
                   Whitelisted IPs / CIDR Ranges
                 </label>
                 <div className="flex gap-2 mb-3">
@@ -358,7 +358,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
             {config.ipSecurity.enableGeoBlocking && (
               <div className="ml-7 mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-2">
                     Blocked Countries (ISO 2-letter codes)
                   </label>
                   <div className="flex gap-2 mb-3">
@@ -441,7 +441,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                   ]}
                 />
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Retain Logs For (Days)
                   </label>
                   <input

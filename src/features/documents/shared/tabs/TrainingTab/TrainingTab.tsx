@@ -108,7 +108,7 @@ export const TrainingTab: React.FC<TrainingTabProps> = ({
                         {/* Course Selection */}
                         <div>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-medium text-slate-700">
+                                <label className="text-xs sm:text-sm font-medium text-slate-700">
                                     Course Name/ID {!isReadOnly && <span className="text-red-500">*</span>}
                                 </label>
                                 <Select
@@ -124,7 +124,7 @@ export const TrainingTab: React.FC<TrainingTabProps> = ({
                         {/* Training Period */}
                         <div>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-medium text-slate-700">
+                                <label className="text-xs sm:text-sm font-medium text-slate-700">
                                     Training Period (Days) {!isReadOnly && <span className="text-red-500">*</span>}
                                 </label>
                                 <Input
@@ -179,7 +179,7 @@ export const TrainingTab: React.FC<TrainingTabProps> = ({
                     {/* Reason Dropdown */}
                     <div>
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-sm font-medium text-slate-700">
+                            <label className="text-xs sm:text-sm font-medium text-slate-700">
                                 Reason for skipping training {!isReadOnly && <span className="text-red-500">*</span>}
                             </label>
                             <div className={cn(isReadOnly && "pointer-events-none")}>
@@ -202,7 +202,7 @@ export const TrainingTab: React.FC<TrainingTabProps> = ({
                     {config.skipReason === "others" && (
                         <div>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-medium text-slate-700">
+                                <label className="text-xs sm:text-sm font-medium text-slate-700">
                                     Specify reason {!isReadOnly && <span className="text-red-500">*</span>}
                                 </label>
                                 {isReadOnly ? (

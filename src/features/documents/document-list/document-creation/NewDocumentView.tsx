@@ -827,7 +827,7 @@ export const NewDocumentView: React.FC = () => {
                 size="lg"
             >
                 <div className="space-y-2">
-                    <label htmlFor="activity-summary" className="text-sm font-medium text-slate-700 block">
+                    <label htmlFor="activity-summary" className="text-xs sm:text-sm font-medium text-slate-700 block">
                         Activity Summary <span className="text-red-500">*</span>
                     </label>
                     <textarea

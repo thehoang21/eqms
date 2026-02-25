@@ -116,7 +116,7 @@ export const TaskTable: React.FC<{
                   )}
                 >
                   {/* No. */}
-                  <td className="py-3.5 px-4 text-sm font-medium text-slate-700 whitespace-nowrap">
+                  <td className="py-3.5 px-4 text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">
                     {startIndex + idx}
                   </td>
 

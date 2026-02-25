@@ -95,7 +95,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                             <ZoomOut className="h-3.5 w-3.5 md:h-4 md:w-4" />
                         </Button>
                         <div className="min-w-[60px] md:min-w-[70px] text-center">
-                            <span className="text-xs md:text-sm font-medium text-slate-700">{zoomLevel}%</span>
+                            <span className="text-xs md:text-xs sm:text-sm font-medium text-slate-700">{zoomLevel}%</span>
                         </div>
                         <Button
                             variant="outline"

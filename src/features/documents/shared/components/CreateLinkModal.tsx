@@ -256,7 +256,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
 
           {/* Recipient Type Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700 block mb-2">
+            <label className="text-xs sm:text-sm font-medium text-slate-700 block mb-2">
               Share With
             </label>
             <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-lg">
@@ -335,7 +335,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
 
           {/* Expiry Date */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+            <label className="flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-700">
               Link Expiry Date (Optional)
             </label>
             <DateTimePicker

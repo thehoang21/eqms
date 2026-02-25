@@ -43,7 +43,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Default Retention Period (Days)
             </label>
             <input
@@ -58,7 +58,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
             </p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Max File Size (MB)
             </label>
             <input
@@ -123,7 +123,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
             <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Maximum Versions to Keep
                   </label>
                   <input
@@ -190,7 +190,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
             <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Signature Validity Period (Days)
                   </label>
                   <input

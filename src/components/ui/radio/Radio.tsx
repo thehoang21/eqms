@@ -163,7 +163,7 @@ export const Radio: React.FC<RadioProps> = ({
             <label
               htmlFor={radioId}
               className={cn(
-                'block text-sm font-medium text-slate-700 cursor-pointer select-none',
+                'block text-xs sm:text-sm font-medium text-slate-700 cursor-pointer select-none',
                 disabled && 'cursor-not-allowed'
               )}
             >
@@ -235,7 +235,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   return (
     <div className={cn('space-y-2', className)}>
       {label && (
-        <label className="text-sm font-medium text-slate-700 block">
+        <label className="text-xs sm:text-sm font-medium text-slate-700 block">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>

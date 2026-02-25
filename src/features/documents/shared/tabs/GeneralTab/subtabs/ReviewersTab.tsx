@@ -274,7 +274,7 @@ export const ReviewersTab: React.FC<ReviewersTabProps> = ({
             {reviewers.length > 0 && (
                 <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700 block">
+                        <label className="text-xs sm:text-sm font-medium text-slate-700 block">
                             Review Flow Type:
                         </label>
                         <div className="py-2 flex items-center gap-3">

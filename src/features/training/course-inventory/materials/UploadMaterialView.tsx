@@ -520,7 +520,7 @@ export const UploadMaterialView: React.FC = () => {
                   )}>
                     <CloudUpload className={cn("h-7 w-7", isDragActive ? "text-emerald-600" : "text-slate-400")} />
                   </div>
-                  <p className="text-sm font-medium text-slate-700 text-center">
+                  <p className="text-xs sm:text-sm font-medium text-slate-700 text-center">
                     {isDragActive ? "Drop your file here" : "Drag & drop your file here"}
                   </p>
                   <p className="text-xs text-slate-500 mt-1">or click to browse</p>
@@ -606,7 +606,7 @@ export const UploadMaterialView: React.FC = () => {
                     <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4 bg-slate-100">
                       <Link2 className="h-7 w-7 text-slate-400" />
                     </div>
-                    <p className="text-sm font-medium text-slate-700 text-center mb-3">Paste external resource URL</p>
+                    <p className="text-xs sm:text-sm font-medium text-slate-700 text-center mb-3">Paste external resource URL</p>
                     <div className="w-full flex items-center gap-2">
                       <input
                         type="url"
@@ -669,7 +669,7 @@ export const UploadMaterialView: React.FC = () => {
             <div className="p-5 space-y-5">
               {/* Row 1: Material Name */}
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                   Material Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -684,7 +684,7 @@ export const UploadMaterialView: React.FC = () => {
               {/* Row 2: Material Code + Version */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                     Material Code <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -697,7 +697,7 @@ export const UploadMaterialView: React.FC = () => {
                   <p className="text-xs text-slate-400 mt-1">Auto-generated based on file type. You can modify it.</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                     Version
                   </label>
                   <input
@@ -712,7 +712,7 @@ export const UploadMaterialView: React.FC = () => {
 
               {/* Row 3: Author */}
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                   Author
                 </label>
                 <input
@@ -749,7 +749,7 @@ export const UploadMaterialView: React.FC = () => {
               {/* Row 5: Reviewer + Approver */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                     Reviewer <span className="text-red-500">*</span>
                   </label>
                   <Select
@@ -760,7 +760,7 @@ export const UploadMaterialView: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                     Approver <span className="text-red-500">*</span>
                   </label>
                   <Select
@@ -774,7 +774,7 @@ export const UploadMaterialView: React.FC = () => {
 
               {/* Row 6: Description */}
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <textarea

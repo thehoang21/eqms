@@ -392,7 +392,7 @@ export const DestroyControlledCopyView: React.FC = () => {
 
             {/* Destruction Method */}
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                 Destruction Method <span className="text-red-500">*</span>
               </label>
               <input
@@ -413,7 +413,7 @@ export const DestroyControlledCopyView: React.FC = () => {
 
             {/* Executor */}
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                 Executor (Person Performing) <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -437,7 +437,7 @@ export const DestroyControlledCopyView: React.FC = () => {
 
             {/* Supervisor */}
             <div>
-              <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+              <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                 Supervisor (Witness) <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -474,7 +474,7 @@ export const DestroyControlledCopyView: React.FC = () => {
               <>
                 {/* File Upload */}
                 <div>
-                  <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                     Evidence Photos <span className="text-red-500">*</span>
                   </label>
 

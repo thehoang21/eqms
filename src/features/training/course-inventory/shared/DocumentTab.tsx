@@ -213,7 +213,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                     ) : (
                         <>
                             <div className="flex items-center justify-between mb-2">
-                                <p className="text-sm font-medium text-slate-700">
+                                <p className="text-xs sm:text-sm font-medium text-slate-700">
                                     {trainingFiles.length} file{trainingFiles.length > 1 ? "s" : ""} uploaded
                                 </p>
                             </div>
@@ -258,7 +258,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                 {instruction && (
                     <div className="border-t border-slate-200 pt-6">
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-sm font-medium text-slate-700">
+                            <label className="text-xs sm:text-sm font-medium text-slate-700">
                                 Instruction
                             </label>
                             <Textarea
@@ -329,7 +329,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                     "h-8 w-8 mb-3 transition-colors",
                     isDragOver ? "text-emerald-500" : "text-slate-400"
                 )} />
-                <p className="text-sm font-medium text-slate-700">
+                <p className="text-xs sm:text-sm font-medium text-slate-700">
                     {isDragOver ? "Drop files here" : "Click to upload or drag and drop"}
                 </p>
                 <p className="text-xs text-slate-400 mt-1">
@@ -340,7 +340,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
             {/* File List */}
             {trainingFiles.length > 0 && (
                 <div>
-                    <h4 className="text-sm font-medium text-slate-700 mb-2">Uploaded Files ({trainingFiles.length})</h4>
+                    <h4 className="text-xs sm:text-sm font-medium text-slate-700 mb-2">Uploaded Files ({trainingFiles.length})</h4>
                     <div className="space-y-2">
                     {trainingFiles.map(file => (
                         <div
@@ -359,7 +359,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
 
                             {/* File Info */}
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-slate-700 truncate">{file.name}</p>
+                                <p className="text-xs sm:text-sm font-medium text-slate-700 truncate">{file.name}</p>
                                 <div className="flex items-center gap-2 mt-0.5">
                                     <span className="text-xs text-slate-400">{formatFileSize(file.size)}</span>
                                     {file.status === "uploading" && (
@@ -403,7 +403,7 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
             {/* Instruction / Notes */}
             <div className="border-t border-slate-200 pt-6">
                 <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-slate-700">
+                    <label className="text-xs sm:text-sm font-medium text-slate-700">
                         Instruction
                     </label>
                     <Textarea

@@ -406,12 +406,12 @@ export const RevisionReviewViewWithBatch: React.FC<RevisionReviewViewProps> = ({
                                     {document.reviewFlowType === 'sequential' ? (
                                         <>
                                             <IconListNumbers className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-slate-600" />
-                                            <span className="text-xs lg:text-sm font-medium text-slate-700">Sequential Review</span>
+                                            <span className="text-xs sm:text-sm font-medium text-slate-700">Sequential Review</span>
                                         </>
                                     ) : (
                                         <>
                                             <Users className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-slate-600" />
-                                            <span className="text-xs lg:text-sm font-medium text-slate-700">Parallel Review</span>
+                                            <span className="text-xs sm:text-sm font-medium text-slate-700">Parallel Review</span>
                                         </>
                                     )}
                                 </div>

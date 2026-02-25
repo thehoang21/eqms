@@ -61,7 +61,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         {/* Document Number (read-only, auto-generated) */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Document Number
           </label>
           <input
@@ -75,7 +75,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Created (read-only, auto-generated) */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Created (Date - Time)
           </label>
           <input
@@ -108,7 +108,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
         <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
           {/* Opened by (read-only, auto-generated) */}
           <div className="flex flex-col gap-1.5 md:col-span-2">
-            <label className="text-sm font-medium text-slate-700">
+            <label className="text-xs sm:text-sm font-medium text-slate-700">
               Opened by
             </label>
             <input
@@ -121,7 +121,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </div>
           {/* Author (Select) */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-slate-700">
+            <label className="text-xs sm:text-sm font-medium text-slate-700">
               Author<span className="text-red-500 ml-1">*</span>
             </label>
             <Select
@@ -143,7 +143,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
           {/* Co-Authors (MultiSelect) */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-slate-700">
+            <label className="text-xs sm:text-sm font-medium text-slate-700">
               Co-Authors
             </label>
             <MultiSelect
@@ -171,7 +171,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             <label
               htmlFor="isTemplate"
               className={cn(
-                "text-sm font-medium text-slate-700",
+                "text-xs sm:text-sm font-medium text-slate-700",
                 !isObsoleted && "cursor-pointer",
               )}
             >
@@ -190,7 +190,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Business Unit (Select) */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Business Unit<span className="text-red-500 ml-1">*</span>
           </label>
           <Select
@@ -211,7 +211,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Document Name - Full width */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Document Name<span className="text-red-500 ml-1">*</span>
           </label>
           <input
@@ -231,7 +231,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Department (Select) */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Department
           </label>
           <Select
@@ -255,7 +255,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Knowledge Base */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Knowledge Base
           </label>
           <input
@@ -275,7 +275,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Document Type (Select) */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Document Type<span className="text-red-500 ml-1">*</span>
           </label>
           <Select
@@ -295,7 +295,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Sub-Type (Select) */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">Sub-Type</label>
+          <label className="text-xs sm:text-sm font-medium text-slate-700">Sub-Type</label>
           <Select
             value={formData.subType}
             onChange={(value) =>
@@ -315,7 +315,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Periodic Review Cycle */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Periodic Review Cycle (Months)
             <span className="text-red-500 ml-1">*</span>
           </label>
@@ -339,7 +339,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Periodic Review Notification */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Periodic Review Notification (Days)
             <span className="text-red-500 ml-1">*</span>
           </label>
@@ -363,7 +363,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Effective Date (read-only, auto-generated) */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Effective Date (dd/MM/yyyy)
           </label>
           <input
@@ -376,7 +376,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
         </div>
         {/* Valid Until (read-only, auto-generated) */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Valid Until (dd/MM/yyyy)
           </label>
           <input
@@ -390,7 +390,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Language */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">Language</label>
+          <label className="text-xs sm:text-sm font-medium text-slate-700">Language</label>
           <Select
             value={formData.language}
             onChange={(value) =>
@@ -407,7 +407,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Review Date */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Review Date
           </label>
           <DateTimePicker
@@ -422,7 +422,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
 
         {/* Description */}
         <div className="flex flex-col gap-1.5 md:col-span-2">
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
             Description
           </label>
           <textarea

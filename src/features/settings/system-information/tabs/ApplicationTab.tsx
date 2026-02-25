@@ -38,7 +38,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Application Name
             </label>
             <input
@@ -49,7 +49,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Version
             </label>
             <input
@@ -60,7 +60,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Environment
             </label>
             <div className="flex items-center h-9 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
@@ -71,7 +71,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Build Number
             </label>
             <input
@@ -82,7 +82,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
             />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Build Date
             </label>
             <input

@@ -99,7 +99,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
         <div className="space-y-4">
           {/* Distribution Type - Required Field */}
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-700">
+            <label className="text-xs sm:text-sm font-medium text-slate-700">
               Distribution <span className="text-red-500">*</span>
             </label>
             <Select
@@ -119,7 +119,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Employees */}
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">
+                <label className="text-xs sm:text-sm font-medium text-slate-700">
                   Employees
                 </label>
                 <MultiSelect
@@ -134,7 +134,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
 
               {/* Groups */}
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">
+                <label className="text-xs sm:text-sm font-medium text-slate-700">
                   Groups
                 </label>
                 <MultiSelect
@@ -149,7 +149,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
 
               {/* Business Units */}
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">
+                <label className="text-xs sm:text-sm font-medium text-slate-700">
                   Business Units
                 </label>
                 <MultiSelect
@@ -164,7 +164,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
 
               {/* Departments */}
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">
+                <label className="text-xs sm:text-sm font-medium text-slate-700">
                   Departments
                 </label>
                 <MultiSelect
@@ -182,7 +182,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
           {/* Suppliers/Customers - Only shown when External is selected */}
           {distributionType === "external" && (
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-slate-700">
+              <label className="text-xs sm:text-sm font-medium text-slate-700">
                 Suppliers/Customers <span className="text-red-500">*</span>
               </label>
               <Select
@@ -201,7 +201,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
           {/* Supplier List - Only shown when Suppliers is selected */}
           {distributionType === "external" && supplierCustomerType === "suppliers" && (
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-slate-700">
+              <label className="text-xs sm:text-sm font-medium text-slate-700">
                 Supplier <span className="text-red-500">*</span>
               </label>
               <Select
@@ -217,7 +217,7 @@ export const DistributionInformationTab: React.FC<DistributionInformationTabProp
           {/* Customer List - Only shown when Customers is selected */}
           {distributionType === "external" && supplierCustomerType === "customers" && (
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-slate-700">
+              <label className="text-xs sm:text-sm font-medium text-slate-700">
                 Customer <span className="text-red-500">*</span>
               </label>
               <Select

@@ -65,7 +65,7 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
       <div className="space-y-4">
         {/* Name Field */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
             Name
           </label>
           <input
@@ -81,7 +81,7 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
 
         {/* Revision Number Field */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
             Revision Number
           </label>
           <input
@@ -94,7 +94,7 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
 
         {/* Note Textarea */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">
+          <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
             Note
           </label>
           <textarea

@@ -438,7 +438,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   return (
     <div className="relative w-full">
       {label && (
-        <label htmlFor={`${pickerId}-trigger`} className="text-sm font-medium text-slate-700 mb-1.5 block">
+        <label htmlFor={`${pickerId}-trigger`} className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
           {label}
         </label>
       )}

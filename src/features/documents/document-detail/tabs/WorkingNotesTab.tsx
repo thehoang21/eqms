@@ -27,7 +27,7 @@ export const WorkingNotesTab: React.FC<WorkingNotesTabProps> = ({
     <div className="space-y-4">
       {/* Working Notes Textarea */}
       <div>
-        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+        <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
           Working Notes
         </label>
         <textarea

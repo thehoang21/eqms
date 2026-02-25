@@ -55,7 +55,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
     <div className="space-y-4">
       {/* Document Name - Full Width Row */}
       <div>
-        <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+        <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
           Document Name
         </label>
         <input
@@ -71,7 +71,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
       {/* Document Number and Created - Same Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+          <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
             Document Number
           </label>
           <input
@@ -85,7 +85,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
         </div>
 
         <div>
-          <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+          <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
             Document Created
           </label>
           <input

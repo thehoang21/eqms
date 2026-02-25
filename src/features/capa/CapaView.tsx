@@ -327,7 +327,7 @@ export const CAPAView: React.FC = () => {
         {/* Row 1: Search + Type + Source */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-9 gap-4 items-end">
           <div className="xl:col-span-3">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
             <div className="relative">

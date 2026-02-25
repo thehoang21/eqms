@@ -103,7 +103,7 @@ export const FeaturesTab: React.FC<FeaturesTabProps> = ({ features }) => {
                   <div className="flex-1 min-w-0">
                     <label
                       htmlFor={`feature-${feature.id}`}
-                      className="block text-sm font-medium text-slate-700 mb-1 cursor-not-allowed"
+                      className="block text-xs sm:text-sm font-medium text-slate-700 mb-1 cursor-not-allowed"
                     >
                       {feature.name}
                     </label>

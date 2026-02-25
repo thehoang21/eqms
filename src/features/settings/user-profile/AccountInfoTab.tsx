@@ -144,19 +144,19 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">Basic Information</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
                                 <input type="text" value={formData.fullName} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Username</label>
                                 <input type="text" value={formData.username} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Employee ID</label>
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Employee ID</label>
                                 <input type="text" value={formData.employeeId} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Nationality</label>
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Nationality</label>
                                 <input type="text" value={formData.nationality} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                         </div>
@@ -167,22 +167,22 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">Role & Permissions</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Job Title</label>
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Job Title</label>
                                 <input type="text" value={formData.jobTitle} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">Department</label>
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Department</label>
                                 <input type="text" value={formData.department} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                             <div className="md:col-span-2">
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">System Role</label>
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">System Role</label>
                                 <input type="text" value={formData.systemRole} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
                             </div>
                         </div>
 
                         {/* Permissions List */}
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Permissions</label>
+                            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-2">Permissions</label>
                             <div className="space-y-2.5 p-4 bg-slate-50 rounded-lg border border-slate-200">
                                 {[
                                     { id: 'perm-print', checked: permissions.printControlledCopy, label: 'Request Controlled Copy', desc: 'Allow printing of controlled document copies' },
@@ -211,7 +211,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">Contact Information</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                                     Email Address <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
@@ -265,7 +265,7 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                                     Phone Number <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">

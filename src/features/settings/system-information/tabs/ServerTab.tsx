@@ -17,7 +17,7 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Operating System
             </label>
             <input
@@ -28,7 +28,7 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Node.js Version
             </label>
             <input
@@ -39,7 +39,7 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-2">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-2">
               <Clock className="h-3.5 w-3.5 text-slate-500" />
               System Uptime
             </label>
@@ -61,7 +61,7 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               CPU Model
             </label>
             <input
@@ -72,7 +72,7 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               CPU Cores
             </label>
             <div className="flex items-center h-9 px-3.5 border border-slate-200 rounded-lg bg-slate-50">

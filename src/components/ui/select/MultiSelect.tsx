@@ -262,7 +262,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
       {label && (
-        <label htmlFor={`${selectId}-trigger`} className="text-sm font-medium text-slate-700 mb-1.5 block">
+        <label htmlFor={`${selectId}-trigger`} className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
           {label}
         </label>
       )}

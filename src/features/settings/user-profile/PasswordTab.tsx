@@ -156,7 +156,7 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
                         <div className="space-y-4">
                             {/* New Password */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                                     New Password <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
@@ -200,7 +200,7 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
 
                             {/* Confirm New Password */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                                     Confirm New Password <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
@@ -235,7 +235,7 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
                             {/* Password Strength */}
                             {passwordData.newPassword && (
                                 <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                                    <p className="text-xs font-medium text-slate-700 mb-2">Password Strength:</p>
+                                    <p className="text-xs sm:text-sm font-medium text-slate-700 mb-2">Password Strength:</p>
                                     <div className="space-y-1.5">
                                         {[
                                             { key: 'minLength', label: 'At least 8 characters' },
@@ -275,7 +275,7 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
                                 onChange={onLogoutAllSessionsChange}
                             />
                             <div className="flex-1">
-                                <label htmlFor="logoutAllSessions" className="text-sm font-medium text-slate-700 cursor-pointer block">
+                                <label htmlFor="logoutAllSessions" className="text-xs sm:text-sm font-medium text-slate-700 cursor-pointer block">
                                     Log out from all sessions after password change
                                 </label>
                                 <p className="text-xs text-slate-600 mt-0.5">

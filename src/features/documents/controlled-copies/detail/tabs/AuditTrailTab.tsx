@@ -184,7 +184,7 @@ export const AuditTrailTab: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search */}
           <div className="md:col-span-2 xl:col-span-4 w-full">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-slate-400" />
@@ -305,7 +305,7 @@ export const AuditTrailTab: React.FC = () => {
                     <div className="flex flex-col items-center justify-center gap-3">
                       <History className="h-12 w-12 text-slate-300" />
                       <div>
-                        <p className="text-sm font-medium text-slate-700">No audit entries found</p>
+                        <p className="text-xs sm:text-sm font-medium text-slate-700">No audit entries found</p>
                         <p className="text-xs text-slate-500 mt-1">
                           {searchQuery || selectedAction !== "all"
                             ? "Try adjusting your filters or search query"

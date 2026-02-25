@@ -300,7 +300,7 @@ export const StandaloneRevisionView: React.FC = () => {
                                 </div>
                                 <div>
                                     <p className="text-xs text-slate-500 mb-1">Document Name</p>
-                                    <p className="text-sm font-medium text-slate-700">{sourceDocument.title}</p>
+                                    <p className="text-xs sm:text-sm font-medium text-slate-700">{sourceDocument.title}</p>
                                 </div>
                                 <div>
                                     <p className="text-xs text-slate-500 mb-1">Current Version</p>

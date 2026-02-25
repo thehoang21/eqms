@@ -85,7 +85,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
         </h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Base URL
             </label>
             <div className="flex gap-2">
@@ -117,7 +117,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 API Version
               </label>
               <input
@@ -128,7 +128,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                 Average Response Time
               </label>
               <div className="flex items-center h-9 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
@@ -147,7 +147,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
         </h3>
         <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Last Health Check
             </label>
             <p className="text-sm text-slate-900 font-medium">

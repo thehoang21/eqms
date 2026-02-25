@@ -229,7 +229,7 @@ export const NewRevisionView: React.FC = () => {
                             </div>
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">Document Name</p>
-                                <p className="text-sm font-medium text-slate-700">{MOCK_SOURCE_DOCUMENT.name}</p>
+                                <p className="text-xs sm:text-sm font-medium text-slate-700">{MOCK_SOURCE_DOCUMENT.name}</p>
                             </div>
                             <div>
                                 <p className="text-xs text-slate-500 mb-1">Current Version</p>
@@ -345,7 +345,7 @@ export const NewRevisionView: React.FC = () => {
                                                 {doc.type}
                                             </span>
                                         </td>
-                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm font-medium text-slate-700">
+                                        <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs sm:text-sm font-medium text-slate-700">
                                             {doc.currentVersion}
                                         </td>
                                         <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm">

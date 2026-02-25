@@ -60,7 +60,7 @@ export const CancelDistributionModal: React.FC<CancelDistributionModalProps> = (
 
         {/* Cancellation Reason */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-2">
             Cancellation Reason <span className="text-red-500">*</span>
           </label>
           <textarea

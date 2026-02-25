@@ -93,7 +93,7 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
 
         {/* New Password */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-2">
+          <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-2">
             New Password
           </label>
           <div className="flex items-center gap-2">

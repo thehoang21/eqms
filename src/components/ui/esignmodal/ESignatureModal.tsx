@@ -100,7 +100,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">Username <span className="text-red-500">*</span></label>
+            <label className="text-xs sm:text-sm font-medium text-slate-700">Username <span className="text-red-500">*</span></label>
             <input 
               type="text" 
               value={username} 
@@ -111,7 +111,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">Password <span className="text-red-500">*</span></label>
+            <label className="text-xs sm:text-sm font-medium text-slate-700">Password <span className="text-red-500">*</span></label>
             <input 
               type="password" 
               value={password}
@@ -122,7 +122,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">Reason <span className="text-red-500">*</span></label>
+            <label className="text-xs sm:text-sm font-medium text-slate-700">Reason <span className="text-red-500">*</span></label>
             <textarea 
               value={reason}
               onChange={(e) => setReason(e.target.value)}

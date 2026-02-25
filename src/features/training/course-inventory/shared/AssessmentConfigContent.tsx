@@ -95,7 +95,7 @@ const FileUploadZone: React.FC<{
     return (
         <div className="space-y-2">
             <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-slate-700">{label}</label>
+                <label className="text-xs sm:text-sm font-medium text-slate-700">{label}</label>
                 {isRestricted && (
                     <span className="inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
                         <Lock className="h-3 w-3" />
@@ -116,7 +116,7 @@ const FileUploadZone: React.FC<{
                         />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-slate-700 truncate">{file.name}</p>
+                        <p className="text-xs sm:text-sm font-medium text-slate-700 truncate">{file.name}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                             <span className="text-xs text-slate-400">{formatFileSize(file.size)}</span>
                             {file.status === "uploading" && (
@@ -332,7 +332,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                         {/* Passing Score */}
                         {passingGradeType !== "pass_fail" && (
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-sm font-medium text-slate-700">
+                                <label className="text-xs sm:text-sm font-medium text-slate-700">
                                     {getPassingScoreLabel()}
                                 </label>
                                 <Input
@@ -360,7 +360,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
 
                         {/* Max Attempts */}
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-sm font-medium text-slate-700">Max Attempts</label>
+                            <label className="text-xs sm:text-sm font-medium text-slate-700">Max Attempts</label>
                             <Input
                                 type="number"
                                 value={maxAttempts}
@@ -427,7 +427,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                     {/* Passing Score (conditional) */}
                     {passingGradeType !== "pass_fail" && (
                         <div className="flex flex-col gap-1.5">
-                            <label className="text-sm font-medium text-slate-700">
+                            <label className="text-xs sm:text-sm font-medium text-slate-700">
                                 {getPassingScoreLabel()}
                             </label>
                             <Input
@@ -462,7 +462,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
 
                     {/* Max Attempts */}
                     <div className="flex flex-col gap-1.5">
-                        <label className="text-sm font-medium text-slate-700">Max Attempts</label>
+                        <label className="text-xs sm:text-sm font-medium text-slate-700">Max Attempts</label>
                         <Input
                             type="number"
                             min={1}

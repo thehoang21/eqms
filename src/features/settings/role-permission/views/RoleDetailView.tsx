@@ -333,7 +333,7 @@ export const RoleDetailView: React.FC = () => {
         <h3 className="text-base font-semibold text-slate-900 mb-4">Role Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
           <div>
-            <label className="text-xs font-medium text-slate-700 mb-1.5 block">
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
               Role Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -353,7 +353,7 @@ export const RoleDetailView: React.FC = () => {
             {nameError && <p className="text-xs text-red-600 mt-1">{nameError}</p>}
           </div>
           <div>
-            <label className="text-xs font-medium text-slate-700 mb-1.5 block">Description</label>
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Description</label>
             <input
               type="text"
               value={roleDescription}

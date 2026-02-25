@@ -574,7 +574,7 @@ export const MaterialsView: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {getTypeIcon(type)}
-                    <span className="text-sm font-medium text-slate-700">{type}</span>
+                    <span className="text-xs sm:text-sm font-medium text-slate-700">{type}</span>
                   </div>
                   <span className="text-sm font-bold text-slate-900">{count} <span className="text-xs font-normal text-slate-500">({pct}%)</span></span>
                 </div>
@@ -608,7 +608,7 @@ export const MaterialsView: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search */}
           <div className="xl:col-span-3">
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input

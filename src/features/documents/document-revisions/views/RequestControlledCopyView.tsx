@@ -289,7 +289,7 @@ export const RequestControlledCopyView: React.FC = () => {
               <div className="space-y-3 lg:space-y-4">
                 {/* Document ID */}
                 <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-2 pb-3 lg:pb-4 border-b border-slate-200">
-                  <label className="text-xs lg:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Document ID</label>
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Document ID</label>
                   <p className="text-xs lg:text-sm text-slate-900 font-medium flex-1">
                     {documentId}
                   </p>
@@ -297,7 +297,7 @@ export const RequestControlledCopyView: React.FC = () => {
 
                 {/* Title */}
                 <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-2 pb-3 lg:pb-4 border-b border-slate-200">
-                  <label className="text-xs lg:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Title</label>
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Title</label>
                   <p className="text-xs lg:text-sm text-slate-900 flex-1" title={documentTitle}>
                     {documentTitle}
                   </p>
@@ -305,7 +305,7 @@ export const RequestControlledCopyView: React.FC = () => {
 
                 {/* Version */}
                 <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-2 pb-3 lg:pb-4 border-b border-slate-200">
-                  <label className="text-xs lg:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Version</label>
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Version</label>
                   <p className="text-xs lg:text-sm text-slate-900 font-medium flex-1">
                     v{documentVersion}
                   </p>
@@ -313,7 +313,7 @@ export const RequestControlledCopyView: React.FC = () => {
 
                 {/* Status */}
                 <div className="flex flex-col lg:flex-row lg:items-center gap-1.5 lg:gap-2">
-                  <label className="text-xs lg:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Status</label>
+                  <label className="text-xs sm:text-sm font-medium text-slate-700 w-full lg:w-40 flex-shrink-0">Status</label>
                   <div className="flex-1">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
                       Effective
@@ -423,7 +423,7 @@ export const RequestControlledCopyView: React.FC = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                     {/* Location Dropdown */}
                     <div>
-                      <label className="text-xs lg:text-sm font-medium text-slate-700 mb-1.5 block">
+                      <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                         Location <span className="text-red-600">*</span>
                       </label>
                       <Select
@@ -453,7 +453,7 @@ export const RequestControlledCopyView: React.FC = () => {
                     <div>
                       <label
                         htmlFor="quantity"
-                        className="text-xs lg:text-sm font-medium text-slate-700 mb-1.5 block"
+                        className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block"
                       >
                         Copies <span className="text-red-600">*</span>
                       </label>
@@ -529,7 +529,7 @@ export const RequestControlledCopyView: React.FC = () => {
                     <div className="lg:col-span-2">
                       <label
                         htmlFor="reason"
-                        className="text-xs lg:text-sm font-medium text-slate-700 mb-1.5 block"
+                        className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block"
                       >
                         Reason <span className="text-red-600">*</span>
                       </label>

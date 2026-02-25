@@ -164,7 +164,7 @@ export const AddUserView: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {/* Employee ID */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Employee ID <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -207,7 +207,7 @@ export const AddUserView: React.FC = () => {
 
               {/* Full Name */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -238,7 +238,7 @@ export const AddUserView: React.FC = () => {
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Email <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -274,7 +274,7 @@ export const AddUserView: React.FC = () => {
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Phone Number
                 </label>
                 <input
@@ -297,7 +297,7 @@ export const AddUserView: React.FC = () => {
 
               {/* Business Unit */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Business Unit <span className="text-red-500">*</span>
                 </label>
                 <Select
@@ -319,7 +319,7 @@ export const AddUserView: React.FC = () => {
 
               {/* Department */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                   Department <span className="text-red-500">*</span>
                 </label>
                 <Select

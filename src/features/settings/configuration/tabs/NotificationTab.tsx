@@ -105,7 +105,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
             <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     SMTP Host
                   </label>
                   <input
@@ -117,7 +117,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     SMTP Port
                   </label>
                   <input
@@ -129,7 +129,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     SMTP Username
                   </label>
                   <input
@@ -141,7 +141,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     SMTP Password
                   </label>
                   <div className="relative">
@@ -162,7 +162,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Sender Email
                   </label>
                   <input
@@ -174,7 +174,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Sender Name
                   </label>
                   <input
@@ -214,7 +214,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
             <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Bot Token
                   </label>
                   <div className="relative">
@@ -238,7 +238,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Chat ID / Group ID
                   </label>
                   <input
@@ -275,7 +275,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
             <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Phone Number ID
                   </label>
                   <input
@@ -290,7 +290,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Business Account ID
                   </label>
                   <input
@@ -305,7 +305,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </p>
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Access Token
                   </label>
                   <div className="relative">
@@ -389,7 +389,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Account SID / API Key
                   </label>
                   <input
@@ -401,7 +401,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Auth Token / Secret
                   </label>
                   <div className="relative">
@@ -422,7 +422,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Sender Phone Number
                   </label>
                   <input
@@ -437,7 +437,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Rate Limit (Per Hour)
                   </label>
                   <input
@@ -478,7 +478,7 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
             <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-slate-700">
+                  <p className="text-xs sm:text-sm font-medium text-slate-700">
                     Template Library
                   </p>
                   <span className="text-xs text-slate-500">
