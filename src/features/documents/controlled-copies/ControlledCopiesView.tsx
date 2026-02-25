@@ -1106,8 +1106,8 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
       {/* Filters */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="p-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-            <div className="md:col-span-2 xl:col-span-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-end">
+            <div>
               <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -1120,7 +1120,7 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
                 />
               </div>
             </div>
-            <div className="xl:col-span-6">
+            <div>
               <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">State</label>
               {viewType === "all" ? (
                 <Select
@@ -1144,7 +1144,7 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
                 />
               )}
             </div>
-            <div className="md:col-span-2 xl:col-span-6">
+            <div>
               <DateTimePicker
                 label="From Date"
                 value={dateFromFilter}
@@ -1152,7 +1152,7 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
                 placeholder="Select date"
               />
             </div>
-            <div className="md:col-span-2 xl:col-span-6">
+            <div>
               <DateTimePicker
                 label="To Date"
                 value={dateToFilter}

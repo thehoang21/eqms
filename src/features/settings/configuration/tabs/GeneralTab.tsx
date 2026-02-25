@@ -257,8 +257,8 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
           </p>
           
           {config.backupSettings.enableAutoBackup && (
-            <div className="ml-7 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="ml-4 sm:ml-7 p-3 sm:p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Select
                   label="Backup Frequency"
                   value={config.backupSettings.backupFrequency}
@@ -283,7 +283,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                     System local time (24-hour format)
                   </p>
                 </div>
-                <div>
+                <div className="sm:col-span-2 lg:col-span-1">
                   <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                     Retention Period (Days)
                   </label>
@@ -300,7 +300,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Select
                   label="Backup Location"
                   value={config.backupSettings.backupLocation}
@@ -311,7 +311,7 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
                     { label: 'Amazon S3', value: 's3' },
                   ]}
                 />
-                <div className="flex items-center pt-8">
+                <div className="flex items-center sm:pt-8">
                   <Checkbox
                     id="notifyOnBackupFailure"
                     label="Notify on Backup Failure"
