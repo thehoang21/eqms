@@ -234,9 +234,8 @@ export const RequestControlledCopyView: React.FC = () => {
                   </span>
                   <span className="sm:hidden">...</span>
                   <span className="text-slate-400 mx-1">/</span>
-                  <span>
-                    Document Revisions
-                  </span>
+                  <span className="hidden sm:inline">Document Revisions</span>
+                  <span className="sm:hidden">...</span>
                   <span className="text-slate-400 mx-1">/</span>
                   <span className="text-slate-700 font-medium">{documentId}</span>
                 </div>

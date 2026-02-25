@@ -508,7 +508,7 @@ export const ReportView: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col gap-2">
         <h1 className="text-xl md:text-2xl font-bold text-slate-900">Reports & Analytics</h1>
-        <div className="flex items-center gap-1.5 text-slate-500 text-sm">
+        <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
           <IconLayoutDashboard className="h-4 w-4" />
           <span className="text-slate-400 mx-1">/</span>
           <span className="text-slate-700 font-medium">Reports</span>

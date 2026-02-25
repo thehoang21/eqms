@@ -336,10 +336,10 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                                     ) : item.isActive ? (
                                         <span className="text-slate-700 font-medium">{item.label}</span>
                                     ) : (
-                                        <span>
-                                            <span className="hidden md:inline">{item.label}</span>
-                                            <span className="md:hidden">...</span>
-                                        </span>
+                                        <>
+                                            <span className="hidden sm:inline">{item.label}</span>
+                                            <span className="sm:hidden">...</span>
+                                        </>
                                     )}
                                     {index < breadcrumbs.length - 1 && (
                                         <span className="text-slate-400 mx-1">/</span>

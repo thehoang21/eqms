@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  ChevronRight,
   Clock,
   CheckCircle2,
   AlertCircle,
@@ -226,15 +225,12 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
               <IconLayoutDashboard className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">
-                Dashboard
-              </span>
+              <span className="hidden sm:inline">Document Control</span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <span>
-                All Documents
-              </span>
-              <ChevronRight className="h-4 w-4 text-slate-400" />
+              <span className="hidden sm:inline">All Documents</span>
+              <span className="sm:hidden">...</span>
+              <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">
                 {document.documentId}
               </span>

@@ -332,15 +332,11 @@ export const NewDocumentView: React.FC = () => {
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
                             <IconLayoutDashboard className="h-4 w-4" />
                             <span className="text-slate-400 mx-1">/</span>
-                            <span>
-                                <span className="hidden md:inline">Document Control</span>
-                                <span className="md:hidden">...</span>
-                            </span>
+                            <span className="hidden sm:inline">Document Control</span>
+                            <span className="sm:hidden">...</span>
                             <span className="text-slate-400 mx-1">/</span>
-                            <span>
-                                <span className="hidden md:inline">All Documents</span>
-                                <span className="md:hidden">...</span>
-                            </span>
+                            <span className="hidden sm:inline">All Documents</span>
+                            <span className="sm:hidden">...</span>
                             <span className="text-slate-400 mx-1">/</span>
                             <span className="text-slate-700 font-medium">New Document</span>
                         </div>

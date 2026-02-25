@@ -275,9 +275,8 @@ export const RoleDetailView: React.FC = () => {
             <span className="hidden sm:inline">Settings</span>
             <span className="sm:hidden">...</span>
             <span className="text-slate-400 mx-1">/</span>
-            <span>
-              Role & Permissions
-            </span>
+            <span className="hidden sm:inline">Role & Permissions</span>
+            <span className="sm:hidden">...</span>
             <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">
               {isNewRole ? "New Role" : isEditMode ? "Edit Role" : "Role Details"}

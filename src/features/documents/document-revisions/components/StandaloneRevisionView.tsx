@@ -243,7 +243,7 @@ export const StandaloneRevisionView: React.FC = () => {
                                 All Documents
                             </span>
                             <span className="sm:hidden">...</span>
-                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                            <span className="text-slate-400 mx-1">/</span>
                             <span className="text-slate-700 font-medium">New Revision</span>
                         </div>
                     </div>

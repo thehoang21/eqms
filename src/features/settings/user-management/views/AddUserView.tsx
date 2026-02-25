@@ -124,13 +124,11 @@ export const AddUserView: React.FC = () => {
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
               <IconLayoutDashboard className="h-4 w-4" />
               <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden md:inline">Settings</span>
-              <span className="md:hidden">...</span>
+              <span className="hidden sm:inline">Settings</span>
+              <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden md:inline">
-                User Management
-              </span>
-              <span className="md:hidden">...</span>
+              <span className="hidden sm:inline">User Management</span>
+              <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">Add User</span>
             </div>
