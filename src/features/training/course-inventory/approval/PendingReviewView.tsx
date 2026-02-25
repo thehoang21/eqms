@@ -302,11 +302,10 @@ export const PendingReviewView: React.FC = () => {
 
       {/* Filters */}
       <div className="bg-white p-3 sm:p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
-        {/* Row 1: Search + Method + Instructor */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 lg:gap-4 items-end">
           {/* Search */}
-          <div className="md:col-span-2 xl:col-span-6">
-            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+          <div className="xl:col-span-4">
+            <label className="text-xs sm:text-xs font-medium text-slate-700 mb-1.5 block">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
@@ -323,7 +322,7 @@ export const PendingReviewView: React.FC = () => {
           </div>
 
           {/* Method Filter */}
-          <div className="xl:col-span-3">
+          <div className="xl:col-span-4">
             <Select
               label="Training Method"
               value={methodFilter}
@@ -336,7 +335,7 @@ export const PendingReviewView: React.FC = () => {
           </div>
 
           {/* Instructor Filter */}
-          <div className="xl:col-span-3">
+          <div className="xl:col-span-4">
             <Select
               label="Instructor"
               value={instructorFilter}
@@ -347,12 +346,9 @@ export const PendingReviewView: React.FC = () => {
               options={INSTRUCTOR_OPTIONS}
             />
           </div>
-        </div>
 
-        {/* Row 2: Department + Date Range */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4 items-end mt-3 lg:mt-4">
           {/* Department Filter */}
-          <div>
+          <div className="xl:col-span-4">
             <Select
               label="Department"
               value={departmentFilter}
@@ -365,7 +361,7 @@ export const PendingReviewView: React.FC = () => {
           </div>
 
           {/* Date From */}
-          <div>
+          <div className="xl:col-span-4">
             <DateTimePicker
               label="From Date"
               value={dateFrom}
@@ -378,7 +374,7 @@ export const PendingReviewView: React.FC = () => {
           </div>
 
           {/* Date To */}
-          <div>
+          <div className="xl:col-span-4">
             <DateTimePicker
               label="To Date"
               value={dateTo}

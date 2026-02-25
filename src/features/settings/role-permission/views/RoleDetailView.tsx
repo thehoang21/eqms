@@ -333,7 +333,7 @@ export const RoleDetailView: React.FC = () => {
         <h3 className="text-base font-semibold text-slate-900 mb-4">Role Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
           <div>
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">
+            <label className="text-xs font-medium text-slate-700 mb-1.5 block">
               Role Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -353,7 +353,7 @@ export const RoleDetailView: React.FC = () => {
             {nameError && <p className="text-xs text-red-600 mt-1">{nameError}</p>}
           </div>
           <div>
-            <label className="text-sm font-medium text-slate-700 mb-1.5 block">Description</label>
+            <label className="text-xs font-medium text-slate-700 mb-1.5 block">Description</label>
             <input
               type="text"
               value={roleDescription}
@@ -396,7 +396,7 @@ export const RoleDetailView: React.FC = () => {
         </div>
 
         {/* Toolbar */}
-        <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-4 shrink-0">
+        <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex flex-col xl:flex-row xl:items-center gap-3 lg:gap-4 shrink-0">
           <div className="flex flex-1 items-center gap-3">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
