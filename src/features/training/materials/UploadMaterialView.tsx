@@ -391,10 +391,11 @@ export const UploadMaterialView: React.FC = () => {
             <span className="text-slate-400 mx-1">/</span>
             <button
               onClick={() => navigate("/training-management/training-materials")}
-              className="hover:text-emerald-600 transition-colors"
+              className="hidden sm:inline hover:text-emerald-600 transition-colors"
             >
               Training Materials
             </button>
+            <span className="sm:hidden">...</span>
             <span className="text-slate-400 mx-1">/</span>
             <span className="text-slate-700 font-medium">Upload Material</span>
           </div>
