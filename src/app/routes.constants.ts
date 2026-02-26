@@ -93,6 +93,12 @@ export const ROUTES = {
   // Risk Management
   RISK: '/risk-management',
 
+  // Product Management
+  PRODUCT: '/product-management',
+
+  // Regulatory Management
+  REGULATORY: '/regulatory-management',
+
   // Report
   REPORT: '/report',
 

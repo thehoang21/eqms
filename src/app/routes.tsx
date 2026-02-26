@@ -83,6 +83,13 @@ const MaterialReviewApprovalView = lazy(() => import('@/features/training/materi
 
 const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
+const ChangeControlView = lazy(() => import('@/features/change-control').then(m => ({ default: m.ChangeControlView })));
+const ComplaintsView = lazy(() => import('@/features/complaints').then(m => ({ default: m.ComplaintsView })));
+const RiskManagementView = lazy(() => import('@/features/risk-management').then(m => ({ default: m.RiskManagementView })));
+const EquipmentView = lazy(() => import('@/features/equipment').then(m => ({ default: m.EquipmentView })));
+const SupplierView = lazy(() => import('@/features/supplier').then(m => ({ default: m.SupplierView })));
+const ProductView = lazy(() => import('@/features/product').then(m => ({ default: m.ProductView })));
+const RegulatoryView = lazy(() => import('@/features/regulatory').then(m => ({ default: m.RegulatoryView })));
 const ReportView = lazy(() => import('@/features/report').then(m => ({ default: m.ReportView })));
 
 // System
@@ -319,19 +326,25 @@ export const AppRoutes: React.FC = () => {
         <Route path="capa-management" element={<Suspense fallback={<LoadingFallback />}><CAPAView /></Suspense>} />
         
         {/* ===== CHANGE MANAGEMENT ===== */}
-        <Route path="change-management" element={<UnderConstruction />} />
+        <Route path="change-management" element={<Suspense fallback={<LoadingFallback />}><ChangeControlView /></Suspense>} />
         
         {/* ===== COMPLAINTS MANAGEMENT ===== */}
-        <Route path="complaints-management" element={<UnderConstruction />} />
+        <Route path="complaints-management" element={<Suspense fallback={<LoadingFallback />}><ComplaintsView /></Suspense>} />
         
         {/* ===== EQUIPMENT MANAGEMENT ===== */}
-        <Route path="equipment-management" element={<UnderConstruction />} />
+        <Route path="equipment-management" element={<Suspense fallback={<LoadingFallback />}><EquipmentView /></Suspense>} />
         
         {/* ===== SUPPLIER MANAGEMENT ===== */}
-        <Route path="supplier-management" element={<UnderConstruction />} />
+        <Route path="supplier-management" element={<Suspense fallback={<LoadingFallback />}><SupplierView /></Suspense>} />
         
         {/* ===== RISK MANAGEMENT ===== */}
-        <Route path="risk-management" element={<UnderConstruction />} />
+        <Route path="risk-management" element={<Suspense fallback={<LoadingFallback />}><RiskManagementView /></Suspense>} />
+        
+        {/* ===== PRODUCT MANAGEMENT ===== */}
+        <Route path="product-management" element={<Suspense fallback={<LoadingFallback />}><ProductView /></Suspense>} />
+        
+        {/* ===== REGULATORY MANAGEMENT ===== */}
+        <Route path="regulatory-management" element={<Suspense fallback={<LoadingFallback />}><RegulatoryView /></Suspense>} />
         
         {/* ===== REPORT ===== */}
         <Route path="report" element={<Suspense fallback={<LoadingFallback />}><ReportView /></Suspense>} />

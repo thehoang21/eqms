@@ -215,31 +215,31 @@ const QUALITY_MODULES: NavItem[] = [
     id: "deviation-ncs",
     label: "Deviation & NCs",
     icon: IconAlertTriangle,
-    path: "/deviations",
+    path: "/deviations-ncs",
   },
   {
     id: "capa-management",
     label: "CAPA Management",
     icon: IconClipboardCheck,
-    path: "/capa",
+    path: "/capa-management",
   },
   {
     id: "change-control",
     label: "Change Controls",
     icon: IconReplace,
-    path: "/changes",
+    path: "/change-management",
   },
   {
     id: "complaints-management",
     label: "Complaints Management",
     icon: IconMessageReport,
-    path: "/complaints",
+    path: "/complaints-management",
   },
   {
     id: "risk-management",
     label: "Risk Management",
     icon: IconShieldExclamation,
-    path: "/risks",
+    path: "/risk-management",
   },
 ];
 
@@ -251,19 +251,19 @@ const OPERATIONS_MODULES: NavItem[] = [
     id: "equipment-management",
     label: "Equipment Management",
     icon: IconDeviceLaptop,
-    path: "/equipment",
+    path: "/equipment-management",
   },
   {
     id: "supplier-management",
     label: "Supplier Management",
     icon: IconBuildingStore,
-    path: "/suppliers",
+    path: "/supplier-management",
   },
   {
     id: "product-management",
     label: "Product Management",
     icon: Package,
-    path: "/products",
+    path: "/product-management",
   },
 ];
 
@@ -275,7 +275,7 @@ const REGULATORY_MODULE: NavItem[] = [
     id: "regulatory-management",
     label: "Regulatory Management",
     icon: Scale,
-    path: "/regulatory",
+    path: "/regulatory-management",
   },
 ];
 
@@ -287,7 +287,7 @@ const SYSTEM_MODULES: NavItem[] = [
     id: "report",
     label: "Reports & Analytics",
     icon: FileBarChart,
-    path: "/reports",
+    path: "/report",
   },
   {
     id: "audit-trail",

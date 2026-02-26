@@ -165,7 +165,7 @@ export const DashboardView: React.FC = () => {
       {/* Welcome & Quick Actions Section */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Welcome Banner */}
-        <div className="lg:col-span-2 relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 text-white shadow-lg">
+        <div className="lg:col-span-2 relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 text-white shadow-lg">
           <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
           <div className="absolute bottom-0 left-0 -ml-16 -mb-16 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
           
@@ -195,7 +195,7 @@ export const DashboardView: React.FC = () => {
         </div>
 
         {/* Quick Actions Panel */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
            <div>
             <h2 className="text-lg font-bold text-slate-900 mb-1">Quick Actions</h2>
             <p className="text-sm text-slate-500 mb-4">Common tasks and shortcuts</p>
@@ -293,7 +293,7 @@ export const DashboardView: React.FC = () => {
         {/* Document Trend Chart */}
         <motion.div 
           variants={itemVariants}
-          className="xl:col-span-2 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col"
+          className="xl:col-span-2 rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col"
         >
           <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -371,7 +371,7 @@ export const DashboardView: React.FC = () => {
            {/* Deadlines Widget */}
            <motion.div 
              variants={itemVariants} 
-             className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+             className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
            >
               <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                  <h3 className="font-bold text-slate-900 flex items-center gap-2">
@@ -414,7 +414,7 @@ export const DashboardView: React.FC = () => {
         {/* Recent Activity Widget */}
         <motion.div 
            variants={itemVariants} 
-           className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+           className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
         >
            <div className="p-5 border-b border-slate-100 bg-slate-50/50">
                <h3 className="font-bold text-slate-900 flex items-center gap-2">

@@ -1,2 +1,2 @@
 // Export Change Control components
-// export { ChangeControlView } from './ChangeControlView';
+export { ChangeControlView } from './ChangeControlView';

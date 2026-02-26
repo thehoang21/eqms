@@ -145,19 +145,19 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
-                                <input type="text" value={formData.fullName} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.fullName} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-900 cursor-default focus:outline-none" />
                             </div>
                             <div>
                                 <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Username</label>
-                                <input type="text" value={formData.username} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.username} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-900 cursor-default focus:outline-none" />
                             </div>
                             <div>
                                 <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Employee ID</label>
-                                <input type="text" value={formData.employeeId} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.employeeId} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-900 cursor-default focus:outline-none" />
                             </div>
                             <div>
                                 <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Nationality</label>
-                                <input type="text" value={formData.nationality} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.nationality} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-900 cursor-default focus:outline-none" />
                             </div>
                         </div>
                     </div>
@@ -168,15 +168,15 @@ export const AccountInfoTab: React.FC<AccountInfoTabProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Job Title</label>
-                                <input type="text" value={formData.jobTitle} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.jobTitle} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-900 cursor-default focus:outline-none" />
                             </div>
                             <div>
                                 <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Department</label>
-                                <input type="text" value={formData.department} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.department} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-900 cursor-default focus:outline-none" />
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">System Role</label>
-                                <input type="text" value={formData.systemRole} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-500 cursor-not-allowed" />
+                                <input type="text" value={formData.systemRole} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-900 cursor-default focus:outline-none" />
                             </div>
                         </div>
 
