@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Save, RotateCcw, Settings, Shield, FileText, Bell } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Save, RotateCcw, Settings, Shield, FileText, Bell, Plug, Download, Upload } from 'lucide-react';
 import { IconLayoutDashboard } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
@@ -11,8 +11,9 @@ import { GeneralTab } from './tabs/GeneralTab';
 import { SecurityTab } from './tabs/SecurityTab';
 import { DocumentTab } from './tabs/DocumentTab';
 import { NotificationTab } from './tabs/NotificationTab';
+import { IntegrationTab } from './tabs/IntegrationTab';
 
-type TabId = 'general' | 'security' | 'document' | 'notification';
+type TabId = 'general' | 'security' | 'document' | 'notification' | 'integration';
 
 const TABS = [
   {
@@ -39,6 +40,12 @@ const TABS = [
     icon: Bell,
     description: 'Email and in-app notification channels and triggers',
   },
+  {
+    id: 'integration' as TabId,
+    label: 'Integrations',
+    icon: Plug,
+    description: 'SSO, LDAP, webhooks, storage, and API security settings',
+  },
 ];
 
 export const ConfigurationView: React.FC = () => {
@@ -47,6 +54,7 @@ export const ConfigurationView: React.FC = () => {
   const [isDirty, setIsDirty] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const { showToast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleConfigChange = <K extends keyof SystemConfig>(section: K, value: SystemConfig[K]) => {
     setConfig((prev) => ({
@@ -82,6 +90,59 @@ export const ConfigurationView: React.FC = () => {
     });
   };
 
+  const handleExportConfig = () => {
+    const dataStr = JSON.stringify(config, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `eqms-config-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast({
+      type: 'success',
+      title: 'Configuration exported',
+      message: 'Configuration file downloaded successfully.',
+    });
+  };
+
+  const handleImportConfig = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target?.result as string);
+        if (imported.general && imported.security && imported.documents && imported.notifications) {
+          setConfig(imported as SystemConfig);
+          setIsDirty(true);
+          showToast({
+            type: 'success',
+            title: 'Configuration imported',
+            message: 'Review changes and click "Save Changes" to apply.',
+          });
+        } else {
+          showToast({
+            type: 'error',
+            title: 'Invalid file',
+            message: 'The selected file is not a valid configuration file.',
+          });
+        }
+      } catch {
+        showToast({
+          type: 'error',
+          title: 'Import failed',
+          message: 'Could not parse the selected JSON file.',
+        });
+      }
+    };
+    reader.readAsText(file);
+    // Reset file input
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'general':
@@ -92,6 +153,8 @@ export const ConfigurationView: React.FC = () => {
         return <DocumentTab config={config.documents} onChange={(val) => handleConfigChange('documents', val)} />;
       case 'notification':
         return <NotificationTab config={config.notifications} onChange={(val) => handleConfigChange('notifications', val)} />;
+      case 'integration':
+        return <IntegrationTab config={config.integrations} onChange={(val) => handleConfigChange('integrations', val)} />;
       default:
         return null;
     }
@@ -115,6 +178,31 @@ export const ConfigurationView: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+          <Button
+            variant="outline"
+            onClick={handleExportConfig}
+            size="sm"
+            className="gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            size="sm"
+            className="gap-2"
+          >
+            <Upload className="h-4 w-4" />
+            Import
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleImportConfig}
+            className="hidden"
+          />
           <Button 
             variant="outline" 
             onClick={handleResetClick} 

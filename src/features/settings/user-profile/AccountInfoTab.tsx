@@ -1,4 +1,4 @@
-import React, { useRef, ChangeEvent } from 'react';
+﻿import React, { useRef, ChangeEvent } from 'react';
 import { Camera, Edit2, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';

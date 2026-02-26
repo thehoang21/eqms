@@ -17,6 +17,22 @@ export interface BackupSettings {
   notifyOnBackupFailure: boolean;
 }
 
+export interface LocaleSettings {
+  language: string;
+  numberFormat: string;
+  currencyCode: string;
+  firstDayOfWeek: 'monday' | 'sunday';
+}
+
+export interface AppearanceSettings {
+  theme: 'light' | 'dark' | 'auto';
+  primaryColor: string;
+  compactMode: boolean;
+  showBreadcrumbs: boolean;
+  sidebarDefaultCollapsed: boolean;
+  animationsEnabled: boolean;
+}
+
 export interface GeneralConfig {
   systemName: string;
   systemDisplayName: string;
@@ -28,6 +44,8 @@ export interface GeneralConfig {
   timeZone: string;
   companyInfo: CompanyInfo;
   backupSettings: BackupSettings;
+  locale: LocaleSettings;
+  appearance: AppearanceSettings;
 }
 
 export interface IpSecurity {
@@ -152,9 +170,66 @@ export interface NotificationConfig {
   };
 }
 
+// --- Integration Types ---
+
+export interface SsoConfig {
+  enableSso: boolean;
+  provider: 'saml' | 'oidc' | 'ldap' | 'azure-ad';
+  entityId: string;
+  ssoUrl: string;
+  certificate: string;
+  autoProvisionUsers: boolean;
+  defaultRole: string;
+}
+
+export interface LdapConfig {
+  enableLdap: boolean;
+  serverUrl: string;
+  baseDn: string;
+  bindDn: string;
+  bindPassword: string;
+  userSearchFilter: string;
+  groupSearchFilter: string;
+  syncSchedule: 'hourly' | 'daily' | 'manual';
+  lastSyncDate: string;
+}
+
+export interface WebhookConfig {
+  id: string;
+  name: string;
+  url: string;
+  events: string[];
+  secret: string;
+  enabled: boolean;
+  lastTriggered: string;
+  failureCount: number;
+}
+
+export interface StorageIntegration {
+  provider: 'local' | 'aws-s3' | 'azure-blob' | 'google-cloud';
+  bucketName: string;
+  region: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  basePath: string;
+  enableCdn: boolean;
+  cdnUrl: string;
+}
+
+export interface IntegrationConfig {
+  sso: SsoConfig;
+  ldap: LdapConfig;
+  webhooks: WebhookConfig[];
+  storage: StorageIntegration;
+  enableApiKeyAuth: boolean;
+  apiRateLimitPerMinute: number;
+  corsAllowedOrigins: string[];
+}
+
 export interface SystemConfig {
   general: GeneralConfig;
   security: SecurityConfig;
   documents: DocumentConfig;
   notifications: NotificationConfig;
+  integrations: IntegrationConfig;
 }

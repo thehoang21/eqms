@@ -1,5 +1,5 @@
-import React from "react";
-import { Shield, Calendar, Users, Package, AlertTriangle } from "lucide-react";
+﻿import React from "react";
+import { Shield, Calendar, Users, Package, AlertTriangle, Info, Check } from "lucide-react";
 import type { LicenseInfo } from "../types";
 
 interface LicenseTabProps {
@@ -20,199 +20,158 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
   const userUsagePercent = (data.activeUsers / data.maxUsers) * 100;
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Expiry Warning */}
+    <div className="p-5 space-y-4">
+      {/* Expiry Warning Banner */}
       {isExpiringSoon && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <div className="flex gap-3">
-            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
-            <div>
-              <h4 className="text-sm font-medium text-amber-900 mb-1">License Expiring Soon</h4>
-              <p className="text-sm text-amber-700">
-                Your license will expire in <strong>{data.daysUntilExpiry} days</strong> on{" "}
-                <strong>{formatDate(data.expiryDate)}</strong>.
-                Please contact your account manager to renew your license.
-              </p>
-            </div>
+        <div className="flex gap-3 px-4 py-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-amber-900 mb-0.5">License Expiring Soon</p>
+            <p className="text-sm text-amber-700">
+              Your license will expire in <strong>{data.daysUntilExpiry} days</strong> on{" "}
+              <strong>{formatDate(data.expiryDate)}</strong>. Please contact your account manager to renew.
+            </p>
           </div>
         </div>
       )}
 
-      {/* License Details */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
-          <Shield className="h-4 w-4 text-slate-600" />
-          License Details
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              License Type
-            </label>
-            <input
-              type="text"
-              value={data.licenseType}
-              disabled
-              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-semibold"
-            />
+      {/* Card: License Details */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-emerald-100 flex-shrink-0">
+            <Shield className="h-4 w-4 text-emerald-600" />
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Company Name
-            </label>
-            <input
-              type="text"
-              value={data.companyName}
-              disabled
-              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
-            />
+            <h3 className="text-sm font-semibold text-slate-900">License Details</h3>
+            <p className="text-xs text-slate-500 mt-0.5">License type & organization</p>
+          </div>
+        </div>
+        <div className="p-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">License Type</label>
+              <input type="text" value={data.licenseType} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-semibold" />
+            </div>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Company Name</label>
+              <input type="text" value={data.companyName} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Validity Period */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-slate-600" />
-          Validity Period
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Issued Date
-            </label>
-            <input
-              type="text"
-              value={formatDate(data.issuedDate)}
-              disabled
-              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
-            />
+      {/* Card: Validity Period */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-blue-100 flex-shrink-0">
+            <Calendar className="h-4 w-4 text-blue-600" />
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Expiry Date
-            </label>
-            <input
-              type="text"
-              value={formatDate(data.expiryDate)}
-              disabled
-              className={`w-full h-9 px-3.5 text-sm border rounded-lg cursor-not-allowed font-semibold ${
-                isExpiringSoon
-                  ? "border-amber-300 bg-amber-50 text-amber-900"
-                  : "border-slate-200 bg-slate-50 text-slate-700"
-              }`}
-            />
+            <h3 className="text-sm font-semibold text-slate-900">Validity Period</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Issue date, expiry & days remaining</p>
           </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Days Until Expiry
-            </label>
-            <div className={`flex items-center h-9 px-3.5 border rounded-lg ${
-              isExpiringSoon
-                ? "border-amber-300 bg-amber-50"
-                : "border-slate-200 bg-slate-50"
-            }`}>
-              <span className={`text-sm font-semibold ${
-                isExpiringSoon ? "text-amber-900" : "text-slate-700"
+        </div>
+        <div className="p-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Issued Date</label>
+              <input type="text" value={formatDate(data.issuedDate)} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed" />
+            </div>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Expiry Date</label>
+              <input type="text" value={formatDate(data.expiryDate)} disabled className={`w-full h-9 px-3.5 text-sm border rounded-lg cursor-not-allowed font-semibold ${
+                isExpiringSoon ? "border-amber-300 bg-amber-50 text-amber-900" : "border-slate-200 bg-slate-50 text-slate-700"
+              }`} />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Days Until Expiry</label>
+              <div className={`flex items-center h-9 px-3.5 border rounded-lg ${
+                isExpiringSoon ? "border-amber-300 bg-amber-50" : "border-slate-200 bg-slate-50"
               }`}>
-                {data.daysUntilExpiry} days remaining
-              </span>
+                <span className={`text-sm font-semibold ${isExpiringSoon ? "text-amber-900" : "text-slate-700"}`}>
+                  {data.daysUntilExpiry} days remaining
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* User Licenses */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
-          <Users className="h-4 w-4 text-slate-600" />
-          User Licenses
-        </h3>
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
-                Active Users
-              </label>
-              <p className="text-lg font-semibold text-slate-900">{data.activeUsers}</p>
+      {/* Card: User Licenses */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-teal-100 flex-shrink-0">
+            <Users className="h-4 w-4 text-teal-600" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900">User Licenses</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Active users & license capacity</p>
+          </div>
+        </div>
+        <div className="p-5 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 text-center">
+              <p className="text-xs font-medium text-slate-500 mb-1">Active Users</p>
+              <p className="text-2xl font-bold text-slate-900">{data.activeUsers}</p>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">
-                Maximum Users
-              </label>
-              <p className="text-lg font-semibold text-slate-900">{data.maxUsers}</p>
+            <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 text-center">
+              <p className="text-xs font-medium text-slate-500 mb-1">Maximum Users</p>
+              <p className="text-2xl font-bold text-slate-900">{data.maxUsers}</p>
             </div>
           </div>
-          
-          {/* User Usage Progress Bar */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-medium text-slate-600">
-                License Utilization
-              </label>
-              <span className="text-xs font-semibold text-slate-700">
-                {userUsagePercent.toFixed(1)}%
-              </span>
+              <span className="text-xs font-medium text-slate-600">License Utilization</span>
+              <span className="text-xs font-bold text-slate-700">{userUsagePercent.toFixed(1)}%</span>
             </div>
-            <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+            <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
               <div
-                className={`h-3 rounded-full transition-all duration-300 ${
-                  userUsagePercent >= 90
-                    ? "bg-red-600"
-                    : userUsagePercent >= 75
-                    ? "bg-amber-500"
-                    : "bg-emerald-600"
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  userUsagePercent >= 90 ? "bg-red-600" : userUsagePercent >= 75 ? "bg-amber-500" : "bg-emerald-600"
                 }`}
                 style={{ width: `${userUsagePercent}%` }}
               />
             </div>
-            <p className="text-xs text-slate-500 mt-1.5">
-              {userUsagePercent >= 90 && "⚠️ License limit approaching"}
-              {userUsagePercent >= 75 && userUsagePercent < 90 && "⚠️ High license usage"}
+            <p className="text-xs text-slate-500 mt-2">
+              {userUsagePercent >= 90 && "âš ï¸ License limit approaching"}
+              {userUsagePercent >= 75 && userUsagePercent < 90 && "âš ï¸ High license usage"}
               {userUsagePercent < 75 && `${data.maxUsers - data.activeUsers} licenses available`}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Licensed Modules */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
-          <Package className="h-4 w-4 text-slate-600" />
-          Licensed Modules ({data.modules.length})
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-          {data.modules.map((module, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg"
-            >
-              <div className="flex items-center justify-center h-6 w-6 rounded bg-emerald-100">
-                <svg className="h-3.5 w-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
+      {/* Card: Licensed Modules */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-slate-100 flex-shrink-0">
+            <Package className="h-4 w-4 text-slate-600" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900">Licensed Modules</h3>
+            <p className="text-xs text-slate-500 mt-0.5">{data.modules.length} modules included</p>
+          </div>
+        </div>
+        <div className="p-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            {data.modules.map((module, index) => (
+              <div key={index} className="flex items-center gap-2.5 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                <div className="flex items-center justify-center h-6 w-6 rounded bg-emerald-100 flex-shrink-0">
+                  <Check className="h-3.5 w-3.5 text-emerald-600" />
+                </div>
+                <span className="text-sm font-medium text-slate-900">{module}</span>
               </div>
-              <span className="text-sm font-medium text-slate-900">{module}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Contact Notice */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="flex gap-3">
-          <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-blue-900 mb-1">License Support</h4>
-            <p className="text-sm text-blue-700">
-              For license renewal, upgrade inquiries, or additional user licenses,
-              please contact your account manager or email: licensing@eqms.company.com
-            </p>
-          </div>
+      {/* Notice Strip */}
+      <div className="flex gap-3 px-4 py-3.5 bg-blue-50 border border-blue-200 rounded-xl">
+        <Info className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="text-xs font-semibold text-blue-900 mb-0.5">License Support</p>
+          <p className="text-xs text-blue-700">For license renewal, upgrade inquiries, or additional user licenses, contact your account manager or email: licensing@eqms.company.com</p>
         </div>
       </div>
     </div>

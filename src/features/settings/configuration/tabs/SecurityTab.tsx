@@ -3,7 +3,7 @@ import { SecurityConfig } from '../types';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { Select } from '@/components/ui/select/Select';
 import { Button } from '@/components/ui/button/Button';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Lock, CheckCircle2, Clock, Shield, Globe, ClipboardList } from 'lucide-react';
 
 interface SecurityTabProps {
   config: SecurityConfig;
@@ -67,13 +67,16 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-5 space-y-4">
       {/* Password Policies */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Password Policies
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-emerald-100 flex-shrink-0">
+            <Lock className="h-4 w-4 text-emerald-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Password Policies</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Minimum Password Length
@@ -107,11 +110,14 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
       </div>
 
       {/* Password Requirements */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Password Requirements
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-blue-100 flex-shrink-0">
+            <CheckCircle2 className="h-4 w-4 text-blue-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Password Requirements</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-5">
           <Checkbox
             id="requireUppercase"
             label="Require Uppercase Letters (A-Z)"
@@ -140,11 +146,14 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
       </div>
 
       {/* Password Expiry & History */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Password Expiry & History
-        </h3>
-        <div className="space-y-3">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-amber-100 flex-shrink-0">
+            <Clock className="h-4 w-4 text-amber-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Password Expiry &amp; History</h3>
+        </div>
+        <div className="space-y-3 p-5">
           <Checkbox
             id="enablePasswordExpiry"
             label="Enable Password Expiration"
@@ -206,11 +215,14 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
       </div>
 
       {/* Session & Account Security */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Session & Account Security
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-teal-100 flex-shrink-0">
+            <Shield className="h-4 w-4 text-teal-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Session &amp; Account Security</h3>
+        </div>
+        <div className="space-y-4 p-5">
           {/* Two-Factor Authentication */}
           <div>
             <Checkbox
@@ -289,11 +301,14 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
       </div>
 
       {/* IP Access Control */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          IP Access Control & Geo-blocking
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-red-100 flex-shrink-0">
+            <Globe className="h-4 w-4 text-red-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">IP Access Control &amp; Geo-blocking</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableIpWhitelisting"
             label="Enable IP Whitelisting"
@@ -412,11 +427,14 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
       </div>
 
       {/* Audit & Logging */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Audit & Logging
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-slate-100 flex-shrink-0">
+            <ClipboardList className="h-4 w-4 text-slate-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Audit &amp; Logging</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableDetailedAuditLog"
             label="Enable Detailed Audit Logging"

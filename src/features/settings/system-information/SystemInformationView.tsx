@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { Package, Server, Database, Globe, ToggleLeft, Shield, Download, RefreshCw, Copy, ChevronDown, ChevronUp, Calendar, Tag, CheckCircle2, Wrench, Bug } from "lucide-react";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { Package, Server, Database, Globe, ToggleLeft, Shield, Download, RefreshCw, Copy, History, HardDrive } from "lucide-react";
+import { IconClockEdit, IconLayoutDashboard, IconLicense } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { useToast } from "@/components/ui/toast/Toast";
 import { cn } from "@/components/ui/utils";
 import type { TabType } from "./types";
-import { MOCK_SYSTEM_INFO, MOCK_CHANGELOG } from "./mockData";
+import { MOCK_SYSTEM_INFO } from "./mockData";
 import { ApplicationTab } from "./tabs/ApplicationTab";
 import { ServerTab } from "./tabs/ServerTab";
 import { DatabaseTab } from "./tabs/DatabaseTab";
 import { ApiTab } from "./tabs/ApiTab";
 import { FeaturesTab } from "./tabs/FeaturesTab";
 import { LicenseTab } from "./tabs/LicenseTab";
+import { StorageTab } from "./tabs/StorageTab";
+import { ChangelogTab } from "./tabs/ChangelogTab";
 
 const TABS = [
   {
@@ -45,10 +47,22 @@ const TABS = [
     description: "Enabled and disabled feature flags for the application",
   },
   {
+    id: "storage" as TabType,
+    label: "Storage",
+    icon: HardDrive,
+    description: "File storage usage, file type breakdown, and recent uploads",
+  },
+  {
     id: "license" as TabType,
     label: "License",
-    icon: Shield,
+    icon: IconLicense,
     description: "License details, expiration date, and user allocation",
+  },
+  {
+    id: "changelog" as TabType,
+    label: "Changelog",
+    icon: IconClockEdit,
+    description: "Version history and release notes for system updates",
   },
 ];
 
@@ -56,30 +70,6 @@ export const SystemInformationView: React.FC = () => {
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<TabType>("application");
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set([MOCK_CHANGELOG[0]?.version]));
-
-  const currentTab = TABS.find(tab => tab.id === activeTab);
-
-  const toggleVersion = (version: string) => {
-    setExpandedVersions((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(version)) {
-        newSet.delete(version);
-      } else {
-        newSet.add(version);
-      }
-      return newSet;
-    });
-  };
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(date);
-  };
 
   const handleExport = () => {
     // TODO: Implement actual export functionality
@@ -147,6 +137,12 @@ LICENSE
 - Company: ${MOCK_SYSTEM_INFO.license.companyName}
 - Expiry: ${MOCK_SYSTEM_INFO.license.expiryDate} (${MOCK_SYSTEM_INFO.license.daysUntilExpiry} days)
 - Users: ${MOCK_SYSTEM_INFO.license.activeUsers} / ${MOCK_SYSTEM_INFO.license.maxUsers}
+- Support: ${MOCK_SYSTEM_INFO.license.supportLevel}
+
+STORAGE
+- Provider: ${MOCK_SYSTEM_INFO.storage.provider}
+- Usage: ${MOCK_SYSTEM_INFO.storage.usedStorage} / ${MOCK_SYSTEM_INFO.storage.totalStorage} (${MOCK_SYSTEM_INFO.storage.usagePercent}%)
+- Total Files: ${MOCK_SYSTEM_INFO.storage.documentsCount}
       `.trim();
 
       await navigator.clipboard.writeText(textData);
@@ -176,8 +172,12 @@ LICENSE
         return <ApiTab data={MOCK_SYSTEM_INFO.api} />;
       case "features":
         return <FeaturesTab features={MOCK_SYSTEM_INFO.features} />;
+      case "storage":
+        return <StorageTab data={MOCK_SYSTEM_INFO.storage} />;
       case "license":
         return <LicenseTab data={MOCK_SYSTEM_INFO.license} />;
+      case "changelog":
+        return <ChangelogTab />;
       default:
         return null;
     }
@@ -256,107 +256,6 @@ LICENSE
         </div>
       </div>
 
-      {/* Changelog Section */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-200">
-          <h2 className="text-base font-semibold text-slate-900">System Changelog</h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Version history and release notes for system updates
-          </p>
-        </div>
-        <div className="divide-y divide-slate-200">
-          {MOCK_CHANGELOG.map((entry) => {
-            const isExpanded = expandedVersions.has(entry.version);
-            const hasFeatures = entry.changes.features && entry.changes.features.length > 0;
-            const hasImprovements = entry.changes.improvements && entry.changes.improvements.length > 0;
-            const hasBugFixes = entry.changes.bugFixes && entry.changes.bugFixes.length > 0;
-
-            return (
-              <div key={entry.version} className="transition-colors hover:bg-slate-50/50">
-                <button
-                  onClick={() => toggleVersion(entry.version)}
-                  className="w-full px-6 py-4 flex items-center justify-between gap-4 text-left"
-                >
-                  <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <Tag className="h-5 w-5 text-emerald-600" />
-                      <span className="font-mono font-semibold text-slate-900">
-                        v{entry.version}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-500">
-                      <Calendar className="h-4 w-4" />
-                      <span className="text-sm">{formatDate(entry.releaseDate)}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {isExpanded ? (
-                      <ChevronUp className="h-5 w-5 text-slate-400" />
-                    ) : (
-                      <ChevronDown className="h-5 w-5 text-slate-400" />
-                    )}
-                  </div>
-                </button>
-
-                {isExpanded && (
-                  <div className="px-6 pb-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                    {hasFeatures && (
-                      <div>
-                        <h4 className="text-sm font-semibold text-slate-900 mb-2 flex items-center gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                          New Features
-                        </h4>
-                        <ul className="space-y-1.5 ml-6">
-                          {entry.changes.features!.map((feature, idx) => (
-                            <li key={idx} className="text-sm text-slate-700 flex items-start gap-2">
-                              <span className="text-emerald-600 mt-1">•</span>
-                              <span>{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {hasImprovements && (
-                      <div>
-                        <h4 className="text-sm font-semibold text-slate-900 mb-2 flex items-center gap-2">
-                          <Wrench className="h-4 w-4 text-blue-600" />
-                          Improvements
-                        </h4>
-                        <ul className="space-y-1.5 ml-6">
-                          {entry.changes.improvements!.map((improvement, idx) => (
-                            <li key={idx} className="text-sm text-slate-700 flex items-start gap-2">
-                              <span className="text-blue-600 mt-1">•</span>
-                              <span>{improvement}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {hasBugFixes && (
-                      <div>
-                        <h4 className="text-sm font-semibold text-slate-900 mb-2 flex items-center gap-2">
-                          <Bug className="h-4 w-4 text-amber-600" />
-                          Bug Fixes
-                        </h4>
-                        <ul className="space-y-1.5 ml-6">
-                          {entry.changes.bugFixes!.map((fix, idx) => (
-                            <li key={idx} className="text-sm text-slate-700 flex items-start gap-2">
-                              <span className="text-amber-600 mt-1">•</span>
-                              <span>{fix}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 };

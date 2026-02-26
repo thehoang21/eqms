@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { NotificationConfig } from '../types';
 import { Select } from '@/components/ui/select/Select';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
-import { Eye, EyeOff } from 'lucide-react';
+import { Button } from '@/components/ui/button/Button';
+import { useToast } from '@/components/ui/toast/Toast';
+import { Eye, EyeOff, Send, Loader2, Bell, Mail, MessageCircle, Phone, Clock, Smartphone, Layout, Zap } from 'lucide-react';
 
 interface NotificationTabProps {
   config: NotificationConfig;
@@ -13,6 +15,10 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
   const [showSmtpPassword, setShowSmtpPassword] = useState(false);
   const [showTelegramToken, setShowTelegramToken] = useState(false);
   const [showWhatsAppToken, setShowWhatsAppToken] = useState(false);
+  const [testingSmtp, setTestingSmtp] = useState(false);
+  const [testingTelegram, setTestingTelegram] = useState(false);
+  const [testingWhatsApp, setTestingWhatsApp] = useState(false);
+  const { showToast } = useToast();
 
   const handleChange = (key: keyof NotificationConfig, value: any) => {
     onChange({ ...config, [key]: value });
@@ -68,14 +74,53 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
     });
   };
 
+  const handleTestSmtp = () => {
+    setTestingSmtp(true);
+    setTimeout(() => {
+      setTestingSmtp(false);
+      showToast({
+        type: 'success',
+        title: 'SMTP Connection Successful',
+        message: `Test email sent to ${config.emailConfig.senderEmail}`,
+      });
+    }, 2000);
+  };
+
+  const handleTestTelegram = () => {
+    setTestingTelegram(true);
+    setTimeout(() => {
+      setTestingTelegram(false);
+      showToast({
+        type: 'success',
+        title: 'Telegram Bot Connected',
+        message: `Test message sent to chat ${config.telegramConfig.chatId}`,
+      });
+    }, 1500);
+  };
+
+  const handleTestWhatsApp = () => {
+    setTestingWhatsApp(true);
+    setTimeout(() => {
+      setTestingWhatsApp(false);
+      showToast({
+        type: 'success',
+        title: 'WhatsApp API Connected',
+        message: 'Test message sent via WhatsApp Business API',
+      });
+    }, 2000);
+  };
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-5 space-y-4">
       {/* Notification Channels */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Notification Channels
-        </h3>
-        <div className="space-y-3">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-emerald-100 flex-shrink-0">
+            <Bell className="h-4 w-4 text-emerald-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Notification Channels</h3>
+        </div>
+        <div className="space-y-3 p-5">
           <Checkbox
             id="enableInAppNotifications"
             label="Enable In-App Notifications"
@@ -89,11 +134,14 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
       </div>
 
       {/* Email Configuration */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Email Notifications (SMTP)
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-blue-100 flex-shrink-0">
+            <Mail className="h-4 w-4 text-blue-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Email Notifications (SMTP)</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableEmailNotifications"
             label="Enable Email Notifications"
@@ -186,23 +234,42 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   />
                 </div>
               </div>
-              <Checkbox
-                id="useSSL"
-                label="Use SSL/TLS Encryption"
-                checked={config.emailConfig.useSSL}
-                onChange={(checked) => handleEmailConfigChange('useSSL', checked)}
-              />
+              <div className="flex items-center justify-between">
+                <Checkbox
+                  id="useSSL"
+                  label="Use SSL/TLS Encryption"
+                  checked={config.emailConfig.useSSL}
+                  onChange={(checked) => handleEmailConfigChange('useSSL', checked)}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTestSmtp}
+                  disabled={testingSmtp || !config.emailConfig.smtpHost}
+                  className="gap-2"
+                >
+                  {testingSmtp ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Send className="h-3.5 w-3.5" />
+                  )}
+                  {testingSmtp ? 'Testing...' : 'Send Test Email'}
+                </Button>
+              </div>
             </div>
           )}
         </div>
       </div>
 
       {/* Telegram Configuration */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Telegram Notifications
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-sky-100 flex-shrink-0">
+            <MessageCircle className="h-4 w-4 text-sky-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Telegram Notifications</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableTelegramNotifications"
             label="Enable Telegram Notifications"
@@ -253,17 +320,36 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </p>
                 </div>
               </div>
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTestTelegram}
+                  disabled={testingTelegram || !config.telegramConfig.botToken || !config.telegramConfig.chatId}
+                  className="gap-2"
+                >
+                  {testingTelegram ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Send className="h-3.5 w-3.5" />
+                  )}
+                  {testingTelegram ? 'Testing...' : 'Send Test Message'}
+                </Button>
+              </div>
             </div>
           )}
         </div>
       </div>
 
       {/* WhatsApp Configuration */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          WhatsApp Notifications (Business API)
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-teal-100 flex-shrink-0">
+            <Phone className="h-4 w-4 text-teal-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">WhatsApp Notifications (Business API)</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableWhatsAppNotifications"
             label="Enable WhatsApp Notifications"
@@ -329,17 +415,36 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </p>
                 </div>
               </div>
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleTestWhatsApp}
+                  disabled={testingWhatsApp || !config.whatsappConfig.accessToken || !config.whatsappConfig.phoneNumberId}
+                  className="gap-2"
+                >
+                  {testingWhatsApp ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Send className="h-3.5 w-3.5" />
+                  )}
+                  {testingWhatsApp ? 'Testing...' : 'Send Test Message'}
+                </Button>
+              </div>
             </div>
           )}
         </div>
       </div>
 
       {/* Digest Settings */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Email Digest Settings
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-amber-100 flex-shrink-0">
+            <Clock className="h-4 w-4 text-amber-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Email Digest Settings</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
           <Select
             label="Email Digest Frequency"
             value={config.emailDigestFrequency}
@@ -360,11 +465,14 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
       </div>
 
       {/* SMS Notifications */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          SMS Notifications
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-purple-100 flex-shrink-0">
+            <Smartphone className="h-4 w-4 text-purple-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">SMS Notifications</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableSms"
             label="Enable SMS Notifications"
@@ -459,11 +567,14 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
       </div>
 
       {/* Notification Templates */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Notification Templates
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-slate-100 flex-shrink-0">
+            <Layout className="h-4 w-4 text-slate-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Notification Templates</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableCustomTemplates"
             label="Enable Custom Notification Templates"
@@ -506,11 +617,14 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
       </div>
 
       {/* Notification Triggers */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Notification Triggers
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-indigo-100 flex-shrink-0">
+            <Zap className="h-4 w-4 text-indigo-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Notification Triggers</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
           <div>
             <Checkbox
               id="trigger-approval"

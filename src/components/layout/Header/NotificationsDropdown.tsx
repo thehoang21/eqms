@@ -250,26 +250,26 @@ const NotificationItem: React.FC<{
         onClose();
       }}
       className={cn(
-        "w-full flex items-start gap-3 px-4 py-3.5 hover:bg-slate-50 active:bg-slate-100 transition-colors text-left",
+        "w-full flex items-start gap-2.5 px-3.5 py-2 hover:bg-slate-50 active:bg-slate-100 transition-colors text-left",
         !isLast && "border-b border-slate-100"
       )}
     >
       <div className="relative shrink-0">
-        <div className={cn("h-10 w-10 rounded-full flex items-center justify-center", notification.avatarBg)}>
-          <AvatarIcon className={cn("h-5 w-5", notification.avatarColor)} />
+        <div className={cn("h-8 w-8 rounded-full flex items-center justify-center", notification.avatarBg)}>
+          <AvatarIcon className={cn("h-4 w-4", notification.avatarColor)} />
         </div>
         <div className={cn(
-          "absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full flex items-center justify-center border-2 border-white",
+          "absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full flex items-center justify-center border-2 border-white",
           notification.badgeBg
         )}>
-          <BadgeIcon className="h-3 w-3 text-white" />
+          <BadgeIcon className="h-2.5 w-2.5 text-white" />
         </div>
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-slate-900">
+        <p className="text-xs text-slate-900 leading-snug">
           {notification.title}
         </p>
-        <p className="text-xs text-slate-500 mt-1">{notification.time}</p>
+        <p className="text-[10px] text-slate-400 mt-0.5">{notification.time}</p>
       </div>
     </button>
   );
@@ -577,20 +577,20 @@ const DesktopDropdown: React.FC<{
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
-          <h3 className="text-base font-semibold text-slate-900">Notifications</h3>
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-200">
+          <h3 className="text-sm font-semibold text-slate-900">Notifications</h3>
           <button 
-            className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-lg transition-colors group"
+            className="flex items-center gap-1.5 px-2 py-1 hover:bg-slate-100 rounded-lg transition-colors group"
             onClick={() => console.log("Mark all as read")}
             title="Mark all as read"
           >
-            <CheckCheck className="h-4 w-4 text-slate-500 group-hover:text-emerald-600 transition-colors" />
-            <span className="text-xs font-medium text-slate-600 group-hover:text-emerald-600 transition-colors">Mark all as read</span>
+            <CheckCheck className="h-3.5 w-3.5 text-slate-500 group-hover:text-emerald-600 transition-colors" />
+            <span className="text-[11px] font-medium text-slate-600 group-hover:text-emerald-600 transition-colors">Mark all as read</span>
           </button>
         </div>
 
-        {/* Notifications List */}
-        <div className="max-h-[280px] overflow-y-auto">
+        {/* Notifications List — max 5 visible, scroll for more */}
+        <div className="max-h-[240px] overflow-y-auto">
           {NOTIFICATIONS.map((notification, index) => (
             <NotificationItem
               key={notification.id}
@@ -604,7 +604,7 @@ const DesktopDropdown: React.FC<{
         {/* Footer */}
         <div className="border-t border-slate-200">
           <button 
-            className="w-full py-2 text-center text-xs font-medium text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+            className="w-full py-1.5 text-center text-[11px] font-medium text-emerald-600 hover:bg-emerald-50 rounded-b-xl transition-colors"
             onClick={() => {
               onViewAll();
               onClose();

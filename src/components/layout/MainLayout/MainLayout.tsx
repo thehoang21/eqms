@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar';
 import { Header } from '@/components/layout/Header/Header';
 import { Footer } from '@/components/layout/Footer/Footer';
 import { NetworkStatusMonitor } from '@/components/NetworkStatusMonitor';
+import { ScrollToTop } from '@/components/ui/scroll-to-top/ScrollToTop';
 import { useResponsiveSidebar } from './useResponsiveSidebar';
 import { useNavigation } from './useNavigation';
 import { resetViewportZoom, isIOSSafari } from '@/utils/viewport';
@@ -15,6 +16,7 @@ export const MainLayout: React.FC = () => {
   const { isSidebarCollapsed, isMobileMenuOpen, toggleSidebar, closeMobileMenu } = useResponsiveSidebar();
   const { activeId, handleNavigate } = useNavigation();
   const [isIOS, setIsIOS] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Detect iOS Safari and reset viewport zoom on mount (combined effect)
   useEffect(() => {
@@ -84,7 +86,8 @@ export const MainLayout: React.FC = () => {
         />
 
         {/* Scrollable Content Area */}
-        <div 
+        <div
+          ref={scrollContainerRef}
           className={cn(
             "flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar",
             isIOS && "ios-scroll-container"
@@ -112,6 +115,9 @@ export const MainLayout: React.FC = () => {
         {/* Footer - Always visible */}
         <Footer />
       </div>
+
+      {/* Scroll To Top - Global */}
+      <ScrollToTop scrollContainerRef={scrollContainerRef} />
     </div>
   );
 };

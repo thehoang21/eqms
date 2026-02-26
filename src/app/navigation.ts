@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   BookText,
   GraduationCap,
+  BookOpen,
 } from "lucide-react";
 
 import {
@@ -33,6 +34,8 @@ import {
   IconReplace,
   IconSettings2,
   IconLayoutDashboard,
+  IconBook2,
+  IconShieldExclamation,
 } from "@tabler/icons-react";
 import { NavItem } from "@/types";
 
@@ -235,7 +238,7 @@ const QUALITY_MODULES: NavItem[] = [
   {
     id: "risk-management",
     label: "Risk Management",
-    icon: IconAlertSquareRounded,
+    icon: IconShieldExclamation,
     path: "/risks",
   },
 ];
@@ -329,6 +332,12 @@ const SYSTEM_MODULES: NavItem[] = [
         path: "/settings/system-info",
       },
     ],
+  },
+  {
+    id: "user-manual",
+    label: "User Manual",
+    icon: IconBook2,
+    path: "/user-manual",
   },
 ];
 

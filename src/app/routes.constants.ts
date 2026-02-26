@@ -113,6 +113,9 @@ export const ROUTES = {
     SYSTEM_INFO: '/settings/info-system',
   },
 
+  // User Manual
+  USER_MANUAL: '/user-manual',
+
   // Profile
   PROFILE: '/profile',
 } as const;

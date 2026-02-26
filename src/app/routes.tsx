@@ -54,6 +54,7 @@ const EditUserView = lazy(() => import('@/features/settings').then(m => ({ defau
 const DictionariesView = lazy(() => import('@/features/settings').then(m => ({ default: m.DictionariesView })));
 const SystemInformationView = lazy(() => import('@/features/settings').then(m => ({ default: m.SystemInformationView })));
 const ConfigurationView = lazy(() => import('@/features/settings').then(m => ({ default: m.ConfigurationView })));
+const UserManualView = lazy(() => import('@/features/user-manual').then(m => ({ default: m.UserManualView })));
 const RoleListView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RoleListView })));
 const RoleDetailView = lazy(() => import('@/features/settings/role-permission').then(m => ({ default: m.RoleDetailView })));
 
@@ -274,6 +275,9 @@ export const AppRoutes: React.FC = () => {
           <Route path="configuration" element={<Suspense fallback={<LoadingFallback />}><ConfigurationView /></Suspense>} />
           <Route path="system-info" element={<Suspense fallback={<LoadingFallback />}><SystemInformationView /></Suspense>} />
         </Route>
+        
+        {/* ===== USER MANUAL ===== */}
+        <Route path="user-manual" element={<Suspense fallback={<LoadingFallback />}><UserManualView /></Suspense>} />
         
         {/* ===== TRAINING MANAGEMENT ===== */}
         <Route path="training-management">

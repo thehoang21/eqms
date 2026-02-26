@@ -1,4 +1,5 @@
 import React from "react";
+import { Package, Code2, FileText, Info } from "lucide-react";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import type { ApplicationInfo } from "../types";
 
@@ -30,98 +31,150 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Application Details */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Application Details
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Application Name
-            </label>
-            <input
-              type="text"
-              value={data.name}
-              disabled
-              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
-            />
+    <div className="p-5 space-y-4">
+      {/* Card: Application Details */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-emerald-100 flex-shrink-0">
+            <Package className="h-4 w-4 text-emerald-600" />
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Version
-            </label>
-            <input
-              type="text"
-              value={data.version}
-              disabled
-              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono font-semibold"
-            />
+            <h3 className="text-sm font-semibold text-slate-900">Application Details</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Build & version information</p>
           </div>
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Environment
-            </label>
-            <div className="flex items-center h-9 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
-              <StatusBadge status={getEnvironmentBadge(data.environment) as any} />
-              <span className="ml-2 text-sm text-slate-700 font-medium capitalize">
-                {data.environment}
-              </span>
+        </div>
+        <div className="p-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
+                Application Name
+              </label>
+              <input
+                type="text"
+                value={data.name}
+                disabled
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              />
+            </div>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
+                Version
+              </label>
+              <input
+                type="text"
+                value={data.version}
+                disabled
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono font-semibold"
+              />
+            </div>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
+                Environment
+              </label>
+              <div className="flex items-center h-9 px-3.5 border border-slate-200 rounded-lg bg-slate-50">
+                <StatusBadge status={getEnvironmentBadge(data.environment) as any} />
+                <span className="ml-2 text-sm text-slate-700 font-medium capitalize">
+                  {data.environment}
+                </span>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
+                Build Number
+              </label>
+              <input
+                type="text"
+                value={data.buildNumber}
+                disabled
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
+                Build Date
+              </label>
+              <input
+                type="text"
+                value={formatDate(data.buildDate)}
+                disabled
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+              />
             </div>
           </div>
-          <div>
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Build Number
-            </label>
-            <input
-              type="text"
-              value={data.buildNumber}
-              disabled
-              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
-            />
+        </div>
+      </div>
+
+      {/* Card: Technology Stack */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-blue-100 flex-shrink-0">
+            <Code2 className="h-4 w-4 text-blue-600" />
           </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-              Build Date
-            </label>
-            <input
-              type="text"
-              value={formatDate(data.buildDate)}
-              disabled
-              className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
-            />
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900">Technology Stack</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Frameworks and tools</p>
+          </div>
+        </div>
+        <div className="p-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
+                Framework
+              </label>
+              <input
+                type="text"
+                value={data.frameworkVersion}
+                disabled
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              />
+            </div>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
+                TypeScript
+              </label>
+              <input
+                type="text"
+                value={data.typeScriptVersion}
+                disabled
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              />
+            </div>
+            <div>
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
+                Build Tool
+              </label>
+              <input
+                type="text"
+                value={data.buildTool}
+                disabled
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Description */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Description
-        </h3>
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-          <p className="text-sm text-slate-700 leading-relaxed">
-            {data.description}
+      {/* Card: Description */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-slate-100 flex-shrink-0">
+            <FileText className="h-4 w-4 text-slate-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Description</h3>
+        </div>
+        <div className="p-5">
+          <p className="text-sm text-slate-700 leading-relaxed">{data.description}</p>
+        </div>
+      </div>
+
+      {/* Notice */}
+      <div className="flex gap-3 px-4 py-3.5 bg-blue-50 border border-blue-200 rounded-xl">
+        <Info className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="text-xs font-semibold text-blue-900 mb-0.5">Read-only Information</p>
+          <p className="text-xs text-blue-700">
+            This information is automatically updated with each deployment. Reference the build number and version for support inquiries.
           </p>
-        </div>
-      </div>
-
-      {/* Info Notice */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div className="flex gap-3">
-          <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-blue-900 mb-1">System Information</h4>
-            <p className="text-sm text-blue-700">
-              This information is read-only and automatically updated with each application deployment.
-              For support inquiries, please reference the build number and version.
-            </p>
-          </div>
         </div>
       </div>
     </div>

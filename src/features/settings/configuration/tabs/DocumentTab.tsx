@@ -3,6 +3,7 @@ import { DocumentConfig } from '../types';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { Select } from '@/components/ui/select/Select';
 import { MultiSelect } from '@/components/ui/select/MultiSelect';
+import { Archive, Shield, GitBranch, PenSquare } from 'lucide-react';
 
 interface DocumentTabProps {
   config: DocumentConfig;
@@ -35,13 +36,16 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-5 space-y-4">
       {/* Retention & Storage */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Retention & Storage
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-emerald-100 flex-shrink-0">
+            <Archive className="h-4 w-4 text-emerald-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Retention &amp; Storage</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Default Retention Period (Days)
@@ -76,11 +80,14 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
       </div>
 
       {/* Protection & Distribution */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Protection & Distribution
-        </h3>
-        <div className="space-y-3">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-blue-100 flex-shrink-0">
+            <Shield className="h-4 w-4 text-blue-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Protection &amp; Distribution</h3>
+        </div>
+        <div className="space-y-3 p-5">
           <Checkbox
             id="enableWatermark"
             label="Enable Watermarking"
@@ -104,11 +111,14 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
       </div>
 
       {/* Version Control */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Version Control
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-purple-100 flex-shrink-0">
+            <GitBranch className="h-4 w-4 text-purple-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Version Control</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableAutoVersioning"
             label="Enable Automatic Versioning"
@@ -171,11 +181,14 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({ config, onChange }) =>
       </div>
 
       {/* E-Signature Settings */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-200">
-          Electronic Signature (E-Signature)
-        </h3>
-        <div className="space-y-4">
+      <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-3.5 bg-slate-50/70 border-b border-slate-200">
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-amber-100 flex-shrink-0">
+            <PenSquare className="h-4 w-4 text-amber-600" />
+          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Electronic Signature (E-Signature)</h3>
+        </div>
+        <div className="space-y-4 p-5">
           <Checkbox
             id="enableESignature"
             label="Enable Electronic Signatures"
