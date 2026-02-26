@@ -356,6 +356,25 @@ export const UserManualView: React.FC = () => {
       {/* ══════════════════════════════════════════
           SPLIT VIEW — Desktop & Tablet
       ══════════════════════════════════════════ */}
+
+      {/* Mobile-only sticky module title bar */}
+      <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 -mt-2 pt-2 pb-2 bg-slate-50">
+        <div className="flex items-center gap-3 px-4 py-2.5 border border-slate-200 rounded-xl bg-white shadow-sm">
+          {(() => {
+            const tab = MANUAL_TABS.find((t) => t.id === activeTab)!;
+            const Icon = tab.icon;
+            return (
+              <>
+                <div className="flex items-center justify-center h-7 w-7 rounded-lg bg-emerald-100 flex-shrink-0">
+                  <Icon className="h-4 w-4 text-emerald-600" />
+                </div>
+                <h2 className="text-sm font-semibold text-slate-900">{currentSection.title}</h2>
+              </>
+            );
+          })()}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left — Module List (col-2) — Hidden on mobile */}
         <div className="hidden lg:block lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -391,8 +410,8 @@ export const UserManualView: React.FC = () => {
 
         {/* Right — Content (col-10 on desktop, full width on mobile) */}
         <div className="lg:col-span-10 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col lg:max-h-[calc(100vh-220px)]">
-          {/* Module title bar — sticky on desktop/tablet */}
-          <div className="flex items-center gap-3 px-5 py-3 border-b border-slate-200 bg-slate-50/70 flex-shrink-0">
+          {/* Module title bar — desktop only (mobile has sticky version above) */}
+          <div className="hidden lg:flex items-center gap-3 px-5 py-3 border-b border-slate-200 bg-slate-50/70 flex-shrink-0">
             {(() => {
               const tab = MANUAL_TABS.find((t) => t.id === activeTab)!;
               const Icon = tab.icon;
