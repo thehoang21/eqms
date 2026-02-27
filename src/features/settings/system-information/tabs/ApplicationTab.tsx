@@ -52,8 +52,8 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               <input
                 type="text"
                 value={data.name}
-                disabled
-                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+                readOnly
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none"
               />
             </div>
             <div>
@@ -63,8 +63,8 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               <input
                 type="text"
                 value={data.version}
-                disabled
-                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono font-semibold"
+                readOnly
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono font-semibold"
               />
             </div>
             <div>
@@ -85,8 +85,8 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               <input
                 type="text"
                 value={data.buildNumber}
-                disabled
-                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+                readOnly
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono"
               />
             </div>
             <div className="md:col-span-2">
@@ -96,8 +96,8 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               <input
                 type="text"
                 value={formatDate(data.buildDate)}
-                disabled
-                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed"
+                readOnly
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none"
               />
             </div>
           </div>
@@ -124,8 +124,8 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               <input
                 type="text"
                 value={data.frameworkVersion}
-                disabled
-                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+                readOnly
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono"
               />
             </div>
             <div>
@@ -135,8 +135,8 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               <input
                 type="text"
                 value={data.typeScriptVersion}
-                disabled
-                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+                readOnly
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono"
               />
             </div>
             <div>
@@ -146,8 +146,8 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               <input
                 type="text"
                 value={data.buildTool}
-                disabled
-                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono"
+                readOnly
+                className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono"
               />
             </div>
           </div>

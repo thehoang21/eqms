@@ -35,11 +35,14 @@ interface ScrollToTopProps {
   scrollContainerRef?: React.RefObject<HTMLElement>;
   /** Threshold in pixels to show the button. Default: 300 */
   threshold?: number;
+  /** Hide button when mobile sidebar is open */
+  isMobileMenuOpen?: boolean;
 }
 
 export const ScrollToTop: React.FC<ScrollToTopProps> = ({
   scrollContainerRef,
   threshold = 300,
+  isMobileMenuOpen = false,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -72,9 +75,10 @@ export const ScrollToTop: React.FC<ScrollToTopProps> = ({
         "h-10 w-10 rounded-full bg-emerald-600 text-white shadow-lg",
         "hover:bg-emerald-700 active:scale-95",
         "transition-all duration-300 ease-in-out",
-        visible
+        visible && !isMobileMenuOpen
           ? "opacity-100 translate-y-0 pointer-events-auto"
-          : "opacity-0 translate-y-4 pointer-events-none"
+          : "opacity-0 translate-y-4 pointer-events-none",
+        isMobileMenuOpen && "md:opacity-100 md:translate-y-0 md:pointer-events-auto"
       )}
     >
       <IconChevronUp className="h-5 w-5" />

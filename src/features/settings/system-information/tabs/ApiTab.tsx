@@ -123,7 +123,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
           <div>
             <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Base URL</label>
             <div className="flex gap-2">
-              <input type="text" value={data.baseUrl} disabled className="flex-1 h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono" />
+              <input type="text" value={data.baseUrl} readOnly className="flex-1 h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono" />
               <Button onClick={handleCopyUrl} variant="outline" size="sm" className="gap-2">
                 {copied ? <><Check className="h-4 w-4 text-emerald-600" />Copied</> : <><Copy className="h-4 w-4" />Copy</>}
               </Button>
@@ -132,7 +132,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">API Version</label>
-              <input type="text" value={data.version} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono font-semibold" />
+              <input type="text" value={data.version} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono font-semibold" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Average Response Time</label>
@@ -258,7 +258,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
               </div>
               <div>
                 <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Window</label>
-                <input type="text" value={data.rateLimiting.windowSize} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed" />
+                <input type="text" value={data.rateLimiting.windowSize} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none" />
               </div>
             </div>
           </div>

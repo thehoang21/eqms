@@ -74,6 +74,22 @@ export const MainLayout: React.FC = () => {
         onToggleSidebar={toggleSidebar}
       />
 
+      {/* Mobile Backdrop - Blur effect when sidebar is open */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-slate-900/20 backdrop-blur-sm animate-in fade-in duration-150 md:hidden"
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+          style={{
+            // Ensure full coverage including safe areas
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+        />
+      )}
+
       {/* Main Content Wrapper */}
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
         {/* Header - Fixed at top */}
@@ -117,7 +133,10 @@ export const MainLayout: React.FC = () => {
       </div>
 
       {/* Scroll To Top - Global */}
-      <ScrollToTop scrollContainerRef={scrollContainerRef} />
+      <ScrollToTop 
+        scrollContainerRef={scrollContainerRef}
+        isMobileMenuOpen={isMobileMenuOpen}
+      />
     </div>
   );
 };

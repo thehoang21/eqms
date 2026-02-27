@@ -50,11 +50,11 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">License Type</label>
-              <input type="text" value={data.licenseType} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-semibold" />
+              <input type="text" value={data.licenseType} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-semibold" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Company Name</label>
-              <input type="text" value={data.companyName} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed" />
+              <input type="text" value={data.companyName} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none" />
             </div>
           </div>
         </div>
@@ -75,11 +75,11 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Issued Date</label>
-              <input type="text" value={formatDate(data.issuedDate)} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed" />
+              <input type="text" value={formatDate(data.issuedDate)} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Expiry Date</label>
-              <input type="text" value={formatDate(data.expiryDate)} disabled className={`w-full h-9 px-3.5 text-sm border rounded-lg cursor-not-allowed font-semibold ${
+              <input type="text" value={formatDate(data.expiryDate)} readOnly className={`w-full h-9 px-3.5 text-sm border rounded-lg cursor-default focus:outline-none font-semibold ${
                 isExpiringSoon ? "border-amber-300 bg-amber-50 text-amber-900" : "border-slate-200 bg-slate-50 text-slate-700"
               }`} />
             </div>

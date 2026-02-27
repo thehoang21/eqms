@@ -846,8 +846,8 @@ const NewRevisionForm: React.FC<NewRevisionFormProps> = ({ materialId, source })
                     <input
                       type="text"
                       value={formData.materialCode}
-                      disabled
-                      className="w-full h-9 px-4 pr-8 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-500 disabled:cursor-not-allowed"
+                      readOnly
+                      className="w-full h-9 px-4 pr-8 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 cursor-default focus:outline-none"
                     />
                     <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
                   </div>
@@ -876,8 +876,8 @@ const NewRevisionForm: React.FC<NewRevisionFormProps> = ({ materialId, source })
                   <input
                     type="text"
                     value={formData.author}
-                    disabled
-                    className="w-full h-9 px-4 pr-8 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-500 disabled:cursor-not-allowed"
+                    readOnly
+                    className="w-full h-9 px-4 pr-8 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 cursor-default focus:outline-none"
                   />
                   <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
                 </div>

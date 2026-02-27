@@ -358,7 +358,7 @@ export const UserManualView: React.FC = () => {
       ══════════════════════════════════════════ */}
 
       {/* Mobile-only sticky module title bar */}
-      <div className="lg:hidden sticky top-0 z-20 -mx-4 px-4 -mt-2 pt-2 pb-2 bg-slate-50">
+      <div className="lg:hidden border-b-2 sticky top-0 z-20 -mx-4 px-4 -mt-2 pt-2 pb-2 bg-slate-50">
         <div className="flex items-center gap-3 px-4 py-2.5 border border-slate-200 rounded-xl bg-white shadow-sm">
           {(() => {
             const tab = MANUAL_TABS.find((t) => t.id === activeTab)!;

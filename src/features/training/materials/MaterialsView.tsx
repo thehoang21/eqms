@@ -7,29 +7,21 @@ import {
   Video,
   FileImage,
   Download,
-  Eye,
   Edit,
-  Trash2,
   MoreVertical,
   Upload,
   FolderOpen,
   AlertTriangle,
   TrendingUp,
-  Calendar,
   BarChart3,
   Clock,
-  ExternalLink,
-  ChevronRight,
-  ArrowUpRight,
-  ArrowDownRight,
-  FileStack,
   CheckCircle,
   XCircle,
   FilePlusCorner,
   Link2,
 } from "lucide-react";
 import { MarkObsoleteModal, ObsoleteResult } from "./components/MarkObsoleteModal";
-import { IconLayoutDashboard, IconPlus, IconChecks, IconInfoCircle } from "@tabler/icons-react";
+import { IconLayoutDashboard, IconChecks, IconInfoCircle } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { TablePagination } from "@/components/ui/table/TablePagination";
@@ -696,7 +688,7 @@ export const MaterialsView: React.FC = () => {
                 <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Courses Using</th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Last Updated</th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Uploaded By</th>
-                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-40 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">Action</th>
+                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">

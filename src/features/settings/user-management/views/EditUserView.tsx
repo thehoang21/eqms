@@ -149,7 +149,7 @@ export const EditUserView: React.FC = () => {
                   type="text"
                   value={editUser.employeeId}
                   readOnly
-                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-600 cursor-not-allowed"
+                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-900 cursor-default focus:outline-none"
                 />
               </div>
 
@@ -162,7 +162,7 @@ export const EditUserView: React.FC = () => {
                   type="text"
                   value={editUser.username}
                   readOnly
-                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-600 cursor-not-allowed"
+                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-900 cursor-default focus:outline-none"
                 />
               </div>
             </div>

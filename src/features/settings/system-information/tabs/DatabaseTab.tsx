@@ -76,23 +76,23 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Database Type</label>
-              <input type="text" value={data.type} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-semibold" />
+              <input type="text" value={data.type} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-semibold" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Version</label>
-              <input type="text" value={data.version} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono" />
+              <input type="text" value={data.version} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Host</label>
-              <input type="text" value={data.host} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono" />
+              <input type="text" value={data.host} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Port</label>
-              <input type="text" value={data.port} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono" />
+              <input type="text" value={data.port} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Database Name</label>
-              <input type="text" value={data.database} disabled className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-not-allowed font-mono" />
+              <input type="text" value={data.database} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none font-mono" />
             </div>
             {data.totalSize && (
               <div>

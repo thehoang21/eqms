@@ -704,8 +704,8 @@ export const UploadMaterialView: React.FC = () => {
                   <input
                     type="text"
                     value={formData.version}
-                    disabled
-                    className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 disabled:cursor-not-allowed"
+                    readOnly
+                    className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 cursor-default focus:outline-none"
                   />
                   <p className="text-xs text-slate-400 mt-1">Default 1.0 for initial upload.</p>
                 </div>
@@ -719,8 +719,8 @@ export const UploadMaterialView: React.FC = () => {
                 <input
                   type="text"
                   value={formData.author}
-                  disabled
-                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 disabled:cursor-not-allowed"
+                  readOnly
+                  className="w-full h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 text-slate-900 cursor-default focus:outline-none"
                 />
                 <p className="text-xs text-slate-400 mt-1">Automatically set to the current logged-in user.</p>
               </div>
