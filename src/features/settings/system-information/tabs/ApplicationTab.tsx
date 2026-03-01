@@ -2,25 +2,13 @@ import React from "react";
 import { Package, Code2, FileText, Info } from "lucide-react";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import type { ApplicationInfo } from "../types";
+import { formatDateTimeLong } from "@/utils/format";
 
 interface ApplicationTabProps {
   data: ApplicationInfo;
 }
 
 export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }).format(date);
-  };
-
   const getEnvironmentBadge = (env: string) => {
     const badges = {
       production: "effective",
@@ -95,7 +83,7 @@ export const ApplicationTab: React.FC<ApplicationTabProps> = ({ data }) => {
               </label>
               <input
                 type="text"
-                value={formatDate(data.buildDate)}
+                value={formatDateTimeLong(data.buildDate)}
                 readOnly
                 className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none"
               />

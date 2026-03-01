@@ -23,6 +23,7 @@ import { StatusBadge, StatusType } from "@/components/ui/statusbadge/StatusBadge
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
+import { formatDateUS } from "@/utils/format";
 import { DocumentFilters } from "./../shared/components/DocumentFilters";
 import { DetailDocumentView } from "../document-detail/DetailDocumentView";
 import { CreateLinkModal } from "./../shared/components/CreateLinkModal";
@@ -463,15 +464,6 @@ const getTypeColor = (type: DocumentType) => {
   }
 };
 
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-};
-
 // --- Dropdown Component ---
 
 interface DropdownMenuProps {
@@ -532,7 +524,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           icon: IconEyeCheck,
           label: "Review Document",
           onClick: () => {
-            navigate(`/documents/${document.id}/review`);
+            navigate(`/documents/revisions/review/${document.id}`);
             onClose();
           },
           color: "text-slate-500"
@@ -544,7 +536,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           icon: IconChecks,
           label: "Approve Document",
           onClick: () => {
-            navigate(`/documents/${document.id}/approval`);
+            navigate(`/documents/revisions/approval/${document.id}`);
             onClose();
           },
           color: "text-slate-500"
@@ -744,9 +736,9 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
     const document = MOCK_DOCUMENTS.find(doc => doc.id === documentId);
     
     if (document?.status === "Pending Review") {
-      navigate(`/documents/${documentId}/review`);
+      navigate(`/documents/revisions/review/${documentId}`);
     } else if (document?.status === "Pending Approval") {
-      navigate(`/documents/${documentId}/approval`);
+      navigate(`/documents/revisions/approval/${documentId}`);
     } else {
       setSelectedDocumentId(documentId);
       setSelectedDocumentTab(tab);
@@ -1046,7 +1038,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       if (col.id === 'created') {
                         return (
                           <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
-                            {formatDate(doc.created)}
+                            {formatDateUS(doc.created)}
                           </td>
                         );
                       }
@@ -1128,14 +1120,14 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       if (col.id === 'effectiveDate') {
                         return (
                           <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
-                            {formatDate(doc.effectiveDate)}
+                            {formatDateUS(doc.effectiveDate)}
                           </td>
                         );
                       }
                       if (col.id === 'validUntil') {
                         return (
                           <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
-                            {formatDate(doc.validUntil)}
+                            {formatDateUS(doc.validUntil)}
                           </td>
                         );
                       }

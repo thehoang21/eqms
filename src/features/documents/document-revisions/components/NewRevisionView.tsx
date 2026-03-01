@@ -313,7 +313,7 @@ export const NewRevisionView: React.FC = () => {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-slate-200">
                             {MOCK_LINKED_DOCUMENTS.map((doc, index) => {
                                 const isUpgrade = impactDecisions[doc.id];
                                 return (

@@ -11,7 +11,7 @@ Bạn là một chuyên gia Senior React Developer (ReactJS, Tailwind CSS, shadc
 **PHẢI SỬ DỤNG các components này khi cần:**
 
 1. **Button** (`components/ui/button/Button.tsx`)
-   - Variants: `default`, `ghost`, `outline`, `secondary`
+   - Variants: `default`, `ghost`, `outline`, `secondary`, `destructive`, `link`
    - Sizes: `xs`, `sm`, `default`, `lg`, `xl`, `icon`, `icon-sm`, `icon-lg`
    - Props: `variant`, `size`, `fullWidth`, `disabled`, `onClick`, etc.
 
@@ -53,6 +53,22 @@ Bạn là một chuyên gia Senior React Developer (ReactJS, Tailwind CSS, shadc
 
 11. **ResponsiveTable** (`components/ui/table/ResponsiveTable.tsx`)
     - ⚠️ CHỈ dùng cho simple tables, ưu tiên native HTML table cho complex tables
+
+12. **Badge** (`components/ui/badge/Badge.tsx`)
+    - Inline badge/tag component
+    - Props: `variant`, `size`, `icon`, `pill` (rounded-full vs rounded-lg)
+
+13. **ActionDropdown** (`components/ui/dropdown/ActionDropdown.tsx`)
+    - Reusable dropdown menu cho table actions
+    - Portal rendering, backdrop, positioning
+
+14. **TablePagination** (`components/ui/table/TablePagination.tsx`)
+    - Pagination footer cho tables
+    - Props: `currentPage`, `totalPages`, `onPageChange`, `startItem`, `endItem`, `totalItems`
+
+15. **Toast** (`components/ui/toast/Toast.tsx`)
+    - Notification toast system
+    - Import `useToast` hook
 
 ### 0.2 Quy trình khi cần UI component
 
@@ -313,13 +329,13 @@ const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElem
 
 ### 5.2 Form Components (Input, Select)
 - **Label:** `text-sm font-medium text-slate-700 mb-1.5 block`
-- **Input/Select height:** `h-11`
+- **Input/Select height:** `h-9`
 - **Border:** `border border-slate-200 rounded-lg`
 - **Focus state:** `focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500`
-- **Placeholder:** `placeholder:text-slate-400`
+- **Placeholder:** `placeholder:text-slate-400 placeholder:text-sm`
 
 ### 5.3 Select Component (Custom Dropdown)
-- **Trigger:** Height `h-11`, full width, với ChevronDown icon
+- **Trigger:** Height `h-9`, full width, với ChevronDown icon
 - **Portal rendering:** Sử dụng `createPortal` với `position: fixed`, `z-index: 9999`
 - **Search input (nếu có):** Auto-focus khi mở, với Search icon
 - **Options:** `py-3 px-4 text-sm hover:bg-slate-50 transition-colors`
@@ -405,7 +421,7 @@ interface FiltersProps {
   ```tsx
   <Button variant="default" className="rounded-lg">Submit</Button>
   
-  <input className="h-11 border border-slate-200 rounded-lg" />
+  <input className="h-9 border border-slate-200 rounded-lg" />
   
   <div className="fixed bg-white rounded-lg shadow-2xl">
     {/* Dropdown menu */}
@@ -439,7 +455,7 @@ interface FiltersProps {
 Các components trong `components/ui` ĐÃ enforce border-radius chuẩn:
 - **Button:** `rounded-lg` (enforced)
 - **Select/MultiSelect:** `rounded-lg` (enforced)
-- **Input fields:** `rounded-lg` (h-11, enforced)
+- **Input fields:** `rounded-lg` (h-9, enforced)
 - **StatusBadge:** `rounded-full` (enforced)
 - **Modal:** `rounded-xl` (enforced)
 - **Card:** `rounded-xl` (enforced)
@@ -543,6 +559,10 @@ const getButtonRef = (id: string) => {
 - ✅ Có Badge/Status chưa? → Dùng `@/components/ui/statusbadge/StatusBadge`
 - ✅ Có DatePicker chưa? → Dùng `@/components/ui/datetime-picker/DateTimePicker`
 - ✅ Có Card chưa? → Dùng `@/components/ui/card/ResponsiveCard`
+- ✅ Có Badge/Tag chưa? → Dùng `@/components/ui/badge/Badge`
+- ✅ Có Pagination chưa? → Dùng `@/components/ui/table/TablePagination`
+- ✅ Có Toast chưa? → Dùng `@/components/ui/toast/Toast` và `useToast`
+- ✅ Cần format date? → Dùng `@/utils/format` (formatDate, formatDateTime, etc.)
 
 **Khi cần tạo component mới:**
 - 📁 Tạo folder mới trong `components/ui/[component-name]/`
@@ -628,16 +648,28 @@ export const MainComponent: React.FC<Props> = ({ ... }) => {
 
 ## 14. Data Formatting & Utilities
 
-### 14.1 Date Formatting
+### 14.1 Centralized Formatting (`@/utils/format.ts`)
+**PHẢI import từ centralized utils thay vì viết inline:**
 ```tsx
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
+import { formatDate, formatDateUS, formatDateTime, formatDateLong, formatRelativeTime, formatFileSize } from "@/utils/format";
+
+// Sử dụng:
+formatDate(dateString)       // "Jan 15, 2025"
+formatDateUS(dateString)     // "01/15/2025"
+formatDateTime(dateString)   // "Jan 15, 2025, 2:30 PM"
+formatDateLong(dateString)   // "January 15, 2025"
+formatRelativeTime(dateString) // "2 hours ago"
+formatFileSize(bytes)        // "1.5 MB"
+```
+
+**❌ KHÔNG viết inline:**
+```tsx
+// SAI
+new Date(date).toLocaleDateString("en-US", { ... })
+
+// ĐÚNG
+import { formatDate } from "@/utils/format";
+formatDate(date)
 ```
 
 ### 14.2 Helper Functions Organization
@@ -650,16 +682,31 @@ const formatCurrency = (amount: number) => { ... };
 ```
 
 ## 15. Accessibility (A11Y)
-- **Buttons:** Luôn có `aria-label` cho icon-only buttons
+- **Icon-only buttons:** PHẢI có `aria-label` mô tả hành động
+  ```tsx
+  <button aria-label="More actions">
+    <MoreVertical className="h-4 w-4" />
+  </button>
+  ```
 - **Backdrop:** `aria-hidden="true"`
 - **Focus states:** `focus-visible:ring-2 focus-visible:ring-emerald-500`
 - **Keyboard support:** Escape key để đóng modals/dropdowns
+- **Select/Combobox:** Sử dụng `role="combobox"`, `aria-expanded`, `aria-haspopup="listbox"`
+- **Decorative icons:** Icons bên cạnh text label không cần `aria-label` (text đã mô tả)
 
 ## 16. Performance Optimizations
 - **Pagination:** Luôn paginate data phía client (10-20 items/page)
 - **Virtual scrolling:** Không cần thiết cho tables < 1000 rows
-- **Memoization:** Sử dụng `useMemo` cho filtered/sorted data
+- **Memoization:** Sử dụng `useMemo` cho filtered/sorted data VÀ paginatedData
+  ```tsx
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredData.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredData, currentPage, itemsPerPage]);
+  ```
+  **Lưu ý:** Nếu `startIndex` cần dùng trong JSX (row numbering), khai báo riêng ngoài `useMemo`
 - **Event handlers:** Declare outside JSX khi có thể
+- **visibleColumns:** Wrap trong `useMemo` nếu có column customizer
 
 ## 17. QUAN TRỌNG: Event Propagation trong Table
 Khi có interactive elements bên trong clickable table rows:

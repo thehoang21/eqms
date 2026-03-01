@@ -558,10 +558,10 @@ export const MyTasksView: React.FC = () => {
   // Pagination Logic
   const totalItems = filteredData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredData.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredData, currentPage, itemsPerPage]);
 
   return (
     <div className="space-y-4 sm:space-y-5 lg:space-y-6 w-full flex-1 flex flex-col">

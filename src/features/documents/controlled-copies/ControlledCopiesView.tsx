@@ -17,6 +17,7 @@ import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { formatDateUS, formatDateTimeParts } from "@/utils/format";
 import { CreateLinkModal } from "@/features/documents/shared/components";
 import { CancelDistributionModal } from "./components/CancelDistributionModal";
 import { DestructionTypeSelectionModal } from "./components/DestructionTypeSelectionModal";
@@ -608,28 +609,6 @@ type ViewType = "all" | "ready" | "distributed";
 
 // ==================== HELPER FUNCTIONS ====================
 
-const formatDateTime = (date: string, time: string) => {
-  const dateObj = new Date(`${date}T${time}`);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).format(dateObj);
-};
-
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-};
-
 const getStatusConfig = (status: ControlledCopyStatus) => {
   const configs = {
     "Ready for Distribution": {
@@ -1214,7 +1193,7 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
                         <span className="font-medium text-emerald-600">{copy.documentNumber}</span>
                       </td>
                       <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
-                        {formatDateTime(copy.createdDate, copy.createdTime)}
+                        {formatDateTimeParts(copy.createdDate, copy.createdTime)}
                       </td>
                       <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
                         {copy.openedBy}
@@ -1230,7 +1209,7 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
-                        {formatDate(copy.validUntil)}
+                        {formatDateUS(copy.validUntil)}
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                         <span className="font-medium text-slate-900">{copy.document}</span>
@@ -1246,6 +1225,7 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
                           ref={getButtonRef(copy.id)}
                           onClick={(e) => handleDropdownToggle(copy.id, e)}
                           className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                          aria-label="More actions"
                         >
                           <MoreVertical className="h-4 w-4 text-slate-600" />
                         </button>

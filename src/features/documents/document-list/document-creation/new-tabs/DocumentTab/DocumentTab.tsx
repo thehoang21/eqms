@@ -245,7 +245,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                             }}
                             disabled={isObsoleted}
                             className={cn(
-                              "p-1 rounded transition-colors",
+                              "p-1 rounded-lg transition-colors",
                               isObsoleted
                                 ? "cursor-not-allowed opacity-50"
                                 : "hover:bg-red-50"

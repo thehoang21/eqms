@@ -21,6 +21,7 @@ import { Select } from "@/components/ui/select/Select";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
+import { formatDateUS } from "@/utils/format";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -139,15 +140,6 @@ const getResultColor = (status: ResultStatus) => {
     default:
       return "bg-slate-50 text-slate-700 border-slate-200";
   }
-};
-
-const formatDate = (dateStr: string | null) => {
-  if (!dateStr) return "—";
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 };
 
 /* ------------------------------------------------------------------ */
@@ -535,7 +527,7 @@ export const CourseProgressView: React.FC = () => {
                       {emp.attempts > 0 ? emp.attempts : "—"}
                     </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700 hidden xl:table-cell">
-                      {formatDate(emp.completedAt)}
+                      {emp.completedAt ? formatDateUS(emp.completedAt) : "—"}
                     </td>
                   </tr>
                 );

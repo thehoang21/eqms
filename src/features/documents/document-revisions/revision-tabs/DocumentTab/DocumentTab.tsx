@@ -531,7 +531,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                                   e.stopPropagation();
                                   onSelectFile(uploadedFile.file);
                                 }}
-                                className="p-1 hover:bg-emerald-50 rounded transition-colors"
+                                className="p-1 hover:bg-emerald-50 rounded-lg transition-colors"
                                 title="Preview"
                               >
                                 <Eye className="h-3.5 w-3.5 md:h-4 md:w-4 text-emerald-600" />
@@ -546,7 +546,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
                               e.stopPropagation();
                               handleRemoveFile(uploadedFile.id);
                             }}
-                            className="p-1 hover:bg-red-50 rounded transition-colors"
+                            className="p-1 hover:bg-red-50 rounded-lg transition-colors"
                             title="Remove"
                           >
                             <X className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-400 hover:text-red-600" />

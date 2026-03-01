@@ -183,6 +183,7 @@ export function useScheduledTab() {
                     <button
                       onClick={(e) => handleDropdownToggle(schedule.id, e)}
                       className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                      aria-label="More actions"
                     >
                       <MoreVertical className="h-4 w-4 text-slate-600" />
                     </button>

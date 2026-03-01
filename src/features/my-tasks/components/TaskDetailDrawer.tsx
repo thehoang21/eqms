@@ -71,7 +71,7 @@ export const TaskDetailDrawer: React.FC<{
   const handleStartReview = () => {
     // Extract document ID from taskId (e.g., "SOP-REV-001" -> "1")
     const docId = task.id;
-    navigate(`/documents/${docId}/review`);
+    navigate(`/documents/revisions/review/${docId}`);
     handleClose();
   };
 
@@ -189,7 +189,7 @@ export const TaskDetailDrawer: React.FC<{
             <div className="flex items-center gap-2 mb-2">
               <span
                 className={cn(
-                  "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-bold border uppercase",
+                  "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-bold border uppercase",
                   getModuleBadgeStyle(task.module)
                 )}
               >
@@ -328,7 +328,7 @@ export const TaskDetailDrawer: React.FC<{
                 <div>
                   <span
                     className={cn(
-                      "px-2.5 py-1 rounded text-xs font-bold border",
+                      "px-2.5 py-1 rounded-lg text-xs font-bold border",
                       getPriorityColor(task.priority)
                     )}
                   >

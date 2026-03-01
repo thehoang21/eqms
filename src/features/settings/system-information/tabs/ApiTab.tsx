@@ -3,6 +3,7 @@ import { Globe, CheckCircle2, XCircle, Clock, Copy, Check, BarChart3, Shield, Za
 import { Button } from "@/components/ui/button/Button";
 import { useToast } from "@/components/ui/toast/Toast";
 import type { ApiInfo } from "../types";
+import { formatDateTimeLong } from "@/utils/format";
 
 interface ApiTabProps {
   data: ApiInfo;
@@ -11,19 +12,6 @@ interface ApiTabProps {
 export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
   const { showToast } = useToast();
   const [copied, setCopied] = useState(false);
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }).format(date);
-  };
 
   const handleCopyUrl = async () => {
     try {
@@ -278,7 +266,7 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
         </div>
         <div className="p-5">
           <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Last Health Check</label>
-          <p className="text-sm text-slate-900 font-semibold">{formatDate(data.lastHealthCheck)}</p>
+          <p className="text-sm text-slate-900 font-semibold">{formatDateTimeLong(data.lastHealthCheck)}</p>
           <p className="text-xs text-slate-500 mt-1.5">Health checks run automatically every 5 minutes</p>
         </div>
       </div>

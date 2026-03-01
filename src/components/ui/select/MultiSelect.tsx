@@ -292,7 +292,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       >
         <div className="flex items-center gap-1.5 flex-wrap flex-1 min-w-0">
           {selectedOptions.length === 0 ? (
-            <span className="text-slate-500 text-left">{placeholder}</span>
+            <span className="text-slate-400 text-left">{placeholder}</span>
           ) : (
             <>
               {visibleTags.map((option) => (
@@ -348,7 +348,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             bottom: position.showAbove ? `${window.innerHeight - position.top}px` : 'auto',
             left: position.left,
             width: position.width,
-            zIndex: 9999,
+            zIndex: 50,
             maxHeight: dropdownMaxHeight,
           }}
         >

@@ -22,8 +22,7 @@ export const ROUTES = {
     ALL: '/documents/all',
     NEW: '/documents/all/new',
     DETAIL: (id: string) => `/documents/${id}`,
-    REVIEW: (id: string) => `/documents/${id}/review`,
-    APPROVAL: (id: string) => `/documents/${id}/approval`,
+    KNOWLEDGE: '/documents/knowledge',
     ARCHIVED: '/documents/archived',
 
     // Templates
@@ -48,10 +47,12 @@ export const ROUTES = {
 
     // Controlled Copies
     CONTROLLED_COPIES: {
-      ALL: '/documents/controlled-copies?view=all',
-      READY: '/documents/controlled-copies?view=ready',
-      DISTRIBUTED: '/documents/controlled-copies?view=distributed',
+      ALL: '/documents/controlled-copies/all',
+      READY: '/documents/controlled-copies/ready',
+      DISTRIBUTED: '/documents/controlled-copies/distributed',
+      DETAIL: (id: string) => `/documents/controlled-copies/${id}`,
       DESTROY: (id: string) => `/documents/controlled-copies/${id}/destroy`,
+      REQUEST: '/documents/controlled-copy/request',
     },
   },
 
@@ -60,10 +61,23 @@ export const ROUTES = {
     BASE: '/training-management',
     // Course Inventory
     COURSES_LIST: '/training-management/courses-list',
+    COURSES_CREATE: '/training-management/courses/create',
+    COURSE_DETAIL: (courseId: string) => `/training-management/courses/${courseId}`,
+    COURSE_EDIT: (courseId: string) => `/training-management/courses/${courseId}/edit`,
+    COURSE_PROGRESS: (courseId: string) => `/training-management/courses/${courseId}/progress`,
+    COURSE_RESULT_ENTRY: (courseId: string) => `/training-management/courses/${courseId}/result-entry`,
+    // Training Materials
     TRAINING_MATERIALS: '/training-management/training-materials',
     UPLOAD_MATERIAL: '/training-management/training-materials/upload',
     MATERIAL_DETAIL: (id: string) => `/training-management/training-materials/${id}`,
-    COURSES_CREATE: '/training-management/courses/create',
+    MATERIAL_EDIT: (id: string) => `/training-management/training-materials/${id}/edit`,
+    MATERIAL_NEW_REVISION: (id: string) => `/training-management/training-materials/${id}/new-revision`,
+    MATERIAL_USAGE_REPORT: (id: string) => `/training-management/training-materials/${id}/usage-report`,
+    MATERIAL_REVIEW: (id: string) => `/training-management/training-materials/${id}/review`,
+    // Approval
+    PENDING_REVIEW: '/training-management/pending-review',
+    PENDING_APPROVAL: '/training-management/pending-approval',
+    APPROVAL_DETAIL: (id: string) => `/training-management/pending-review/${id}`,
     // Compliance Tracking
     TRAINING_MATRIX: '/training-management/training-matrix',
     COURSE_STATUS: '/training-management/course-status',
@@ -107,16 +121,16 @@ export const ROUTES = {
 
   // Settings
   SETTINGS: {
-    USER_MANAGEMENT: '/settings/user-management',
-    USER_MANAGEMENT_ADD: '/settings/user-management/add',
-    USER_MANAGEMENT_EDIT: (userId: string) => `/settings/user-management/edit/${userId}`,
-    ROLE_PERMISSION: '/settings/role-permission',
-    ROLE_PERMISSION_NEW: '/settings/role-permission/new',
-    ROLE_PERMISSION_DETAIL: (roleId: string) => `/settings/role-permission/${roleId}`,
-    ROLE_PERMISSION_EDIT: (roleId: string) => `/settings/role-permission/${roleId}/edit`,
+    USERS: '/settings/users',
+    USERS_ADD: '/settings/users/add',
+    USERS_EDIT: (userId: string) => `/settings/users/edit/${userId}`,
+    ROLES: '/settings/roles',
+    ROLES_NEW: '/settings/roles/new',
+    ROLES_DETAIL: (roleId: string) => `/settings/roles/${roleId}`,
+    ROLES_EDIT: (roleId: string) => `/settings/roles/${roleId}/edit`,
     DICTIONARIES: '/settings/dictionaries',
-    CONFIG: '/settings/config',
-    SYSTEM_INFO: '/settings/info-system',
+    CONFIGURATION: '/settings/configuration',
+    SYSTEM_INFO: '/settings/system-info',
   },
 
   // User Manual

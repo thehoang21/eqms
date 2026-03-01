@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { Button } from '@/components/ui/button/Button';
 import { useToast } from '@/components/ui/toast/Toast';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
+import { formatDateTime } from '@/utils/format';
 import {
   Plus,
   X,
@@ -107,17 +108,6 @@ export const IntegrationTab: React.FC<IntegrationTabProps> = ({ config, onChange
     setTimeout(() => {
       showToast({ type: 'success', message: 'LDAP connection successful — 142 users found' });
     }, 2000);
-  };
-
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return 'Never';
-    return new Date(dateStr).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
   };
 
   return (
@@ -343,7 +333,7 @@ export const IntegrationTab: React.FC<IntegrationTabProps> = ({ config, onChange
               </div>
               {config.ldap.lastSyncDate && (
                 <p className="text-xs text-slate-500">
-                  Last synchronized: {formatDate(config.ldap.lastSyncDate)}
+                  Last synchronized: {config.ldap.lastSyncDate ? formatDateTime(config.ldap.lastSyncDate) : 'Never'}
                 </p>
               )}
               <div className="flex items-center justify-end gap-2">
@@ -416,7 +406,7 @@ export const IntegrationTab: React.FC<IntegrationTabProps> = ({ config, onChange
                   </div>
                   {webhook.lastTriggered && (
                     <p className="text-xs text-slate-500 mt-2">
-                      Last triggered: {formatDate(webhook.lastTriggered)}
+                      Last triggered: {webhook.lastTriggered ? formatDateTime(webhook.lastTriggered) : 'Never'}
                     </p>
                   )}
                 </div>
@@ -636,7 +626,7 @@ export const IntegrationTab: React.FC<IntegrationTabProps> = ({ config, onChange
                   <span className="text-sm font-mono text-slate-700">{origin}</span>
                   <button
                     onClick={() => removeCorsOrigin(origin)}
-                    className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                    className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   >
                     <X className="h-4 w-4" />
                   </button>

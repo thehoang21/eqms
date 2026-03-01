@@ -14,6 +14,8 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
+import { formatDateTime } from "@/utils/format";
+import { FilterCard } from "@/components/ui/card/FilterCard";
 import type { AuditTrailRecord, AuditAction, AuditModule } from "./types";
 
 // --- Mock Data ---
@@ -300,17 +302,6 @@ const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
 ];
 
 // --- Helper Functions ---
-const formatDateTime = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).format(date);
-};
 
 // --- Dropdown Component ---
 interface DropdownMenuProps {
@@ -461,10 +452,10 @@ export const AuditTrailView: React.FC = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredData.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredData, currentPage, itemsPerPage]);
 
   // Reset page when filters change
   React.useEffect(() => {
@@ -597,10 +588,10 @@ export const AuditTrailView: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+      <FilterCard>
+        <FilterCard.Row>
           {/* Search */}
-          <div className="md:col-span-2 xl:col-span-6">
+          <FilterCard.Item span={6} mdSpan={2}>
             <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
@@ -614,10 +605,10 @@ export const AuditTrailView: React.FC = () => {
                 className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
-          </div>
+          </FilterCard.Item>
 
           {/* Module Filter */}
-          <div className="xl:col-span-3">
+          <FilterCard.Item span={3}>
             <Select
               label="Module"
               value={moduleFilter}
@@ -625,10 +616,10 @@ export const AuditTrailView: React.FC = () => {
               options={moduleOptions}
               placeholder="All Modules"
             />
-          </div>
+          </FilterCard.Item>
 
           {/* Action Filter */}
-          <div className="xl:col-span-3">
+          <FilterCard.Item span={3}>
             <Select
               label="Action"
               value={actionFilter}
@@ -636,29 +627,29 @@ export const AuditTrailView: React.FC = () => {
               options={actionOptions}
               placeholder="All Actions"
             />
-          </div>
+          </FilterCard.Item>
 
           {/* Date From */}
-          <div className="xl:col-span-3">
+          <FilterCard.Item span={3}>
             <DateTimePicker
               label="From Date"
               value={dateFrom}
               onChange={setDateFrom}
               placeholder="Start date"
             />
-          </div>
+          </FilterCard.Item>
 
           {/* Date To */}
-          <div className="xl:col-span-3">
+          <FilterCard.Item span={3}>
             <DateTimePicker
               label="To Date"
               value={dateTo}
               onChange={setDateTo}
               placeholder="End date"
             />
-          </div>
-        </div>
-      </div>
+          </FilterCard.Item>
+        </FilterCard.Row>
+      </FilterCard>
 
       {/* Table */}
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
@@ -694,7 +685,7 @@ export const AuditTrailView: React.FC = () => {
                       IP Address
                     </th>
 
-                    <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                    <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                       Action
                     </th>
                   </tr>
@@ -768,7 +759,7 @@ export const AuditTrailView: React.FC = () => {
                       {/* Action Column */}
                       <td
                         onClick={(e) => e.stopPropagation()}
-                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                       >
                         <button
                           ref={getButtonRef(record.id)}

@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 import { useToast } from '@/components/ui/toast';
+import { formatDate } from '@/utils/format';
 import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
 import { GeneralTab, TrainingTab, SignaturesTab, AuditTab, type GeneralTabFormData } from "@/features/documents/shared/tabs";
@@ -83,15 +84,6 @@ interface RevisionApprovalViewProps {
 
 // Use shared FormData type from GeneralTab
 type FormData = GeneralTabFormData;
-
-// --- Helper Functions ---
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-};
 
 // --- Mock Data ---
 const MOCK_REVISION: RevisionDetail = {
@@ -290,10 +282,9 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                     <>
                         <Button
                             onClick={handleReject}
-                            variant="outline"
+                            variant="destructive"
                             size="sm"
                             disabled={isSubmitting}
-                            className="bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
                         >
                             <span className="text-xs sm:text-sm">Reject</span>
                         </Button>
@@ -321,10 +312,9 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                         <>
                             <Button
                                 onClick={handleReject}
-                                variant="outline"
+                                variant="destructive"
                                 size="sm"
                                 disabled={isSubmitting}
-                                className="bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
                             >
                                 <span className="text-xs sm:text-sm">Reject</span>
                             </Button>

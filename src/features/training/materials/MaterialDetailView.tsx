@@ -27,6 +27,7 @@ import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
 import { ESignatureModal } from "@/components/ui/esignmodal";
 import { cn } from "@/components/ui/utils";
 import { getFileIconSrc } from "@/utils/fileIcons";
+import { formatDateUS } from "@/utils/format";
 
 // ─── Types ─────────────────────────────────────────────────────────
 type MaterialStatus = "Draft" | "Pending" | "Approved" | "Obsolete";
@@ -134,18 +135,6 @@ const generateActivityLog = (material: TrainingMaterial): ActivityEntry[] => {
   return logs.reverse(); // Newest first
 };
 
-// ─── Helpers ───────────────────────────────────────────────────────
-const getStatusBadge = (status: MaterialStatus) => {
-  switch (status) {
-    case "Draft": return "bg-slate-50 text-slate-700 border-slate-200";
-    case "Pending": return "bg-amber-50 text-amber-700 border-amber-200";
-    case "Approved": return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Obsolete": return "bg-red-50 text-red-700 border-red-200";
-  }
-};
-
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 
 // ─── Component ─────────────────────────────────────────────────────
 export const MaterialDetailView: React.FC = () => {
@@ -322,7 +311,7 @@ export const MaterialDetailView: React.FC = () => {
           {/* Review actions */}
           {canReview && !material.reviewedAt && (
             <>
-              <Button size="sm" className="whitespace-nowrap gap-2 bg-red-600 text-white hover:bg-red-700 active:scale-95" onClick={handleReviewReject}>
+              <Button size="sm" variant="destructive" className="whitespace-nowrap gap-2" onClick={handleReviewReject}>
                 Reject
               </Button>
               <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleReviewApprove}>
@@ -334,7 +323,7 @@ export const MaterialDetailView: React.FC = () => {
           {/* Approve actions (after review) */}
           {canApprove && (
             <>
-              <Button size="sm" className="whitespace-nowrap gap-2 bg-red-600 text-white hover:bg-red-700 active:scale-95" onClick={handleReject}>
+              <Button size="sm" variant="destructive" className="whitespace-nowrap gap-2" onClick={handleReject}>
                 Reject
               </Button>
               <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleApprove}>
@@ -345,7 +334,7 @@ export const MaterialDetailView: React.FC = () => {
 
           {/* Obsolete action */}
           {material.status === "Approved" && (
-            <Button size="sm" className="whitespace-nowrap gap-2 bg-red-600 text-white hover:bg-red-700 active:scale-95" onClick={handleMarkObsolete}>
+            <Button size="sm" variant="destructive" className="whitespace-nowrap gap-2" onClick={handleMarkObsolete}>
               <XCircle className="h-4 w-4" />
               Mark Obsolete
             </Button>
@@ -437,7 +426,7 @@ export const MaterialDetailView: React.FC = () => {
                   <p className="text-xs text-slate-500 mt-0.5">
                     {material.externalUrl
                       ? "External Link"
-                      : `${material.fileSize} \u00b7 ${material.type} \u00b7 Uploaded ${formatDate(material.uploadedAt)}`}
+                      : `${material.fileSize} · ${material.type} · Uploaded ${formatDateUS(material.uploadedAt)}`}
                   </p>
                   {material.externalUrl && (
                     <a
@@ -487,7 +476,7 @@ export const MaterialDetailView: React.FC = () => {
                   <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
                     <Calendar className="h-3.5 w-3.5" /> Upload Date
                   </div>
-                  <p className="text-sm font-semibold text-slate-900">{formatDate(material.uploadedAt)}</p>
+                  <p className="text-sm font-semibold text-slate-900">{formatDateUS(material.uploadedAt)}</p>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
@@ -526,7 +515,7 @@ export const MaterialDetailView: React.FC = () => {
                   {material.reviewedAt ? (
                     <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                       <CheckCircle className="h-3.5 w-3.5" />
-                      Reviewed on {formatDate(material.reviewedAt)}
+                      Reviewed on {formatDateUS(material.reviewedAt)}
                     </div>
                   ) : material.status === "Pending" ? (
                     <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium">
@@ -555,7 +544,7 @@ export const MaterialDetailView: React.FC = () => {
                   {material.approvedAt ? (
                     <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                       <CheckCircle className="h-3.5 w-3.5" />
-                      Approved on {formatDate(material.approvedAt)}
+                      Approved on {formatDateUS(material.approvedAt)}
                     </div>
                   ) : material.reviewedAt ? (
                     <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium">
@@ -599,7 +588,7 @@ export const MaterialDetailView: React.FC = () => {
                           <p className="text-sm font-semibold text-slate-900">{entry.action}</p>
                         </div>
                         <p className="text-xs text-slate-500 mt-0.5">
-                          by <span className="font-medium text-slate-700">{entry.user}</span> · {formatDate(entry.timestamp)}
+                          by <span className="font-medium text-slate-700">{entry.user}</span> · {formatDateUS(entry.timestamp)}
                         </p>
                         {entry.comment && (
                           <p className="text-xs text-slate-600 mt-1.5 p-2.5 bg-slate-50 rounded-lg border border-slate-100">

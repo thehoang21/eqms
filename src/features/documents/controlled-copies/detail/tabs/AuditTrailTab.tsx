@@ -276,7 +276,7 @@ export const AuditTrailTab: React.FC = () => {
       <div className="flex-1 overflow-hidden border rounded-xl bg-white shadow-sm flex flex-col">
         <div className="overflow-x-auto flex-1">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-10">
+            <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-30">
               <tr>
                 <th className="px-4 py-3.5 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   No.
@@ -298,7 +298,7 @@ export const AuditTrailTab: React.FC = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-slate-200 bg-white">
               {paginatedData.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-16 text-center">
@@ -319,7 +319,7 @@ export const AuditTrailTab: React.FC = () => {
                 paginatedData.map((entry, index) => {
                   const rowNumber = (currentPage - 1) * itemsPerPage + index + 1;
                   return (
-                    <tr key={entry.id} className="hover:bg-slate-50 transition-colors">
+                    <tr key={entry.id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="px-4 py-3.5 text-center text-sm text-slate-600 font-medium">
                         {rowNumber}
                       </td>

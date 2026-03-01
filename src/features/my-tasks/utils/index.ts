@@ -124,18 +124,6 @@ export const calculateDaysLeft = (dueDate: string): number => {
 };
 
 /**
- * Format date to readable string
- */
-export const formatDate = (dateStr: string): string => {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-};
-
-/**
  * Get priority badge style (alternative)
  */
 export const getPriorityBadgeStyle = (priority: string): string => {

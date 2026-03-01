@@ -22,6 +22,7 @@ import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
 import { ESignatureModal } from "@/components/ui/esignmodal";
 import { cn } from "@/components/ui/utils";
 import { getFileIconSrc } from "@/utils/fileIcons";
+import { formatDateUS } from "@/utils/format";
 
 // ─── Types ─────────────────────────────────────────────────────────
 type MaterialStatus = "Draft" | "Pending" | "Approved" | "Obsolete";
@@ -129,19 +130,6 @@ const generateActivityLog = (material: TrainingMaterial): ActivityEntry[] => {
 
   return logs.reverse();
 };
-
-// ─── Helpers ───────────────────────────────────────────────────────
-const getStatusBadge = (status: MaterialStatus) => {
-  switch (status) {
-    case "Draft":    return "bg-slate-50 text-slate-700 border-slate-200";
-    case "Pending":  return "bg-amber-50 text-amber-700 border-amber-200";
-    case "Approved": return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Obsolete": return "bg-red-50 text-red-700 border-red-200";
-  }
-};
-
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 
 // ─── Component ─────────────────────────────────────────────────────
 export const ReviewApprovalView: React.FC = () => {
@@ -286,8 +274,9 @@ export const ReviewApprovalView: React.FC = () => {
           {canReview && !material.reviewedAt && (
             <>
               <Button
+                variant="destructive"
                 size="sm"
-                className="whitespace-nowrap gap-2 bg-red-600 text-white hover:bg-red-700 active:scale-95"
+                className="whitespace-nowrap gap-2"
                 onClick={handleReviewReject}
               >
                 Reject
@@ -301,8 +290,9 @@ export const ReviewApprovalView: React.FC = () => {
           {canApprove && (
             <>
               <Button
+                variant="destructive"
                 size="sm"
-                className="whitespace-nowrap gap-2 bg-red-600 text-white hover:bg-red-700 active:scale-95"
+                className="whitespace-nowrap gap-2"
                 onClick={handleReject}
               >
                 Reject
@@ -315,8 +305,9 @@ export const ReviewApprovalView: React.FC = () => {
 
           {material.status === "Approved" && (
             <Button
+              variant="destructive"
               size="sm"
-              className="whitespace-nowrap gap-2 bg-red-600 text-white hover:bg-red-700 active:scale-95"
+              className="whitespace-nowrap gap-2"
               onClick={handleMarkObsolete}
             >
               <XCircle className="h-4 w-4" />
@@ -410,7 +401,7 @@ export const ReviewApprovalView: React.FC = () => {
                   <p className="text-xs text-slate-500 mt-0.5">
                     {material.externalUrl
                       ? "External Link"
-                      : `${material.fileSize} · ${material.type} · Uploaded ${formatDate(material.uploadedAt)}`}
+                      : `${material.fileSize} · ${material.type} · Uploaded ${formatDateUS(material.uploadedAt)}`}
                   </p>
                   {material.externalUrl && (
                     <a
@@ -460,7 +451,7 @@ export const ReviewApprovalView: React.FC = () => {
                   <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
                     <Calendar className="h-3.5 w-3.5" /> Upload Date
                   </div>
-                  <p className="text-sm font-semibold text-slate-900">{formatDate(material.uploadedAt)}</p>
+                  <p className="text-sm font-semibold text-slate-900">{formatDateUS(material.uploadedAt)}</p>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
@@ -499,7 +490,7 @@ export const ReviewApprovalView: React.FC = () => {
                   {material.reviewedAt ? (
                     <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                       <CheckCircle className="h-3.5 w-3.5" />
-                      Reviewed on {formatDate(material.reviewedAt)}
+                      Reviewed on {formatDateUS(material.reviewedAt)}
                     </div>
                   ) : material.status === "Pending" ? (
                     <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium">
@@ -528,7 +519,7 @@ export const ReviewApprovalView: React.FC = () => {
                   {material.approvedAt ? (
                     <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                       <CheckCircle className="h-3.5 w-3.5" />
-                      Approved on {formatDate(material.approvedAt)}
+                      Approved on {formatDateUS(material.approvedAt)}
                     </div>
                   ) : material.reviewedAt ? (
                     <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium">
@@ -571,7 +562,7 @@ export const ReviewApprovalView: React.FC = () => {
                         <p className="text-sm font-semibold text-slate-900">{entry.action}</p>
                         <p className="text-xs text-slate-500 mt-0.5">
                           by <span className="font-medium text-slate-700">{entry.user}</span> ·{" "}
-                          {formatDate(entry.timestamp)}
+                          {formatDateUS(entry.timestamp)}
                         </p>
                         {entry.comment && (
                           <p className="text-xs text-slate-600 mt-1.5 p-2.5 bg-slate-50 rounded-lg border border-slate-100">

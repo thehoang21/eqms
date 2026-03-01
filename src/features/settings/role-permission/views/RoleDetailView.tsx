@@ -467,10 +467,10 @@ export const RoleDetailView: React.FC = () => {
             </div>
             {(permissionSearch.trim() || actionFilters.size > 0) && (
               <Button
-                variant="outline"
+                variant="destructive"
                 size="xs"
                 onClick={clearPermissionFilters}
-                className="h-7 px-2 text-xs bg-red-500 text-white border-red-500 hover:bg-red-600 hover:border-red-600"
+                className="h-7 px-2 text-xs"
               >
                 Clear
               </Button>

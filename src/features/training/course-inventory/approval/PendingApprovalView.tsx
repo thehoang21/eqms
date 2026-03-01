@@ -15,6 +15,7 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
+import { formatDateUS } from "@/utils/format";
 import { CourseApproval } from "../../types";
 
 // --- Mock Data: Pending Approval queue ---
@@ -113,13 +114,6 @@ const getMethodBadge = (method: "Read & Understood" | "Quiz (Paper-based/Manual)
     ? "bg-amber-50 text-amber-700 border-amber-200"
     : "bg-slate-50 text-slate-700 border-slate-200";
 
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
 const METHOD_OPTIONS = [
   { label: "All Methods", value: "All" },
   { label: "Quiz (Paper-based/Manual)", value: "Quiz (Paper-based/Manual)" },
@@ -178,10 +172,10 @@ export const PendingApprovalView: React.FC = () => {
   }, [searchQuery, methodFilter, instructorFilter, departmentFilter, dateFrom, dateTo]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredData.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredData, currentPage, itemsPerPage]);
 
   const handleViewDetail = (item: CourseApproval) => {
     navigate(`/training-management/pending-approval/${item.id}`);
@@ -379,7 +373,7 @@ export const PendingApprovalView: React.FC = () => {
                         {item.submittedBy}
                       </td>
                       <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
-                        {formatDate(item.submittedAt)}
+                        {formatDateUS(item.submittedAt)}
                       </td>
                       <td
                         onClick={(e) => e.stopPropagation()}

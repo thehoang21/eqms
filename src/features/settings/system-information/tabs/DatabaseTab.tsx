@@ -1,28 +1,16 @@
 ﻿import React from "react";
 import { Database, CheckCircle2, XCircle, Clock, Layers, BarChart3, ShieldAlert, Info } from "lucide-react";
 import type { DatabaseInfo } from "../types";
+import { formatDateTimeLong, formatDateUS } from "@/utils/format";
 
 interface DatabaseTabProps {
   data: DatabaseInfo;
 }
 
 export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    }).format(date);
-  };
-
   const getPoolUsagePercent = () => {
     if (!data.connectionPool) return 0;
-    return Math.round((data.connectionPool.active / data.connectionPool.maxSize) * 100);
+    return Math.round((data.connectionPool.activeConnections / data.connectionPool.maxSize) * 100);
   };
 
   return (
@@ -121,15 +109,15 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
           <div className="p-5 space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-center">
-                <p className="text-2xl font-bold text-emerald-700">{data.connectionPool.active}</p>
+                <p className="text-2xl font-bold text-emerald-700">{data.connectionPool.activeConnections}</p>
                 <p className="text-xs font-medium text-emerald-600 mt-1">Active</p>
               </div>
               <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 text-center">
-                <p className="text-2xl font-bold text-blue-700">{data.connectionPool.idle}</p>
+                <p className="text-2xl font-bold text-blue-700">{data.connectionPool.idleConnections}</p>
                 <p className="text-xs font-medium text-blue-600 mt-1">Idle</p>
               </div>
               <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-center">
-                <p className="text-2xl font-bold text-amber-700">{data.connectionPool.waiting}</p>
+                <p className="text-2xl font-bold text-amber-700">{data.connectionPool.waitingRequests}</p>
                 <p className="text-xs font-medium text-amber-600 mt-1">Waiting</p>
               </div>
               <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 text-center">
@@ -184,7 +172,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
                     <td className="py-2.5 px-5 text-sm text-slate-700 text-right font-semibold">{table.rowCount.toLocaleString()}</td>
                     <td className="py-2.5 px-5 text-sm text-slate-600 text-right hidden sm:table-cell">{table.size}</td>
                     <td className="py-2.5 px-5 text-sm text-slate-600 hidden md:table-cell">
-                      {new Date(table.lastUpdated).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      {formatDateUS(table.lastModified)}
                     </td>
                   </tr>
                 ))}
@@ -208,7 +196,7 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
         <div className="p-5">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Last Backup</label>
-            <p className="text-sm text-slate-900 font-semibold">{formatDate(data.lastBackup)}</p>
+            <p className="text-sm text-slate-900 font-semibold">{formatDateTimeLong(data.lastBackup)}</p>
           </div>
         </div>
       </div>

@@ -35,6 +35,5 @@ export {
   isOverdue,
   daysUntil,
   calculateDaysLeft,
-  formatDate,
   getPriorityBadgeStyle,
 } from './utils';

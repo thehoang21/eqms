@@ -337,7 +337,7 @@ export const Select: React.FC<SelectProps> = ({
           triggerClassName
         )}
       >
-        <span className={cn("truncate", selectedOption ? "text-slate-900" : "text-slate-500")}>
+        <span className={cn("truncate", selectedOption ? "text-slate-900" : "text-slate-400")}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <ChevronDown
@@ -360,7 +360,7 @@ export const Select: React.FC<SelectProps> = ({
             bottom: position.showAbove ? `${window.innerHeight - position.top}px` : 'auto',
             left: position.left,
             width: position.width,
-            zIndex: 9999,
+            zIndex: 50,
             maxHeight: dropdownMaxHeight,
           }}
         >

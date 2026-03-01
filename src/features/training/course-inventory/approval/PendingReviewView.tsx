@@ -15,6 +15,7 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
+import { formatDateUS } from "@/utils/format";
 import { CourseApproval } from "../../types";
 
 // --- Mock Data ---
@@ -184,15 +185,6 @@ const getMethodBadge = (method: "Read & Understood" | "Quiz (Paper-based/Manual)
     : "bg-slate-50 text-slate-700 border-slate-200";
 };
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
-
 // --- Constants ---
 const METHOD_OPTIONS = [
   { label: "All Methods", value: "All" },
@@ -258,10 +250,10 @@ export const PendingReviewView: React.FC = () => {
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredData.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredData, currentPage, itemsPerPage]);
 
   const handleViewDetail = (approval: CourseApproval) => {
     navigate(`/training-management/pending-review/${approval.id}`);
@@ -469,7 +461,7 @@ export const PendingReviewView: React.FC = () => {
                         {item.submittedBy}
                       </td>
                       <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
-                        {formatDate(item.submittedAt)}
+                        {formatDateUS(item.submittedAt)}
                       </td>
                       <td
                         onClick={(e) => e.stopPropagation()}

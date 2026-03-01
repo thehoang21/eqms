@@ -26,7 +26,9 @@ import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
+import { StatusBadge, StatusType } from "@/components/ui/statusbadge/StatusBadge";
 import { cn } from "@/components/ui/utils";
+import { formatDateUS } from "@/utils/format";
 
 interface TrainingMaterial {
   id: string;
@@ -199,6 +201,22 @@ export const MaterialsView: React.FC = () => {
   const getEffectiveStatus = (m: TrainingMaterial) =>
     obsoleteOverrides[m.id] !== undefined ? "Obsolete" as const : m.status;
 
+  // Map material status to StatusBadge type
+  const mapMaterialStatusToStatusType = (status: TrainingMaterial["status"]): StatusType => {
+    switch (status) {
+      case "Draft":
+        return "draft";
+      case "Pending":
+        return "pendingReview";
+      case "Approved":
+        return "approved";
+      case "Obsolete":
+        return "obsolete";
+      default:
+        return "draft";
+    }
+  };
+
   // Filtered & Paginated
   const filteredData = useMemo(() => {
     return MOCK_MATERIALS.filter((m) => {
@@ -266,25 +284,6 @@ export const MaterialsView: React.FC = () => {
       case "Image": return "bg-blue-500";
       default: return "bg-slate-500";
     }
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "Draft":
-        return "bg-slate-50 text-slate-700 border-slate-200";
-      case "Pending":
-        return "bg-amber-50 text-amber-700 border-amber-200";
-      case "Approved":
-        return "bg-emerald-50 text-emerald-700 border-emerald-200";
-      case "Obsolete":
-        return "bg-red-50 text-red-700 border-red-200";
-      default:
-        return "bg-slate-50 text-slate-700 border-slate-200";
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
   };
 
   const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
@@ -564,13 +563,8 @@ export const MaterialsView: React.FC = () => {
                     <p className="text-xs text-slate-500">{material.materialId} · {material.version}</p>
                   </div>
                   <div className="flex flex-col items-end flex-shrink-0">
-                    <span className={cn(
-                      "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
-                      getStatusBadge(material.status)
-                    )}>
-                      {material.status}
-                    </span>
-                    <span className="text-xs text-slate-500 mt-0.5">{formatDate(material.uploadedAt)}</span>
+                    <StatusBadge status={mapMaterialStatusToStatusType(material.status)} />
+                    <span className="text-xs text-slate-500 mt-0.5">{formatDateUS(material.uploadedAt)}</span>
                   </div>
                 </div>
               ))}
@@ -748,9 +742,7 @@ export const MaterialsView: React.FC = () => {
                   </td>
                   {/* Status */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
-                    <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border", getStatusBadge(getEffectiveStatus(material)))}>
-                      {getEffectiveStatus(material)}
-                    </span>
+                    <StatusBadge status={mapMaterialStatusToStatusType(getEffectiveStatus(material) as TrainingMaterial["status"])} />
                   </td>
                   {/* Courses Using */}
                   <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap">
@@ -760,7 +752,7 @@ export const MaterialsView: React.FC = () => {
                   </td>
                   {/* Last Updated */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                    {formatDate(material.uploadedAt)}
+                    {formatDateUS(material.uploadedAt)}
                   </td>
                   {/* Uploaded By */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
@@ -774,6 +766,7 @@ export const MaterialsView: React.FC = () => {
                     <button
                       onClick={(e) => handleDropdownToggle(material.id, e)}
                       className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                      aria-label="More actions"
                     >
                       <MoreVertical className="h-4 w-4 text-slate-600" />
                     </button>

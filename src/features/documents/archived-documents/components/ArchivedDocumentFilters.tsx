@@ -2,6 +2,7 @@ import React from 'react';
 import { Search, Calendar, User, Clock } from 'lucide-react';
 import { Select } from '@/components/ui/select/Select';
 import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
+import { FilterCard } from '@/components/ui/card/FilterCard';
 import { RetentionFilter } from '../types';
 
 interface ArchivedDocumentFiltersProps {
@@ -44,10 +45,10 @@ export const ArchivedDocumentFilters: React.FC<ArchivedDocumentFiltersProps> = (
     ];
 
     return (
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+        <FilterCard>
+            <FilterCard.Row>
                 {/* Search Input */}
-                <div className="md:col-span-2 xl:col-span-6">
+                <FilterCard.Item span={6} mdSpan={2}>
                     <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                         Search
                     </label>
@@ -61,48 +62,48 @@ export const ArchivedDocumentFilters: React.FC<ArchivedDocumentFiltersProps> = (
                             className="w-full pl-9 pr-4 py-2 h-9 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
                         />
                     </div>
-                </div>
+                </FilterCard.Item>
 
                 {/* Archive Date Range - Start */}
-                <div className="xl:col-span-3">
+                <FilterCard.Item span={3}>
                     <DateTimePicker
                         label="Archived From"
                         value={startDate}
                         onChange={onStartDateChange}
                         placeholder="Select start date"
                     />
-                </div>
+                </FilterCard.Item>
 
                 {/* Archive Date Range - End */}
-                <div className="xl:col-span-3">
+                <FilterCard.Item span={3}>
                     <DateTimePicker
                         label="Archived To"
                         value={endDate}
                         onChange={onEndDateChange}
                         placeholder="Select end date"
                     />
-                </div>
+                </FilterCard.Item>
 
                 {/* Last Approver Filter */}
-                <div className="xl:col-span-6">
+                <FilterCard.Item span={6}>
                     <Select
                         label="Last Approver"
                         value={lastApproverFilter}
                         onChange={onLastApproverChange}
                         options={approverOptions}
                     />
-                </div>
+                </FilterCard.Item>
 
                 {/* Retention Status Filter */}
-                <div className="xl:col-span-6">
+                <FilterCard.Item span={6}>
                     <Select
                         label="Retention Status"
                         value={retentionFilter}
                         onChange={onRetentionFilterChange}
                         options={retentionOptions}
                     />
-                </div>
-            </div>
-        </div>
+                </FilterCard.Item>
+            </FilterCard.Row>
+        </FilterCard>
     );
 };

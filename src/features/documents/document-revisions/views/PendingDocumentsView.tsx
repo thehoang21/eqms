@@ -575,8 +575,9 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
 
   const totalPages = Math.ceil(filteredRevisions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentRevisions = filteredRevisions.slice(startIndex, endIndex);
+  const currentRevisions = useMemo(() => {
+    return filteredRevisions.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredRevisions, startIndex, itemsPerPage]);
 
   const handleDropdownToggle = (
     docId: string,
@@ -855,6 +856,7 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
                               ref={getButtonRef(rev.id)}
                               onClick={(e) => handleDropdownToggle(rev.id, e)}
                               className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                              aria-label="More actions"
                             >
                               <MoreVertical className="h-4 w-4 text-slate-600" />
                             </button>

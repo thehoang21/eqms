@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
+import { formatDateUS } from "@/utils/format";
 import { Select } from "@/components/ui/select/Select";
 import { cn } from "@/components/ui/utils";
 
@@ -197,8 +198,6 @@ const getFallbackUsage = (id: string): UsageCourseRecord[] => {
 };
 
 // ─── Helpers ────────────────────────────────────────────────────────
-const formatDate = (d: string) =>
-  new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 
 const getTypeIcon = (type: MaterialType) => {
   switch (type) {
@@ -381,7 +380,7 @@ export const UsageReportView: React.FC = () => {
             <div className="flex items-center gap-4 mt-1 flex-wrap text-xs text-slate-500">
               <span className="flex items-center gap-1"><Building2 className="h-3.5 w-3.5" /> {material.department}</span>
               <span className="flex items-center gap-1"><GitBranch className="h-3.5 w-3.5" /> {material.allVersions.length} versions published</span>
-              <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" /> Uploaded {formatDate(material.uploadedAt)}</span>
+              <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" /> Uploaded {formatDateUS(material.uploadedAt)}</span>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
@@ -693,9 +692,9 @@ export const UsageReportView: React.FC = () => {
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{record.instructor}</td>
                       {/* Period */}
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <div className="text-slate-700">{formatDate(record.startDate)}</div>
+                        <div className="text-slate-700">{formatDateUS(record.startDate)}</div>
                         {record.endDate ? (
-                          <div className="text-xs text-slate-500">→ {formatDate(record.endDate)}</div>
+                          <div className="text-xs text-slate-500">→ {formatDateUS(record.endDate)}</div>
                         ) : (
                           <div className="text-xs text-blue-500 font-medium">Ongoing</div>
                         )}

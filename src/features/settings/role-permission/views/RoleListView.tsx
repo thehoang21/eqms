@@ -9,6 +9,7 @@ import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
+import { FilterCard } from "@/components/ui/card/FilterCard";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Role } from "../types";
 import { MOCK_ROLES, PERMISSION_GROUPS } from "../constants";
@@ -150,8 +151,9 @@ export const RoleListView: React.FC = () => {
   // Pagination
   const totalPages = Math.ceil(filteredRoles.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedRoles = filteredRoles.slice(startIndex, endIndex);
+  const paginatedRoles = useMemo(() => {
+    return filteredRoles.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredRoles, startIndex, itemsPerPage]);
 
   // Handlers
   const handleViewRole = (id: string) => {
@@ -289,10 +291,10 @@ export const RoleListView: React.FC = () => {
       </div>
 
       {/* Filter Section */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+      <FilterCard>
+        <FilterCard.Row>
           {/* Search */}
-          <div className="md:col-span-2 xl:col-span-6 w-full">
+          <FilterCard.Item span={6} mdSpan={2}>
             <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -309,9 +311,9 @@ export const RoleListView: React.FC = () => {
                 className="block w-full pl-10 pr-3 h-9 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
               />
             </div>
-          </div>
-        </div>
-      </div>
+          </FilterCard.Item>
+        </FilterCard.Row>
+      </FilterCard>
 
       {/* Table Container */}
       <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
@@ -340,7 +342,7 @@ export const RoleListView: React.FC = () => {
                     <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Permissions
                     </th>
-                    <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-20 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                    <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                       Action
                     </th>
                   </tr>
@@ -390,7 +392,7 @@ export const RoleListView: React.FC = () => {
                       </td>
                       <td
                         onClick={(e) => e.stopPropagation()}
-                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-10 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                       >
                         <button
                           ref={getButtonRef(role.id)}

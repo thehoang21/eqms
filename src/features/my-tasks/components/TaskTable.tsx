@@ -3,10 +3,10 @@ import { CheckCircle2 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { TaskStatusBadge, PriorityBadge, ModuleBadge } from '@/components/ui/badge';
 import { cn } from '@/components/ui/utils';
+import { formatDateUS } from '@/utils/format';
 import type { Task } from "../types";
 import {
   calculateDaysLeft,
-  formatDate,
 } from "../utils";
 import { IconCircleCheckFilled } from "@tabler/icons-react";
 
@@ -101,7 +101,7 @@ export const TaskTable: React.FC<{
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 bg-white">
+          <tbody className="divide-y divide-slate-200 bg-white">
             {tasks.map((task, idx) => {
               const remainingDays = calculateDaysLeft(task.dueDate);
               const progressPercentage = task.progress || 0;
@@ -204,7 +204,7 @@ export const TaskTable: React.FC<{
                   {/* Due Date */}
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-1.5 text-slate-700">
-                      <span>{formatDate(task.dueDate)}</span>
+                      <span>{formatDateUS(task.dueDate)}</span>
                     </div>
                   </td>
 

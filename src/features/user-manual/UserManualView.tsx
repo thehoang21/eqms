@@ -315,7 +315,7 @@ export const UserManualView: React.FC = () => {
             placeholder="Search guides..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-9 pr-4 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 bg-white"
+            className="w-full h-9 pl-9 pr-4 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 bg-white"
           />
         </div>
       </div>
@@ -377,7 +377,7 @@ export const UserManualView: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left — Module List (col-2) — Hidden on mobile */}
-        <div className="hidden lg:block lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="hidden lg:block lg:col-span-3 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-200 bg-slate-50/70">
             <h3 className="text-sm font-semibold text-slate-900">Modules List</h3>
           </div>
@@ -409,7 +409,7 @@ export const UserManualView: React.FC = () => {
         </div>
 
         {/* Right — Content (col-10 on desktop, full width on mobile) */}
-        <div className="lg:col-span-10 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col lg:max-h-[calc(100vh-220px)]">
+        <div className="lg:col-span-9 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col lg:max-h-[calc(100vh-220px)]">
           {/* Module title bar — desktop only (mobile has sticky version above) */}
           <div className="hidden lg:flex items-center gap-3 px-5 py-3 border-b border-slate-200 bg-slate-50/70 flex-shrink-0">
             {(() => {

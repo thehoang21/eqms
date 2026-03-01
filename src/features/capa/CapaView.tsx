@@ -482,7 +482,7 @@ export const CAPAView: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+      <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
         {paginatedData.length > 0 ? (
           <>
             <div className="overflow-x-auto">
@@ -513,7 +513,7 @@ export const CAPAView: React.FC = () => {
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Target Date
                 </th>
-                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-40 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
                   Action
                 </th>
               </tr>
@@ -522,7 +522,7 @@ export const CAPAView: React.FC = () => {
               {paginatedData.map((capa, index) => (
                 <tr
                   key={capa.id}
-                  className="hover:bg-slate-50 transition-colors"
+                  className="hover:bg-slate-50/80 transition-colors group"
                 >
                   <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
                     {(currentPage - 1) * itemsPerPage + index + 1}
@@ -565,8 +565,8 @@ export const CAPAView: React.FC = () => {
                       },
                     )}
                   </td>
-                  <td className="py-3.5 px-4 text-sm text-center sticky right-0 bg-white z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] hover:bg-slate-50">
-                    <button className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors">
+                  <td className="py-3.5 px-4 text-sm text-center sticky right-0 bg-white z-30 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50">
+                    <button className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="More actions">
                       <MoreVertical className="h-4 w-4 text-slate-600" />
                     </button>
                   </td>

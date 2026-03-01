@@ -140,26 +140,6 @@ const getStageColor = (stage: CurrentStage) => {
   }
 };
 
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-};
-
-const formatDateTime = (dateTimeStr: string) => {
-  const date = new Date(dateTimeStr);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
-};
-
 // Timeline Component
 const Timeline: React.FC<{ events: TimelineEvent[] }> = ({ events }) => {
   return (

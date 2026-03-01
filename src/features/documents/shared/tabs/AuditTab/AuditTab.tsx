@@ -304,32 +304,32 @@ export const AuditTab: React.FC = () => {
       <div className="flex-1 overflow-hidden border rounded-xl bg-white shadow-sm flex flex-col">
         <div className="overflow-x-auto flex-1">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-10">
+            <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-30">
               <tr>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="px-4 py-3.5 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                     No.
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Timestamp
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   User
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Action
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Changes
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Reason
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   IP / Device
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-slate-200 bg-white">
               {paginatedData.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-4 py-16 text-center">
@@ -348,7 +348,7 @@ export const AuditTab: React.FC = () => {
                 </tr>
               ) : (
                 paginatedData.map((entry, index) => (
-                  <tr key={entry.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={entry.id} className="hover:bg-slate-50/80 transition-colors">
                       {/* số thứ tự */}
                       <td className="px-4 py-4 whitespace-nowrap text-center">
                           <div className="text-sm text-slate-500">{(currentPage - 1) * itemsPerPage + index + 1}</div>
@@ -477,11 +477,11 @@ export const AuditTab: React.FC = () => {
                         {change.field}
                       </div>
                       <div className="space-y-2">
-                        <div className="bg-red-50 border border-red-200 rounded p-3">
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                           <div className="text-xs font-medium text-red-700 mb-1">Old Value:</div>
                           <div className="text-sm text-slate-700">{change.oldValue}</div>
                         </div>
-                        <div className="bg-green-50 border border-green-200 rounded p-3">
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                           <div className="text-xs font-medium text-green-700 mb-1">New Value:</div>
                           <div className="text-sm text-slate-700">{change.newValue}</div>
                         </div>

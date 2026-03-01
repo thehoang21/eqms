@@ -223,8 +223,9 @@ export const UserManagementView: React.FC = () => {
   // Pagination
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentUsers = filteredUsers.slice(startIndex, endIndex);
+  const currentUsers = useMemo(() => {
+    return filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredUsers, startIndex, itemsPerPage]);
 
   // Visible columns
   const visibleColumns = useMemo(
@@ -541,6 +542,7 @@ export const UserManagementView: React.FC = () => {
                       ref={getButtonRef(user.id)}
                       onClick={(e) => handleDropdownToggle(user.id, e)}
                       className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                      aria-label="More actions"
                     >
                       <MoreVertical className="h-4 w-4 text-slate-600" />
                     </button>

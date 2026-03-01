@@ -311,16 +311,6 @@ const formatTimeAgo = (dateString: string) => {
   return `${day}/${month}`;
 };
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
-};
-
 // --- Components ---
 
 // Tab Component
@@ -426,9 +416,9 @@ const NotificationFilters: React.FC<{
 
   return (
     <FilterCard>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+      <FilterCard.Row>
         {/* Search */}
-        <div className="md:col-span-2 xl:col-span-4">
+        <FilterCard.Item span={4} mdSpan={2}>
           <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
             Search
           </label>
@@ -442,48 +432,48 @@ const NotificationFilters: React.FC<{
               className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
             />
           </div>
-        </div>
+        </FilterCard.Item>
 
         {/* Type Filter */}
-        <div className="xl:col-span-2">
+        <FilterCard.Item span={2}>
           <Select
             label="Type"
             value={type}
             onChange={(val) => setType(val as string)}
             options={typeOptions}
           />
-        </div>
+        </FilterCard.Item>
 
         {/* Module Filter */}
-        <div className="xl:col-span-2">
+        <FilterCard.Item span={2}>
           <Select
             label="Module"
             value={module}
             onChange={(val) => setModule(val as string)}
             options={moduleOptions}
           />
-        </div>
+        </FilterCard.Item>
 
         {/* Priority Filter */}
-        <div className="xl:col-span-2">
+        <FilterCard.Item span={2}>
           <Select
             label="Priority"
             value={priority}
             onChange={(val) => setPriority(val as string)}
             options={priorityOptions}
           />
-        </div>
+        </FilterCard.Item>
 
         {/* Date From */}
-        <div className="xl:col-span-2">
+        <FilterCard.Item span={2}>
           <DateTimePicker
             label="From"
             value={dateFrom}
             onChange={setDateFrom}
             placeholder="Start date"
           />
-        </div>
-      </div>
+        </FilterCard.Item>
+      </FilterCard.Row>
     </FilterCard>
   );
 };
@@ -695,6 +685,7 @@ const NotificationRow: React.FC<{
         <button
           onClick={handleDropdownToggle}
           className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+          aria-label="More actions"
         >
           <MoreVertical className="h-4 w-4 text-slate-600" />
         </button>
@@ -796,6 +787,7 @@ const NotificationCard: React.FC<{
             <button
               onClick={handleDropdownToggle}
               className="shrink-0 p-1.5 -mr-1.5 -mt-1 rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors"
+              aria-label="More actions"
             >
               <MoreVertical className="h-4 w-4 text-slate-500" />
             </button>

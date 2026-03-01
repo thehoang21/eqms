@@ -232,13 +232,15 @@ export const RevisionsOwnedByMeView: React.FC = () => {
   // Pagination
   const totalPages = Math.ceil(filteredRevisions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedRevisions = filteredRevisions.slice(startIndex, endIndex);
+  const paginatedRevisions = useMemo(() => {
+    return filteredRevisions.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredRevisions, startIndex, itemsPerPage]);
 
   // Visible columns
-  const visibleColumns = columns
-    .filter((col) => col.visible)
-    .sort((a, b) => a.order - b.order);
+  const visibleColumns = useMemo(
+    () => columns.filter((col) => col.visible).sort((a, b) => a.order - b.order),
+    [columns]
+  );
 
   // Handlers
   const handleViewRevision = (id: string) => {

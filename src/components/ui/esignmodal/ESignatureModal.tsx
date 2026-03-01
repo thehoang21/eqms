@@ -66,7 +66,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
       }}
     >
       <div 
-        className="bg-white rounded-lg shadow-xl w-full max-w-md border border-slate-200 animate-in zoom-in-95 duration-200 overflow-hidden"
+        className="bg-white rounded-xl shadow-xl w-full max-w-md border border-slate-200 animate-in zoom-in-95 duration-200 overflow-hidden"
         style={{
           // Ensure modal doesn't exceed viewport on mobile
           maxHeight: 'calc(100dvh - 2rem)',
@@ -133,7 +133,7 @@ export const ESignatureModal: React.FC<ESignatureModalProps> = ({
 
           {error && <p className="text-xs text-red-600 font-medium">{error}</p>}
 
-          <div className="pt-2 flex justify-end gap-2">
+          <div className="flex justify-end gap-2">
              <Button type="button" size='sm' variant="outline" onClick={onClose} className="min-w-[5rem]">Cancel</Button>
              <Button type="submit" size='sm' className="min-w-[5rem]">Sign</Button>
           </div>

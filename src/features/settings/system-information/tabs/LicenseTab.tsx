@@ -1,21 +1,13 @@
 ﻿import React from "react";
 import { Shield, Calendar, Users, Package, AlertTriangle, Info, Check } from "lucide-react";
 import type { LicenseInfo } from "../types";
+import { formatDateLong } from "@/utils/format";
 
 interface LicenseTabProps {
   data: LicenseInfo;
 }
 
 export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date);
-  };
-
   const isExpiringSoon = data.daysUntilExpiry <= 90;
   const userUsagePercent = (data.activeUsers / data.maxUsers) * 100;
 
@@ -29,7 +21,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
             <p className="text-sm font-semibold text-amber-900 mb-0.5">License Expiring Soon</p>
             <p className="text-sm text-amber-700">
               Your license will expire in <strong>{data.daysUntilExpiry} days</strong> on{" "}
-              <strong>{formatDate(data.expiryDate)}</strong>. Please contact your account manager to renew.
+              <strong>{formatDateLong(data.expiryDate)}</strong>. Please contact your account manager to renew.
             </p>
           </div>
         </div>
@@ -75,11 +67,11 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Issued Date</label>
-              <input type="text" value={formatDate(data.issuedDate)} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none" />
+              <input type="text" value={formatDateLong(data.issuedDate)} readOnly className="w-full h-9 px-3.5 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 cursor-default focus:outline-none" />
             </div>
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Expiry Date</label>
-              <input type="text" value={formatDate(data.expiryDate)} readOnly className={`w-full h-9 px-3.5 text-sm border rounded-lg cursor-default focus:outline-none font-semibold ${
+              <input type="text" value={formatDateLong(data.expiryDate)} readOnly className={`w-full h-9 px-3.5 text-sm border rounded-lg cursor-default focus:outline-none font-semibold ${
                 isExpiringSoon ? "border-amber-300 bg-amber-50 text-amber-900" : "border-slate-200 bg-slate-50 text-slate-700"
               }`} />
             </div>
@@ -133,8 +125,8 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
               />
             </div>
             <p className="text-xs text-slate-500 mt-2">
-              {userUsagePercent >= 90 && "âš ï¸ License limit approaching"}
-              {userUsagePercent >= 75 && userUsagePercent < 90 && "âš ï¸ High license usage"}
+              {userUsagePercent >= 90 && "⚠️ License limit approaching"}
+              {userUsagePercent >= 75 && userUsagePercent < 90 && "⚠️ High license usage"}
               {userUsagePercent < 75 && `${data.maxUsers - data.activeUsers} licenses available`}
             </p>
           </div>

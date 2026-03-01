@@ -7,6 +7,7 @@ import { Input, Textarea } from "@/components/ui/form/ResponsiveForm";
 import { RadioGroup } from "@/components/ui/radio";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
 import { cn } from "@/components/ui/utils";
+import { formatDateUS } from "@/utils/format";
 import { TrainingType, TrainingMethod, Recurrence } from "../../types";
 
 // Option lists (shared between edit and readOnly modes)
@@ -68,15 +69,6 @@ const USER_OPTIONS = [
     { label: "Linda Harris - Finance Director", value: "linda_harris" },
     { label: "Charles Lewis - Safety Officer", value: "charles_lewis" },
 ];
-
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-    });
-};
 
 /** Read-only display field */
 const ReadOnlyField: React.FC<{ value: string | number | undefined | null; placeholder?: string }> = ({ value, placeholder }) => (
@@ -317,7 +309,7 @@ export const BasicInfoTab: React.FC<BasicInfoTabProps> = ({
                             Scheduled Date {!readOnly && <span className="text-red-500">*</span>}
                         </label>
                         {readOnly ? (
-                            <ReadOnlyField value={scheduledDate ? formatDate(scheduledDate) : undefined} />
+                            <ReadOnlyField value={scheduledDate ? formatDateUS(scheduledDate) : undefined} />
                         ) : (
                             <DateTimePicker
                                 value={scheduledDate}

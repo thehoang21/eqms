@@ -220,7 +220,7 @@ export const RetentionPoliciesTab: React.FC = () => {
       <div className="flex-1 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col min-w-0 overflow-hidden">
         <div className="flex-1 overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b-2 border-slate-200 sticky top-0 z-10">
+            <thead className="bg-slate-50 border-b-2 border-slate-200 sticky top-0 z-30">
               <tr>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   No.
@@ -282,6 +282,7 @@ export const RetentionPoliciesTab: React.FC = () => {
                         ref={getButtonRef(item.id)}
                         onClick={(e) => handleDropdownToggle(item.id, e)}
                         className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                        aria-label="More actions"
                       >
                         <MoreVertical className="h-4 w-4 text-slate-600" />
                       </button>

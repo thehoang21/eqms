@@ -1,24 +1,13 @@
 ﻿import React from "react";
 import { HardDrive, FileText, Upload, Clock, Info } from "lucide-react";
 import type { StorageInfo } from "../types";
+import { formatDateTime } from "@/utils/format";
 
 interface StorageTabProps {
   data: StorageInfo;
 }
 
 export const StorageTab: React.FC<StorageTabProps> = ({ data }) => {
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).format(date);
-  };
-
   const getUsageColor = (percent: number) => {
     if (percent >= 80) return "bg-red-600";
     if (percent >= 60) return "bg-amber-500";
@@ -166,7 +155,7 @@ export const StorageTab: React.FC<StorageTabProps> = ({ data }) => {
                   <td className="py-2.5 px-5 text-sm text-slate-600 hidden md:table-cell">
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-3.5 w-3.5 text-slate-400" />
-                      {formatDate(upload.uploadedAt)}
+                      {formatDateTime(upload.uploadedAt)}
                     </div>
                   </td>
                   <td className="py-2.5 px-5 text-sm text-slate-700 font-medium text-right">{upload.size}</td>

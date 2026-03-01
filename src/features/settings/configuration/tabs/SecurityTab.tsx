@@ -345,7 +345,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                       <span className="text-sm font-mono text-slate-700">{ip}</span>
                       <button
                         onClick={() => removeWhitelistedIp(ip)}
-                        className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -397,7 +397,7 @@ export const SecurityTab: React.FC<SecurityTabProps> = ({ config, onChange }) =>
                         <span className="text-sm font-mono text-slate-700">{country}</span>
                         <button
                           onClick={() => removeBlockedCountry(country)}
-                          className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                          className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         >
                           <X className="h-4 w-4" />
                         </button>

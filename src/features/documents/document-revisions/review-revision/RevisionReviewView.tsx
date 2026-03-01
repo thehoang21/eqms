@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button/Button";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
+import { formatDate } from "@/utils/format";
 import {
   DocumentWorkflowLayout,
   DEFAULT_WORKFLOW_TABS,
@@ -96,15 +97,6 @@ interface RevisionReviewViewProps {
   onBack: () => void;
   currentUserId: string;
 }
-
-// --- Helper Functions ---
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-};
 
 // --- Mock Data ---
 const MOCK_REVISION: DocumentDetail = {
@@ -316,10 +308,9 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
           <>
             <Button
               onClick={handleReject}
-              variant="outline"
+              variant="destructive"
               size="sm"
               disabled={isSubmitting}
-              className="bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
             >
               <span className="text-xs sm:text-sm">Reject</span>
             </Button>
@@ -347,10 +338,9 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
             <>
               <Button
                 onClick={handleReject}
-                variant="outline"
+                variant="destructive"
                 size="sm"
                 disabled={isSubmitting}
-                className="bg-red-600 text-white hover:bg-red-700 border-red-600 shadow-sm active:scale-95"
               >
                 <span className="text-xs sm:text-sm">Reject</span>
               </Button>
@@ -475,7 +465,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                                     <div className="flex items-center gap-2 flex-wrap">
                                       <h4 className="font-medium text-sm lg:text-base text-slate-900 truncate">{reviewer.name}</h4>
                                       {isCurrentUserReviewer && (
-                                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded shrink-0">
+                                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-lg shrink-0">
                                           You
                                         </span>
                                       )}

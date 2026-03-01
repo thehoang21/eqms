@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Calendar, Tag, CheckCircle2, Wrench, Bug } from "lucide-react";
 import { MOCK_CHANGELOG } from "../mockData";
+import { formatDateLong } from "@/utils/format";
 
 export const ChangelogTab: React.FC = () => {
   const [expandedVersions, setExpandedVersions] = useState<Set<string>>(
@@ -17,15 +18,6 @@ export const ChangelogTab: React.FC = () => {
       }
       return newSet;
     });
-  };
-
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date);
   };
 
   return (
@@ -78,7 +70,7 @@ export const ChangelogTab: React.FC = () => {
                     </span>
                     <div className="flex items-center gap-1.5 text-slate-500">
                       <Calendar className="h-3.5 w-3.5" />
-                      <span className="text-sm">{formatDate(entry.releaseDate)}</span>
+                      <span className="text-sm">{formatDateLong(entry.releaseDate)}</span>
                     </div>
                     <div className="hidden sm:flex items-center gap-2">
                       {hasFeatures && (

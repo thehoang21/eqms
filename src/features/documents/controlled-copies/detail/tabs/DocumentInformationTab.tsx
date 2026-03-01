@@ -1,31 +1,10 @@
 import React from "react";
 import { ControlledCopy } from "../../types";
+import { formatDateNumeric, formatDateTimePartsNumeric } from "@/utils/format";
 
 interface DocumentInformationTabProps {
   controlledCopy: ControlledCopy;
 }
-
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(date);
-};
-
-const formatDateTime = (date: string, time: string) => {
-  const dateObj = new Date(`${date}T${time}`);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).format(dateObj);
-};
 
 export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
   controlledCopy,
@@ -54,7 +33,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
           </label>
           <input
             type="text"
-            value={formatDateTime(controlledCopy.createdDate, controlledCopy.createdTime)}
+            value={formatDateTimePartsNumeric(controlledCopy.createdDate, controlledCopy.createdTime)}
             readOnly
             className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />
@@ -132,7 +111,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
           </label>
           <input
             type="text"
-            value={formatDate(controlledCopy.validUntil)}
+            value={formatDateNumeric(controlledCopy.validUntil)}
             readOnly
             className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
           />

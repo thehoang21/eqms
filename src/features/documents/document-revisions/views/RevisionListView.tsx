@@ -234,8 +234,9 @@ export const RevisionListView: React.FC = () => {
   // Pagination
   const totalPages = Math.ceil(filteredRevisions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedRevisions = filteredRevisions.slice(startIndex, endIndex);
+  const paginatedRevisions = useMemo(() => {
+    return filteredRevisions.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredRevisions, startIndex, itemsPerPage]);
 
   // Handlers
   const handleViewRevision = (id: string) => {
@@ -476,15 +477,15 @@ export const RevisionListView: React.FC = () => {
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Author</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Effective Date</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Valid Until</th>
-                  <th className="sticky right-0 bg-slate-50/80 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">Action</th>
+                  <th className="sticky right-0 bg-slate-50/80 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-200">
                 {paginatedRevisions.map((revision, index) => (
                   <tr
                     key={revision.id}
                     onClick={() => handleViewRevision(revision.id)}
-                    className="hover:bg-slate-50/50 transition-colors group cursor-pointer"
+                    className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
                   >
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{startIndex + index + 1}</td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
@@ -523,7 +524,7 @@ export const RevisionListView: React.FC = () => {
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">{revision.validUntil}</td>
                     <td
                       onClick={(e) => e.stopPropagation()}
-                      className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                      className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                     >
                       <button
                         ref={getButtonRef(revision.id)}
