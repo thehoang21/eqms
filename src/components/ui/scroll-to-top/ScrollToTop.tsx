@@ -32,7 +32,7 @@ const smoothScrollTo = (el: HTMLElement | Window, targetY: number, duration = 50
 
 interface ScrollToTopProps {
   /** Ref to the scrollable container element. Defaults to window if not provided. */
-  scrollContainerRef?: React.RefObject<HTMLElement>;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
   /** Threshold in pixels to show the button. Default: 300 */
   threshold?: number;
   /** Hide button when mobile sidebar is open */

@@ -959,13 +959,13 @@ export const NotificationsView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header: Title + Action Button */}
-      <div className="flex flex-row items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex-1 min-w-0">
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             Notifications
           </h1>
         </div>
-        <div className="flex items-center gap-2 md:gap-3 shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 shrink-0 flex-wrap">
           <Button
             onClick={() => console.log("Export notifications")}
             variant="outline"

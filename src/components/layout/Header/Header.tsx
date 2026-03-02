@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSi
 
   return (
     <header 
-      className="w-full sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-sm shadow-sm shrink-0 ios-fixed-header safari-sticky-header"
+      className="w-full z-40 border-b border-slate-200 bg-white shadow-sm shrink-0"
       style={{
         // Safe area for notch and Dynamic Island
         paddingTop: 'env(safe-area-inset-top, 0px)',
@@ -85,9 +85,6 @@ export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSi
         paddingRight: 'env(safe-area-inset-right, 0px)',
         // Min height includes safe area
         minHeight: 'calc(3.5rem + env(safe-area-inset-top, 0px))',
-        // iOS Safari fix: force GPU layer
-        transform: 'translateZ(0)',
-        WebkitTransform: 'translateZ(0)',
       }}
     >
       

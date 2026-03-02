@@ -510,7 +510,7 @@ export const ApprovalDetailView: React.FC = () => {
 
           {/* Action Buttons (Header) */}
           <div className="flex items-center gap-2 shrink-0">
-            <Button variant="outline" size="sm" onClick={handleBack} className="hidden sm:inline-flex">
+            <Button variant="outline" size="sm" onClick={handleBack}>
               Cancel
             </Button>
             {isPendingReview && (

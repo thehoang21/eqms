@@ -298,7 +298,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
             "border-b border-slate-200 bg-white p-3 flex items-center justify-center",
             timelineView === "day" ? "h-[88px]" : "h-12"
           )}>
-            <p className="text-base font-bold text-slate-700 uppercase tracking-wider">Tasks</p>
+            <p className="text-base font-bold text-slate-700 uppercase tracking-wider">Tasks Name</p>
           </div>
 
           {/* Task Names */}

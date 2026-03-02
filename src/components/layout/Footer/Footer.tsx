@@ -3,17 +3,13 @@ import React from 'react';
 export const Footer: React.FC = () => {
   return (
     <footer 
-      className="shrink-0 border-t border-slate-200 bg-white/95 backdrop-blur-sm shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)] ios-fixed-footer"
+      className="shrink-0 border-t border-slate-200 bg-white shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)]"
       style={{
         paddingTop: '0.75rem',
         // Safe area for home indicator on iPhone/iPad with gesture bar
         paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))',
-        // Fallback for older iOS versions using constant() is not supported in React inline styles
         paddingLeft: 'env(safe-area-inset-left, 0px)',
         paddingRight: 'env(safe-area-inset-right, 0px)',
-        // iOS Safari fix: force GPU layer
-        transform: 'translateZ(0)',
-        WebkitTransform: 'translateZ(0)',
       }}
     >
       <div className="max-w-[1920px] mx-auto px-4 md:px-6 lg:px-8">

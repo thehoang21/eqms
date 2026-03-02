@@ -281,6 +281,14 @@ export const PendingReviewView: React.FC = () => {
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <Button
+            onClick={() => navigate(-1)}
+            variant="outline"
+            size="sm"
+            className="whitespace-nowrap"
+          >
+            Cancel
+          </Button>
+          <Button
             onClick={() => console.log("Export pending review")}
             variant="outline"
             size="sm"
@@ -468,23 +476,13 @@ export const PendingReviewView: React.FC = () => {
                         className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-10 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                       >
                         <div className="flex items-center justify-center gap-1.5">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleViewDetail(item);
-                            }}
-                            className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors sm:hidden"
-                            aria-label="View details"
-                          >
-                            <IconInfoCircle className="h-4 w-4 text-slate-600" />
-                          </button>
                           <Button
                             size="xs"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleViewDetail(item);
                             }}
-                            className="hidden sm:inline-flex bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
                           >
                             Review
                           </Button>

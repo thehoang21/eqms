@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar';
 import { Header } from '@/components/layout/Header/Header';
@@ -8,23 +8,17 @@ import { ScrollToTop } from '@/components/ui/scroll-to-top/ScrollToTop';
 import { useResponsiveSidebar } from './useResponsiveSidebar';
 import { useNavigation } from './useNavigation';
 import { resetViewportZoom, isIOSSafari } from '@/utils/viewport';
-import { cn } from '@/components/ui/utils';
 
 export const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isSidebarCollapsed, isMobileMenuOpen, toggleSidebar, closeMobileMenu } = useResponsiveSidebar();
   const { activeId, handleNavigate } = useNavigation();
-  const [isIOS, setIsIOS] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Detect iOS Safari and reset viewport zoom on mount (combined effect)
+  // Reset viewport zoom on iOS Safari
   useEffect(() => {
-    const isiOSSafari = isIOSSafari();
-    setIsIOS(isiOSSafari);
-    
-    if (isiOSSafari) {
-      // Small delay to ensure the page has rendered before resetting zoom
+    if (isIOSSafari()) {
       const timer = setTimeout(() => {
         resetViewportZoom();
       }, 150);
@@ -41,24 +35,10 @@ export const MainLayout: React.FC = () => {
 
   return (
     <div 
-      className={cn(
-        "flex h-screen w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden",
-        isIOS && "ios-layout-container"
-      )}
+      className="flex h-dvh w-screen bg-slate-50 font-sans text-slate-900 overflow-hidden"
       style={{
-        // Use dvh for iOS Safari dynamic viewport
-        height: '100dvh',
-        // Fallback for older browsers
+        // Fallback for browsers without dvh support
         minHeight: '100vh',
-        // iOS Safari fix: use -webkit-fill-available
-        ...(isIOS && {
-          height: '-webkit-fill-available',
-          position: 'fixed' as const,
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        }),
       }}
     >
       {/* Network Status Monitor - Global */}
@@ -92,7 +72,7 @@ export const MainLayout: React.FC = () => {
 
       {/* Main Content Wrapper */}
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-        {/* Header - Fixed at top */}
+        {/* Header - Pinned at top via flex shrink-0 */}
         <Header 
           onToggleSidebar={toggleSidebar}
           isSidebarCollapsed={isSidebarCollapsed}
@@ -101,17 +81,11 @@ export const MainLayout: React.FC = () => {
           onLogout={handleLogout}
         />
 
-        {/* Scrollable Content Area */}
+        {/* Scrollable Content Area - ONLY this div scrolls */}
         <div
           ref={scrollContainerRef}
-          className={cn(
-            "flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar",
-            isIOS && "ios-scroll-container"
-          )}
+          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar"
           style={{
-            paddingLeft: 'var(--safe-area-inset-left)',
-            paddingRight: 'var(--safe-area-inset-right)',
-            // iOS Safari fix: enable momentum scrolling
             WebkitOverflowScrolling: 'touch',
           }}
         >
@@ -128,7 +102,7 @@ export const MainLayout: React.FC = () => {
           </main>
         </div>
 
-        {/* Footer - Always visible */}
+        {/* Footer - Pinned at bottom via flex shrink-0 */}
         <Footer />
       </div>
 
