@@ -15,6 +15,7 @@ import {
     ArrowRight,
     Check,
 } from "lucide-react";
+import { Loading } from '@/components/ui/loading/Loading';
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
 import { cn } from '@/components/ui/utils';
@@ -197,10 +198,7 @@ export const StandaloneRevisionView: React.FC = () => {
     if (isLoadingDocument) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <div className="text-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-emerald-600 mx-auto mb-4" />
-                    <p className="text-sm text-slate-600">Loading document information...</p>
-                </div>
+                <Loading size="default" text="Loading document information..." />
             </div>
         );
     }

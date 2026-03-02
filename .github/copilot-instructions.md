@@ -70,6 +70,17 @@ Bạn là một chuyên gia Senior React Developer (ReactJS, Tailwind CSS, shadc
     - Notification toast system
     - Import `useToast` hook
 
+16. **Loading** (`components/ui/loading/Loading.tsx`) ⭐ **MỚI**
+    - Loading spinner sử dụng respinner library (BeatLoading)
+    - Variants:
+      - `<Loading />` - Default inline loading
+      - `<InlineLoading />` - Small inline loading (for buttons, dropdowns)
+      - `<FullPageLoading />` - Full page overlay loading
+      - `<ButtonLoading />` - Button loading state với text
+      - `<SectionLoading />` - Card/section loading state
+    - Props: `size` ('xs', 'sm', 'default', 'lg', 'xl'), `color` (default: '#111111'), `count` (default: 4), `text`, `fullPage`
+    - **PHẢI SỬ DỤNG thay cho custom spinner CSS**
+
 ### 0.2 Quy trình khi cần UI component
 
 **BƯỚC 1: KIỂM TRA `components/ui` TRƯỚC**
@@ -148,6 +159,25 @@ import { MultiSelect } from "@/components/ui/select/MultiSelect";
   placeholder="Select authors..."
   maxVisibleTags={2}
 />
+```
+
+❌ **SAI - Tạo custom loading spinner:**
+```tsx
+<div className="h-5 w-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+```
+
+✅ **ĐÚNG - Dùng Loading component:**
+```tsx
+import { Loading, InlineLoading, ButtonLoading } from "@/components/ui/loading/Loading";
+
+// Inline loading
+<InlineLoading size="sm" />
+
+// Button loading
+<ButtonLoading text="Processing..." light />
+
+// Full page loading
+<Loading fullPage text="Loading..." />
 ```
 
 ### 0.4 Utilities có sẵn
@@ -562,6 +592,7 @@ const getButtonRef = (id: string) => {
 - ✅ Có Badge/Tag chưa? → Dùng `@/components/ui/badge/Badge`
 - ✅ Có Pagination chưa? → Dùng `@/components/ui/table/TablePagination`
 - ✅ Có Toast chưa? → Dùng `@/components/ui/toast/Toast` và `useToast`
+- ✅ Có Loading spinner chưa? → **PHẢI DÙNG** `@/components/ui/loading/Loading`
 - ✅ Cần format date? → Dùng `@/utils/format` (formatDate, formatDateTime, etc.)
 
 **Khi cần tạo component mới:**

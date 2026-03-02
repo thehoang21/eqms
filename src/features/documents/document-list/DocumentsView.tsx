@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button/Button";
 import { StatusBadge, StatusType } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
+import { SectionLoading } from "@/components/ui/loading/Loading";
 import { cn } from "@/components/ui/utils";
 import { formatDateUS } from "@/utils/format";
 import { DocumentFilters } from "./../shared/components/DocumentFilters";
@@ -623,9 +624,12 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
         </div>
       </div>
       
-
-      {/* Filters Card */}
-      <DocumentFilters
+      {isLoading ? (
+        <SectionLoading text="Loading documents..." minHeight="400px" />
+      ) : (
+        <>
+          {/* Filters Card */}
+          <DocumentFilters
         searchQuery={searchQuery}
         onSearchChange={(value) => {
           setSearchQuery(value);
@@ -898,6 +902,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           />
         )}
       </div>
+        </>
+      )}
 
       {/* Create Shareable Link Modal */}
       {selectedDocumentForLink && (

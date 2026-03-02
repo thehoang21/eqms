@@ -9,6 +9,7 @@ import FilePreviewLib from "reactjs-file-preview";
 import filePlaceholder from "@/assets/images/image-file/file.png";
 import { renderAsync } from "docx-preview";
 import { Button } from "@/components/ui/button/Button";
+import { Loading } from "@/components/ui/loading/Loading";
 
 interface FilePreviewProps {
     file: File | null;
@@ -152,10 +153,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
     if (isLoading) {
         return (
             <div className="h-full flex items-center justify-center bg-white rounded-xl border border-slate-200">
-                <div className="text-center">
-                    <div className="animate-spin h-10 w-10 md:h-12 md:w-12 border-4 border-emerald-600 border-t-transparent rounded-full mx-auto mb-3 md:mb-4"></div>
-                    <p className="text-slate-600 font-medium text-xs md:text-sm">Loading preview...</p>
-                </div>
+                <Loading size="default" text="Loading preview..." />
             </div>
         );
     }

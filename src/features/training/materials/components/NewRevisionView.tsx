@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
+import { ButtonLoading } from "@/components/ui/loading/Loading";
 import { Select } from "@/components/ui/select/Select";
 import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
 import { ESignatureModal } from "@/components/ui/esignmodal";
@@ -454,7 +455,7 @@ const NewRevisionForm: React.FC<NewRevisionFormProps> = ({ materialId, source })
             Cancel
           </Button>
           <Button variant="outline" size="sm" onClick={handleSaveDraft} disabled={isLoading} className="whitespace-nowrap gap-2">
-            {isLoading ? "Saving..." : "Save as Draft"}
+            {isLoading ? <ButtonLoading text="Saving..." /> : "Save as Draft"}
           </Button>
           <Button size="sm" onClick={handleSubmitForReview} disabled={isLoading} className="whitespace-nowrap gap-2">
             Submit for Review

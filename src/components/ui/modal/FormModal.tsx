@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { Button } from '../button/Button';
 import { cn } from '../utils';
+import { ButtonLoading } from '../loading/Loading';
 
 export interface FormModalProps {
   isOpen: boolean;
@@ -81,7 +82,7 @@ export const FormModal: React.FC<FormModalProps> = ({
             </Button>
           )}
           <Button size="sm" onClick={onConfirm || onClose} disabled={isLoading || confirmDisabled}>
-            {isLoading ? 'Processing...' : confirmText}
+            {isLoading ? <ButtonLoading text="Processing..." /> : confirmText}
           </Button>
         </div>
       </div>

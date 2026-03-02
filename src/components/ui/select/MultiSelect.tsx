@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search, X } from 'lucide-react';
 import { cn } from '../utils';
+import { InlineLoading } from '../loading/Loading';
 
 export interface MultiSelectOption {
   label: string;
@@ -380,7 +381,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           >
             {isLoading ? (
               <div className="py-8 flex flex-col items-center justify-center gap-2">
-                <div className="h-5 w-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+                <InlineLoading size="sm" />
                 <span className="text-sm text-slate-500">{loadingText}</span>
               </div>
             ) : filteredOptions.length === 0 ? (

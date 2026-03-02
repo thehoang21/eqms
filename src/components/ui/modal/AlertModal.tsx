@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { X, CheckCircle2, AlertTriangle, XCircle, Info, HelpCircle } from 'lucide-react';
 import { Button } from '../button/Button';
 import { cn } from '../utils';
+import { ButtonLoading } from '../loading/Loading';
 
 export type AlertModalType = 'success' | 'error' | 'warning' | 'info' | 'confirm';
 
@@ -226,7 +227,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
             className={getConfirmButtonClass()}
             disabled={isLoading}
           >
-            {isLoading ? 'Processing...' : finalConfirmText}
+            {isLoading ? <ButtonLoading text="Processing..." light={type === 'error'} /> : finalConfirmText}
           </Button>
         </div>
       </div>

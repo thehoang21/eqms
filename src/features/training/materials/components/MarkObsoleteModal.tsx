@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
+import { InlineLoading } from "@/components/ui/loading/Loading";
 
 // ─── Types ───────────────────────────────────────────────────────────
 export interface ObsoleteMaterial {
@@ -592,8 +593,8 @@ export const MarkObsoleteModal: React.FC<MarkObsoleteModalProps> = ({
               >
                 {isSubmitting ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Processing...
+                    <InlineLoading size="xs" color="#ffffff" />
+                    <span className="ml-2">Processing...</span>
                   </>
                 ) : (
                   <>

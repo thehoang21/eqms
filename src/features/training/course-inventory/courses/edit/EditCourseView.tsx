@@ -5,6 +5,7 @@ import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Check } from "lucide-react";
 import { cn } from "@/components/ui/utils";
 import { Button } from "@/components/ui/button/Button";
+import { ButtonLoading } from "@/components/ui/loading/Loading";
 import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
 import {
   TrainingConfig,
@@ -326,7 +327,7 @@ export const EditCourseView: React.FC = () => {
             className="whitespace-nowrap gap-2"
             disabled={isLoading}
           >
-            {isLoading ? "Saving..." : "Save Changes"}
+            {isLoading ? <ButtonLoading text="Saving..." /> : "Save Changes"}
           </Button>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { ArrowLeft, CheckCircle2, Mail, User, Phone, Briefcase } from "lucide-react";
-import { Button } from "@/components/ui/button/Button";
-import { cn } from "@/components/ui/utils";
+import { Button } from "@/components/ui/button/Button";import { ButtonLoading } from '@/components/ui/loading/Loading';import { cn } from "@/components/ui/utils";
 import { resetViewportZoom, blurActiveInput } from "@/utils/viewport";
 import { isValidEmail } from "@/utils/validation";
 import logoImg from "@/assets/images/logo_nobg.png";
@@ -657,13 +656,7 @@ export const ContactAdminView: React.FC<ContactAdminViewProps> = ({
                       aria-busy={isLoading}
                     >
                       {isLoading ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <div
-                            className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"
-                            aria-hidden="true"
-                          />
-                          <span>Submitting Request...</span>
-                        </div>
+                        <ButtonLoading text="Submitting Request..." light />
                       ) : (
                         <span>Submit Request</span>
                       )}

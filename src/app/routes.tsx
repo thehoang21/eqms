@@ -13,6 +13,9 @@ import { useAuth } from '@/contexts/AuthContext';
 // Route Constants
 import { ROUTES } from './routes.constants';
 
+// Loading Component
+import { Loading } from '@/components/ui/loading/Loading';
+
 // Features - Auth (eager load for login page)
 import { LoginView, ForgotPasswordView, ContactAdminView } from '@/features/auth';
 import { UnderConstruction } from './UnderConstruction';
@@ -167,10 +170,7 @@ const ControlledCopyDetailViewWrapper = () => (
 // ==================== LOADING FALLBACK ====================
 const LoadingFallback: React.FC = () => (
   <div className="flex items-center justify-center min-h-[400px]">
-    <div className="flex flex-col items-center gap-3">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600"></div>
-      <p className="text-sm text-slate-500">Loading...</p>
-    </div>
+    <Loading size="default" text="Loading..." />
   </div>
 );
 

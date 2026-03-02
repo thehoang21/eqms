@@ -4,7 +4,8 @@ import { Select } from '@/components/ui/select/Select';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { Button } from '@/components/ui/button/Button';
 import { useToast } from '@/components/ui/toast/Toast';
-import { Eye, EyeOff, Send, Loader2, Bell, Mail, MessageCircle, Phone, Clock, Smartphone, Layout, Zap } from 'lucide-react';
+import { InlineLoading } from '@/components/ui/loading/Loading';
+import { Eye, EyeOff, Send, Bell, Mail, MessageCircle, Phone, Clock, Smartphone, Layout, Zap } from 'lucide-react';
 
 interface NotificationTabProps {
   config: NotificationConfig;
@@ -249,11 +250,16 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   className="gap-2"
                 >
                   {testingSmtp ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <>
+                      <InlineLoading size="xs" />
+                      <span className="ml-1">Testing...</span>
+                    </>
                   ) : (
-                    <Send className="h-3.5 w-3.5" />
+                    <>
+                      <Send className="h-3.5 w-3.5" />
+                      <span className="ml-1">Send Test Email</span>
+                    </>
                   )}
-                  {testingSmtp ? 'Testing...' : 'Send Test Email'}
                 </Button>
               </div>
             </div>
@@ -329,11 +335,16 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   className="gap-2"
                 >
                   {testingTelegram ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <>
+                      <InlineLoading size="xs" />
+                      <span className="ml-1">Testing...</span>
+                    </>
                   ) : (
-                    <Send className="h-3.5 w-3.5" />
+                    <>
+                      <Send className="h-3.5 w-3.5" />
+                      <span className="ml-1">Send Test Message</span>
+                    </>
                   )}
-                  {testingTelegram ? 'Testing...' : 'Send Test Message'}
                 </Button>
               </div>
             </div>
@@ -424,11 +435,16 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   className="gap-2"
                 >
                   {testingWhatsApp ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <>
+                      <InlineLoading size="xs" />
+                      <span className="ml-1">Testing...</span>
+                    </>
                   ) : (
-                    <Send className="h-3.5 w-3.5" />
+                    <>
+                      <Send className="h-3.5 w-3.5" />
+                      <span className="ml-1">Send Test Message</span>
+                    </>
                   )}
-                  {testingWhatsApp ? 'Testing...' : 'Send Test Message'}
                 </Button>
               </div>
             </div>

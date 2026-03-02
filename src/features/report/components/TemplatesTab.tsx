@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { FileBarChart, Download, Filter, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
+import { InlineLoading } from '@/components/ui/loading/Loading';
 import { Select } from '@/components/ui/select/Select';
 import { DateRangePicker } from '@/components/ui/datetime-picker/DateRangePicker';
 import { cn } from '@/components/ui/utils';
@@ -216,8 +217,8 @@ export function useTemplatesTab(mode: 'templates' | 'compliance') {
         >
           {isGenerating ? (
             <>
-              <div className="h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Generating...
+              <InlineLoading size="xs" color="#ffffff" />
+              <span className="ml-2">Generating...</span>
             </>
           ) : (
             <>

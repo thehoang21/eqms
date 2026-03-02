@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
+import { ButtonLoading } from "@/components/ui/loading/Loading";
 import { Select } from "@/components/ui/select/Select";
 import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
 import { ESignatureModal } from "@/components/ui/esignmodal";
@@ -411,7 +412,7 @@ const EditMaterialForm: React.FC<EditMaterialFormProps> = ({ materialId, existin
             className="whitespace-nowrap gap-2"
             disabled={isLoading}
           >
-            {isLoading ? "Saving..." : "Save Draft"}
+            {isLoading ? <ButtonLoading text="Saving..." /> : "Save Draft"}
           </Button>
           <Button
             onClick={handleSubmitForReview}

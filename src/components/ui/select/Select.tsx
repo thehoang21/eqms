@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check, Search } from 'lucide-react';
 import { cn } from '../utils';
+import { InlineLoading } from '../loading/Loading';
 
 export interface SelectOption {
   label: string;
@@ -392,7 +393,7 @@ export const Select: React.FC<SelectProps> = ({
           >
             {isLoading || isSearching ? (
               <div className="py-8 flex flex-col items-center justify-center gap-2">
-                <div className="h-5 w-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+                <InlineLoading size="sm" />
                 <span className="text-sm text-slate-500">
                   {isSearching ? 'Searching...' : loadingText}
                 </span>

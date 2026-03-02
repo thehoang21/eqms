@@ -22,6 +22,7 @@ export * from './toast';
 export * from './statusbadge';
 export * from './badge';
 export * from './popover';
+export * from './loading';
 
 // Signature & Auth
 export * from './esignmodal';

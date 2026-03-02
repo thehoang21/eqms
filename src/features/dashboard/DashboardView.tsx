@@ -159,32 +159,128 @@ export const DashboardView: React.FC = () => {
     >
       {/* Welcome & Quick Actions Section */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Welcome Banner */}
-        <div className="lg:col-span-2 relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 text-white shadow-lg">
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
-          <div className="absolute bottom-0 left-0 -ml-16 -mb-16 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
+        {/* Welcome Banner - Modern & Bright Design */}
+        <div className="lg:col-span-2 relative overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-sm p-8 group">
+          {/* Animated Background Elements */}
+          <div className="absolute top-0 right-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+             <motion.div 
+               animate={{ 
+                 scale: [1, 1.2, 1],
+                 rotate: [0, 90, 0],
+                 opacity: [0.3, 0.5, 0.3] 
+               }}
+               transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+               className="absolute -top-32 -right-32 w-96 h-96 bg-emerald-50 rounded-full blur-3xl opacity-50"
+             />
+             <motion.div 
+               animate={{ 
+                 x: [0, -50, 0],
+                 y: [0, 30, 0],
+                 opacity: [0.3, 0.6, 0.3]
+               }}
+               transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+               className="absolute top-10 right-10 w-72 h-72 bg-teal-50 rounded-full blur-3xl opacity-60"
+             />
+             <motion.div
+               animate={{
+                 scale: [1, 1.1, 1],
+                 x: [0, 30, 0]
+               }}
+               transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }} 
+               className="absolute -bottom-20 right-[10%] w-80 h-80 bg-blue-50/40 rounded-full blur-3xl"
+             />
+          </div>
           
-          <div className="relative z-10">
-            <p className="text-slate-300 max-w-xl mb-6 text-lg">
-              Here is what's happening in your Quality Management System today. You have <span className="text-white font-semibold">12 pending tasks</span> requiring your attention.
-            </p>
-            <div className="flex flex-wrap gap-3">
+          <div className="relative z-10 flex flex-col items-start justify-center h-full"> 
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight mb-3">
+                {getGreeting()}, <br className="hidden md:block lg:hidden" />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500">
+                  {getUserFullName()}
+                </span>
+                <motion.span 
+                  animate={{ rotate: [0, 14, -8, 14, -4, 10, 0, 0] }}
+                  transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1 }}
+                  className="inline-block ml-3 origin-bottom-right cursor-default"
+                >
+                  👋
+                </motion.span>
+              </h1>
+              
+              <p className="text-slate-500 text-base md:text-lg max-w-xl leading-relaxed mb-8">
+                Here is what's happening in your Quality Management System today. You have <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-emerald-700 bg-emerald-50 border border-emerald-100 font-semibold text-base mx-1">12 pending tasks</span> requiring attention.
+              </p>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-wrap gap-4"
+            >
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(5, 150, 105, 0.3)" }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => navigate(ROUTES.MY_TASKS)}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium text-sm transition-colors shadow-lg shadow-emerald-900/20"
+                className="group relative px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl font-semibold shadow-md transition-all flex items-center gap-2 overflow-hidden"
               >
-                View My Tasks
+                <div className="absolute inset-0 w-full h-full bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
+                <span className="relative">View My Tasks</span>
+                <CheckSquare className="w-4 h-4 relative" />
               </motion.button>
+
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium text-sm backdrop-blur-sm transition-colors border border-white/10"
+                whileHover={{ scale: 1.05, backgroundColor: "#f8fafc" }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-3 bg-white text-slate-700 border border-slate-200 rounded-xl font-semibold hover:border-emerald-200 hover:text-emerald-700 transition-colors shadow-sm flex items-center gap-2"
               >
-                Latest Deviations
+                <span>Latest Deviations</span>
+                <AlertTriangle className="w-4 h-4 text-amber-500" />
               </motion.button>
-            </div>
+            </motion.div>
+          </div>
+
+          {/* Decorative Floating Cards (Desktop Only) */}
+          <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4 opacity-100 pointer-events-none z-0">
+             <motion.div 
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0, y: [0, -8, 0] }}
+               transition={{ 
+                 opacity: { duration: 0.5, delay: 0.4 },
+                 y: { duration: 4, repeat: Infinity, ease: "easeInOut" } 
+               }}
+               className="p-3 bg-white/80 backdrop-blur-md rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/50 flex items-center gap-3 w-48 transform translate-x-4"
+             >
+                <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shadow-sm">
+                  <CheckCircle2 size={18} />
+                </div>
+                <div className="flex-1">
+                   <div className="h-2.5 w-20 bg-slate-200 rounded-full mb-2" />
+                   <div className="h-2 w-12 bg-slate-100 rounded-full" />
+                </div>
+             </motion.div>
+             
+             <motion.div 
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0, y: [0, 8, 0] }}
+               transition={{ 
+                 opacity: { duration: 0.5, delay: 0.6 },
+                 y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 } 
+               }}
+               className="p-3 bg-white/80 backdrop-blur-md rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100/50 flex items-center gap-3 w-48 ml-12"
+             >
+                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shadow-sm">
+                  <FileText size={18} />
+                </div>
+                <div className="flex-1">
+                   <div className="h-2.5 w-24 bg-slate-200 rounded-full mb-2" />
+                   <div className="h-2 w-16 bg-slate-100 rounded-full" />
+                </div>
+             </motion.div>
           </div>
         </div>
 
@@ -220,7 +316,10 @@ export const DashboardView: React.FC = () => {
       </motion.div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div 
+        variants={containerVariants}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
         {[
           {
             title: 'Documents',
@@ -259,8 +358,8 @@ export const DashboardView: React.FC = () => {
           <motion.div
             key={idx}
             variants={itemVariants}
-            whileHover={{ y: -4 }}
-            className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition-shadow"
+            whileHover={{ y: -5, scale: 1.02 }}
+            className="group bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-lg hover:border-emerald-100 transition-all cursor-default"
           >
             <div className="flex items-start justify-between mb-4">
               <div className={cn("p-2.5 rounded-lg", stat.bg)}>
@@ -281,13 +380,17 @@ export const DashboardView: React.FC = () => {
             </div>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <motion.div 
+        variants={containerVariants}
+        className="grid grid-cols-1 xl:grid-cols-3 gap-6"
+      >
         {/* Document Trend Chart */}
         <motion.div 
           variants={itemVariants}
-          className="xl:col-span-2 rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col"
+          whileHover={{ boxShadow: "0 10px 30px -5px rgba(0, 0, 0, 0.05)" }}
+          className="xl:col-span-2 rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col transition-shadow duration-300"
         >
           <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -376,8 +479,13 @@ export const DashboardView: React.FC = () => {
               </div>
               <div className="divide-y divide-slate-100">
                  {MOCK_DEADLINES.slice(0, 3).map((item, idx) => (
-                    <div key={idx} className="p-4 hover:bg-slate-50 transition-colors cursor-pointer">
-                       <div className="flex items-start gap-3">
+                    <motion.div 
+                      key={idx} 
+                      whileHover={{ x: 4, backgroundColor: "rgba(248, 250, 252, 0.8)" }}
+                      className="group p-4 transition-all cursor-pointer relative overflow-hidden"
+                    >
+                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-400 to-teal-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-center duration-300" />
+                       <div className="flex items-start gap-3 relative z-10">
                           <div className={cn(
                              "w-10 h-10 rounded-lg flex flex-col items-center justify-center shrink-0 border",
                              item.priority === 'high' ? "bg-red-50 border-red-100 text-red-600" : "bg-amber-50 border-amber-100 text-amber-600"
@@ -388,7 +496,7 @@ export const DashboardView: React.FC = () => {
                           <div>
                              <p className="text-sm font-semibold text-slate-900 line-clamp-1">{item.title}</p>
                              <div className="flex items-center gap-2 mt-1.5">
-n                                <span className="text-xs text-slate-500 bg-white border border-slate-200 px-1.5 py-0.5 rounded">{item.module}</span>
+                                <span className="text-xs text-slate-500 bg-white border border-slate-200 px-1.5 py-0.5 rounded">{item.module}</span>
                                 {item.priority === 'high' && (
                                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-wide flex items-center gap-1">
                                       <AlertCircle className="h-3 w-3" /> Critical
@@ -397,7 +505,7 @@ n                                <span className="text-xs text-slate-500 bg-whit
                              </div>
                           </div>
                        </div>
-                    </div>
+                    </motion.div>
                  ))}
               </div>
               <div className="p-3 bg-slate-50 border-t border-slate-100 text-center">
@@ -419,25 +527,40 @@ n                                <span className="text-xs text-slate-500 bg-whit
            <div className="p-5">
               <div className="relative">
                  <div className="absolute top-0 bottom-0 left-[7px] w-px bg-slate-200" />
-                 <div className="space-y-6">
+                 <motion.div 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={{
+                      visible: { transition: { staggerChildren: 0.1 } } 
+                    }}
+                    className="space-y-6"
+                 >
                     {MOCK_ACTIVITIES.slice(0, 4).map((activity, idx) => (
-                       <div key={idx} className="relative pl-8">
+                       <motion.div 
+                          key={idx}
+                          variants={{
+                            hidden: { opacity: 0, x: -10 },
+                            visible: { opacity: 1, x: 0 }
+                          }}
+                          className="relative pl-8 group"
+                       >
                           <div className={cn(
-                             "absolute left-0 top-1.5 w-3.5 h-3.5 rounded-full border-2 border-white ring-1",
+                             "absolute left-0 top-1.5 w-3.5 h-3.5 rounded-full border-2 border-white ring-1 transition-all group-hover:scale-125 group-hover:ring-2",
                              activity.status === 'success' ? "bg-emerald-500 ring-emerald-100" :
                              activity.status === 'warning' ? "bg-amber-500 ring-amber-100" :
                              "bg-blue-500 ring-blue-100"
                           )} />
-                          <p className="text-sm text-slate-900 font-medium">{activity.title}</p>
+                          <p className="text-sm text-slate-900 font-medium group-hover:text-emerald-700 transition-colors">{activity.title}</p>
                           <p className="text-xs text-slate-400 mt-0.5">{activity.time}</p>
-                       </div>
+                       </motion.div>
                     ))}
-                 </div>
+                 </motion.div>
               </div>
            </div>
         </motion.div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
 
   );

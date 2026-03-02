@@ -9,10 +9,11 @@ import {
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
-import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
+import { DateRangePicker } from '@/components/ui/datetime-picker/DateRangePicker';
 import { TablePagination } from '@/components/ui/table/TablePagination';
 import { TableEmptyState } from '@/components/ui/table/TableEmptyState';
 import { FilterCard } from '@/components/ui/card/FilterCard';
+import { SectionLoading } from '@/components/ui/loading/Loading';
 import { cn } from '@/components/ui/utils';
 import type { Task, ViewMode } from "./types";
 import { MOCK_TASKS } from "./mockData";
@@ -43,6 +44,8 @@ const TaskFilters: React.FC<{
   setToDate: (val: string) => void;
   assignee: string;
   setAssignee: (val: string) => void;
+  reporter: string;
+  setReporter: (val: string) => void;
 }> = ({
   search,
   setSearch,
@@ -58,6 +61,8 @@ const TaskFilters: React.FC<{
   setToDate,
   assignee,
   setAssignee,
+  reporter,
+  setReporter,
 }) => {
   const moduleOptions: SelectOption[] = [
     { label: "All", value: "All Modules" },
@@ -141,6 +146,21 @@ const TaskFilters: React.FC<{
       icon: <Users className="h-3.5 w-3.5" />,
     },
   ];
+  const reporterOptions: SelectOption[] = [
+    { label: "All Reporters", value: "All Reporters" },
+    { label: "System", value: "System", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "John Smith", value: "John Smith", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "W. House", value: "W. House", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "HR Training", value: "HR Training", icon: <Users className="h-3.5 w-3.5" /> },
+    { label: "QA Lead", value: "QA Lead", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "V. Validation", value: "V. Validation", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "Fac. Manager", value: "Fac. Manager", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "QC Lead", value: "QC Lead", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "Auditor Ext", value: "Auditor Ext", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "Supply Chain", value: "Supply Chain", icon: <Users className="h-3.5 w-3.5" /> },
+    { label: "Microbio QA", value: "Microbio QA", icon: <User className="h-3.5 w-3.5" /> },
+    { label: "EM Lead", value: "EM Lead", icon: <User className="h-3.5 w-3.5" /> },
+  ];
   return (
     <FilterCard>
       <FilterCard.Row>
@@ -205,44 +225,27 @@ const TaskFilters: React.FC<{
           />
         </FilterCard.Item>
         <FilterCard.Item span={3}>
-          <DateTimePicker
-            label="From Date"
-            value={fromDate}
-            onChange={setFromDate}
-            placeholder="Select start date..."
+          <Select
+            label="Reporter"
+            value={reporter}
+            onChange={setReporter}
+            options={reporterOptions}
+            searchPlaceholder="Find reporter..."
+            enableSearch
           />
         </FilterCard.Item>
         <FilterCard.Item span={3}>
-          <DateTimePicker
-            label="To Date"
-            value={toDate}
-            onChange={setToDate}
-            placeholder="Select end date..."
+          <DateRangePicker
+            label="Due Date Range"
+            startDate={fromDate}
+            endDate={toDate}
+            onStartDateChange={setFromDate}
+            onEndDateChange={setToDate}
+            placeholder="Select date range..."
           />
         </FilterCard.Item>
       </FilterCard.Row>
     </FilterCard>
-  );
-};
-
-const SkeletonLoader = () => {
-  return (
-    <div className="w-full animate-pulse">
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <div className="h-12 bg-slate-100 border-b border-slate-200" />
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="h-16 border-b border-slate-100 px-6 py-4 flex items-center gap-4"
-          >
-            <div className="h-4 w-20 bg-slate-200 rounded" />
-            <div className="h-4 w-48 bg-slate-200 rounded flex-1" />
-            <div className="h-6 w-20 bg-slate-200 rounded-full" />
-            <div className="h-4 w-24 bg-slate-200 rounded" />
-          </div>
-        ))}
-      </div>
-    </div>
   );
 };
 
@@ -265,6 +268,7 @@ export const MyTasksView: React.FC = () => {
   const [fromDateFilter, setFromDateFilter] = useState("");
   const [toDateFilter, setToDateFilter] = useState("");
   const [assigneeFilter, setAssigneeFilter] = useState("All Assignees");
+  const [reporterFilter, setReporterFilter] = useState("All Reporters");
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -279,6 +283,7 @@ export const MyTasksView: React.FC = () => {
     setFromDateFilter("");
     setToDateFilter("");
     setAssigneeFilter("All Assignees");
+    setReporterFilter("All Reporters");
   }, []);
 
   // Simulate loading on filter change
@@ -295,6 +300,7 @@ export const MyTasksView: React.FC = () => {
     fromDateFilter,
     toDateFilter,
     assigneeFilter,
+    reporterFilter,
   ]);
 
   // Derived Data Logic
@@ -318,6 +324,8 @@ export const MyTasksView: React.FC = () => {
       data = data.filter((t) => t.status === statusFilter);
     if (assigneeFilter !== "All Assignees")
       data = data.filter((t) => t.assignee === assigneeFilter);
+    if (reporterFilter !== "All Reporters")
+      data = data.filter((t) => t.reporter === reporterFilter);
 
     // Date range filter logic
     if (fromDateFilter) {
@@ -336,6 +344,7 @@ export const MyTasksView: React.FC = () => {
     fromDateFilter,
     toDateFilter,
     assigneeFilter,
+    reporterFilter,
   ]);
 
   // Pagination Logic
@@ -412,12 +421,14 @@ export const MyTasksView: React.FC = () => {
           setToDate={setToDateFilter}
           assignee={assigneeFilter}
           setAssignee={setAssigneeFilter}
+          reporter={reporterFilter}
+          setReporter={setReporterFilter}
         />
       </div>
       {/* 3. Data Display (Loading / View-based Rendering) */}
       <div className="flex-1 min-h-0 flex flex-col">
         {isLoading ? (
-          <SkeletonLoader />
+          <SectionLoading text="Loading tasks..." minHeight="400px" />
         ) : (
           <>
             {/* List View (Table + Mobile Cards) */}

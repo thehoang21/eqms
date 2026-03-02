@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
+import { ButtonLoading } from "@/components/ui/loading/Loading";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
 import { cn } from "@/components/ui/utils";
 import { resetViewportZoom, blurActiveInput } from "@/utils/viewport";
@@ -521,13 +522,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin, onForgotPassword,
                   aria-busy={isLoading}
                 >
                   {isLoading ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <div
-                        className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"
-                        aria-hidden="true"
-                      />
-                      <span>Signing in...</span>
-                    </div>
+                    <ButtonLoading text="Signing in..." light />
                   ) : (
                     <span>Sign In</span>
                   )}
