@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Upload,
   FileText,
@@ -176,7 +177,7 @@ export const EditMaterialView: React.FC = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate("/training-management/training-materials")}
+          onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)}
           className="gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -338,7 +339,7 @@ const EditMaterialForm: React.FC<EditMaterialFormProps> = ({ materialId, existin
       setModalType("success");
       setModalTitle("Changes Saved");
       setModalDescription("Material has been updated and saved as draft successfully.");
-      setModalAction(() => () => navigate("/training-management/training-materials"));
+      setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
       setIsModalOpen(true);
     }, 1000);
   };
@@ -364,7 +365,7 @@ const EditMaterialForm: React.FC<EditMaterialFormProps> = ({ materialId, existin
       setModalType("success");
       setModalTitle("Submitted for Review");
       setModalDescription("Training material has been updated and submitted for review. The reviewer will be notified.");
-      setModalAction(() => () => navigate("/training-management/training-materials"));
+      setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
       setIsModalOpen(true);
     }, 1000);
   };
@@ -373,7 +374,7 @@ const EditMaterialForm: React.FC<EditMaterialFormProps> = ({ materialId, existin
     setModalType("confirm");
     setModalTitle("Discard Changes?");
     setModalDescription("Are you sure you want to cancel? All unsaved changes will be lost.");
-    setModalAction(() => () => navigate(`/training-management/training-materials`));
+    setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
     setIsModalOpen(true);
   };
 

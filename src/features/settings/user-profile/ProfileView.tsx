@@ -139,12 +139,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
         }
 
         if (!hasError) {
-            console.log('Updating profile:', formData);
-            if (passwordData.newPassword) {
-                console.log('Changing password, Logout all sessions:', logoutAllSessions);
-            }
             if (hasAvatarChanged) {
-                console.log('Updating avatar');
             }
             alert('Changes saved successfully!');
             if (passwordData.newPassword) {

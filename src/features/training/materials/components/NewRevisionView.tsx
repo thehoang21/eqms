@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   CloudUpload,
   FileText,
@@ -242,7 +243,7 @@ export const NewRevisionView: React.FC = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate("/training-management/training-materials")}
+          onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)}
           className="gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -391,7 +392,7 @@ const NewRevisionForm: React.FC<NewRevisionFormProps> = ({ materialId, source })
       setModalType("success");
       setModalTitle("Revision Saved as Draft");
       setModalDescription(`New revision ${formData.version} of ${formData.materialCode} has been saved as draft.`);
-      setModalAction(() => () => navigate("/training-management/training-materials"));
+      setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
       setIsModalOpen(true);
     }, 1000);
   };
@@ -413,7 +414,7 @@ const NewRevisionForm: React.FC<NewRevisionFormProps> = ({ materialId, source })
       setModalType("success");
       setModalTitle("Revision Submitted for Review");
       setModalDescription(`Revision ${formData.version} of ${formData.materialCode} has been submitted for review.`);
-      setModalAction(() => () => navigate("/training-management/training-materials"));
+      setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
       setIsModalOpen(true);
     }, 1000);
   };
@@ -422,7 +423,7 @@ const NewRevisionForm: React.FC<NewRevisionFormProps> = ({ materialId, source })
     setModalType("confirm");
     setModalTitle("Discard New Revision?");
     setModalDescription("Are you sure you want to cancel? All unsaved changes will be lost.");
-    setModalAction(() => () => navigate(`/training-management/training-materials`));
+    setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
     setIsModalOpen(true);
   };
 

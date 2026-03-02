@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, createRef, RefObject } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import { Plus, Search, MoreVertical, Users, Lock, Download } from "lucide-react";
 import { IconEye, IconEdit, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
@@ -157,15 +158,15 @@ export const RoleListView: React.FC = () => {
 
   // Handlers
   const handleViewRole = (id: string) => {
-    navigate(`/settings/roles/${id}`);
+    navigate(ROUTES.SETTINGS.ROLES_DETAIL(id));
   };
 
   const handleEdit = (id: string) => {
-    navigate(`/settings/roles/${id}/edit`);
+    navigate(ROUTES.SETTINGS.ROLES_EDIT(id));
   };
 
   const handleCreateNew = () => {
-    navigate("/settings/roles/new");
+    navigate(ROUTES.SETTINGS.ROLES_NEW);
   };
 
   const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
   User,
   MessageSquare,
@@ -285,8 +286,8 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
 
   // Breadcrumbs
   const breadcrumbs = [
-    { label: "Dashboard", onClick: () => navigate('/dashboard') },
-    { label: "Document Revisions", onClick: () => navigate('/documents/revisions/all') },
+    { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
+    { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
     { label: "Pending My Review", onClick: onBack },
     { label: document.documentId, isActive: true },
   ];

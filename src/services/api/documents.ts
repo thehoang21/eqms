@@ -4,7 +4,7 @@
  */
 
 import { api } from './client';
-import type { Document, DocumentFilter, PaginatedResponse } from '@/types/document';
+import type { Document, DocumentFilter, PaginatedResponse } from '@/types';
 
 const DOCUMENTS_ENDPOINT = '/documents';
 

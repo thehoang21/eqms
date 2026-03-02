@@ -66,7 +66,6 @@ export const ConfigurationView: React.FC = () => {
 
   const handleSave = () => {
     // In real app, API call here
-    console.log('Saving config:', config);
     setIsDirty(false);
     showToast({
       type: "success",

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Check,
   Edit,
@@ -23,6 +24,7 @@ import {
 import { BasicInfoTab } from "../shared/BasicInfoTab";
 import { DocumentTab } from "../shared/DocumentTab";
 import { ConfigTab } from "../shared/ConfigTab";
+import { MOCK_TRAINING_FILES, MOCK_COURSES } from "./mockData";
 
 // Tab types
 type TabType = "basic-info" | "document-training" | "training-config";
@@ -35,184 +37,6 @@ const TABS: { id: TabType; label: string }[] = [
 
 // Workflow stepper steps
 const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved"] as const;
-
-// Mock training files
-const MOCK_TRAINING_FILES: TrainingFile[] = [
-  {
-    id: "tf-001",
-    file: null as any,
-    name: "GMP_Training_Materials_2026.pdf",
-    size: 2456789,
-    type: "application/pdf",
-    progress: 100,
-    status: "success",
-  },
-  {
-    id: "tf-002",
-    file: null as any,
-    name: "GMP_Presentation_Slides.pptx",
-    size: 8765432,
-    type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    progress: 100,
-    status: "success",
-  },
-  {
-    id: "tf-003",
-    file: null as any,
-    name: "Quick_Reference_Guide.docx",
-    size: 567890,
-    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    progress: 100,
-    status: "success",
-  },
-];
-
-// Mock courses — in real app, fetch from API by ID
-const MOCK_COURSES: (TrainingRecord & {
-  trainingFiles: TrainingFile[];
-  instruction: string;
-  examTemplate?: string;
-  answerKey?: string;
-  passingGradeType?: "pass_fail" | "score_10" | "percentage";
-  maxAttempts?: number;
-  questions: any[];
-  instructorType: "internal" | "external";
-  distributionList: string[];
-  linkedDocumentId: string;
-  linkedDocumentTitle: string;
-})[] = [
-  {
-    id: "1",
-    trainingId: "TRN-2026-001",
-    title: "GMP Basic Principles",
-    description:
-      "This comprehensive training covers the fundamental principles of Good Manufacturing Practice (GMP) required for all personnel working in pharmaceutical manufacturing environments.",
-    type: "GMP",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    status: "In-Progress",
-    instructor: "Dr. Sarah Williams",
-    instructorType: "internal",
-    scheduledDate: "2026-03-15",
-    duration: 4,
-    location: "Training Room A",
-    capacity: 25,
-    enrolled: 20,
-    department: "Quality Assurance",
-    mandatory: true,
-    passScore: 80,
-    recurrence: { enabled: true, intervalMonths: 12 },
-    linkedDocumentId: "DOC-001",
-    linkedDocumentTitle: "SOP-QA-001: Good Manufacturing Practices",
-    distributionList: ["Quality Assurance", "Production", "Quality Control"],
-    trainingFiles: MOCK_TRAINING_FILES,
-    instruction:
-      "Focus on Chapter 3 (Cleaning Validation) and Appendix B (Equipment Handling). Review all SOPs referenced in Section 2.4 before the training session.",
-    examTemplate: "GMP_Exam_Template_2026.pdf",
-    answerKey: "GMP_Answer_Key_2026.pdf",
-    passingGradeType: "score_10",
-    maxAttempts: 3,
-    questions: [
-      {
-        id: "q1",
-        text: "What is the primary purpose of GMP?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "To increase production speed", isCorrect: false },
-          { id: "b", text: "To ensure product quality and safety", isCorrect: true },
-          { id: "c", text: "To reduce manufacturing costs", isCorrect: false },
-          { id: "d", text: "To improve employee satisfaction", isCorrect: false },
-        ],
-      },
-    ],
-    createdBy: "Admin",
-    createdAt: "2026-01-15",
-    updatedAt: "2026-01-20",
-  },
-  {
-    id: "2",
-    trainingId: "TRN-2026-002",
-    title: "Cleanroom Qualification",
-    description:
-      "Training on cleanroom classification, gowning procedures, and environmental monitoring requirements.",
-    type: "Technical",
-    trainingMethod: "Read & Understood",
-    status: "Scheduled",
-    instructor: "Michael Chen",
-    instructorType: "internal",
-    scheduledDate: "2026-03-20",
-    duration: 2,
-    location: "Cleanroom Facility",
-    capacity: 15,
-    enrolled: 15,
-    department: "Production",
-    mandatory: true,
-    passScore: 100,
-    recurrence: { enabled: false, intervalMonths: 0 },
-    linkedDocumentId: "DOC-002",
-    linkedDocumentTitle: "SOP-CR-002: Cleanroom Operations",
-    distributionList: ["Production", "Quality Control"],
-    trainingFiles: [
-      {
-        id: "tf-004",
-        file: null as any,
-        name: "Cleanroom_SOP_Manual.pdf",
-        size: 3456789,
-        type: "application/pdf",
-        progress: 100,
-        status: "success",
-      },
-    ],
-    instruction:
-      "Pay special attention to gowning procedures in Section 3 and environmental monitoring protocols in Section 5.",
-    passingGradeType: "pass_fail",
-    maxAttempts: 1,
-    questions: [],
-    createdBy: "QA Manager",
-    createdAt: "2026-01-10",
-    updatedAt: "2026-01-25",
-  },
-  {
-    id: "3",
-    trainingId: "TRN-2026-003",
-    title: "Emergency Response Procedures",
-    description:
-      "Training on fire safety, chemical spill response, and emergency evacuation procedures aligned with OSHA guidelines.",
-    type: "Safety",
-    trainingMethod: "Hands-on/OJT",
-    status: "Completed",
-    instructor: "Robert Lee",
-    instructorType: "external",
-    scheduledDate: "2026-01-20",
-    duration: 6,
-    location: "Assembly Point A",
-    capacity: 50,
-    enrolled: 45,
-    department: "All Departments",
-    mandatory: true,
-    passScore: 70,
-    recurrence: { enabled: true, intervalMonths: 6 },
-    linkedDocumentId: "DOC-003",
-    linkedDocumentTitle: "SOP-HSE-001: Emergency Response Plan",
-    distributionList: ["All Departments"],
-    trainingFiles: [
-      {
-        id: "tf-005",
-        file: null as any,
-        name: "Emergency_Response_Guide.pdf",
-        size: 4567890,
-        type: "application/pdf",
-        progress: 100,
-        status: "success",
-      },
-    ],
-    instruction: "Complete all fire extinguisher drills during hands-on session.",
-    questions: [],
-    createdBy: "HSE Manager",
-    createdAt: "2026-01-05",
-    updatedAt: "2026-01-21",
-  },
-];
 
 const getStatusColor = (status: TrainingStatus): string => {
   switch (status) {
@@ -342,14 +166,14 @@ export const CourseDetailView: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate("/training-management/courses-list")}
+            onClick={() => navigate(ROUTES.TRAINING.COURSES_LIST)}
           >
             Back
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/training-management/courses/${courseId}/edit`)}
+            onClick={() => navigate(ROUTES.TRAINING.COURSE_EDIT(courseId))}
             className="gap-1.5"
           >
             Edit Course
@@ -357,7 +181,7 @@ export const CourseDetailView: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/training-management/courses/${courseId}/progress`)}
+            onClick={() => navigate(ROUTES.TRAINING.COURSE_PROGRESS(courseId))}
             className="gap-1.5"
           >
             View Progress
@@ -366,7 +190,7 @@ export const CourseDetailView: React.FC = () => {
             <Button
               variant="default"
               size="sm"
-              onClick={() => navigate(`/training-management/courses/${courseId}/result-entry`)}
+              onClick={() => navigate(ROUTES.TRAINING.COURSE_RESULT_ENTRY(courseId))}
               className="gap-1.5"
             >
               Result Entry

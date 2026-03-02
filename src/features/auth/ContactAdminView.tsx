@@ -3,6 +3,7 @@ import { ArrowLeft, CheckCircle2, Mail, User, Phone, Briefcase } from "lucide-re
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { resetViewportZoom, blurActiveInput } from "@/utils/viewport";
+import { isValidEmail } from "@/utils/validation";
 import logoImg from "@/assets/images/logo_nobg.png";
 import slide1 from "@/assets/images/slide-image/ipad1.webp";
 import slide2 from "@/assets/images/slide-image/ipad2.webp";
@@ -83,16 +84,6 @@ interface FormErrors {
 // ============================================================================
 // VALIDATION HELPERS
 // ============================================================================
-
-/**
- * Validates email format
- * @param email - Email string to validate
- * @returns true if valid email format
- */
-const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
 
 /**
  * Validates phone number format (basic validation)
@@ -267,8 +258,6 @@ export const ContactAdminView: React.FC<ContactAdminViewProps> = ({
 
         if (onRequestSubmit) {
           onRequestSubmit(formData);
-        } else {
-          console.log("Account request sent:", formData);
         }
 
         // Auto redirect to login after 5 seconds

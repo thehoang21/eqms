@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
     ChevronRight,
     Save,
@@ -110,7 +111,7 @@ export const SingleDocumentView: React.FC = () => {
 
     const handleCancelConfirm = () => {
         setIsCancelModalOpen(false);
-        navigate("/documents/all");
+        navigate(ROUTES.DOCUMENTS.ALL);
     };
 
     const handleSaveDraft = () => {
@@ -123,11 +124,10 @@ export const SingleDocumentView: React.FC = () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
             
             // TODO: Integrate with API service
-            console.log("Document saved as draft:", formData);
             
             setIsSaving(false);
             setShowSaveModal(false);
-            navigate("/documents/all");
+            navigate(ROUTES.DOCUMENTS.ALL);
         } catch (error) {
             console.error("Error saving document:", error);
             setIsSaving(false);
@@ -143,9 +143,8 @@ export const SingleDocumentView: React.FC = () => {
         setIsSubmitting(true);
         try {
             // TODO: Integrate with API service
-            console.log("Document submitted for activation:", { ...formData, eSignatureReason: reason });
             setIsESignOpen(false);
-            navigate("/documents/all");
+            navigate(ROUTES.DOCUMENTS.ALL);
         } catch (error) {
             console.error("Error submitting document:", error);
         } finally {

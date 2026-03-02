@@ -240,8 +240,6 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin, onForgotPassword,
 
           if (onLogin) {
             onLogin(formData.username, formData.password, formData.rememberMe);
-          } else {
-            console.log("Login successful:", formData);
           }
         } else {
           // Login failed

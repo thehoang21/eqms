@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { LinkIcon } from "lucide-react";
 import { Select } from "@/components/ui/select/Select";
 import { MultiSelect } from "@/components/ui/select/MultiSelect";
@@ -7,6 +7,14 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { cn } from "@/components/ui/utils";
 import type { DocumentType } from "@/features/documents/types";
 import { DOCUMENT_TYPES } from "@/features/documents/types";
+
+// Business Unit → Department mapping for document forms
+const DOCUMENT_BU_DEPARTMENTS: Record<string, string[]> = {
+  "Operation Unit": ["Production", "Warehouse", "Logistics", "Maintenance"],
+  "QA Unit": ["Quality Assurance", "Regulatory Affairs"],
+  "QC Unit": ["Quality Control", "Laboratory"],
+  "HR Unit": ["Human Resources & Administrator", "IT Department", "Finance", "Legal"],
+};
 
 // Export FormData interface to be reused by parent components
 export interface GeneralTabFormData {
@@ -55,6 +63,13 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
   const setFormData = (data: Partial<FormData>) => {
     onFormChange({ ...formData, ...data });
   };
+
+  // Department options based on selected Business Unit
+  const departmentOptions = useMemo(() => {
+    if (!formData.businessUnit) return [];
+    const departments = DOCUMENT_BU_DEPARTMENTS[formData.businessUnit] || [];
+    return departments.map((dept) => ({ label: dept, value: dept }));
+  }, [formData.businessUnit]);
 
   return (
     <div className="space-y-4 md:space-y-5">
@@ -165,29 +180,6 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           </div>
         </div>
 
-        {/* Is Template */}
-        {!isTemplateMode && (
-          <div className="flex items-center gap-3">
-            <label
-              htmlFor="isTemplate"
-              className={cn(
-                "text-xs sm:text-sm font-medium text-slate-700",
-                !isObsoleted && "cursor-pointer",
-              )}
-            >
-              Is Template?
-            </label>
-            <Checkbox
-              id="isTemplate"
-              checked={formData.isTemplate}
-              onChange={(checked) =>
-                !isObsoleted && setFormData({ isTemplate: checked })
-              }
-              disabled={isObsoleted}
-            />
-          </div>
-        )}
-
         {/* Business Unit (Select) */}
         <div className="flex flex-col gap-1.5">
           <label className="text-xs sm:text-sm font-medium text-slate-700">
@@ -196,16 +188,31 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           <Select
             value={formData.businessUnit}
             onChange={(value) =>
-              !isObsoleted && setFormData({ businessUnit: value })
+              !isObsoleted && setFormData({ businessUnit: value, department: "" })
             }
-            options={[
-              { label: "Operation Unit", value: "Operation Unit" },
-              { label: "QA Unit", value: "QA Unit" },
-              { label: "QC Unit", value: "QC Unit" },
-              { label: "HR Unit", value: "HR Unit" },
-            ]}
+            options={Object.keys(DOCUMENT_BU_DEPARTMENTS).map((bu) => ({
+              label: bu,
+              value: bu,
+            }))}
             enableSearch={true}
             disabled={isObsoleted}
+          />
+        </div>
+
+        {/* Department (Select) - depends on Business Unit */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
+            Department
+          </label>
+          <Select
+            value={formData.department}
+            onChange={(value) =>
+              !isObsoleted && setFormData({ department: value })
+            }
+            options={departmentOptions}
+            enableSearch={true}
+            placeholder={formData.businessUnit ? "Select department..." : "Select Business Unit first"}
+            disabled={isObsoleted || !formData.businessUnit}
           />
         </div>
 
@@ -229,29 +236,28 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
           />
         </div>
 
-        {/* Department (Select) */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs sm:text-sm font-medium text-slate-700">
-            Department
-          </label>
-          <Select
-            value={formData.department}
-            onChange={(value) =>
-              !isObsoleted && setFormData({ department: value })
-            }
-            options={[
-              {
-                label: "Human Resources & Administrator",
-                value: "Human Resources & Administrator",
-              },
-              { label: "Production", value: "Production" },
-              { label: "Quality Control", value: "Quality Control" },
-              { label: "Quality Assurance", value: "Quality Assurance" },
-            ]}
-            enableSearch={true}
-            disabled={isObsoleted}
-          />
-        </div>
+        {/* Is Template */}
+        {!isTemplateMode && (
+          <div className="flex items-center gap-3">
+            <label
+              htmlFor="isTemplate"
+              className={cn(
+                "text-xs sm:text-sm font-medium text-slate-700",
+                !isObsoleted && "cursor-pointer",
+              )}
+            >
+              Is Template?
+            </label>
+            <Checkbox
+              id="isTemplate"
+              checked={formData.isTemplate}
+              onChange={(checked) =>
+                !isObsoleted && setFormData({ isTemplate: checked })
+              }
+              disabled={isObsoleted}
+            />
+          </div>
+        )}
 
         {/* Knowledge Base */}
         <div className="flex flex-col gap-1.5">

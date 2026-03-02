@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { IconListNumbers } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
+import { MOCK_USERS } from "../../../mockData";
 
 interface Reviewer {
     id: string;
@@ -26,15 +27,6 @@ interface ReviewersTabProps {
 }
 
 type ReviewFlowType = 'sequential' | 'parallel';
-
-// Mock Data for User Selection
-const MOCK_USERS = [
-    { id: '1', name: 'Nguyen Van A', username: 'nguyenvana', role: 'QA Manager', department: 'Quality Assurance', email: 'a.nguyen@example.com' },
-    { id: '2', name: 'Tran Thi B', username: 'tranthib', role: 'Director', department: 'Board of Directors', email: 'b.tran@example.com' },
-    { id: '3', name: 'Le Van C', username: 'levanc', role: 'Production Manager', department: 'Production', email: 'c.le@example.com' },
-    { id: '4', name: 'Pham Thi D', username: 'phamthid', role: 'Technical Lead', department: 'Technical', email: 'd.pham@example.com' },
-    { id: '5', name: 'Hoang Van E', username: 'hoangvane', role: 'Quality Control', department: 'Quality Control', email: 'e.hoang@example.com' },
-];
 
 interface UserSelectionModalProps {
     isOpen: boolean;

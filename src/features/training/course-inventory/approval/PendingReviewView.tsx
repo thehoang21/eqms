@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
   Eye,
@@ -17,165 +18,7 @@ import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
 import { formatDateUS } from "@/utils/format";
 import { CourseApproval } from "../../types";
-
-// --- Mock Data ---
-const MOCK_APPROVALS: CourseApproval[] = [
-  {
-    id: "CA-001",
-    courseId: "1",
-    trainingId: "TRN-2026-001",
-    courseTitle: "GMP Basic Principles",
-    relatedDocument: "SOP-QA-001: Good Manufacturing Practices",
-    relatedDocumentId: "DOC-001",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    submittedBy: "John Smith",
-    submittedAt: "2026-02-10",
-    department: "Quality Assurance",
-    approvalStatus: "Pending Review",
-    passScore: 80,
-    questions: [
-      {
-        id: "q1",
-        text: "What is the primary purpose of GMP?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "To increase production speed", isCorrect: false },
-          { id: "b", text: "To ensure product quality and safety", isCorrect: true },
-          { id: "c", text: "To reduce manufacturing costs", isCorrect: false },
-          { id: "d", text: "To improve employee satisfaction", isCorrect: false },
-        ],
-      },
-      {
-        id: "q2",
-        text: "Which document defines the standard operating procedures for cleanroom entry?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "SOP-QA-001", isCorrect: false },
-          { id: "b", text: "SOP-CR-002", isCorrect: true },
-          { id: "c", text: "SOP-PR-003", isCorrect: false },
-          { id: "d", text: "SOP-IT-004", isCorrect: false },
-        ],
-      },
-      {
-        id: "q3",
-        text: "How often should GMP training be renewed?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "Every 6 months", isCorrect: false },
-          { id: "b", text: "Every year", isCorrect: true },
-          { id: "c", text: "Every 2 years", isCorrect: false },
-          { id: "d", text: "Only once at onboarding", isCorrect: false },
-        ],
-      },
-    ],
-  },
-  {
-    id: "CA-002",
-    courseId: "2",
-    trainingId: "TRN-2026-006",
-    courseTitle: "Cleanroom Qualification",
-    relatedDocument: "SOP-CR-002: Cleanroom Operations",
-    relatedDocumentId: "DOC-002",
-    trainingMethod: "Read & Understood",
-    submittedBy: "Sarah Johnson",
-    submittedAt: "2026-02-12",
-    department: "Production",
-    approvalStatus: "Pending Review",
-    passScore: 100,
-    questions: [],
-  },
-  {
-    id: "CA-003",
-    courseId: "3",
-    trainingId: "TRN-2026-007",
-    courseTitle: "HPLC Operation Advanced",
-    relatedDocument: "SOP-LAB-005: HPLC Standard Method",
-    relatedDocumentId: "DOC-003",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    submittedBy: "Dr. Michael Chen",
-    submittedAt: "2026-02-08",
-    department: "QC Lab",
-    approvalStatus: "Pending Review",
-    approvedBy: undefined,
-    approvedAt: undefined,
-    passScore: 85,
-    questions: [
-      {
-        id: "q1",
-        text: "What is the recommended mobile phase flow rate for analytical HPLC?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "0.1 mL/min", isCorrect: false },
-          { id: "b", text: "1.0 mL/min", isCorrect: true },
-          { id: "c", text: "5.0 mL/min", isCorrect: false },
-          { id: "d", text: "10.0 mL/min", isCorrect: false },
-        ],
-      },
-      {
-        id: "q2",
-        text: "Which detector is most commonly used for UV-absorbing compounds?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "DAD/PDA detector", isCorrect: true },
-          { id: "b", text: "Refractive Index detector", isCorrect: false },
-          { id: "c", text: "Fluorescence detector", isCorrect: false },
-          { id: "d", text: "Conductivity detector", isCorrect: false },
-        ],
-      },
-    ],
-  },
-  {
-    id: "CA-004",
-    courseId: "4",
-    trainingId: "TRN-2026-008",
-    courseTitle: "ISO 9001:2015 Requirements",
-    relatedDocument: "SOP-QMS-010: Quality Management System",
-    relatedDocumentId: "DOC-004",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    submittedBy: "Emma Wilson",
-    submittedAt: "2026-02-15",
-    department: "All Departments",
-    approvalStatus: "Pending Review",
-    passScore: 70,
-    questions: [
-      {
-        id: "q1",
-        text: "What is the risk-based thinking approach in ISO 9001:2015?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "Eliminating all risks completely", isCorrect: false },
-          { id: "b", text: "Identifying and addressing risks that affect conformity", isCorrect: true },
-          { id: "c", text: "Only documenting risks", isCorrect: false },
-          { id: "d", text: "Avoiding change", isCorrect: false },
-        ],
-      },
-    ],
-  },
-  {
-    id: "CA-005",
-    courseId: "5",
-    trainingId: "TRN-2026-009",
-    courseTitle: "SOP Review & Update Procedures",
-    relatedDocument: "SOP-DC-003: Document Change Control",
-    relatedDocumentId: "DOC-005",
-    trainingMethod: "Read & Understood",
-    submittedBy: "David Brown",
-    submittedAt: "2026-02-05",
-    department: "Documentation",
-    approvalStatus: "Rejected",
-    approvedBy: "QA Manager",
-    approvedAt: "2026-02-06",
-    rejectionReason: "Training content does not reflect latest SOP revision (Rev.5). Please update to align with SOP-DC-003 Rev.5 effective 01/28/2026.",
-    passScore: 80,
-    questions: [],
-  },
-];
+import { MOCK_PENDING_REVIEWS as MOCK_APPROVALS } from "./mockData";
 
 const getMethodBadge = (method: "Read & Understood" | "Quiz (Paper-based/Manual)" | "Hands-on/OJT") => {
   return method === "Quiz (Paper-based/Manual)"
@@ -256,7 +99,7 @@ export const PendingReviewView: React.FC = () => {
   }, [filteredData, currentPage, itemsPerPage]);
 
   const handleViewDetail = (approval: CourseApproval) => {
-    navigate(`/training-management/pending-review/${approval.id}`);
+    navigate(ROUTES.TRAINING.APPROVAL_DETAIL(approval.id));
   };
 
   return (

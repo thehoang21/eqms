@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import { Check, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
@@ -199,7 +200,6 @@ export const NewDocumentView: React.FC = () => {
         setDocumentStatus("Closed - Cancelled");
         
         // TODO: Save cancelActivitySummary to database
-        console.log("Document cancelled with Activity Summary:", cancelActivitySummary);
         
         // Show toast notification
         showToast({
@@ -233,17 +233,9 @@ export const NewDocumentView: React.FC = () => {
                 setCreatedDateTime(created);
                 // openedBy is already set from user context on component mount
                 setIsSaved(true);
-                
-                console.log("Document created:", {
-                    documentNumber: docNum,
-                    created,
-                    openedBy,
-                    ...formData
-                });
             } else {
                 // Second save: keep document in Draft status
                 // Document remains in Draft until it goes through review/approval workflow
-                console.log("Document saved:", formData);
             }
             
             setIsSaving(false);
@@ -256,12 +248,11 @@ export const NewDocumentView: React.FC = () => {
 
     const handleObsolete = (reason: string) => {
         // TODO: Integrate with API - save obsolete reason
-        console.log("Document obsoleted with reason:", reason);
         setDocumentStatus("Obsoleted");
     };
 
     const handleBackToList = () => {
-        navigate("/documents/all");
+        navigate(ROUTES.DOCUMENTS.ALL);
     };
 
     const handleUploadRevision = (file: File, note: string, useTemplate: boolean) => {
@@ -299,13 +290,6 @@ export const NewDocumentView: React.FC = () => {
         
         // Switch to Document tab to show preview
         setActiveTab("document");
-
-        console.log("Revision uploaded:", {
-            revision: newRevision,
-            file: file.name,
-            note,
-            useTemplate,
-        });
     };
 
     // Status workflow steps - simplified for new document creation
@@ -816,8 +800,8 @@ export const NewDocumentView: React.FC = () => {
                         </p>
                     </div>
                 }
-                confirmText="Yes, Cancel Document"
-                cancelText="No, Continue Editing"
+                confirmText="Yes, Cancel"
+                cancelText="No, Continue"
                 confirmDisabled={!cancelActivitySummary.trim()}
                 showCancel={true}
                 size="lg"

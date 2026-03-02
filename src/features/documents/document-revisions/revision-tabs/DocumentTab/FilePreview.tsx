@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FileText, File as FileIcon, Image as ImageIcon, AlertCircle, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
+import { config } from "@/config";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "./docx-preview.css";
@@ -48,8 +49,6 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
 
         const fileType = file.type;
         const fileName = file.name.toLowerCase();
-
-        console.log("Processing file:", { fileName, fileType, size: file.size });
 
         // PDF - use iframe
         if (fileType === "application/pdf" || fileName.endsWith(".pdf")) {
@@ -201,7 +200,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
 
                 {!error && previewType === "pdf" && previewUrl && (
                     <div className="h-full">
-                        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+                        <Worker workerUrl={config.pdf.workerUrl}>
                             <Viewer fileUrl={previewUrl} defaultScale={SpecialZoomLevel.ActualSize} />
                         </Worker>
                     </div>

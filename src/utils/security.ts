@@ -3,12 +3,15 @@
  * XSS protection, sanitization, validation, and encryption helpers
  */
 
-// Optional import - install with: npm install dompurify
+// Optional import - install with: npm install dompurify @types/dompurify
 let DOMPurify: any;
 try {
-  DOMPurify = require('dompurify');
+  // Dynamic import not available synchronously; using fallback sanitizer
+  // To enable DOMPurify: npm install dompurify @types/dompurify
+  // Then: import DOMPurify from 'dompurify';
+  DOMPurify = null;
 } catch {
-  console.warn('DOMPurify not installed. Install with: npm install dompurify');
+  // DOMPurify not available, fallback sanitizer will be used
 }
 
 /**
@@ -45,14 +48,6 @@ export const sanitizeInput = (input: string): string => {
       .replace(/\//g, '&#x2F;');
   }
   return DOMPurify.sanitize(input, { ALLOWED_TAGS: [] });
-};
-
-/**
- * Validate email format
- */
-export const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
 };
 
 /**
@@ -393,16 +388,36 @@ export class SessionManager {
     }, timeoutMs);
   }
 
+  private activityHandler: (() => void) | null = null;
+
   private setupActivityListeners(): void {
     const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+    // Throttle reset to avoid excessive timer recreation on rapid interactions
+    let lastReset = 0;
+    const THROTTLE_MS = 30_000; // Only reset once per 30 seconds
+    this.activityHandler = () => {
+      const now = Date.now();
+      if (now - lastReset > THROTTLE_MS) {
+        lastReset = now;
+        this.reset();
+      }
+    };
     events.forEach((event) => {
-      document.addEventListener(event, () => this.reset(), { passive: true });
+      document.addEventListener(event, this.activityHandler!, { passive: true });
     });
   }
 
   stop(): void {
     if (this.timeout) clearTimeout(this.timeout);
     if (this.warningTimeout) clearTimeout(this.warningTimeout);
+    // Clean up event listeners
+    if (this.activityHandler) {
+      const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+      events.forEach((event) => {
+        document.removeEventListener(event, this.activityHandler!);
+      });
+      this.activityHandler = null;
+    }
   }
 }
 

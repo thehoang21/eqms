@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Check,
   X,
@@ -233,7 +234,7 @@ export const MaterialDetailView: React.FC = () => {
           setModalType("success");
           setModalTitle("Material Returned");
           setModalDescription("Material has been returned to draft. The author will be notified to make changes.");
-          setModalAction(() => () => navigate("/training-management/training-materials"));
+          setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
           break;
 
         case "approve":
@@ -258,7 +259,7 @@ export const MaterialDetailView: React.FC = () => {
           setModalType("success");
           setModalTitle("Material Rejected");
           setModalDescription("Material has been rejected and returned to draft. The author will be notified.");
-          setModalAction(() => () => navigate("/training-management/training-materials"));
+          setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
           break;
 
         case "obsolete":
@@ -303,7 +304,7 @@ export const MaterialDetailView: React.FC = () => {
             variant="outline"
             size="sm"
             className="whitespace-nowrap gap-2"
-            onClick={() => navigate("/training-management/training-materials")}
+            onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)}
           >
             Back
           </Button>

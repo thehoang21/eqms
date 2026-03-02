@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, createRef, RefObject } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
   GraduationCap,
@@ -34,116 +35,7 @@ import {
   TrainingType,
   TrainingMethod,
 } from "../../types";
-
-// Mock Data
-const MOCK_TRAININGS: TrainingRecord[] = [
-  {
-    id: "1",
-    trainingId: "TRN-2026-001",
-    title: "GMP Basic Principles",
-    description: "Introduction to Good Manufacturing Practices",
-    type: "GMP",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    status: "In-Progress",
-    instructor: "John Smith",
-    scheduledDate: "2026-02-15",
-    duration: 4,
-    location: "Training Room A",
-    capacity: 30,
-    enrolled: 25,
-    department: "Quality Assurance",
-    mandatory: true,
-    passScore: 80,
-    createdBy: "Admin",
-    createdAt: "2026-01-15",
-    updatedAt: "2026-01-20",
-  },
-  {
-    id: "2",
-    trainingId: "TRN-2026-002",
-    title: "Cleanroom Qualification",
-    description: "Training on cleanroom operations and aseptic techniques",
-    type: "Technical",
-    trainingMethod: "Hands-on/OJT",
-    status: "Scheduled",
-    instructor: "Sarah Johnson",
-    scheduledDate: "2026-01-26",
-    duration: 3,
-    location: "Cleanroom B",
-    capacity: 20,
-    enrolled: 20,
-    department: "Quality Assurance",
-    mandatory: true,
-    passScore: 85,
-    createdBy: "QA Manager",
-    createdAt: "2026-01-10",
-    updatedAt: "2026-01-25",
-  },
-  {
-    id: "3",
-    trainingId: "TRN-2026-003",
-    title: "HPLC Operation Advanced",
-    description: "Advanced techniques for HPLC operation and troubleshooting",
-    type: "Technical",
-    trainingMethod: "Hands-on/OJT",
-    status: "Completed",
-    instructor: "Dr. Michael Chen",
-    scheduledDate: "2026-01-20",
-    duration: 6,
-    location: "Laboratory 2",
-    capacity: 15,
-    enrolled: 14,
-    department: "QC Lab",
-    mandatory: false,
-    passScore: 75,
-    createdBy: "Lab Supervisor",
-    createdAt: "2026-01-05",
-    updatedAt: "2026-01-21",
-  },
-  {
-    id: "4",
-    trainingId: "TRN-2026-004",
-    title: "ISO 9001:2015 Requirements",
-    description:
-      "Understanding ISO 9001 quality management system requirements",
-    type: "Compliance",
-    trainingMethod: "Read & Understood",
-    status: "Scheduled",
-    instructor: "Emma Wilson",
-    scheduledDate: "2026-03-01",
-    duration: 8,
-    location: "Conference Hall",
-    capacity: 40,
-    enrolled: 15,
-    department: "All Departments",
-    mandatory: false,
-    passScore: 70,
-    createdBy: "QA Director",
-    createdAt: "2026-01-15",
-    updatedAt: "2026-01-23",
-  },
-  {
-    id: "5",
-    trainingId: "TRN-2026-005",
-    title: "SOP Review & Update Procedures",
-    description: "Training on proper SOP review and revision processes",
-    type: "SOP",
-    trainingMethod: "Read & Understood",
-    status: "Overdue",
-    instructor: "David Brown",
-    scheduledDate: "2026-01-10",
-    duration: 2,
-    location: "Meeting Room 3",
-    capacity: 25,
-    enrolled: 18,
-    department: "Documentation",
-    mandatory: true,
-    passScore: 80,
-    createdBy: "Doc Control",
-    createdAt: "2025-12-20",
-    updatedAt: "2026-01-05",
-  },
-];
+import { MOCK_TRAININGS } from "./mockData";
 
 export const CourseListView: React.FC = () => {
   const navigate = useNavigate();
@@ -305,22 +197,22 @@ export const CourseListView: React.FC = () => {
   };
 
   const handleViewCourse = (id: string) => {
-    navigate(`/training-management/courses/${id}`);
+    navigate(ROUTES.TRAINING.COURSE_DETAIL(id));
     setOpenDropdownId(null);
   };
 
   const handleEditCourse = (id: string) => {
-    navigate(`/training-management/courses/${id}/edit`);
+    navigate(ROUTES.TRAINING.COURSE_EDIT(id));
     setOpenDropdownId(null);
   };
 
   const handleResultEntry = (id: string) => {
-    navigate(`/training-management/courses/${id}/result-entry`);
+    navigate(ROUTES.TRAINING.COURSE_RESULT_ENTRY(id));
     setOpenDropdownId(null);
   };
 
   const handleViewProgress = (id: string) => {
-    navigate(`/training-management/courses/${id}/progress`);
+    navigate(ROUTES.TRAINING.COURSE_PROGRESS(id));
     setOpenDropdownId(null);
   };
 
@@ -360,7 +252,7 @@ export const CourseListView: React.FC = () => {
             Export
           </Button>
           <Button
-            onClick={() => navigate("/training-management/courses/create")}
+            onClick={() => navigate(ROUTES.TRAINING.COURSES_CREATE)}
             size="sm"
             className="whitespace-nowrap gap-2"
           >
@@ -509,7 +401,7 @@ export const CourseListView: React.FC = () => {
                 <tr
                   key={training.id}
                   className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
-                  onClick={() => navigate(`/training-management/courses/${training.id}`)}
+                  onClick={() => navigate(ROUTES.TRAINING.COURSE_DETAIL(training.id))}
                 >
                   <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-500 font-medium">
                     {(currentPage - 1) * itemsPerPage + index + 1}

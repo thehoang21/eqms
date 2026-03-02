@@ -63,7 +63,6 @@ export const ExportRecordsView: React.FC = () => {
   ];
 
   const handleExport = () => {
-    console.log("Exporting with config:", config);
     // Implement export logic here
   };
 

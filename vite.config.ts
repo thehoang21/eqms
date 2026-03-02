@@ -18,6 +18,27 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, './src'),
         }
-      }
+      },
+      build: {
+        chunkSizeWarningLimit: 600,
+        rollupOptions: {
+          output: {
+            manualChunks: {
+              // Core React runtime
+              'vendor-react': ['react', 'react-dom', 'react-router-dom', 'react-router'],
+              // Charting library
+              'vendor-recharts': ['recharts'],
+              // Animation library
+              'vendor-framer': ['framer-motion'],
+              // PDF viewer
+              'vendor-pdf': ['@react-pdf-viewer/core', '@react-pdf-viewer/default-layout', 'pdfjs-dist'],
+              // Document preview
+              'vendor-docx': ['docx-preview'],
+              // Icons
+              'vendor-icons': ['lucide-react', '@tabler/icons-react'],
+            },
+          },
+        },
+      },
     };
 });

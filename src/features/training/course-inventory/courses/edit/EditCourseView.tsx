@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Check } from "lucide-react";
 import { cn } from "@/components/ui/utils";
@@ -140,7 +141,7 @@ export const EditCourseView: React.FC = () => {
       "Are you sure you want to cancel? All unsaved changes will be lost."
     );
     setModalAction(() => () => {
-      navigate(`/training-management/courses/${courseId}`);
+      navigate(ROUTES.TRAINING.COURSE_DETAIL(courseId));
     });
     setIsModalOpen(true);
   };
@@ -218,8 +219,6 @@ export const EditCourseView: React.FC = () => {
         config: hasQuiz ? config : undefined,
       };
 
-      console.log("Updated course:", updatedCourse);
-
       setIsLoading(false);
       setModalType("success");
       setModalTitle("Course Updated Successfully");
@@ -227,7 +226,7 @@ export const EditCourseView: React.FC = () => {
         "The training course has been updated. Changes will be reflected immediately."
       );
       setModalAction(() => () => {
-        navigate(`/training-management/courses/${courseId}`);
+        navigate(ROUTES.TRAINING.COURSE_DETAIL(courseId));
       });
       setIsModalOpen(true);
     } catch (error) {

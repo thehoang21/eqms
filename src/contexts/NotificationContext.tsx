@@ -92,8 +92,8 @@ export const useNotifications = () => {
   return context;
 };
 
-// Convenience method for toast-like notifications
-export const useToast = () => {
+// Convenience method for toast-like notifications (deprecated: use @/components/ui/toast instead)
+export const useNotificationToast = () => {
   const { addNotification } = useNotifications();
 
   return {

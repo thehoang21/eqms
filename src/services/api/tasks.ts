@@ -4,7 +4,7 @@
  */
 
 import { api } from './client';
-import type { Task, TaskFilter, PaginatedResponse } from '@/types/task';
+import type { Task, TaskFilter, PaginatedResponse } from '@/types';
 
 const TASKS_ENDPOINT = '/tasks';
 

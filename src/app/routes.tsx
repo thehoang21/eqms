@@ -10,6 +10,9 @@ import { ProtectedRoute } from '@/middleware/ProtectedRoute';
 // Auth Context
 import { useAuth } from '@/contexts/AuthContext';
 
+// Route Constants
+import { ROUTES } from './routes.constants';
+
 // Features - Auth (eager load for login page)
 import { LoginView, ForgotPasswordView, ContactAdminView } from '@/features/auth';
 import { UnderConstruction } from './UnderConstruction';
@@ -107,7 +110,7 @@ const RouteWrapper: React.FC<RouteWrapperProps> = ({ render }) => {
   const navigate = useNavigate();
   
   if (!id) {
-    navigate('/dashboard');
+    navigate(ROUTES.DASHBOARD);
     return null;
   }
   
@@ -180,38 +183,36 @@ export const AppRoutes: React.FC = () => {
   const handleLogin = async (username: string, password: string, _rememberMe: boolean) => {
     try {
       await login({ username, password });
+      navigate(ROUTES.DASHBOARD);
     } catch {
       // Login simulation handles its own errors in LoginView
     }
-    navigate('/dashboard');
   };
 
   const handleForgotPassword = () => {
-    navigate('/forgot-password');
+    navigate(ROUTES.FORGOT_PASSWORD);
   };
 
   const handleBackToLogin = () => {
-    navigate('/login');
+    navigate(ROUTES.LOGIN);
   };
 
   const handlePasswordResetRequest = (email: string, reason: string) => {
-    console.log('Password reset request:', { email, reason });
     // TODO: Implement API call to send request to admin
   };
 
   const handleContactAdmin = () => {
-    navigate('/contact-admin');
+    navigate(ROUTES.CONTACT_ADMIN);
   };
 
   const handleAccountRequest = (data: any) => {
-    console.log('Account request:', data);
     // TODO: Implement API call to send request to admin
   };
 
   return (
     <Routes>
       {/* ==================== PUBLIC ROUTES ==================== */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<Navigate to={ROUTES.LOGIN} replace />} />
       <Route path="/login" element={<LoginView onLogin={handleLogin} onForgotPassword={handleForgotPassword} onContactAdmin={handleContactAdmin} />} />
       <Route path="/forgot-password" element={<ForgotPasswordView onBackToLogin={handleBackToLogin} onRequestSubmit={handlePasswordResetRequest} />} />
       <Route path="/contact-admin" element={<ContactAdminView onBackToLogin={handleBackToLogin} onRequestSubmit={handleAccountRequest} />} />
@@ -227,8 +228,8 @@ export const AppRoutes: React.FC = () => {
         {/* ===== DOCUMENTS ===== */}
         <Route path="documents">
           {/* Document Lists */}
-          <Route path="owned" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="owned-by-me" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
-          <Route path="all" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
+          <Route path="owned" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="owned-by-me" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
+          <Route path="all" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
           <Route path="all/new" element={<Suspense fallback={<LoadingFallback />}><NewDocumentView /></Suspense>} />
           <Route path="archived" element={<Suspense fallback={<LoadingFallback />}><ArchivedDocumentsView /></Suspense>} />
           
@@ -242,25 +243,25 @@ export const AppRoutes: React.FC = () => {
           <Route path="revisions">
             <Route path="all" element={<Suspense fallback={<LoadingFallback />}><RevisionListView /></Suspense>} />
             <Route path="owned" element={<Suspense fallback={<LoadingFallback />}><RevisionsOwnedByMeView /></Suspense>} />
-            <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="review" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
-            <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
+            <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="review" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
+            <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
             <Route path="new" element={<Suspense fallback={<LoadingFallback />}><NewRevisionView /></Suspense>} />
             <Route path="new-standalone" element={<Suspense fallback={<LoadingFallback />}><StandaloneRevisionView /></Suspense>} />
             <Route path="workspace" element={<Suspense fallback={<LoadingFallback />}><RevisionWorkspaceView /></Suspense>} />
             <Route path="review/:id" element={<RevisionReviewViewWrapper />} />
             <Route path="approval/:id" element={<RevisionApprovalViewWrapper />} />
-            <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
+            <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
           </Route>
           
           {/* Controlled Copies */}
           <Route path="controlled-copies">
-            <Route index element={<Navigate to="/documents/controlled-copies/all" replace />} />
+            <Route index element={<Navigate to={ROUTES.DOCUMENTS.CONTROLLED_COPIES.ALL} replace />} />
             <Route path="all" element={<Suspense fallback={<LoadingFallback />}><ControlledCopiesView viewType="all" /></Suspense>} />
             <Route path="ready" element={<Suspense fallback={<LoadingFallback />}><ControlledCopiesView viewType="ready" /></Suspense>} />
             <Route path="distributed" element={<Suspense fallback={<LoadingFallback />}><ControlledCopiesView viewType="distributed" /></Suspense>} />
             <Route path=":id" element={<ControlledCopyDetailViewWrapper />} />
             <Route path=":id/destroy" element={<Suspense fallback={<LoadingFallback />}><DestroyControlledCopyView /></Suspense>} />
-            <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(`/documents/${id}`)} /></Suspense>} />
+            <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
           </Route>
           <Route path="controlled-copy/request" element={<Suspense fallback={<LoadingFallback />}><RequestControlledCopyView /></Suspense>} />
         </Route>
@@ -316,7 +317,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="export-records" element={<Suspense fallback={<LoadingFallback />}><ExportRecordsView /></Suspense>} />
           
           {/* Default redirect */}
-          <Route index element={<Navigate to="/training-management/courses-list" replace />} />
+          <Route index element={<Navigate to={ROUTES.TRAINING.COURSES_LIST} replace />} />
         </Route>
         
         {/* ===== DEVIATION & NCs ===== */}

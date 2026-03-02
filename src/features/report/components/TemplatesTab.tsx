@@ -29,13 +29,6 @@ export function useTemplatesTab(mode: 'templates' | 'compliance') {
   const handleGenerateReport = async () => {
     setIsGenerating(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log('Generating report:', {
-      template: selectedTemplate,
-      format: reportFormat,
-      period: reportPeriod,
-      dateFrom,
-      dateTo,
-    });
     setIsGenerating(false);
   };
 

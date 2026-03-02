@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import { 
     ChevronRight, 
     FileText, 
@@ -102,7 +103,6 @@ export const NewRevisionView: React.FC = () => {
     // For now, using MOCK_SOURCE_DOCUMENT
     useEffect(() => {
         if (sourceDocId) {
-            console.log('Creating revision for document:', sourceDocId);
             // TODO: Fetch document details and linked documents from API
         }
     }, [sourceDocId]);
@@ -135,7 +135,7 @@ export const NewRevisionView: React.FC = () => {
 
     const handleConfirmCancel = () => {
         setShowCancelModal(false);
-        navigate("/documents/all");
+        navigate(ROUTES.DOCUMENTS.ALL);
     };
 
     const handleToggleDecision = (docId: string) => {
@@ -153,7 +153,7 @@ export const NewRevisionView: React.FC = () => {
         }
 
         // Navigate to workspace with all the data
-        navigate("/documents/revisions/workspace", {
+        navigate(ROUTES.DOCUMENTS.REVISIONS.WORKSPACE, {
             state: {
                 sourceDocument: MOCK_SOURCE_DOCUMENT,
                 impactDecisions,
@@ -186,7 +186,7 @@ export const NewRevisionView: React.FC = () => {
                             <span className="sm:hidden">...</span>
                             <span className="text-slate-400 mx-1">/</span>
                             <button
-                                onClick={() => navigate("/documents/all")}
+                                onClick={() => navigate(ROUTES.DOCUMENTS.ALL)}
                                 className="hover:text-slate-700 transition-colors hidden sm:inline"
                             >
                                 All Documents

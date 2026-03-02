@@ -7,6 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/app/routes.constants';
 
 export interface BatchDocument {
   id: string;
@@ -62,7 +63,7 @@ export const useBatchNavigation = ({
       onFinishBatch();
     } else {
       // Default: navigate to dashboard
-      navigate('/dashboard');
+      navigate(ROUTES.DASHBOARD);
     }
   }, [onFinishBatch, navigate]);
 

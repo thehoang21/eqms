@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Check } from "lucide-react";
 import { cn } from "@/components/ui/utils";
@@ -84,7 +85,7 @@ export const CreateCourseView: React.FC = () => {
         setModalTitle("Discard Changes?");
         setModalDescription("Are you sure you want to cancel? All unsaved changes will be lost.");
         setModalAction(() => () => {
-            navigate("/training-management/courses-list");
+            navigate(ROUTES.TRAINING.COURSES_LIST);
         });
         setIsModalOpen(true);
     };
@@ -168,14 +169,12 @@ export const CreateCourseView: React.FC = () => {
                 config: hasQuiz ? config : undefined,
             };
 
-            console.log("Saved course:", courseData);
-
             setIsLoading(false);
             setModalType("success");
             setModalTitle("Course Created Successfully");
             setModalDescription("The training course has been created and will be sent for review.");
             setModalAction(() => () => {
-                navigate("/training-management/courses-list");
+                navigate(ROUTES.TRAINING.COURSES_LIST);
             });
             setIsModalOpen(true);
         } catch (error) {

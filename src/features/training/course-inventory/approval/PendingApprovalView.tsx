@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
   Eye,
@@ -17,95 +18,7 @@ import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
 import { formatDateUS } from "@/utils/format";
 import { CourseApproval } from "../../types";
-
-// --- Mock Data: Pending Approval queue ---
-const MOCK_PENDING_APPROVAL: CourseApproval[] = [
-  {
-    id: "CA-003",
-    courseId: "3",
-    trainingId: "TRN-2026-007",
-    courseTitle: "HPLC Operation Advanced",
-    relatedDocument: "SOP-LAB-005: HPLC Standard Method",
-    relatedDocumentId: "DOC-003",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    submittedBy: "Dr. Michael Chen",
-    submittedAt: "2026-02-08",
-    department: "QC Lab",
-    approvalStatus: "Pending Approval",
-    approvedBy: undefined,
-    approvedAt: undefined,
-    passScore: 85,
-    questions: [
-      {
-        id: "q1",
-        text: "What is the recommended mobile phase flow rate for analytical HPLC?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "0.1 mL/min", isCorrect: false },
-          { id: "b", text: "1.0 mL/min", isCorrect: true },
-          { id: "c", text: "5.0 mL/min", isCorrect: false },
-          { id: "d", text: "10.0 mL/min", isCorrect: false },
-        ],
-      },
-      {
-        id: "q2",
-        text: "Which detector is most commonly used for UV-absorbing compounds?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "DAD/PDA detector", isCorrect: true },
-          { id: "b", text: "Refractive Index detector", isCorrect: false },
-          { id: "c", text: "Fluorescence detector", isCorrect: false },
-          { id: "d", text: "Conductivity detector", isCorrect: false },
-        ],
-      },
-    ],
-  },
-  {
-    id: "CA-006",
-    courseId: "6",
-    trainingId: "TRN-2026-011",
-    courseTitle: "ISO 14001 Environmental Management",
-    relatedDocument: "SOP-ENV-001: Environmental Management System",
-    relatedDocumentId: "DOC-006",
-    trainingMethod: "Read & Understood",
-    submittedBy: "Kevin Tran",
-    submittedAt: "2026-02-18",
-    department: "HSE",
-    approvalStatus: "Pending Approval",
-    passScore: 100,
-    questions: [],
-  },
-  {
-    id: "CA-008",
-    courseId: "8",
-    trainingId: "TRN-2026-013",
-    courseTitle: "Deviation & Non-Conformance Handling",
-    relatedDocument: "SOP-QA-007: Deviation Management",
-    relatedDocumentId: "DOC-008",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    submittedBy: "Alice Pham",
-    submittedAt: "2026-02-19",
-    department: "Quality Assurance",
-    approvalStatus: "Pending Approval",
-    passScore: 80,
-    questions: [
-      {
-        id: "q1",
-        text: "What is the first step when a deviation is detected?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "Document and notify QA immediately", isCorrect: true },
-          { id: "b", text: "Continue production", isCorrect: false },
-          { id: "c", text: "Correct the deviation without reporting", isCorrect: false },
-          { id: "d", text: "Wait for the next shift", isCorrect: false },
-        ],
-      },
-    ],
-  },
-];
+import { MOCK_PENDING_APPROVAL } from "./mockData";
 
 const getMethodBadge = (method: "Read & Understood" | "Quiz (Paper-based/Manual)" | "Hands-on/OJT") =>
   method === "Quiz (Paper-based/Manual)"
@@ -178,7 +91,7 @@ export const PendingApprovalView: React.FC = () => {
   }, [filteredData, currentPage, itemsPerPage]);
 
   const handleViewDetail = (item: CourseApproval) => {
-    navigate(`/training-management/pending-approval/${item.id}`);
+    navigate(`${ROUTES.TRAINING.PENDING_APPROVAL}/${item.id}`);
   };
 
   return (

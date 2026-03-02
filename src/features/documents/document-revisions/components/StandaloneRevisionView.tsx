@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import { 
     ChevronRight, 
     Home, 
@@ -155,17 +156,9 @@ export const StandaloneRevisionView: React.FC = () => {
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             // TODO: Implement actual save API call
-            console.log("Save draft:", {
-                sourceDocId,
-                file: uploadedFile,
-                revisionNumber,
-                effectiveDate,
-                reasonForChange,
-                additionalNotes,
-            });
             
             setShowSaveModal(false);
-            navigate("/documents/revisions/all");
+            navigate(ROUTES.DOCUMENTS.REVISIONS.ALL);
         } catch (error) {
             console.error("Error saving draft:", error);
         } finally {
@@ -185,17 +178,9 @@ export const StandaloneRevisionView: React.FC = () => {
             await new Promise(resolve => setTimeout(resolve, 2000));
             
             // TODO: Implement actual submit API call
-            console.log("Submit revision:", {
-                sourceDocId,
-                file: uploadedFile,
-                revisionNumber,
-                effectiveDate,
-                reasonForChange,
-                additionalNotes,
-            });
             
             setShowSubmitModal(false);
-            navigate("/documents/revisions/all");
+            navigate(ROUTES.DOCUMENTS.REVISIONS.ALL);
         } catch (error) {
             console.error("Error submitting revision:", error);
         } finally {
@@ -204,7 +189,7 @@ export const StandaloneRevisionView: React.FC = () => {
     };
 
     const handleCancel = () => {
-        navigate("/documents/all");
+        navigate(ROUTES.DOCUMENTS.ALL);
     };
 
     // Loading state
@@ -260,7 +245,7 @@ export const StandaloneRevisionView: React.FC = () => {
                             size="sm"
                             onClick={() => {
                                 // Navigate to RevisionWorkspaceView
-                                navigate(`/documents/revisions/workspace`, {
+                                navigate(ROUTES.DOCUMENTS.REVISIONS.WORKSPACE, {
                                     state: {
                                         sourceDocument: sourceDocument ? {
                                             code: sourceDocument.documentId,

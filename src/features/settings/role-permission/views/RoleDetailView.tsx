@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
   Lock,
@@ -130,12 +131,6 @@ export const RoleDetailView: React.FC = () => {
       return;
     }
 
-    console.log("Saving role:", {
-      name: roleName.trim(),
-      description: roleDescription.trim(),
-      permissions: selectedPermissions,
-    });
-
     showToast({
       type: "success",
       title: isNewRole ? "Role Created" : "Role Updated",
@@ -143,11 +138,11 @@ export const RoleDetailView: React.FC = () => {
     });
 
     setHasUnsavedChanges(false);
-    navigate("/settings/roles");
+    navigate(ROUTES.SETTINGS.ROLES);
   };
 
   const handleDiscard = () => {
-    navigate("/settings/roles");
+    navigate(ROUTES.SETTINGS.ROLES);
   };
 
   const getGroupPermissionCount = (group: PermissionGroup) => {
@@ -289,7 +284,7 @@ export const RoleDetailView: React.FC = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => navigate("/settings/roles")}
+                onClick={() => navigate(ROUTES.SETTINGS.ROLES)}
                 className="text-slate-600 hover:text-slate-900"
               >
                 Back
@@ -297,7 +292,7 @@ export const RoleDetailView: React.FC = () => {
               <Button
                 variant="default"
                 size="sm"
-                onClick={() => navigate(`/settings/roles/${id}/edit`)}
+                onClick={() => navigate(ROUTES.SETTINGS.ROLES_EDIT(id!))}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[100px]"
               >
                 Edit Role

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
     User,
     MessageSquare,
@@ -234,7 +235,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
 
             // Redirect to Pending My Approval list after 1.5 seconds
             setTimeout(() => {
-                navigate('/documents/revisions/pending-approval');
+                navigate(ROUTES.DOCUMENTS.REVISIONS.PENDING_APPROVAL);
             }, 1500);
         }, 1000);
     };
@@ -259,8 +260,8 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
 
     // Breadcrumbs
     const breadcrumbs = [
-        { label: "Dashboard", onClick: () => navigate('/dashboard') },
-        { label: "Document Revisions", onClick: () => navigate('/documents/revisions/all') },
+        { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
+        { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
         { label: "Pending My Approval", onClick: onBack },
         { label: revision.documentId, isActive: true },
     ];

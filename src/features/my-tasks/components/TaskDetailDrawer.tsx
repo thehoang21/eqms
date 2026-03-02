@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   X,
   AlertCircle,
@@ -71,14 +72,14 @@ export const TaskDetailDrawer: React.FC<{
   const handleStartReview = () => {
     // Extract document ID from taskId (e.g., "SOP-REV-001" -> "1")
     const docId = task.id;
-    navigate(`/documents/revisions/review/${docId}`);
+    navigate(ROUTES.DOCUMENTS.REVISIONS.REVIEW(docId));
     handleClose();
   };
 
   const handleStartApproval = () => {
     // Navigate to revision approval page
     const revisionId = task.id;
-    navigate(`/documents/revisions/approval/${revisionId}`);
+    navigate(ROUTES.DOCUMENTS.REVISIONS.APPROVAL(revisionId));
     handleClose();
   };
 

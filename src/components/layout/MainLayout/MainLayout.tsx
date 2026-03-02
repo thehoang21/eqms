@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { ROUTES } from '@/app/routes.constants';
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar';
 import { Header } from '@/components/layout/Header/Header';
 import { Footer } from '@/components/layout/Footer/Footer';
@@ -28,9 +29,8 @@ export const MainLayout: React.FC = () => {
 
   const handleLogout = () => {
     // Clear any auth tokens/session data here if needed
-    console.log('Logging out...');
     // Navigate to login page
-    navigate('/login');
+    navigate(ROUTES.LOGIN);
   };
 
   return (
@@ -77,7 +77,7 @@ export const MainLayout: React.FC = () => {
           onToggleSidebar={toggleSidebar}
           isSidebarCollapsed={isSidebarCollapsed}
           isMobileMenuOpen={isMobileMenuOpen}
-          onNavigateToProfile={() => navigate('/profile')}
+          onNavigateToProfile={() => navigate(ROUTES.PROFILE)}
           onLogout={handleLogout}
         />
 

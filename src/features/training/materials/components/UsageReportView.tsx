@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   ArrowLeft,
   BookOpen,
@@ -319,7 +320,7 @@ export const UsageReportView: React.FC = () => {
           <BarChart3 className="h-8 w-8 text-red-500" />
         </div>
         <h2 className="text-lg font-semibold text-slate-900">Material Not Found</h2>
-        <Button variant="outline" size="sm" onClick={() => navigate("/training-management/training-materials")} className="gap-2">
+        <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)} className="gap-2">
           <ArrowLeft className="h-4 w-4" />
           Back to Materials
         </Button>
@@ -354,7 +355,7 @@ export const UsageReportView: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => navigate(`/training-management/training-materials`)} className="gap-2">
+          <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)} className="gap-2">
             Back
           </Button>
           <Button variant="outline" size="sm" onClick={() => console.log("Export report")} className="gap-2">
@@ -385,7 +386,7 @@ export const UsageReportView: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <button
-              onClick={() => navigate(`/training-management/training-materials/${materialId}`)}
+              onClick={() => navigate(ROUTES.TRAINING.MATERIAL_DETAIL(materialId))}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
             >
               <Eye className="h-3.5 w-3.5" />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
   ArrowLeft,
   Upload,
@@ -65,7 +66,7 @@ export const DestroyControlledCopyView: React.FC = () => {
       setDestructionType(location.state.type);
     } else {
       // Redirect back if no type specified
-      navigate("/documents/controlled-copies");
+      navigate(ROUTES.DOCUMENTS.CONTROLLED_COPIES.ALL);
     }
   }, [location, navigate]);
 
@@ -204,7 +205,6 @@ export const DestroyControlledCopyView: React.FC = () => {
     setIsLoading(true);
     try {
       // TODO: Call API to mark as destroyed
-      console.log("Destruction confirmed:", { formData, reason, id });
 
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
 
@@ -215,7 +215,7 @@ export const DestroyControlledCopyView: React.FC = () => {
         duration: 3500,
       });
 
-      navigate("/documents/controlled-copies");
+      navigate(ROUTES.DOCUMENTS.CONTROLLED_COPIES.ALL);
     } catch (error) {
       showToast({
         type: "error",
@@ -231,7 +231,7 @@ export const DestroyControlledCopyView: React.FC = () => {
 
   const handleCancelConfirm = () => {
     setIsCancelModalOpen(false);
-    navigate("/documents/controlled-copies");
+    navigate(ROUTES.DOCUMENTS.CONTROLLED_COPIES.ALL);
   };
 
   return (

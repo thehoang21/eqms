@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
   ChevronRight,
   MoreVertical,
@@ -245,7 +246,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
   // Handlers
   const handleViewRevision = (id: string) => {
     // Navigate to document detail view - revisions use the same detail view as documents
-    navigate(`/documents/${id}`);
+    navigate(ROUTES.DOCUMENTS.DETAIL(id));
   };
 
   const handleDropdownToggle = (
@@ -301,9 +302,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
 
   const handleNewRevision = (revision: Revision) => {
     if (revision.hasRelatedDocuments) {
-      navigate(`/documents/revisions/new?sourceDocId=${revision.id}`);
+      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_MULTI(revision.id));
     } else {
-      navigate(`/documents/revisions/new-standalone?sourceDocId=${revision.id}`);
+      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_STANDALONE(revision.id));
     }
     setOpenDropdownId(null);
   };
@@ -322,7 +323,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         ]
       : [];
 
-    navigate('/documents/controlled-copy/request', {
+    navigate(ROUTES.DOCUMENTS.CONTROLLED_COPIES.REQUEST, {
       state: {
         documentId: revision.documentNumber,
         documentTitle: revision.revisionName,
@@ -338,18 +339,16 @@ export const RevisionsOwnedByMeView: React.FC = () => {
 
     switch (action) {
       case "view":
-        navigate(`/documents/${id}`);
+        navigate(ROUTES.DOCUMENTS.DETAIL(id));
         break;
       case "download":
         // TODO: Implement download functionality
-        console.log(`Download revision: ${id}`);
         break;
       case "history":
         // TODO: Implement version history functionality
-        console.log(`View history for revision: ${id}`);
         break;
       default:
-        console.log(`Unknown action: ${action}`);
+        break;
     }
   };
 

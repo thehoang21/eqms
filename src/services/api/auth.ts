@@ -5,7 +5,7 @@
 
 import { api } from './client';
 import { secureStorage } from '@/utils/security';
-import type { User, LoginCredentials, LoginResponse } from '@/types/auth';
+import type { User, LoginCredentials, LoginResponse } from '@/types';
 
 const AUTH_ENDPOINT = '/auth';
 

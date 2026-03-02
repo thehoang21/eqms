@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
   ChevronRight,
   Home,
@@ -247,14 +248,13 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
 
   const handleViewOriginalDocument = () => {
     // Navigate to original document detail view
-    navigate(`/documents/${controlledCopy.documentId}`);
+    navigate(ROUTES.DOCUMENTS.DETAIL(controlledCopy.documentId));
   };
 
   const handleMarkAsDestroyed = (
     formData: any,
     reason: string
   ) => {
-    console.log("Mark as destroyed:", formData, reason);
     // TODO: Call API to mark as destroyed with all form data
     // Update controlled copy with destruction info
     // Add timeline event
@@ -281,8 +281,6 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
     });
 
     // Thực hiện distribute
-    console.log("Distribute reason:", reason);
-    console.log("Distribute controlled copy");
     // TODO: Call API to distribute controlled copy
     // Update status to "Distributed"
     // Add audit trail entry
@@ -299,7 +297,7 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
     setIsReportLostDamagedModalOpen(false);
     
     // Navigate to destroy page với type parameter
-    navigate(`/documents/controlled-copies/${controlledCopy.id}/destroy?type=${type}`);
+    navigate(`${ROUTES.DOCUMENTS.CONTROLLED_COPIES.DESTROY(controlledCopy.id)}?type=${type}`);
   };
 
   return (

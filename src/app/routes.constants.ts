@@ -6,6 +6,8 @@
 export const ROUTES = {
   // Auth
   LOGIN: '/login',
+  FORGOT_PASSWORD: '/forgot-password',
+  CONTACT_ADMIN: '/contact-admin',
 
   // Dashboard
   DASHBOARD: '/dashboard',

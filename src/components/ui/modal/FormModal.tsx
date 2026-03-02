@@ -58,9 +58,6 @@ export const FormModal: React.FC<FormModalProps> = ({
               {title && (
                 <h3 className="text-lg font-bold text-slate-900 leading-6 truncate">{title}</h3>
               )}
-              {description && (
-                <div className="mt-1.5 text-sm text-slate-500 leading-relaxed">{description}</div>
-              )}
             </div>
             <button
               onClick={onClose}
@@ -70,6 +67,9 @@ export const FormModal: React.FC<FormModalProps> = ({
               <X className="h-5 w-5" />
             </button>
           </div>
+          {description && (
+            <div className="mt-3 text-sm text-slate-500 leading-relaxed">{description}</div>
+          )}
         </div>
         <div className="px-6 py-5 bg-white">
           {children}

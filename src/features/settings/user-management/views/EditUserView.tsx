@@ -78,7 +78,6 @@ export const EditUserView: React.FC = () => {
       return;
     }
 
-    console.log("Updating user:", editUser);
     showToast({ type: "success", message: `User ${editUser.fullName} updated successfully` });
     navigate(USER_MANAGEMENT_ROUTES.LIST);
   };
@@ -305,7 +304,7 @@ export const EditUserView: React.FC = () => {
         title="Cancel Changes?"
         description="Are you sure you want to cancel? All unsaved changes will be lost."
         confirmText="Yes, Cancel"
-        cancelText="No, Continue Editing"
+        cancelText="No, Continue"
         showCancel={true}
       />
     </div>

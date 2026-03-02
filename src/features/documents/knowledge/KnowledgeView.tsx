@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import { IconLayoutDashboard, IconFolderFilled, IconFile, IconSearch, IconPlus, IconUpload, IconDownload, IconLayoutGrid, IconLayoutList } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -187,7 +188,7 @@ export const KnowledgeView: React.FC = () => {
                             {filteredDepartments.map((dept, index) => (
                                 <button
                                     key={dept.id}
-                                    onClick={() => navigate(`/documents/all?department=${dept.id}`)}
+                                    onClick={() => navigate(`${ROUTES.DOCUMENTS.ALL}?department=${dept.id}`)}
                                     className="group relative bg-white border-2 border-slate-200 rounded-xl p-4 md:p-5 hover:border-emerald-500 hover:shadow-lg transition-all duration-200 text-left"
                                 >
                                     <div className="flex flex-col items-center gap-2 md:gap-3">
@@ -214,7 +215,7 @@ export const KnowledgeView: React.FC = () => {
                             {filteredDepartments.map((dept, index) => (
                                 <button
                                     key={dept.id}
-                                    onClick={() => navigate(`/documents/all?department=${dept.id}`)}
+                                    onClick={() => navigate(`${ROUTES.DOCUMENTS.ALL}?department=${dept.id}`)}
                                     className="group w-full bg-white border border-slate-200 rounded-lg p-3 md:p-4 hover:border-emerald-500 hover:shadow-md transition-all duration-200 text-left"
                                 >
                                     <div className="flex items-center gap-3 md:gap-4">

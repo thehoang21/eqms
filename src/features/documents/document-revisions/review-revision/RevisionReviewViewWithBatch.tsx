@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
     User,
     MessageSquare,
@@ -217,10 +218,9 @@ export const RevisionReviewViewWithBatch: React.FC<RevisionReviewViewProps> = ({
         currentDocumentId: documentId,
         onNavigateToDocument: useCallback((docId: string) => {
             // Navigate to the next revision
-            navigate(`/documents/revisions/review/${docId}`);
+            navigate(ROUTES.DOCUMENTS.REVISIONS.REVIEW(docId));
         }, [navigate]),
         onFinishBatch: useCallback(() => {
-            console.log("Hoàn thành tất cả revision trong lô!");
             onBack();
         }, [onBack]),
     });
@@ -282,18 +282,15 @@ export const RevisionReviewViewWithBatch: React.FC<RevisionReviewViewProps> = ({
             if (enableBatchMode && batchDocs.length > 0) {
                 if (isLastDocument) {
                     // Last document
-                    console.log(successMessage + " - Đây là revision cuối cùng trong lô.");
                     markDocumentCompleted(documentId);
                     handleFinishBatch();
                 } else {
                     // Not last document - auto navigate
-                    console.log(successMessage + " - Đang tải revision tiếp theo...");
                     markDocumentCompleted(documentId);
                     autoNavigateToNext();
                 }
             } else {
                 // No batch mode
-                console.log(successMessage);
             }
         }, 1000);
     };
@@ -318,8 +315,8 @@ export const RevisionReviewViewWithBatch: React.FC<RevisionReviewViewProps> = ({
 
     // Breadcrumbs
     const breadcrumbs = [
-        { label: "Dashboard", onClick: () => navigate('/dashboard') },
-        { label: "Document Revisions", onClick: () => navigate('/documents/revisions/all') },
+        { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
+        { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
         { label: "Pending My Review", onClick: onBack },
         { label: "Review Revision", isActive: true },
     ];

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Upload,
   FileText,
@@ -334,7 +335,7 @@ export const UploadMaterialView: React.FC = () => {
       setModalType("success");
       setModalTitle("Material Saved");
       setModalDescription("Training material has been saved as draft successfully.");
-      setModalAction(() => () => navigate("/training-management/training-materials"));
+      setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
       setIsModalOpen(true);
     }, 1000);
   };
@@ -362,7 +363,7 @@ export const UploadMaterialView: React.FC = () => {
       setModalType("success");
       setModalTitle("Submitted for Review");
       setModalDescription("Training material has been submitted for review. The reviewer will be notified.");
-      setModalAction(() => () => navigate("/training-management/training-materials"));
+      setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
       setIsModalOpen(true);
     }, 1000);
   };
@@ -371,7 +372,7 @@ export const UploadMaterialView: React.FC = () => {
     setModalType("confirm");
     setModalTitle("Discard Changes?");
     setModalDescription("Are you sure you want to cancel? All unsaved changes will be lost.");
-    setModalAction(() => () => navigate("/training-management/training-materials"));
+    setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
     setIsModalOpen(true);
   };
 
@@ -390,7 +391,7 @@ export const UploadMaterialView: React.FC = () => {
             <span className="sm:hidden">...</span>
             <span className="text-slate-400 mx-1">/</span>
             <button
-              onClick={() => navigate("/training-management/training-materials")}
+              onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)}
               className="hidden sm:inline hover:text-emerald-600 transition-colors"
             >
               Training Materials

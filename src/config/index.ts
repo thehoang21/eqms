@@ -51,6 +51,11 @@ export const config = {
     pageSizeOptions: [10, 20, 50, 100],
   },
 
+  // PDF Viewer
+  pdf: {
+    workerUrl: 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js',
+  },
+
   // Date Formats
   dateFormats: {
     display: 'MMM DD, YYYY',

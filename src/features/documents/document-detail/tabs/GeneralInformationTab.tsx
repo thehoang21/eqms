@@ -83,18 +83,23 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
           </div>
         </div>
 
-        {/* Is Template */}
-        <div className="flex items-center gap-3">
-          <label className="text-xs sm:text-sm font-medium text-slate-700">Is Template?</label>
-          <Checkbox id="isTemplate" checked={document.isTemplate} disabled={true} />
-        </div>
-
         {/* Business Unit */}
         <div className="flex flex-col gap-1.5">
           <label className="text-xs sm:text-sm font-medium text-slate-700">Business Unit<span className="text-red-500 ml-1">*</span></label>
           <input
             type="text"
             value={document.businessUnit}
+            readOnly
+            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
+          />
+        </div>
+
+        {/* Department */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">Department</label>
+          <input
+            type="text"
+            value={document.department}
             readOnly
             className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
           />
@@ -111,15 +116,10 @@ export const GeneralInformationTab: React.FC<GeneralInformationTabProps> = ({ do
           />
         </div>
 
-        {/* Department */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs sm:text-sm font-medium text-slate-700">Department</label>
-          <input
-            type="text"
-            value={document.department}
-            readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700"
-          />
+        {/* Is Template */}
+        <div className="flex items-center gap-3">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">Is Template?</label>
+          <Checkbox id="isTemplate" checked={document.isTemplate} disabled={true} />
         </div>
 
         {/* Knowledge Base */}

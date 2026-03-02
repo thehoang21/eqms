@@ -14,17 +14,18 @@ import {
   ThumbsUp,
   Reply,
   Settings,
-  Filter,
   MoreVertical,
   Eye,
   ExternalLink,
   Download,
+  X,
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
-import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
+import { DateRangePicker } from "@/components/ui/datetime-picker/DateRangePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { FilterCard } from "@/components/ui/card/FilterCard";
 import { cn } from "@/components/ui/utils";
 import type {
@@ -34,224 +35,7 @@ import type {
   NotificationFilterTab,
 } from "./types";
 import { IconInfoCircle } from "@tabler/icons-react";
-
-// --- Mock Data ---
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: "1",
-    type: "review-request",
-    title: "Document Review Request",
-    description: "John Smith requested your review on SOP-QA-015",
-    module: "Document",
-    priority: "high",
-    status: "unread",
-    createdAt: "2026-01-29T08:30:00Z",
-    sender: { id: "u1", name: "John Smith" },
-    relatedItem: {
-      id: "doc1",
-      type: "document",
-      code: "SOP-QA-015",
-      title: "Quality Assurance Procedures",
-    },
-    actionUrl: "/documents/doc1/review",
-  },
-  {
-    id: "2",
-    type: "approval",
-    title: "Document Approved",
-    description: "Sarah Johnson approved DEV-2023-089",
-    module: "Deviation",
-    priority: "medium",
-    status: "unread",
-    createdAt: "2026-01-29T07:45:00Z",
-    sender: { id: "u2", name: "Sarah Johnson" },
-    relatedItem: {
-      id: "dev1",
-      type: "deviation",
-      code: "DEV-2023-089",
-      title: "Temperature Excursion Investigation",
-    },
-    actionUrl: "/deviations-ncs",
-  },
-  {
-    id: "3",
-    type: "capa-assignment",
-    title: "CAPA Assignment",
-    description: "You were assigned to CAPA-2023-045",
-    module: "CAPA",
-    priority: "critical",
-    status: "unread",
-    createdAt: "2026-01-29T06:00:00Z",
-    relatedItem: {
-      id: "capa1",
-      type: "capa",
-      code: "CAPA-2023-045",
-      title: "Packaging Defect Corrective Action",
-    },
-    actionUrl: "/capa-management",
-  },
-  {
-    id: "4",
-    type: "training-completion",
-    title: "Training Completed",
-    description: "Mike Wilson completed training on GMP Basics",
-    module: "Training",
-    priority: "low",
-    status: "read",
-    createdAt: "2026-01-28T14:30:00Z",
-    readAt: "2026-01-28T16:00:00Z",
-    sender: { id: "u3", name: "Mike Wilson" },
-    relatedItem: {
-      id: "trn1",
-      type: "training",
-      code: "TRN-2025-055",
-      title: "GMP Basics Annual Training",
-    },
-    actionUrl: "/training-management",
-  },
-  {
-    id: "5",
-    type: "document-update",
-    title: "Document Updated",
-    description: "Quality Team updated SOP-QA-001",
-    module: "Document",
-    priority: "medium",
-    status: "read",
-    createdAt: "2026-01-28T10:15:00Z",
-    readAt: "2026-01-28T11:30:00Z",
-    sender: { id: "u4", name: "Quality Team" },
-    relatedItem: {
-      id: "doc2",
-      type: "document",
-      code: "SOP-QA-001",
-      title: "Quality Management System Overview",
-    },
-    actionUrl: "/documents/doc2",
-  },
-  {
-    id: "6",
-    type: "comment-reply",
-    title: "Comment Reply",
-    description: "Emma Davis replied to your comment on Document Review Process",
-    module: "Document",
-    priority: "low",
-    status: "read",
-    createdAt: "2026-01-27T16:45:00Z",
-    readAt: "2026-01-27T18:00:00Z",
-    sender: { id: "u5", name: "Emma Davis" },
-  },
-  {
-    id: "7",
-    type: "review-request",
-    title: "CAPA Review Request",
-    description: "Lisa Chen requested your review on CAPA-2023-078",
-    module: "CAPA",
-    priority: "high",
-    status: "unread",
-    createdAt: "2026-01-27T09:30:00Z",
-    sender: { id: "u6", name: "Lisa Chen" },
-    relatedItem: {
-      id: "capa2",
-      type: "capa",
-      code: "CAPA-2023-078",
-      title: "Equipment Calibration Failure",
-    },
-    actionUrl: "/capa-management",
-  },
-  {
-    id: "8",
-    type: "document-update",
-    title: "Document Published",
-    description: "Regulatory Team published SOP-REG-003",
-    module: "Document",
-    priority: "medium",
-    status: "read",
-    createdAt: "2026-01-26T14:00:00Z",
-    readAt: "2026-01-26T15:30:00Z",
-    sender: { id: "u7", name: "Regulatory Team" },
-    relatedItem: {
-      id: "doc3",
-      type: "document",
-      code: "SOP-REG-003",
-      title: "Regulatory Submission Guidelines",
-    },
-    actionUrl: "/documents/doc3",
-  },
-  {
-    id: "9",
-    type: "training-completion",
-    title: "Training Completed",
-    description: "David Brown completed training on Deviation Handling",
-    module: "Training",
-    priority: "low",
-    status: "read",
-    createdAt: "2026-01-25T11:20:00Z",
-    readAt: "2026-01-25T12:00:00Z",
-    sender: { id: "u8", name: "David Brown" },
-    relatedItem: {
-      id: "trn2",
-      type: "training",
-      code: "TRN-2025-060",
-      title: "Deviation Handling Procedures",
-    },
-    actionUrl: "/training-management",
-  },
-  {
-    id: "10",
-    type: "approval",
-    title: "Change Control Approved",
-    description: "Maria Garcia approved CHG-2023-156",
-    module: "Change Control",
-    priority: "high",
-    status: "read",
-    createdAt: "2026-01-24T16:30:00Z",
-    readAt: "2026-01-24T17:00:00Z",
-    sender: { id: "u9", name: "Maria Garcia" },
-    relatedItem: {
-      id: "chg1",
-      type: "change-control",
-      code: "CHG-2023-156",
-      title: "Production Line Modification",
-    },
-    actionUrl: "/change-management",
-  },
-  {
-    id: "11",
-    type: "deviation-assignment",
-    title: "Urgent Deviation Assignment",
-    description: "You were assigned to DEV-2023-234",
-    module: "Deviation",
-    priority: "critical",
-    status: "unread",
-    createdAt: "2026-01-23T08:00:00Z",
-    relatedItem: {
-      id: "dev2",
-      type: "deviation",
-      code: "DEV-2023-234",
-      title: "Critical Equipment Failure",
-    },
-    actionUrl: "/deviations-ncs",
-  },
-  {
-    id: "12",
-    type: "document-update",
-    title: "Batch Record Updated",
-    description: "Production Team updated BP-PROD-045",
-    module: "Document",
-    priority: "medium",
-    status: "read",
-    createdAt: "2026-01-22T13:45:00Z",
-    readAt: "2026-01-22T14:30:00Z",
-    sender: { id: "u10", name: "Production Team" },
-    relatedItem: {
-      id: "doc4",
-      type: "document",
-      code: "BP-PROD-045",
-      title: "Batch Production Record Template",
-    },
-    actionUrl: "/documents/doc4",
-  },
-];
+import { MOCK_NOTIFICATIONS } from "./mockData";
 
 // Helper functions
 const getTypeIcon = (type: NotificationType) => {
@@ -371,6 +155,8 @@ const NotificationFilters: React.FC<{
   setDateFrom: (val: string) => void;
   dateTo: string;
   setDateTo: (val: string) => void;
+  onClearFilters: () => void;
+  hasActiveFilters: boolean;
 }> = ({
   search,
   setSearch,
@@ -384,6 +170,8 @@ const NotificationFilters: React.FC<{
   setDateFrom,
   dateTo,
   setDateTo,
+  onClearFilters,
+  hasActiveFilters,
 }) => {
   const typeOptions = [
     { label: "All Types", value: "all" },
@@ -416,9 +204,9 @@ const NotificationFilters: React.FC<{
 
   return (
     <FilterCard>
+      {/* Row 1: Search, Type, Module */}
       <FilterCard.Row>
-        {/* Search */}
-        <FilterCard.Item span={4} mdSpan={2}>
+        <FilterCard.Item span={6} mdSpan={2}>
           <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
             Search
           </label>
@@ -434,8 +222,7 @@ const NotificationFilters: React.FC<{
           </div>
         </FilterCard.Item>
 
-        {/* Type Filter */}
-        <FilterCard.Item span={2}>
+        <FilterCard.Item span={3}>
           <Select
             label="Type"
             value={type}
@@ -444,8 +231,7 @@ const NotificationFilters: React.FC<{
           />
         </FilterCard.Item>
 
-        {/* Module Filter */}
-        <FilterCard.Item span={2}>
+        <FilterCard.Item span={3}>
           <Select
             label="Module"
             value={module}
@@ -453,9 +239,11 @@ const NotificationFilters: React.FC<{
             options={moduleOptions}
           />
         </FilterCard.Item>
+      </FilterCard.Row>
 
-        {/* Priority Filter */}
-        <FilterCard.Item span={2}>
+      {/* Row 2: Priority, Time Range */}
+      <FilterCard.Row className="mt-3 sm:mt-4">
+        <FilterCard.Item span={3}>
           <Select
             label="Priority"
             value={priority}
@@ -464,15 +252,31 @@ const NotificationFilters: React.FC<{
           />
         </FilterCard.Item>
 
-        {/* Date From */}
-        <FilterCard.Item span={2}>
-          <DateTimePicker
-            label="From"
-            value={dateFrom}
-            onChange={setDateFrom}
-            placeholder="Start date"
+        <FilterCard.Item span={3} mdSpan={1}>
+          <DateRangePicker
+            label="Time Range"
+            startDate={dateFrom}
+            endDate={dateTo}
+            onStartDateChange={setDateFrom}
+            onEndDateChange={setDateTo}
+            placeholder="Select date range"
           />
         </FilterCard.Item>
+
+        {/* Clear Filters Button */}
+        {hasActiveFilters && (
+          <FilterCard.Item span={6} mdSpan={1} className="flex items-end">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClearFilters}
+              className="text-slate-500 hover:text-red-600 hover:bg-red-50 gap-1.5 whitespace-nowrap"
+            >
+              <X className="h-4 w-4" />
+              Clear Filters
+            </Button>
+          </FilterCard.Item>
+        )}
       </FilterCard.Row>
     </FilterCard>
   );
@@ -704,21 +508,40 @@ const NotificationRow: React.FC<{
 };
 
 // Empty State Component
-const EmptyState: React.FC<{ type: NotificationFilterTab }> = ({ type }) => {
+const EmptyState: React.FC<{
+  type: NotificationFilterTab;
+  hasActiveFilters?: boolean;
+  onClearFilters?: () => void;
+}> = ({ type, hasActiveFilters, onClearFilters }) => {
   const messages = {
-    all: { title: "No notifications", subtitle: "You're all caught up!" },
-    unread: { title: "No unread notifications", subtitle: "All notifications have been read" },
-    read: { title: "No read notifications", subtitle: "Notifications you've read will appear here" },
+    all: {
+      title: "No notifications",
+      description: hasActiveFilters
+        ? "We couldn't find any notifications matching your filters. Try adjusting your search criteria or clear filters."
+        : "You're all caught up!",
+    },
+    unread: {
+      title: "No unread notifications",
+      description: hasActiveFilters
+        ? "We couldn't find any unread notifications matching your filters. Try adjusting your search criteria or clear filters."
+        : "All notifications have been read",
+    },
+    read: {
+      title: "No read notifications",
+      description: hasActiveFilters
+        ? "We couldn't find any read notifications matching your filters. Try adjusting your search criteria or clear filters."
+        : "Notifications you've read will appear here",
+    },
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
-        <Bell className="h-8 w-8 text-slate-400" />
-      </div>
-      <p className="text-base font-medium text-slate-900">{messages[type].title}</p>
-      <p className="text-sm text-slate-500 mt-1">{messages[type].subtitle}</p>
-    </div>
+    <TableEmptyState
+      icon={<Bell className="h-7 w-7 md:h-8 md:w-8 text-slate-300" />}
+      title={messages[type].title}
+      description={messages[type].description}
+      actionLabel="Clear Filters"
+      onAction={hasActiveFilters ? onClearFilters : undefined}
+    />
   );
 };
 
@@ -956,6 +779,18 @@ export const NotificationsView: React.FC = () => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
+  // Clear all filters
+  const handleClearFilters = () => {
+    setSearch("");
+    setType("all");
+    setModule("all");
+    setPriority("all");
+    setDateFrom("");
+    setDateTo("");
+  };
+
+  const hasActiveFilters = search !== "" || type !== "all" || module !== "all" || priority !== "all" || dateFrom !== "" || dateTo !== "";
+
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header: Title + Action Button */}
@@ -1011,6 +846,8 @@ export const NotificationsView: React.FC = () => {
           setDateFrom={setDateFrom}
           dateTo={dateTo}
           setDateTo={setDateTo}
+          onClearFilters={handleClearFilters}
+          hasActiveFilters={hasActiveFilters}
         />
 
       {/* Mobile: Card List */}
@@ -1028,7 +865,7 @@ export const NotificationsView: React.FC = () => {
           ))
         ) : (
           <div className="bg-white border border-slate-200 rounded-xl">
-            <EmptyState type={activeTab} />
+            <EmptyState type={activeTab} hasActiveFilters={hasActiveFilters} onClearFilters={handleClearFilters} />
           </div>
         )}
         
@@ -1091,7 +928,7 @@ export const NotificationsView: React.FC = () => {
               ) : (
                 <tr>
                   <td colSpan={7}>
-                    <EmptyState type={activeTab} />
+                    <EmptyState type={activeTab} hasActiveFilters={hasActiveFilters} onClearFilters={handleClearFilters} />
                   </td>
                 </tr>
               )}

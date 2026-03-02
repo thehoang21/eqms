@@ -64,12 +64,4 @@ export const logAuditTrail = (
     details?: string
 ) => {
     // In production, this would call an API endpoint
-    console.log('Audit Trail:', {
-        documentId,
-        documentCode,
-        action,
-        performedBy,
-        timestamp: new Date().toISOString(),
-        details
-    });
 };

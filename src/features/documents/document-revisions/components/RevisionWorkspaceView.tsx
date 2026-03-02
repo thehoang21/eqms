@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
     ChevronRight,
     Save,
@@ -303,7 +304,7 @@ export const RevisionWorkspaceView: React.FC = () => {
 
     const handleConfirmCancel = () => {
         setShowCancelModal(false);
-        navigate("/documents/revisions/all");
+        navigate(ROUTES.DOCUMENTS.REVISIONS.ALL);
     };
 
     const handleBackToImpactAnalysis = () => {
@@ -321,7 +322,7 @@ export const RevisionWorkspaceView: React.FC = () => {
             );
         } else {
             // Parent-Child: Navigate back to Impact Analysis
-            navigate("/documents/revisions/new", {
+            navigate(ROUTES.DOCUMENTS.REVISIONS.NEW, {
                 state: {
                     sourceDocument: state?.sourceDocument,
                     impactDecisions: state?.impactDecisions,
@@ -352,15 +353,10 @@ export const RevisionWorkspaceView: React.FC = () => {
             await new Promise((resolve) => setTimeout(resolve, 1500));
 
             // TODO: Integrate with API service
-            console.log("Revision workspace saved:", {
-                sourceDocument: state?.sourceDocument,
-                documents: workspaceDocuments,
-                reasonForChange: state?.reasonForChange,
-            });
 
             setIsSaving(false);
             setShowSaveModal(false);
-            navigate("/documents/revisions/all");
+            navigate(ROUTES.DOCUMENTS.REVISIONS.ALL);
         } catch (error) {
             console.error("Error saving revision workspace:", error);
             setIsSaving(false);
@@ -380,14 +376,8 @@ export const RevisionWorkspaceView: React.FC = () => {
         setIsSubmitting(true);
         try {
             // TODO: Integrate with API service
-            console.log("Revision submitted for review:", {
-                sourceDocument: state?.sourceDocument,
-                documents: workspaceDocuments,
-                eSignatureReason: reason,
-                reasonForChange: state?.reasonForChange,
-            });
             setIsESignOpen(false);
-            navigate("/documents/revisions/all");
+            navigate(ROUTES.DOCUMENTS.REVISIONS.ALL);
         } catch (error) {
             console.error("Error submitting revision:", error);
         } finally {

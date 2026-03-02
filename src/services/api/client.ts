@@ -5,6 +5,7 @@
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { secureStorage } from '@/utils/security';
+import { ROUTES } from '@/app/routes.constants';
 
 // API Base URL - will be loaded from environment variables
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
@@ -72,7 +73,7 @@ apiClient.interceptors.response.use(
           console.error('🔒 Unauthorized - redirecting to login');
           secureStorage.removeItem('authToken');
           secureStorage.removeItem('user');
-          window.location.href = '/login';
+          window.location.href = ROUTES.LOGIN;
           break;
 
         case 403:

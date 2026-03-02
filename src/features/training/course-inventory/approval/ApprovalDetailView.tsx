@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   XCircle,
   Check,
@@ -9,6 +10,7 @@ import { Button } from "@/components/ui/button/Button";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { cn } from "@/components/ui/utils";
 import { CourseApproval, TrainingFile } from "../../types";
+import { MOCK_APPROVAL_DETAILS as MOCK_APPROVALS, MOCK_TRAINING_FILES } from "./mockData";
 import { BasicInfoTab } from "../shared/BasicInfoTab";
 import { DocumentTab } from "../shared/DocumentTab";
 import { ConfigTab } from "../shared/ConfigTab";
@@ -24,320 +26,6 @@ const TABS: { id: TabType; label: string }[] = [
 
 // Workflow stepper steps (Rejected is an exception, shown as a banner)
 const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved"] as const;
-
-// Mock training files
-const MOCK_TRAINING_FILES: TrainingFile[] = [
-  {
-    id: "tf-001",
-    file: null as any,
-    name: "GMP_Training_Materials_2026.pdf",
-    size: 2456789,
-    type: "application/pdf",
-    progress: 100,
-    status: "success",
-  },
-  {
-    id: "tf-002",
-    file: null as any,
-    name: "GMP_Presentation_Slides.pptx",
-    size: 8765432,
-    type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    progress: 100,
-    status: "success",
-  },
-  {
-    id: "tf-003",
-    file: null as any,
-    name: "Quick_Reference_Guide.docx",
-    size: 567890,
-    type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    progress: 100,
-    status: "success",
-  },
-];
-
-// Mock data - In real app, fetch by ID from API
-const MOCK_APPROVALS: CourseApproval[] = [
-  {
-    id: "CA-001",
-    courseId: "1",
-    trainingId: "TRN-2026-001",
-    courseTitle: "GMP Basic Principles",
-    relatedDocument: "SOP-QA-001: Good Manufacturing Practices",
-    relatedDocumentId: "DOC-001",
-    trainingType: "GMP",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    instructorType: "internal",
-    submittedBy: "John Smith",
-    submittedAt: "2026-02-10",
-    department: "Quality Assurance",
-    approvalStatus: "Pending Review",
-    passScore: 80,
-    description: "This comprehensive training covers the fundamental principles of Good Manufacturing Practice (GMP) required for all personnel working in pharmaceutical manufacturing environments.",
-    instructor: "Dr. Sarah Williams",
-    duration: 4,
-    location: "Training Room A",
-    scheduledDate: "2026-03-15",
-    capacity: 25,
-    distributionList: ["Quality Assurance", "Production", "Quality Control"],
-    recurrence: { enabled: true, intervalMonths: 12 },
-    trainingFiles: MOCK_TRAINING_FILES,
-    instruction: "Focus on Chapter 3 (Cleaning Validation) and Appendix B (Equipment Handling). Review all SOPs referenced in Section 2.4 before the training session.",
-    examTemplate: "GMP_Exam_Template_2026.pdf",
-    answerKey: "GMP_Answer_Key_2026.pdf",
-    passingGradeType: "score_10",
-    maxAttempts: 3,
-    questions: [
-      {
-        id: "q1",
-        text: "What is the primary purpose of GMP?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "To increase production speed", isCorrect: false },
-          { id: "b", text: "To ensure product quality and safety", isCorrect: true },
-          { id: "c", text: "To reduce manufacturing costs", isCorrect: false },
-          { id: "d", text: "To improve employee satisfaction", isCorrect: false },
-        ],
-      },
-      {
-        id: "q2",
-        text: "Which document defines the standard operating procedures for cleanroom entry?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "SOP-QA-001", isCorrect: false },
-          { id: "b", text: "SOP-CR-002", isCorrect: true },
-          { id: "c", text: "SOP-PR-003", isCorrect: false },
-          { id: "d", text: "SOP-IT-004", isCorrect: false },
-        ],
-      },
-      {
-        id: "q3",
-        text: "How often should GMP training be renewed?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "Every 6 months", isCorrect: false },
-          { id: "b", text: "Every year", isCorrect: true },
-          { id: "c", text: "Every 2 years", isCorrect: false },
-          { id: "d", text: "Only once at onboarding", isCorrect: false },
-        ],
-      },
-    ],
-  },
-  {
-    id: "CA-002",
-    courseId: "2",
-    trainingId: "TRN-2026-006",
-    courseTitle: "Cleanroom Qualification",
-    relatedDocument: "SOP-CR-002: Cleanroom Operations",
-    relatedDocumentId: "DOC-002",
-    trainingType: "SOP",
-    trainingMethod: "Read & Understood",
-    instructorType: "internal",
-    submittedBy: "Sarah Johnson",
-    submittedAt: "2026-02-12",
-    department: "Production",
-    approvalStatus: "Pending Review",
-    passScore: 100,
-    description: "Training on cleanroom classification, gowning procedures, and environmental monitoring requirements.",
-    instructor: "Michael Chen",
-    duration: 2,
-    location: "Cleanroom Facility",
-    scheduledDate: "2026-03-20",
-    capacity: 15,
-    distributionList: ["Production", "Quality Control"],
-    recurrence: { enabled: false, intervalMonths: 0 },
-    trainingFiles: [
-      {
-        id: "tf-004",
-        file: null as any,
-        name: "Cleanroom_SOP_Manual.pdf",
-        size: 3456789,
-        type: "application/pdf",
-        progress: 100,
-        status: "success",
-      },
-    ],
-    instruction: "Pay special attention to gowning procedures in Section 3 and environmental monitoring protocols in Section 5.",
-    passingGradeType: "pass_fail",
-    maxAttempts: 1,
-    questions: [],
-  },
-  {
-    id: "CA-003",
-    courseId: "3",
-    trainingId: "TRN-2026-007",
-    courseTitle: "HPLC Operation Advanced",
-    relatedDocument: "SOP-LAB-005: HPLC Standard Method",
-    relatedDocumentId: "DOC-003",
-    trainingType: "Technical",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    instructorType: "external",
-    submittedBy: "Dr. Michael Chen",
-    submittedAt: "2026-02-08",
-    department: "QC Lab",
-    approvalStatus: "Pending Approval",
-    passScore: 85,
-    description: "Advanced HPLC operation training covering method development, troubleshooting, and maintenance procedures.",
-    instructor: "Dr. Emily Parker",
-    duration: 8,
-    location: "QC Laboratory",
-    scheduledDate: "2026-03-25",
-    capacity: 10,
-    distributionList: ["QC Lab", "R&D"],
-    recurrence: { enabled: true, intervalMonths: 24 },
-    trainingFiles: [
-      {
-        id: "tf-005",
-        file: null as any,
-        name: "HPLC_Advanced_Training.pdf",
-        size: 5678901,
-        type: "application/pdf",
-        progress: 100,
-        status: "success",
-      },
-      {
-        id: "tf-006",
-        file: null as any,
-        name: "HPLC_Troubleshooting_Guide.pdf",
-        size: 2345678,
-        type: "application/pdf",
-        progress: 100,
-        status: "success",
-      },
-    ],
-    instruction: "Review Chapter 4 (Method Development) and practice troubleshooting scenarios in Appendix C before the hands-on session.",
-    examTemplate: "HPLC_Exam_2026.pdf",
-    answerKey: "HPLC_Answer_Key_2026.pdf",
-    passingGradeType: "percentage",
-    maxAttempts: 2,
-    questions: [
-      {
-        id: "q1",
-        text: "What is the recommended mobile phase flow rate for analytical HPLC?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "0.1 mL/min", isCorrect: false },
-          { id: "b", text: "1.0 mL/min", isCorrect: true },
-          { id: "c", text: "5.0 mL/min", isCorrect: false },
-          { id: "d", text: "10.0 mL/min", isCorrect: false },
-        ],
-      },
-      {
-        id: "q2",
-        text: "Which detector is most commonly used for UV-absorbing compounds?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "DAD/PDA detector", isCorrect: true },
-          { id: "b", text: "Refractive Index detector", isCorrect: false },
-          { id: "c", text: "Fluorescence detector", isCorrect: false },
-          { id: "d", text: "Conductivity detector", isCorrect: false },
-        ],
-      },
-    ],
-  },
-  {
-    id: "CA-006",
-    courseId: "6",
-    trainingId: "TRN-2026-011",
-    courseTitle: "ISO 14001 Environmental Management",
-    relatedDocument: "SOP-ENV-001: Environmental Management System",
-    relatedDocumentId: "DOC-006",
-    trainingType: "Compliance",
-    trainingMethod: "Read & Understood",
-    instructorType: "internal",
-    submittedBy: "Kevin Tran",
-    submittedAt: "2026-02-18",
-    department: "HSE",
-    approvalStatus: "Pending Approval",
-    passScore: 100,
-    description: "This training covers the ISO 14001 Environmental Management System requirements, environmental policy, objectives and targets, and compliance monitoring procedures.",
-    instructor: "Lisa Nguyen",
-    duration: 3,
-    location: "HSE Training Center",
-    scheduledDate: "2026-03-28",
-    capacity: 30,
-    distributionList: ["HSE", "Production", "Maintenance"],
-    recurrence: { enabled: true, intervalMonths: 12 },
-    trainingFiles: [
-      {
-        id: "tf-007",
-        file: null as any,
-        name: "ISO14001_Environmental_Management.pdf",
-        size: 4567890,
-        type: "application/pdf",
-        progress: 100,
-        status: "success",
-      },
-    ],
-    questions: [],
-  },
-  {
-    id: "CA-008",
-    courseId: "8",
-    trainingId: "TRN-2026-013",
-    courseTitle: "Deviation & Non-Conformance Handling",
-    relatedDocument: "SOP-QA-007: Deviation Management",
-    relatedDocumentId: "DOC-008",
-    trainingType: "Compliance",
-    trainingMethod: "Quiz (Paper-based/Manual)",
-    instructorType: "internal",
-    submittedBy: "Alice Pham",
-    submittedAt: "2026-02-19",
-    department: "Quality Assurance",
-    approvalStatus: "Pending Approval",
-    passScore: 80,
-    description: "Training on deviation detection, documentation, investigation, root cause analysis, and CAPA implementation procedures.",
-    instructor: "Dr. Sarah Williams",
-    duration: 4,
-    location: "Training Room B",
-    scheduledDate: "2026-04-01",
-    capacity: 20,
-    distributionList: ["Quality Assurance", "Production", "QC Lab"],
-    recurrence: { enabled: true, intervalMonths: 12 },
-    trainingFiles: [
-      {
-        id: "tf-008",
-        file: null as any,
-        name: "Deviation_Management_SOP.pdf",
-        size: 3456789,
-        type: "application/pdf",
-        progress: 100,
-        status: "success",
-      },
-    ],
-    questions: [
-      {
-        id: "q1",
-        text: "What is the first step when a deviation is detected?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "Document and notify QA immediately", isCorrect: true },
-          { id: "b", text: "Continue production", isCorrect: false },
-          { id: "c", text: "Correct the deviation without reporting", isCorrect: false },
-          { id: "d", text: "Wait for the next shift", isCorrect: false },
-        ],
-      },
-      {
-        id: "q2",
-        text: "What tool is commonly used for root cause analysis?",
-        type: "multiple_choice",
-        points: 10,
-        options: [
-          { id: "a", text: "SWOT Analysis", isCorrect: false },
-          { id: "b", text: "Fishbone (Ishikawa) Diagram", isCorrect: true },
-          { id: "c", text: "Balance Scorecard", isCorrect: false },
-          { id: "d", text: "Gantt Chart", isCorrect: false },
-        ],
-      },
-    ],
-  },
-];
 
 export const ApprovalDetailView: React.FC = () => {
   const navigate = useNavigate();
@@ -379,9 +67,9 @@ export const ApprovalDetailView: React.FC = () => {
 
   const handleBack = () => {
     if (isPendingReview) {
-      navigate("/training-management/pending-review");
+      navigate(ROUTES.TRAINING.PENDING_REVIEW);
     } else if (isPendingApproval) {
-      navigate("/training-management/pending-approval");
+      navigate(ROUTES.TRAINING.PENDING_APPROVAL);
     } else {
       window.history.back();
     }
@@ -417,11 +105,11 @@ export const ApprovalDetailView: React.FC = () => {
     
     setTimeout(() => {
       if (eSignAction === "confirm-review") {
-        console.log("Content review confirmed:", approval.id, "Reason:", reason);
+        // TODO: Implement API call for content review confirmation
       } else if (eSignAction === "approve") {
-        console.log("Approved:", approval.id, "Reason:", reason);
+        // TODO: Implement API call for approval
       } else {
-        console.log("Rejected:", approval.id, "Rejection Reason:", reason);
+        // TODO: Implement API call for rejection
       }
       
       setIsSubmitting(false);

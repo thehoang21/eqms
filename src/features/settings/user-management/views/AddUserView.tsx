@@ -93,8 +93,6 @@ export const AddUserView: React.FC = () => {
     setGeneratedCredentials({ username, password });
     setShowCredentialsModal(true);
 
-    console.log("Creating user:", { ...newUser, username });
-    
     showToast({ type: "success", message: `User ${newUser.fullName} created successfully` });
   };
 

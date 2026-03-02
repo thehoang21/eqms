@@ -316,7 +316,6 @@ export const UserManagementView: React.FC = () => {
   };
 
   const confirmDelete = () => {
-    console.log("Delete user:", deleteModal.userId);
     // TODO: Call API to delete user
     // API call would be: await deleteUser(deleteModal.userId);
     
@@ -330,7 +329,6 @@ export const UserManagementView: React.FC = () => {
   };
 
   const confirmStatusChange = () => {
-    console.log(`${statusModal.action} user:`, statusModal.userId);
     // TODO: Call API to change status
     // API call would be: await updateUserStatus(statusModal.userId, statusModal.action);
     

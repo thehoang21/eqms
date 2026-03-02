@@ -104,7 +104,6 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
     const handleConfirmLogout = () => {
         if (logoutModal.sessionId !== null) {
             // TODO: Call API to logout session here
-            console.log(`Logging out session: ${logoutModal.sessionId}`);
         }
         setLogoutModal({ open: false, sessionId: null });
     };

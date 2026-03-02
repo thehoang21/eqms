@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { ROUTES } from '@/app/routes.constants';
 import { ChevronRight, Printer, AlertCircle, ArrowLeft, Home, CheckCircle2, X, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
@@ -77,7 +78,7 @@ export const RequestControlledCopyView: React.FC = () => {
   // Redirect if no document data
   useEffect(() => {
     if (!documentId) {
-      navigate('/documents/all');
+      navigate(ROUTES.DOCUMENTS.ALL);
     }
   }, [documentId, navigate]);
 
@@ -197,7 +198,6 @@ export const RequestControlledCopyView: React.FC = () => {
     };
 
     // TODO: Call API to submit controlled copy request
-    console.log('Controlled Copy Request:', request);
     
     showToast({
       type: 'success',

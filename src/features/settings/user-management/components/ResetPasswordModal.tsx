@@ -59,7 +59,6 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
   };
 
   const handleConfirmReset = () => {
-    console.log('Reset password confirmed for user');
     // TODO: Call API to reset password
     showToast({
       type: "success",

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
   Upload,
@@ -325,7 +326,7 @@ export const ResultEntryPage: React.FC = () => {
         `Your progress has been saved. ${resultsEntered} of ${rows.length} results recorded. You can continue entering results later.`
       );
       setModalAction(() => () => {
-        navigate("/training-management/courses-list");
+        navigate(ROUTES.TRAINING.COURSES_LIST);
       });
       setIsModalOpen(true);
     } catch {
@@ -376,7 +377,7 @@ export const ResultEntryPage: React.FC = () => {
       setModalTitle("Results Submitted");
       setModalDescription(`${resultsEntered} result(s) have been submitted and signed successfully.`);
       setModalAction(() => () => {
-        navigate("/training-management/courses-list");
+        navigate(ROUTES.TRAINING.COURSES_LIST);
       });
       setIsModalOpen(true);
     } catch {

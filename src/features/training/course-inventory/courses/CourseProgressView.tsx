@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
   Users,
@@ -229,7 +230,7 @@ export const CourseProgressView: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/training-management/courses-list`)}
+            onClick={() => navigate(ROUTES.TRAINING.COURSES_LIST)}
           >
             Back
           </Button>

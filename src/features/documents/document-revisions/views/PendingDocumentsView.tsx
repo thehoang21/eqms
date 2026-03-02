@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from '@/app/routes.constants';
 import {
   ChevronRight,
   MoreVertical,
@@ -26,8 +27,8 @@ import {
 } from "@tabler/icons-react";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
-import { MOCK_DOCUMENTS as ALL_DOCUMENTS } from "@/features/documents/document-list/DocumentsView";
-import { MOCK_REVISIONS as ALL_REVISIONS } from "@/features/documents/document-revisions/views/RevisionListView";
+import { MOCK_DOCUMENTS as ALL_DOCUMENTS } from "@/features/documents/document-list/mockData";
+import { MOCK_REVISIONS as ALL_REVISIONS } from "@/features/documents/document-revisions/views/mockData";
 
 // --- Types ---
 type ViewType = "review" | "approval";
@@ -644,10 +645,10 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
         onViewDocument?.(openDropdownId);
         break;
       case "review":
-        navigate(`/documents/revisions/review/${openDropdownId}`);
+        navigate(ROUTES.DOCUMENTS.REVISIONS.REVIEW(openDropdownId));
         break;
       case "approve":
-        navigate(`/documents/revisions/approval/${openDropdownId}`);
+        navigate(ROUTES.DOCUMENTS.REVISIONS.APPROVAL(openDropdownId));
         break;
       case "history":
         console.log(`View history for document ${openDropdownId}`);
