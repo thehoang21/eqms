@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { SmartDropdown, DropdownItem, DropdownDivider } from '@/components/ui/dropdown';
 import { Select } from '@/components/ui/select';
-import { Edit, Trash, Eye, Copy, Download, Share2 } from 'lucide-react';
+import { Edit, Trash, Eye, Copy, Download, Share2, Lightbulb, Sparkles } from 'lucide-react';
 
 /**
  * Example: Smart Dropdown Usage
@@ -80,7 +80,7 @@ export const SmartDropdownExample: React.FC = () => {
           />
         </div>
         <p className="text-sm text-slate-600">
-          ✨ Try this at the bottom of the page - it will auto-flip upward!
+          <Sparkles className="h-4 w-4 text-amber-500 inline shrink-0" /> Try this at the bottom of the page - it will auto-flip upward!
         </p>
       </div>
 
@@ -201,7 +201,7 @@ export const TableWithSmartDropdowns: React.FC = () => {
       </div>
 
       <p className="text-sm text-slate-600 mt-4">
-        💡 Scroll to bottom rows and click Actions - dropdowns will auto-flip upward!
+        <Lightbulb className="h-4 w-4 text-amber-500 inline shrink-0" /> Scroll to bottom rows and click Actions - dropdowns will auto-flip upward!
       </p>
     </div>
   );

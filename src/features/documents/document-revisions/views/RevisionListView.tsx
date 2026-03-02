@@ -89,17 +89,71 @@ export const RevisionListView: React.FC = () => {
       const matchesDepartment = departmentFilter === "All" || revision.department === departmentFilter;
       const matchesAuthor = authorFilter === "All" || revision.author === authorFilter;
 
-      const matchesCreatedDate =
-        (!createdFromDate || revision.created >= createdFromDate) &&
-        (!createdToDate || revision.created <= createdToDate);
+      const matchesCreatedDate = (() => {
+        if (!createdFromDate && !createdToDate) return true;
+        const revisionDate = new Date(revision.created);
+        let matchesFrom = true;
+        let matchesTo = true;
+        if (createdFromDate) {
+          const parts = createdFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (parts) {
+            const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+            matchesFrom = revisionDate >= from;
+          }
+        }
+        if (createdToDate) {
+          const parts = createdToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (parts) {
+            const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+            matchesTo = revisionDate <= to;
+          }
+        }
+        return matchesFrom && matchesTo;
+      })();
 
-      const matchesEffectiveDate =
-        (!effectiveFromDate || revision.effectiveDate >= effectiveFromDate) &&
-        (!effectiveToDate || revision.effectiveDate <= effectiveToDate);
+      const matchesEffectiveDate = (() => {
+        if (!effectiveFromDate && !effectiveToDate) return true;
+        const revisionDate = new Date(revision.effectiveDate);
+        let matchesFrom = true;
+        let matchesTo = true;
+        if (effectiveFromDate) {
+          const parts = effectiveFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (parts) {
+            const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+            matchesFrom = revisionDate >= from;
+          }
+        }
+        if (effectiveToDate) {
+          const parts = effectiveToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (parts) {
+            const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+            matchesTo = revisionDate <= to;
+          }
+        }
+        return matchesFrom && matchesTo;
+      })();
 
-      const matchesValidDate =
-        (!validFromDate || revision.validUntil >= validFromDate) &&
-        (!validToDate || revision.validUntil <= validToDate);
+      const matchesValidDate = (() => {
+        if (!validFromDate && !validToDate) return true;
+        const revisionDate = new Date(revision.validUntil);
+        let matchesFrom = true;
+        let matchesTo = true;
+        if (validFromDate) {
+          const parts = validFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (parts) {
+            const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+            matchesFrom = revisionDate >= from;
+          }
+        }
+        if (validToDate) {
+          const parts = validToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (parts) {
+            const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+            matchesTo = revisionDate <= to;
+          }
+        }
+        return matchesFrom && matchesTo;
+      })();
 
       return (
         matchesSearch &&

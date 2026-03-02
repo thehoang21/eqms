@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, Save, X } from "lucide-react";
+import { Home, Save, X, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
@@ -195,7 +195,7 @@ export const AddUserView: React.FC = () => {
                 )}
                 {!formErrors.employeeId && warnings.employeeId && (
                   <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
-                    <span>⚠️</span>
+                    <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                     {warnings.employeeId}
                   </p>
                 )}
@@ -262,7 +262,7 @@ export const AddUserView: React.FC = () => {
                 )}
                 {!formErrors.email && warnings.email && (
                   <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
-                    <span>⚠️</span>
+                    <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                     {warnings.email}
                   </p>
                 )}

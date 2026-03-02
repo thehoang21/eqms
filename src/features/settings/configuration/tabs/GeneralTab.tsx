@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GeneralConfig } from '../types';
 import { Select } from '@/components/ui/select/Select';
 import { Checkbox } from '@/components/ui/checkbox/Checkbox';
-import { Palette, Phone, Building2, Database, Globe, Monitor, Wrench } from 'lucide-react';
+import { Palette, Phone, Building2, Database, Globe, Monitor, Wrench, Sun, Moon } from 'lucide-react';
 
 interface GeneralTabProps {
   config: GeneralConfig;
@@ -459,9 +459,9 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               value={config.appearance.theme}
               onChange={(val) => handleAppearanceChange('theme', val as 'light' | 'dark' | 'auto')}
               options={[
-                { label: '☀️ Light', value: 'light' },
-                { label: '🌙 Dark', value: 'dark' },
-                { label: '💻 System Default (Auto)', value: 'auto' },
+                { label: 'Light', value: 'light' },
+                { label: 'Dark', value: 'dark' },
+                { label: 'System Default (Auto)', value: 'auto' },
               ]}
             />
             <Select
@@ -469,12 +469,12 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({ config, onChange }) => {
               value={config.appearance.primaryColor}
               onChange={(val) => handleAppearanceChange('primaryColor', val)}
               options={[
-                { label: '🟢 Emerald (Default)', value: 'emerald' },
-                { label: '🔵 Blue', value: 'blue' },
-                { label: '🟣 Violet', value: 'violet' },
-                { label: '🟠 Orange', value: 'orange' },
-                { label: '🔴 Rose', value: 'rose' },
-                { label: '🌊 Teal', value: 'teal' },
+                { label: 'Emerald (Default)', value: 'emerald' },
+                { label: 'Blue', value: 'blue' },
+                { label: 'Violet', value: 'violet' },
+                { label: 'Orange', value: 'orange' },
+                { label: 'Rose', value: 'rose' },
+                { label: 'Teal', value: 'teal' },
               ]}
             />
           </div>

@@ -436,16 +436,58 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
       const matchesVersion = !versionFilter || doc.version.toLowerCase().includes(versionFilter.toLowerCase());
 
       const docCreatedDate = new Date(doc.created);
-      const matchesCreatedFrom = !createdFromDate || docCreatedDate >= new Date(createdFromDate);
-      const matchesCreatedTo = !createdToDate || docCreatedDate <= new Date(createdToDate);
+      let matchesCreatedFrom = true;
+      let matchesCreatedTo = true;
+      if (createdFromDate) {
+        const parts = createdFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+          matchesCreatedFrom = docCreatedDate >= from;
+        }
+      }
+      if (createdToDate) {
+        const parts = createdToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+          matchesCreatedTo = docCreatedDate <= to;
+        }
+      }
 
       const docEffectiveDate = new Date(doc.effectiveDate);
-      const matchesEffectiveFrom = !effectiveFromDate || docEffectiveDate >= new Date(effectiveFromDate);
-      const matchesEffectiveTo = !effectiveToDate || docEffectiveDate <= new Date(effectiveToDate);
+      let matchesEffectiveFrom = true;
+      let matchesEffectiveTo = true;
+      if (effectiveFromDate) {
+        const parts = effectiveFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+          matchesEffectiveFrom = docEffectiveDate >= from;
+        }
+      }
+      if (effectiveToDate) {
+        const parts = effectiveToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+          matchesEffectiveTo = docEffectiveDate <= to;
+        }
+      }
 
       const docValidUntilDate = new Date(doc.validUntil);
-      const matchesValidFrom = !validFromDate || docValidUntilDate >= new Date(validFromDate);
-      const matchesValidTo = !validToDate || docValidUntilDate <= new Date(validToDate);
+      let matchesValidFrom = true;
+      let matchesValidTo = true;
+      if (validFromDate) {
+        const parts = validFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+          matchesValidFrom = docValidUntilDate >= from;
+        }
+      }
+      if (validToDate) {
+        const parts = validToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+          matchesValidTo = docValidUntilDate <= to;
+        }
+      }
 
       return matchesSearch && matchesStatus && matchesType && matchesDepartment && matchesAuthor && matchesVersion &&
              matchesCreatedFrom && matchesCreatedTo && matchesEffectiveFrom && matchesEffectiveTo &&

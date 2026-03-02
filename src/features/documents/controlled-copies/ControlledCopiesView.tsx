@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
-import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
+import { DateRangePicker } from "@/components/ui/datetime-picker/DateRangePicker";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { formatDateUS, formatDateTimeParts } from "@/utils/format";
@@ -232,8 +232,10 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ControlledCopyStatus | "All">("All");
-  const [dateFromFilter, setDateFromFilter] = useState("");
-  const [dateToFilter, setDateToFilter] = useState("");
+  const [createdFromDate, setCreatedFromDate] = useState("");
+  const [createdToDate, setCreatedToDate] = useState("");
+  const [validFromDate, setValidFromDate] = useState("");
+  const [validToDate, setValidToDate] = useState("");
 
   // Modal states
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
@@ -294,15 +296,45 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
 
       const matchesStatus = viewType !== "all" || statusFilter === "All" || copy.status === statusFilter;
 
-      const matchesDateFrom =
-        dateFromFilter === "" || new Date(copy.createdDate) >= new Date(dateFromFilter);
+      // Created Date filtering
+      let matchesCreatedFrom = true;
+      let matchesCreatedTo = true;
+      if (createdFromDate) {
+        const parts = createdFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+          matchesCreatedFrom = new Date(copy.createdDate) >= from;
+        }
+      }
+      if (createdToDate) {
+        const parts = createdToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+          matchesCreatedTo = new Date(copy.createdDate) <= to;
+        }
+      }
 
-      const matchesDateTo =
-        dateToFilter === "" || new Date(copy.createdDate) <= new Date(dateToFilter);
+      // Valid Until Date filtering
+      let matchesValidFrom = true;
+      let matchesValidTo = true;
+      if (validFromDate) {
+        const parts = validFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+          matchesValidFrom = new Date(copy.validUntil) >= from;
+        }
+      }
+      if (validToDate) {
+        const parts = validToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+          matchesValidTo = new Date(copy.validUntil) <= to;
+        }
+      }
 
-      return matchesSearch && matchesStatus && matchesDateFrom && matchesDateTo;
+      return matchesSearch && matchesStatus && matchesCreatedFrom && matchesCreatedTo && matchesValidFrom && matchesValidTo;
     });
-  }, [baseData, searchQuery, statusFilter, dateFromFilter, dateToFilter, viewType]);
+  }, [baseData, searchQuery, statusFilter, createdFromDate, createdToDate, validFromDate, validToDate, viewType]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = useMemo(() => {
@@ -552,19 +584,23 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
               )}
             </div>
             <div>
-              <DateTimePicker
-                label="From Date"
-                value={dateFromFilter}
-                onChange={setDateFromFilter}
-                placeholder="Select date"
+              <DateRangePicker
+                label="Created Date Range"
+                startDate={createdFromDate}
+                endDate={createdToDate}
+                onStartDateChange={setCreatedFromDate}
+                onEndDateChange={setCreatedToDate}
+                placeholder="Select date range"
               />
             </div>
             <div>
-              <DateTimePicker
-                label="To Date"
-                value={dateToFilter}
-                onChange={setDateToFilter}
-                placeholder="Select date"
+              <DateRangePicker
+                label="Valid Until Date Range"
+                startDate={validFromDate}
+                endDate={validToDate}
+                onStartDateChange={setValidFromDate}
+                onEndDateChange={setValidToDate}
+                placeholder="Select date range"
               />
             </div>
           </div>

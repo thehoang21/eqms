@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Upload, File, X, CheckCircle2, AlertCircle } from "lucide-react";
+import { Upload, File, X, CheckCircle2, AlertCircle, Check } from "lucide-react";
 import { IconCloudUpload } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
 import { FilePreview } from "./FilePreview";
@@ -275,8 +275,8 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
                       {/* Status Messages */}
                       {uploadedFile.status === "success" && (
-                        <p className="text-xs text-emerald-600 mt-1 font-medium">
-                          ✓ Uploaded
+                        <p className="text-xs text-emerald-600 mt-1 font-medium flex items-center gap-1">
+                          <Check className="h-3.5 w-3.5 shrink-0" /> Uploaded
                         </p>
                       )}
                       {uploadedFile.status === "error" && (

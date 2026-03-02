@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FileText, File as FileIcon, Image as ImageIcon, AlertCircle, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { FileText, File as FileIcon, Image as ImageIcon, AlertCircle, AlertTriangle, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
 import { config } from "@/config";
 import "@react-pdf-viewer/core/lib/styles/index.css";
@@ -305,7 +305,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({ file }) => {
                                     <li>Text Files (.txt, .md, .json, .xml, .csv)</li>
                                 </ul>
                                 <p className="mt-2 md:mt-3 text-slate-600">
-                                    ⚠️ Old Word format (.doc) is not supported. Please use .docx format.
+                                    <AlertTriangle className="h-3.5 w-3.5 text-amber-600 inline shrink-0" /> Old Word format (.doc) is not supported. Please use .docx format.
                                 </p>
                             </div>
                         </div>

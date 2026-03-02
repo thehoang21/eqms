@@ -125,8 +125,8 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
               />
             </div>
             <p className="text-xs text-slate-500 mt-2">
-              {userUsagePercent >= 90 && "⚠️ License limit approaching"}
-              {userUsagePercent >= 75 && userUsagePercent < 90 && "⚠️ High license usage"}
+              {userUsagePercent >= 90 && <><AlertTriangle className="h-3.5 w-3.5 text-red-600 inline shrink-0" /> License limit approaching</>}
+              {userUsagePercent >= 75 && userUsagePercent < 90 && <><AlertTriangle className="h-3.5 w-3.5 text-amber-600 inline shrink-0" /> High license usage</>}
               {userUsagePercent < 75 && `${data.maxUsers - data.activeUsers} licenses available`}
             </p>
           </div>

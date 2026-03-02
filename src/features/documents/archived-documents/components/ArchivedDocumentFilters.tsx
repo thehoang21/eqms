@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, Calendar, User, Clock } from 'lucide-react';
 import { Select } from '@/components/ui/select/Select';
-import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
+import { DateRangePicker } from '@/components/ui/datetime-picker/DateRangePicker';
 import { FilterCard } from '@/components/ui/card/FilterCard';
 import { RetentionFilter } from '../types';
 
@@ -48,7 +48,7 @@ export const ArchivedDocumentFilters: React.FC<ArchivedDocumentFiltersProps> = (
         <FilterCard>
             <FilterCard.Row>
                 {/* Search Input */}
-                <FilterCard.Item span={6} mdSpan={2}>
+                <FilterCard.Item span={3} mdSpan={2}>
                     <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
                         Search
                     </label>
@@ -64,28 +64,20 @@ export const ArchivedDocumentFilters: React.FC<ArchivedDocumentFiltersProps> = (
                     </div>
                 </FilterCard.Item>
 
-                {/* Archive Date Range - Start */}
+                {/* Archive Date Range */}
                 <FilterCard.Item span={3}>
-                    <DateTimePicker
-                        label="Archived From"
-                        value={startDate}
-                        onChange={onStartDateChange}
-                        placeholder="Select start date"
-                    />
-                </FilterCard.Item>
-
-                {/* Archive Date Range - End */}
-                <FilterCard.Item span={3}>
-                    <DateTimePicker
-                        label="Archived To"
-                        value={endDate}
-                        onChange={onEndDateChange}
-                        placeholder="Select end date"
+                    <DateRangePicker
+                        label="Archived Date Range"
+                        startDate={startDate}
+                        endDate={endDate}
+                        onStartDateChange={onStartDateChange}
+                        onEndDateChange={onEndDateChange}
+                        placeholder="Select date range"
                     />
                 </FilterCard.Item>
 
                 {/* Last Approver Filter */}
-                <FilterCard.Item span={6}>
+                <FilterCard.Item span={3}>
                     <Select
                         label="Last Approver"
                         value={lastApproverFilter}
@@ -95,7 +87,7 @@ export const ArchivedDocumentFilters: React.FC<ArchivedDocumentFiltersProps> = (
                 </FilterCard.Item>
 
                 {/* Retention Status Filter */}
-                <FilterCard.Item span={6}>
+                <FilterCard.Item span={3}>
                     <Select
                         label="Retention Status"
                         value={retentionFilter}

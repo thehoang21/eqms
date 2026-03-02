@@ -10,6 +10,7 @@ import {
     Send,
     CheckCircle2,
     AlertCircle,
+    AlertTriangle,
     Home,
     Layers,
     FileText,
@@ -630,7 +631,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                             </p>
                             <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-1">
                                 <p className="text-amber-800">
-                                    ⚠️ <span className="font-semibold">Warning:</span> All unsaved
+                                    <AlertTriangle className="h-3.5 w-3.5 text-amber-600 inline shrink-0" /> <span className="font-semibold">Warning:</span> All unsaved
                                     changes will be lost.
                                 </p>
                                 <p>
@@ -705,10 +706,10 @@ export const RevisionWorkspaceView: React.FC = () => {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={cn(
-                                        "flex items-center justify-center gap-2 px-3 sm:px-4 md:px-6 py-4 text-xs sm:text-sm font-medium border-b-2 transition-all whitespace-nowrap",
+                                        "flex items-center justify-center gap-2 px-3 sm:px-4 md:px-6 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-all whitespace-nowrap border-r border-slate-200 last:border-r-0",
                                         activeTab === tab.id
-                                            ? "border-emerald-600 text-emerald-700"
-                                            : "border-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
+                                            ? "border-b-emerald-600 text-emerald-700"
+                                            : "border-b-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                                     )}
                                 >
                                     {tab.label}

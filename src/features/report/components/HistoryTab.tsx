@@ -10,9 +10,11 @@ import {
   MoreVertical,
   Trash2,
   RefreshCw,
+  Filter,
 } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { Select } from '@/components/ui/select/Select';
+import { DateRangePicker } from '@/components/ui/datetime-picker/DateRangePicker';
 import { TablePagination } from '@/components/ui/table/TablePagination';
 import { cn } from '@/components/ui/utils';
 import type { ReportType, ReportStatus } from '../types';
@@ -27,6 +29,8 @@ export function useHistoryTab() {
   const [historySearch, setHistorySearch] = useState('');
   const [historyType, setHistoryType] = useState<ReportType | 'All'>('All');
   const [historyStatus, setHistoryStatus] = useState<ReportStatus | 'All'>('All');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -39,9 +43,30 @@ export function useHistoryTab() {
       const matchesSearch = report.reportName.toLowerCase().includes(historySearch.toLowerCase());
       const matchesType = historyType === 'All' || report.type === historyType;
       const matchesStatus = historyStatus === 'All' || report.status === historyStatus;
-      return matchesSearch && matchesType && matchesStatus;
+      
+      // Date range filtering
+      let matchesDateFrom = true;
+      let matchesDateTo = true;
+      if (dateFrom) {
+        const parts = dateFrom.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+          const reportDate = new Date(report.generatedDate);
+          matchesDateFrom = reportDate >= from;
+        }
+      }
+      if (dateTo) {
+        const parts = dateTo.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+          const reportDate = new Date(report.generatedDate);
+          matchesDateTo = reportDate <= to;
+        }
+      }
+      
+      return matchesSearch && matchesType && matchesStatus && matchesDateFrom && matchesDateTo;
     });
-  }, [historySearch, historyType, historyStatus]);
+  }, [historySearch, historyType, historyStatus, dateFrom, dateTo]);
 
   const paginatedHistory = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -108,11 +133,20 @@ export function useHistoryTab() {
     setOpenDropdownId(null);
   };
 
+  const handleClearFilters = () => {
+    setHistorySearch('');
+    setHistoryType('All');
+    setHistoryStatus('All');
+    setDateFrom('');
+    setDateTo('');
+    setCurrentPage(1);
+  };
+
   // --- Filter section (inside the unified card) ---
   const filterElement = (
     <div className="p-4 lg:p-5">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-        <div className="md:col-span-2 xl:col-span-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-end">
+        <div>
           <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
             Search Reports
           </label>
@@ -128,7 +162,7 @@ export function useHistoryTab() {
           </div>
         </div>
 
-        <div className="xl:col-span-3">
+        <div>
           <Select
             label="Report Type"
             value={historyType}
@@ -146,7 +180,7 @@ export function useHistoryTab() {
           />
         </div>
 
-        <div className="xl:col-span-3">
+        <div>
           <Select
             label="Status"
             value={historyStatus}
@@ -157,6 +191,17 @@ export function useHistoryTab() {
               { label: 'In Progress', value: 'In Progress' },
               { label: 'Failed', value: 'Failed' },
             ]}
+          />
+        </div>
+
+        <div>
+          <DateRangePicker
+            label="Generated Date Range"
+            startDate={dateFrom}
+            endDate={dateTo}
+            onStartDateChange={setDateFrom}
+            onEndDateChange={setDateTo}
+            placeholder="Select date range"
           />
         </div>
       </div>
@@ -209,6 +254,12 @@ export function useHistoryTab() {
                   <FileBarChart className="h-12 w-12 text-slate-300 mx-auto mb-3" />
                   <p className="text-slate-500 font-medium">No reports found</p>
                   <p className="text-sm text-slate-400 mt-1">Try adjusting your filters</p>
+                  <button
+                    onClick={handleClearFilters}
+                    className="inline-flex items-center gap-2 px-4 py-2 mt-4 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 active:scale-95 transition-all"
+                  >
+                    Clear Filters
+                  </button>
                 </td>
               </tr>
             ) : (

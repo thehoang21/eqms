@@ -796,7 +796,7 @@ export const NewDocumentView: React.FC = () => {
                 description={
                     <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
                         <p className="text-amber-800">
-                            ⚠️ <span className="font-semibold">Note:</span> The document will be moved to <strong>Closed - Cancelled</strong> status.
+                            <AlertTriangle className="h-3.5 w-3.5 text-amber-600 inline shrink-0" /> <span className="font-semibold">Note:</span> The document will be moved to <strong>Closed - Cancelled</strong> status.
                         </p>
                     </div>
                 }

@@ -15,6 +15,7 @@ import {
 import { IconKey, IconLayoutDashboard, IconTrash } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
+import { DateRangePicker } from "@/components/ui/datetime-picker/DateRangePicker";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { useToast } from "@/components/ui/toast";
 import { TablePagination } from "@/components/ui/table/TablePagination";
@@ -139,6 +140,8 @@ export const UserManagementView: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<UserStatus | "All">("All");
   const [businessUnitFilter, setBusinessUnitFilter] = useState<string>("All");
   const [departmentFilter, setDepartmentFilter] = useState<string>("All");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [columns, setColumns] = useState<TableColumn[]>([...DEFAULT_COLUMNS]);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -216,9 +219,30 @@ export const UserManagementView: React.FC = () => {
       const matchesStatus = statusFilter === "All" || user.status === statusFilter;
       const matchesBusinessUnit = businessUnitFilter === "All" || user.businessUnit === businessUnitFilter;
       const matchesDepartment = departmentFilter === "All" || user.department === departmentFilter;
-      return matchesSearch && matchesRole && matchesStatus && matchesBusinessUnit && matchesDepartment;
+
+      // Date range filter on createdDate
+      let matchesDate = true;
+      if (dateFrom || dateTo) {
+        const createdDate = new Date(user.createdDate);
+        if (dateFrom) {
+          const parts = dateFrom.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (parts) {
+            const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]));
+            if (createdDate < from) matchesDate = false;
+          }
+        }
+        if (dateTo) {
+          const parts = dateTo.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+          if (parts) {
+            const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+            if (createdDate > to) matchesDate = false;
+          }
+        }
+      }
+
+      return matchesSearch && matchesRole && matchesStatus && matchesBusinessUnit && matchesDepartment && matchesDate;
     });
-  }, [searchQuery, roleFilter, statusFilter, businessUnitFilter, departmentFilter]);
+  }, [searchQuery, roleFilter, statusFilter, businessUnitFilter, departmentFilter, dateFrom, dateTo]);
 
   // Pagination
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -384,7 +408,7 @@ export const UserManagementView: React.FC = () => {
       <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 sm:gap-4 items-end">
           {/* Search */}
-          <div className="md:col-span-2 xl:col-span-6">
+          <div className="xl:col-span-4">
             <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -399,7 +423,7 @@ export const UserManagementView: React.FC = () => {
           </div>
 
           {/* Role Filter */}
-          <div className="xl:col-span-3">
+          <div className="xl:col-span-4">
             <Select
               label="Role"
               value={roleFilter}
@@ -417,7 +441,7 @@ export const UserManagementView: React.FC = () => {
           </div>
 
           {/* Status Filter */}
-          <div className="xl:col-span-3">
+          <div className="xl:col-span-4">
             <Select
               label="Status"
               value={statusFilter}
@@ -432,7 +456,7 @@ export const UserManagementView: React.FC = () => {
           </div>
 
           {/* Business Unit Filter */}
-          <div className="xl:col-span-6">
+          <div className="xl:col-span-4">
             <Select
               label="Business Unit"
               value={businessUnitFilter}
@@ -448,12 +472,24 @@ export const UserManagementView: React.FC = () => {
           </div>
 
           {/* Department Filter */}
-          <div className="xl:col-span-6">
+          <div className="xl:col-span-4">
             <Select
               label="Department"
               value={departmentFilter}
               onChange={setDepartmentFilter}
               options={availableDepartments.map((dept) => ({ label: dept, value: dept }))}
+            />
+          </div>
+
+          {/* Date Range Filter */}
+          <div className="xl:col-span-4">
+            <DateRangePicker
+              label="Created Date Range"
+              startDate={dateFrom}
+              endDate={dateTo}
+              onStartDateChange={setDateFrom}
+              onEndDateChange={setDateTo}
+              placeholder="Select date range"
             />
           </div>
         </div>
@@ -572,6 +608,8 @@ export const UserManagementView: React.FC = () => {
               setStatusFilter("All");
               setBusinessUnitFilter("All");
               setDepartmentFilter("All");
+              setDateFrom("");
+              setDateTo("");
             }}
           />
         )}

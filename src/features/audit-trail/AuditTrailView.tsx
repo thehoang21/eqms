@@ -6,11 +6,12 @@ import {
   FileText,
   Download,
   Eye,
+  X,
 } from "lucide-react";
 import { IconInfoCircle, IconLayoutDashboard } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
-import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
+import { DateRangePicker } from "@/components/ui/datetime-picker/DateRangePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
@@ -18,14 +19,161 @@ import { formatDateTime } from "@/utils/format";
 import { FilterCard } from "@/components/ui/card/FilterCard";
 import type { AuditTrailRecord, AuditAction, AuditModule } from "./types";
 import { MOCK_AUDIT_RECORDS } from "./mockData";
+import { AuditTrailDetailView } from "./AuditTrailDetailView";
 
 // --- Helper Functions ---
+
+// --- Export Modal Component ---
+interface ExportModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  record: AuditTrailRecord;
+}
+
+const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, record }) => {
+  if (!isOpen) return null;
+
+  const handleExportJSON = () => {
+    const dataStr = JSON.stringify(record, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `audit-trail-${record.id}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    onClose();
+  };
+
+  const handleExportPDF = () => {
+    // TODO: Implement PDF export
+    console.log("PDF export not implemented yet");
+    onClose();
+  };
+
+  const handleExportText = () => {
+    const text = `
+Audit Trail Record
+==================
+ID: ${record.id}
+Timestamp: ${formatDateTime(record.timestamp)}
+User: ${record.user} (${record.userId})
+IP Address: ${record.ipAddress}
+Device: ${record.device || "Not recorded"}
+Module: ${record.module}
+Action: ${record.action}
+Entity: ${record.entityName} (${record.entityId})
+Description: ${record.description}
+
+${
+      record.changes && record.changes.length > 0
+        ? `Changes:\n${record.changes.map((c) => `- ${c.field}: "${c.oldValue}" → "${c.newValue}"`).join("\n")}`
+        : ""
+    }
+
+${
+      record.metadata && Object.keys(record.metadata).length > 0
+        ? `Metadata:\n${Object.entries(record.metadata)
+            .map(([k, v]) => `- ${k}: ${v}`)
+            .join("\n")}`
+        : ""
+    }
+    `.trim();
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `audit-trail-${record.id}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+    onClose();
+  };
+
+  return createPortal(
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-50 bg-black/50 animate-in fade-in duration-200"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      {/* Modal */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div
+          className="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-in zoom-in-95 fade-in duration-200"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+            <h3 className="text-lg font-semibold text-slate-900">Export Audit Record</h3>
+            <button
+              onClick={onClose}
+              className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+              aria-label="Close"
+            >
+              <X className="h-4 w-4 text-slate-500" />
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="px-6 py-4">
+            <p className="text-sm text-slate-600 mb-4">
+              Select export format for audit record <span className="font-mono font-medium text-slate-900">{record.id}</span>
+            </p>
+            <div className="space-y-2">
+              <button
+                onClick={handleExportJSON}
+                className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors"
+              >
+                <FileText className="h-4 w-4 text-slate-500" />
+                <div className="flex-1 text-left">
+                  <div className="font-medium">Export as JSON</div>
+                  <div className="text-xs text-slate-500">Structured data format</div>
+                </div>
+              </button>
+              <button
+                onClick={handleExportPDF}
+                className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors"
+              >
+                <FileText className="h-4 w-4 text-slate-500" />
+                <div className="flex-1 text-left">
+                  <div className="font-medium">Export as PDF</div>
+                  <div className="text-xs text-slate-500">Printable document format</div>
+                </div>
+              </button>
+              <button
+                onClick={handleExportText}
+                className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors"
+              >
+                <FileText className="h-4 w-4 text-slate-500" />
+                <div className="flex-1 text-left">
+                  <div className="font-medium">Export as TXT</div>
+                  <div className="text-xs text-slate-500">Plain text format</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-slate-200">
+            <Button variant="outline" size="sm" onClick={onClose}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>,
+    document.body
+  );
+};
 
 // --- Dropdown Component ---
 interface DropdownMenuProps {
   record: AuditTrailRecord;
   isOpen: boolean;
   onClose: () => void;
+  onViewDetails: () => void;
+  onExport: () => void;
   position: { top: number; left: number; showAbove?: boolean };
 }
 
@@ -33,19 +181,11 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   record,
   isOpen,
   onClose,
+  onViewDetails,
+  onExport,
   position,
 }) => {
   if (!isOpen) return null;
-
-  const handleViewDetails = () => {
-    console.log("View details:", record.id);
-    onClose();
-  };
-
-  const handleExport = () => {
-    console.log("Export entry:", record.id);
-    onClose();
-  };
 
   return createPortal(
     <>
@@ -71,7 +211,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleViewDetails();
+              onViewDetails();
             }}
             className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
@@ -81,12 +221,12 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              handleExport();
+              onExport();
             }}
             className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
           >
             <Download className="h-4 w-4 flex-shrink-0" />
-            <span className="font-medium">Export Entry</span>
+            <span className="font-medium">Export</span>
           </button>
         </div>
       </div>
@@ -97,6 +237,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
 // --- Main Component ---
 export const AuditTrailView: React.FC = () => {
+  // View state
+  const [selectedRecord, setSelectedRecord] = useState<AuditTrailRecord | null>(null);
+  
   // Filters state
   const [searchQuery, setSearchQuery] = useState("");
   const [moduleFilter, setModuleFilter] = useState<AuditModule | "All">("All");
@@ -113,6 +256,10 @@ export const AuditTrailView: React.FC = () => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
   const buttonRefs = useRef<{ [key: string]: React.RefObject<HTMLButtonElement | null> }>({});
+
+  // Export modal state
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [exportingRecord, setExportingRecord] = useState<AuditTrailRecord | null>(null);
 
   // Get button ref helper
   const getButtonRef = (id: string) => {
@@ -137,14 +284,22 @@ export const AuditTrailView: React.FC = () => {
         userFilter === "" ||
         record.user.toLowerCase().includes(userFilter.toLowerCase());
 
-      // Date filtering
+      // Date filtering (DateRangePicker outputs dd/MM/yyyy format)
       let matchesDateFrom = true;
       let matchesDateTo = true;
       if (dateFrom) {
-        matchesDateFrom = new Date(record.timestamp) >= new Date(dateFrom);
+        const parts = dateFrom.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]));
+          matchesDateFrom = new Date(record.timestamp) >= from;
+        }
       }
       if (dateTo) {
-        matchesDateTo = new Date(record.timestamp) <= new Date(dateTo);
+        const parts = dateTo.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+          matchesDateTo = new Date(record.timestamp) <= to;
+        }
       }
 
       return (
@@ -279,6 +434,16 @@ export const AuditTrailView: React.FC = () => {
     { label: "Disable", value: "Disable" },
   ];
 
+  // Show detail view if a record is selected
+  if (selectedRecord) {
+    return (
+      <AuditTrailDetailView
+        record={selectedRecord}
+        onBack={() => setSelectedRecord(null)}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
@@ -309,7 +474,7 @@ export const AuditTrailView: React.FC = () => {
       <FilterCard>
         <FilterCard.Row>
           {/* Search */}
-          <FilterCard.Item span={6} mdSpan={2}>
+          <FilterCard.Item span={3}>
             <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
@@ -347,23 +512,15 @@ export const AuditTrailView: React.FC = () => {
             />
           </FilterCard.Item>
 
-          {/* Date From */}
+          {/* Timestamp Date Range */}
           <FilterCard.Item span={3}>
-            <DateTimePicker
-              label="From Date"
-              value={dateFrom}
-              onChange={setDateFrom}
-              placeholder="Start date"
-            />
-          </FilterCard.Item>
-
-          {/* Date To */}
-          <FilterCard.Item span={3}>
-            <DateTimePicker
-              label="To Date"
-              value={dateTo}
-              onChange={setDateTo}
-              placeholder="End date"
+            <DateRangePicker
+              label="Timestamp Date Range"
+              startDate={dateFrom}
+              endDate={dateTo}
+              onStartDateChange={setDateFrom}
+              onEndDateChange={setDateTo}
+              placeholder="Select date range"
             />
           </FilterCard.Item>
         </FilterCard.Row>
@@ -401,6 +558,9 @@ export const AuditTrailView: React.FC = () => {
                     </th>
                     <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       IP Address
+                    </th>
+                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                      Device
                     </th>
 
                     <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
@@ -458,7 +618,7 @@ export const AuditTrailView: React.FC = () => {
                           <span className="font-medium text-slate-900">
                             {record.entityId}
                           </span>
-                          <span className="text-xs text-slate-500 max-w-[200px] truncate">
+                          <span className="text-xs text-slate-500">
                             {record.entityName}
                           </span>
                         </div>
@@ -472,6 +632,11 @@ export const AuditTrailView: React.FC = () => {
                       {/* IP Address */}
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-mono">
                         {record.ipAddress}
+                      </td>
+
+                      {/* Device */}
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-mono">
+                        {record.device || "-"}
                       </td>
 
                       {/* Action Column */}
@@ -528,9 +693,36 @@ export const AuditTrailView: React.FC = () => {
             record={paginatedData.find((r) => r.id === openDropdownId)!}
             isOpen={true}
             onClose={() => setOpenDropdownId(null)}
+            onViewDetails={() => {
+              const record = paginatedData.find((r) => r.id === openDropdownId);
+              if (record) {
+                setSelectedRecord(record);
+                setOpenDropdownId(null);
+              }
+            }}
+            onExport={() => {
+              const record = paginatedData.find((r) => r.id === openDropdownId);
+              if (record) {
+                setExportingRecord(record);
+                setIsExportModalOpen(true);
+                setOpenDropdownId(null);
+              }
+            }}
             position={dropdownPosition}
           />
         )}
+
+      {/* Export Modal */}
+      {exportingRecord && (
+        <ExportModal
+          isOpen={isExportModalOpen}
+          onClose={() => {
+            setIsExportModalOpen(false);
+            setExportingRecord(null);
+          }}
+          record={exportingRecord}
+        />
+      )}
     </div>
   );
 };

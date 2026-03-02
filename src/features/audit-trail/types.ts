@@ -53,6 +53,7 @@ export interface AuditTrailRecord {
     newValue: string;
   }[];
   ipAddress: string;
+  device?: string;
   severity: AuditSeverity;
   metadata?: Record<string, any>;
 }

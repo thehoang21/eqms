@@ -9,6 +9,7 @@ import {
   Calendar,
   BarChart3,
   CheckCircle,
+  Check,
   Clock,
   XCircle,
   Search,
@@ -686,7 +687,7 @@ export const UsageReportView: React.FC = () => {
                             : "bg-slate-100 text-slate-600 border-slate-200"
                         )}>
                           v{record.materialVersion}
-                          {record.isCurrentVersion && <span className="text-emerald-600">✓</span>}
+                          {record.isCurrentVersion && <Check className="h-3 w-3 text-emerald-600" />}
                         </span>
                       </td>
                       {/* Instructor */}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { cn } from '../utils';
 
 /**
@@ -63,7 +64,7 @@ export const FormField: React.FC<FormFieldProps> = ({
         )}
         {error && (
           <p className="mt-1.5 text-xs md:text-sm text-red-600 flex items-center gap-1">
-            <span>⚠</span> {error}
+            <AlertTriangle className="h-3.5 w-3.5 shrink-0" /> {error}
           </p>
         )}
       </div>

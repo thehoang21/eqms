@@ -13,6 +13,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Quality Control Testing SOP",
     description: "Approved document for publication",
     ipAddress: "192.168.1.45",
+    device: "Windows 11 - Chrome 120.0",
     severity: "High",
     changes: [
       { field: "status", oldValue: "Pending Approval", newValue: "Approved" },
@@ -30,6 +31,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Jane Doe",
     description: "Created new user account with QA Manager role",
     ipAddress: "192.168.1.12",
+    device: "macOS 14.2 - Safari 17.2",
     severity: "Medium",
     changes: [
       { field: "role", oldValue: "", newValue: "QA Manager" },
@@ -47,6 +49,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Temperature Excursion Investigation",
     description: "Updated root cause analysis findings",
     ipAddress: "192.168.1.89",
+    device: "Windows 11 - Edge 120.0",
     severity: "High",
     changes: [
       { field: "rootCause", oldValue: "Unknown", newValue: "Sensor calibration drift" },
@@ -64,6 +67,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "OOS Result - Batch #2024-112",
     description: "Created deviation for out-of-specification test result",
     ipAddress: "192.168.1.67",
+    device: "Windows 10 - Chrome 119.0",
     severity: "Critical",
   },
   {
@@ -77,6 +81,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "System Login",
     description: "User logged into the system",
     ipAddress: "192.168.1.45",
+    device: "Windows 11 - Chrome 120.0",
     severity: "Low",
   },
   {
@@ -90,6 +95,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Batch Production Record Procedure",
     description: "Downloaded document PDF",
     ipAddress: "192.168.1.45",
+    device: "Windows 11 - Chrome 120.0",
     severity: "Low",
   },
   {
@@ -103,6 +109,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "GMP Annual Refresher",
     description: "Assigned training to 15 employees",
     ipAddress: "192.168.1.23",
+    device: "macOS 14.2 - Chrome 120.0",
     severity: "Medium",
   },
   {
@@ -116,6 +123,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Duplicate CAPA Entry",
     description: "Deleted duplicate CAPA record",
     ipAddress: "192.168.1.89",
+    device: "Windows 11 - Edge 120.0",
     severity: "Medium",
   },
   {
@@ -129,6 +137,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Environmental Monitoring Plan",
     description: "Completed technical review",
     ipAddress: "192.168.1.56",
+    device: "Windows 10 - Firefox 121.0",
     severity: "Medium",
     changes: [
       { field: "status", oldValue: "Pending Review", newValue: "Review Complete" },
@@ -145,6 +154,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "System Configuration",
     description: "Updated password policy settings",
     ipAddress: "192.168.1.45",
+    device: "Windows 11 - Chrome 120.0",
     severity: "High",
     changes: [
       { field: "minPasswordLength", oldValue: "8", newValue: "12" },
@@ -162,6 +172,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Controlled Copy Request - Manufacturing Floor",
     description: "Requested controlled copy for production area",
     ipAddress: "192.168.1.67",
+    device: "Windows 10 - Chrome 119.0",
     severity: "Low",
   },
   {
@@ -175,6 +186,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Equipment Malfunction - Line 3",
     description: "Approved deviation closure",
     ipAddress: "192.168.1.78",
+    device: "macOS 13.6 - Safari 17.0",
     severity: "High",
   },
   {
@@ -188,6 +200,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Former Employee",
     description: "Disabled user account",
     ipAddress: "192.168.1.12",
+    device: "Ubuntu 22.04 - Firefox 121.0",
     severity: "Medium",
   },
   {
@@ -201,6 +214,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Quarterly Quality Metrics Report",
     description: "Exported report to Excel",
     ipAddress: "192.168.1.45",
+    device: "Windows 11 - Chrome 120.0",
     severity: "Low",
   },
   {
@@ -214,6 +228,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Obsolete Cleaning Procedure",
     description: "Archived obsolete document",
     ipAddress: "192.168.1.89",
+    device: "Windows 11 - Edge 120.0",
     severity: "Medium",
   },
   {
@@ -227,6 +242,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Annual Equipment Calibration",
     description: "Assigned task to maintenance team",
     ipAddress: "192.168.1.23",
+    device: "macOS 14.2 - Chrome 120.0",
     severity: "Low",
   },
   {
@@ -240,6 +256,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Packaging Material Specification Update",
     description: "Approved CAPA effectiveness verification",
     ipAddress: "192.168.1.56",
+    device: "Windows 10 - Firefox 121.0",
     severity: "High",
   },
   {
@@ -253,6 +270,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "System Maintenance Notification",
     description: "Created notification for scheduled maintenance",
     ipAddress: "192.168.1.67",
+    device: "Windows 10 - Chrome 119.0",
     severity: "Low",
   },
   {
@@ -266,6 +284,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "Data Integrity Policy",
     description: "Published policy to all users",
     ipAddress: "192.168.1.78",
+    device: "macOS 13.6 - Safari 17.0",
     severity: "Critical",
   },
   {
@@ -279,6 +298,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
     entityName: "System Logout",
     description: "User logged out of the system",
     ipAddress: "192.168.1.45",
+    device: "Windows 11 - Chrome 120.0",
     severity: "Low",
   },
 ];

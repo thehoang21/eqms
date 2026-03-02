@@ -50,11 +50,23 @@ export const ArchivedDocumentsView: React.FC = () => {
             }
 
             // Date range filter
-            if (startDate && new Date(doc.archivedDate) < new Date(startDate)) {
-                return false;
+            if (startDate) {
+                const parts = startDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                if (parts) {
+                    const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+                    if (new Date(doc.archivedDate) < from) {
+                        return false;
+                    }
+                }
             }
-            if (endDate && new Date(doc.archivedDate) > new Date(endDate)) {
-                return false;
+            if (endDate) {
+                const parts = endDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                if (parts) {
+                    const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+                    if (new Date(doc.archivedDate) > to) {
+                        return false;
+                    }
+                }
             }
 
             // Retention filter

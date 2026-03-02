@@ -11,9 +11,11 @@ import {
   X,
   Save,
   Search,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
+import { DateRangePicker } from "@/components/ui/datetime-picker/DateRangePicker";
 import { cn } from "@/components/ui/utils";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
@@ -76,6 +78,8 @@ export const RetentionPoliciesTab: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<
     "All" | "Active" | "Inactive"
   >("All");
+  const [modifiedFromDate, setModifiedFromDate] = useState("");
+  const [modifiedToDate, setModifiedToDate] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [showAddModal, setShowAddModal] = useState(false);
@@ -111,9 +115,30 @@ export const RetentionPoliciesTab: React.FC = () => {
         statusFilter === "All" ||
         (statusFilter === "Active" && item.isActive) ||
         (statusFilter === "Inactive" && !item.isActive);
-      return matchesSearch && matchesStatus;
+      
+      // Date range filtering
+      let matchesModifiedFrom = true;
+      let matchesModifiedTo = true;
+      if (modifiedFromDate) {
+        const parts = modifiedFromDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const from = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 0, 0, 0);
+          const itemDate = new Date(item.modifiedDate);
+          matchesModifiedFrom = itemDate >= from;
+        }
+      }
+      if (modifiedToDate) {
+        const parts = modifiedToDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (parts) {
+          const to = new Date(parseInt(parts[3]), parseInt(parts[2]) - 1, parseInt(parts[1]), 23, 59, 59);
+          const itemDate = new Date(item.modifiedDate);
+          matchesModifiedTo = itemDate <= to;
+        }
+      }
+      
+      return matchesSearch && matchesStatus && matchesModifiedFrom && matchesModifiedTo;
     });
-  }, [mockData, searchQuery, statusFilter]);
+  }, [mockData, searchQuery, statusFilter, modifiedFromDate, modifiedToDate]);
 
   const handleDropdownToggle = (
     id: string,
@@ -170,7 +195,7 @@ export const RetentionPoliciesTab: React.FC = () => {
       {/* Filter Card */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
           {/* Search Input */}
-          <div className="md:col-span-2 xl:col-span-6">
+          <div className="xl:col-span-4">
             <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
               Search
             </label>
@@ -187,7 +212,7 @@ export const RetentionPoliciesTab: React.FC = () => {
           </div>
 
           {/* Status Filter */}
-          <div className="xl:col-span-4">
+          <div className="xl:col-span-3">
             <Select
               label="Status"
               value={statusFilter}
@@ -200,6 +225,18 @@ export const RetentionPoliciesTab: React.FC = () => {
                 { label: "Inactive", value: "Inactive" },
               ]}
               placeholder="Filter by status"
+            />
+          </div>
+
+          {/* Modified Date Range */}
+          <div className="xl:col-span-3">
+            <DateRangePicker
+              label="Modified Date Range"
+              startDate={modifiedFromDate}
+              endDate={modifiedToDate}
+              onStartDateChange={setModifiedFromDate}
+              onEndDateChange={setModifiedToDate}
+              placeholder="Select date range"
             />
           </div>
 
@@ -435,7 +472,8 @@ export const RetentionPoliciesTab: React.FC = () => {
             </p>
             <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3">
               <p className="text-amber-800">
-                <span className="font-semibold">⚠️ Warning:</span> This action
+                <AlertTriangle className="h-3.5 w-3.5 text-amber-600 inline shrink-0" />{" "}
+                <span className="font-semibold">Warning:</span> This action
                 cannot be undone.
               </p>
             </div>

@@ -7,14 +7,9 @@ import {
   Clock,
   AlertCircle,
   CheckCircle2,
-  Calendar,
   Bell,
   Activity,
-  ArrowUpRight,
-  ArrowDownRight,
-  MoreHorizontal,
-  TrendingUp,
-  PieChart
+  PieChart,
 } from 'lucide-react';
 import { cn } from '@/components/ui/utils';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
@@ -170,7 +165,6 @@ export const DashboardView: React.FC = () => {
           <div className="absolute bottom-0 left-0 -ml-16 -mb-16 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
           
           <div className="relative z-10">
-            <h1 className="text-3xl font-bold tracking-tight mb-2">{getGreeting()}, {getUserFullName()} 👋</h1>
             <p className="text-slate-300 max-w-xl mb-6 text-lg">
               Here is what's happening in your Quality Management System today. You have <span className="text-white font-semibold">12 pending tasks</span> requiring your attention.
             </p>

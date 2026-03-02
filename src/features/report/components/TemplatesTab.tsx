@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { FileBarChart, Download, Filter, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
-import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
+import { DateRangePicker } from '@/components/ui/datetime-picker/DateRangePicker';
 import { cn } from '@/components/ui/utils';
 import type { ReportType, ReportFormat, ReportPeriod } from '../types';
 import { REPORT_TEMPLATES, COMPLIANCE_TEMPLATES } from '../data';
@@ -78,28 +78,20 @@ export function useTemplatesTab(mode: 'templates' | 'compliance') {
 
         {/* Date range (only if Custom period) */}
         {reportPeriod === 'Custom' && (
-          <>
-            <div className="xl:col-span-3">
-              <DateTimePicker
-                label="From Date"
-                value={dateFrom}
-                onChange={setDateFrom}
-                placeholder="Select start date"
-              />
-            </div>
-            <div className="xl:col-span-3">
-              <DateTimePicker
-                label="To Date"
-                value={dateTo}
-                onChange={setDateTo}
-                placeholder="Select end date"
-              />
-            </div>
-          </>
+          <div className="xl:col-span-3">
+            <DateRangePicker
+              label="Date Range"
+              startDate={dateFrom}
+              endDate={dateTo}
+              onStartDateChange={setDateFrom}
+              onEndDateChange={setDateTo}
+              placeholder="Select date range"
+            />
+          </div>
         )}
 
         {/* Export Format */}
-        <div className={cn('xl:col-span-3', reportPeriod !== 'Custom' && 'xl:col-start-10')}>
+        <div className="xl:col-span-3">
           <Select
             label="Export Format"
             value={reportFormat}

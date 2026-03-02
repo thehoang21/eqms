@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search } from 'lucide-react';
 import { Select } from '@/components/ui/select/Select';
-import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
+import { DateRangePicker } from '@/components/ui/datetime-picker/DateRangePicker';
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 
@@ -90,10 +90,10 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
         : defaultStatusOptions;
     return (
         <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-            {/* Primary Filters — Always visible */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+            {/* All Filters - 4 items per row on desktop */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-end">
                 {/* Search */}
-                <div className="md:col-span-2 xl:col-span-6 w-full">
+                <div className="w-full">
                     <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
                         Search
                     </label>
@@ -112,7 +112,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                 </div>
 
                 {/* Status Filter */}
-                <div className="xl:col-span-3 w-full">
+                <div className="w-full">
                     <Select
                         label="Status"
                         value={statusFilter}
@@ -126,7 +126,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
 
                 {/* Type Filter */}
                 {showTypeFilter && (
-                    <div className="xl:col-span-3 w-full">
+                    <div className="w-full">
                         <Select
                             label="Document Type"
                             value={typeFilter}
@@ -145,13 +145,10 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         />
                     </div>
                 )}
-            </div>
 
-            {/* Additional Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end mt-4">
                 {/* Department Filter */}
                 {showDepartmentFilter && (
-                    <div className="xl:col-span-3 w-full">
+                    <div className="w-full">
                         <Select
                             label="Department"
                             value={departmentFilter}
@@ -173,7 +170,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                 )}
 
                 {/* Author Filter */}
-                <div className="xl:col-span-3 w-full">
+                <div className="w-full">
                     <Select
                         label="Author"
                         value={authorFilter}
@@ -197,56 +194,38 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                 </div>
 
                 {/* Created Date Range */}
-                <div className="xl:col-span-3 w-full">
-                    <DateTimePicker
-                        label="Created From"
-                        value={createdFromDate}
-                        onChange={(dateStr) => onCreatedFromDateChange(dateStr)}
-                        placeholder="Select start date"
-                    />
-                </div>
-                <div className="xl:col-span-3 w-full">
-                    <DateTimePicker
-                        label="Created To"
-                        value={createdToDate}
-                        onChange={(dateStr) => onCreatedToDateChange(dateStr)}
-                        placeholder="Select end date"
+                <div className="w-full">
+                    <DateRangePicker
+                        label="Created Date Range"
+                        startDate={createdFromDate}
+                        endDate={createdToDate}
+                        onStartDateChange={onCreatedFromDateChange}
+                        onEndDateChange={onCreatedToDateChange}
+                        placeholder="Select date range"
                     />
                 </div>
 
                 {/* Effective Date Range */}
-                <div className="xl:col-span-3 w-full">
-                    <DateTimePicker
-                        label="Effective From"
-                        value={effectiveFromDate}
-                        onChange={(dateStr) => onEffectiveFromDateChange(dateStr)}
-                        placeholder="Select start date"
-                    />
-                </div>
-                <div className="xl:col-span-3 w-full">
-                    <DateTimePicker
-                        label="Effective To"
-                        value={effectiveToDate}
-                        onChange={(dateStr) => onEffectiveToDateChange(dateStr)}
-                        placeholder="Select end date"
+                <div className="w-full">
+                    <DateRangePicker
+                        label="Effective Date Range"
+                        startDate={effectiveFromDate}
+                        endDate={effectiveToDate}
+                        onStartDateChange={onEffectiveFromDateChange}
+                        onEndDateChange={onEffectiveToDateChange}
+                        placeholder="Select date range"
                     />
                 </div>
 
                 {/* Valid Until Date Range */}
-                <div className="xl:col-span-3 w-full">
-                    <DateTimePicker
-                        label="Valid From"
-                        value={validFromDate}
-                        onChange={(dateStr) => onValidFromDateChange(dateStr)}
-                        placeholder="Select start date"
-                    />
-                </div>
-                <div className="xl:col-span-3 w-full">
-                    <DateTimePicker
-                        label="Valid To"
-                        value={validToDate}
-                        onChange={(dateStr) => onValidToDateChange(dateStr)}
-                        placeholder="Select end date"
+                <div className="w-full">
+                    <DateRangePicker
+                        label="Valid Date Range"
+                        startDate={validFromDate}
+                        endDate={validToDate}
+                        onStartDateChange={onValidFromDateChange}
+                        onEndDateChange={onValidToDateChange}
+                        placeholder="Select date range"
                     />
                 </div>
             </div>

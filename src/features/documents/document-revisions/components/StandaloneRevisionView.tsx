@@ -13,6 +13,7 @@ import {
     ArrowLeft,
     CheckCircle,
     ArrowRight,
+    Check,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
 import { Select } from '@/components/ui/select/Select';
@@ -363,7 +364,7 @@ export const StandaloneRevisionView: React.FC = () => {
                         "text-xs",
                         reasonForChange.length < 50 ? "text-amber-600 font-medium" : "text-emerald-600"
                     )}>
-                        {reasonForChange.length >= 50 ? "✓ Minimum met" : "Minimum 50 characters"}
+                        {reasonForChange.length >= 50 ? <><Check className="h-3.5 w-3.5 inline shrink-0" /> Minimum met</> : "Minimum 50 characters"}
                     </p>
                 </div>
             </div>

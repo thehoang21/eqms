@@ -5,6 +5,8 @@ import {
     ChevronRight, 
     FileText, 
     AlertCircle,
+    AlertTriangle,
+    Check,
     Info
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
@@ -471,7 +473,7 @@ export const NewRevisionView: React.FC = () => {
                         "text-xs",
                         reasonForChange.length < 50 ? "text-amber-600 font-medium" : "text-emerald-600"
                     )}>
-                        {reasonForChange.length >= 50 ? "✓ Minimum met" : "Minimum 50 characters required"}
+                        {reasonForChange.length >= 50 ? <><Check className="h-3.5 w-3.5 inline shrink-0" /> Minimum met</> : "Minimum 50 characters required"}
                     </p>
                 </div>
             </div>
@@ -487,7 +489,7 @@ export const NewRevisionView: React.FC = () => {
                     <div className="space-y-3">
                         <p>Are you sure you want to cancel the current Impact Analysis?</p>
                         <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-1">
-                            <p className="text-amber-800">⚠️ <span className="font-semibold">Warning:</span> All unsaved changes will be lost.</p>
+                            <p className="text-amber-800"><AlertTriangle className="h-3.5 w-3.5 text-amber-600 inline shrink-0" /> <span className="font-semibold">Warning:</span> All unsaved changes will be lost.</p>
                             {upgradeCount > 0 && (
                                 <p><span className="font-semibold">Pending Decisions:</span> {upgradeCount} document(s) marked for upgrade</p>
                             )}

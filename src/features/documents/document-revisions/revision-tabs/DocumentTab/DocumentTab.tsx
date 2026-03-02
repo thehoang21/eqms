@@ -11,6 +11,7 @@ import {
   ZoomOut,
   RotateCcw,
   Image as ImageIcon,
+  Check,
 } from "lucide-react";
 import { Worker, Viewer, SpecialZoomLevel } from "@react-pdf-viewer/core";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
@@ -573,8 +574,8 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
                       {/* Success Message */}
                       {uploadedFile.status === "success" && (
-                        <p className="text-[10px] md:text-xs text-emerald-600 mt-1 md:mt-1.5 font-medium">
-                          ✓ Upload completed
+                        <p className="text-[10px] md:text-xs text-emerald-600 mt-1 md:mt-1.5 font-medium flex items-center gap-1">
+                          <Check className="h-3.5 w-3.5 shrink-0" /> Upload completed
                         </p>
                       )}
 
