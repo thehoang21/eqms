@@ -5,6 +5,7 @@ import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
   GraduationCap,
+  Users,
   Download,
   MoreVertical,
 } from "lucide-react";
@@ -15,7 +16,7 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
-import { CourseApproval, CourseWorkflowStatus, TrainingMethod } from "../../../types";
+import { CourseApproval, CourseWorkflowStatus, TrainingMethod, TrainingType } from "../../../types";
 import { MOCK_PENDING_REVIEWS as MOCK_APPROVALS } from "../mockData";
 
 const getMethodConfig = (method: TrainingMethod) => {
@@ -39,28 +40,20 @@ const getStatusColor = (status: CourseWorkflowStatus): string => {
 };
 
 // --- Constants ---
+const TYPE_OPTIONS = [
+  { label: "All Types", value: "All" },
+  { label: "GMP", value: "GMP" },
+  { label: "Technical", value: "Technical" },
+  { label: "Compliance", value: "Compliance" },
+  { label: "SOP", value: "SOP" },
+  { label: "Safety", value: "Safety" },
+];
+
 const METHOD_OPTIONS = [
   { label: "All Methods", value: "All" },
   { label: "Quiz (Paper-based/Manual)", value: "Quiz (Paper-based/Manual)" },
   { label: "Hands-on / OJT", value: "Hands-on/OJT" },
   { label: "Read & Understood", value: "Read & Understood" },
-];
-
-const INSTRUCTOR_OPTIONS = [
-  { label: "All Instructors", value: "All" },
-  { label: "John Smith", value: "John Smith" },
-  { label: "Sarah Johnson", value: "Sarah Johnson" },
-  { label: "Dr. Michael Chen", value: "Dr. Michael Chen" },
-  { label: "Emma Wilson", value: "Emma Wilson" },
-  { label: "David Brown", value: "David Brown" },
-];
-
-const DEPARTMENT_OPTIONS = [
-  { label: "All Departments", value: "All" },
-  { label: "Quality Assurance", value: "Quality Assurance" },
-  { label: "Production", value: "Production" },
-  { label: "QC Lab", value: "QC Lab" },
-  { label: "Documentation", value: "Documentation" },
 ];
 
 // --- Component ---
@@ -69,9 +62,8 @@ export const PendingReviewView: React.FC = () => {
   
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string>("All");
   const [methodFilter, setMethodFilter] = useState<string>("All");
-  const [instructorFilter, setInstructorFilter] = useState<string>("All");
-  const [departmentFilter, setDepartmentFilter] = useState<string>("All");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -83,23 +75,22 @@ export const PendingReviewView: React.FC = () => {
       const matchesSearch =
         item.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.trainingId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.relatedDocument.toLowerCase().includes(searchQuery.toLowerCase());
+        (item.instructor || "").toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesType = typeFilter === "All" || item.trainingType === typeFilter;
       const matchesMethod = methodFilter === "All" || item.trainingMethod === methodFilter;
-      const matchesInstructor = instructorFilter === "All" || item.submittedBy === instructorFilter;
-      const matchesDepartment = departmentFilter === "All" || item.department === departmentFilter;
       
       let matchesDateFrom = true;
       let matchesDateTo = true;
       if (dateFrom) {
-        matchesDateFrom = new Date(item.submittedAt) >= new Date(dateFrom);
+        matchesDateFrom = new Date(item.scheduledDate || item.submittedAt) >= new Date(dateFrom);
       }
       if (dateTo) {
-        matchesDateTo = new Date(item.submittedAt) <= new Date(dateTo);
+        matchesDateTo = new Date(item.scheduledDate || item.submittedAt) <= new Date(dateTo);
       }
       
-      return matchesSearch && matchesMethod && matchesInstructor && matchesDepartment && matchesDateFrom && matchesDateTo;
+      return matchesSearch && matchesType && matchesMethod && matchesDateFrom && matchesDateTo;
     });
-  }, [searchQuery, methodFilter, instructorFilter, departmentFilter, dateFrom, dateTo]);
+  }, [searchQuery, typeFilter, methodFilter, dateFrom, dateTo]);
 
   // Pagination
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -190,28 +181,44 @@ export const PendingReviewView: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-3 sm:p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-3 lg:gap-4 items-end">
+      <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
+        {/* Row 1: Search + Type + Method */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           {/* Search */}
-          <div className="xl:col-span-4">
-            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">Search</label>
+          <div>
+            <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
+              Search
+            </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
+                placeholder="Search by title, ID, or instructor..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Search by title, ID..."
-                className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
               />
             </div>
           </div>
 
-          {/* Method Filter */}
-          <div className="xl:col-span-4">
+          {/* Training Type */}
+          <div>
+            <Select
+              label="Training Type"
+              value={typeFilter}
+              onChange={(val) => {
+                setTypeFilter(val);
+                setCurrentPage(1);
+              }}
+              options={TYPE_OPTIONS}
+            />
+          </div>
+
+          {/* Training Method */}
+          <div>
             <Select
               label="Training Method"
               value={methodFilter}
@@ -222,35 +229,23 @@ export const PendingReviewView: React.FC = () => {
               options={METHOD_OPTIONS}
             />
           </div>
+        </div>
 
-          {/* Instructor Filter */}
-          <div className="xl:col-span-4">
+        {/* Row 2: Status + Date From + Date To */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mt-4">
+          {/* Status (readonly) */}
+          <div>
             <Select
-              label="Instructor"
-              value={instructorFilter}
-              onChange={(val) => {
-                setInstructorFilter(val);
-                setCurrentPage(1);
-              }}
-              options={INSTRUCTOR_OPTIONS}
-            />
-          </div>
-
-          {/* Department Filter */}
-          <div className="xl:col-span-4">
-            <Select
-              label="Department"
-              value={departmentFilter}
-              onChange={(val) => {
-                setDepartmentFilter(val);
-                setCurrentPage(1);
-              }}
-              options={DEPARTMENT_OPTIONS}
+              label="Status"
+              value="Pending Review"
+              onChange={() => {}}
+              options={[{ label: "Pending Review", value: "Pending Review" }]}
+              disabled
             />
           </div>
 
           {/* Date From */}
-          <div className="xl:col-span-4">
+          <div>
             <DateTimePicker
               label="From Date"
               value={dateFrom}
@@ -263,7 +258,7 @@ export const PendingReviewView: React.FC = () => {
           </div>
 
           {/* Date To */}
-          <div className="xl:col-span-4">
+          <div>
             <DateTimePicker
               label="To Date"
               value={dateTo}
@@ -293,19 +288,22 @@ export const PendingReviewView: React.FC = () => {
                   Course Name
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                  Type
+                </th>
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Method
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Status
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Submitted By
+                  Instructor
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Department
+                  Scheduled Date
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Submitted Date
+                  Enrolled
                 </th>
                 <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
                   Action
@@ -315,7 +313,7 @@ export const PendingReviewView: React.FC = () => {
             <tbody className="divide-y divide-slate-200 bg-white">
               {paginatedData.length === 0 ? (
                 <tr>
-                  <td colSpan={9}>
+                  <td colSpan={10}>
                     <TableEmptyState
                       title="No approvals found"
                       description="No course approvals match your current filters."
@@ -349,6 +347,13 @@ export const PendingReviewView: React.FC = () => {
                         </div>
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                        {item.trainingType && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-blue-50 text-blue-700 border-blue-200">
+                            {item.trainingType}
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
                         <span className={cn(
                           "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
                           methodCfg.className
@@ -365,17 +370,22 @@ export const PendingReviewView: React.FC = () => {
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                        {item.submittedBy}
+                        {item.instructor || "—"}
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                        {item.department}
-                      </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
-                        {new Date(item.submittedAt).toLocaleDateString("en-US", {
+                        {new Date(item.scheduledDate || item.submittedAt).toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
                         })}
+                      </td>
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <Users className="h-4 w-4 text-slate-400" />
+                          <span className="text-slate-900 font-medium">
+                            {item.enrolled ?? 0}/{item.capacity ?? 0}
+                          </span>
+                        </div>
                       </td>
                       <td
                         onClick={(e) => e.stopPropagation()}

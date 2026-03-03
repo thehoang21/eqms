@@ -14,8 +14,10 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
+import { Select } from "@/components/ui/select/Select";
 import { cn } from "@/components/ui/utils";
 import { InlineLoading } from "@/components/ui/loading/Loading";
+import { IconCheck, IconCircleCheck } from "@tabler/icons-react";
 
 // ─── Types ───────────────────────────────────────────────────────────
 export interface ObsoleteMaterial {
@@ -87,7 +89,7 @@ const getCourseStatusConfig = (status: CourseStatus) => {
     case "In Progress":
       return { classes: "bg-amber-50 text-amber-700 border-amber-200", icon: <Clock className="h-3 w-3" /> };
     case "Completed":
-      return { classes: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: <CheckCircle className="h-3 w-3" /> };
+      return { classes: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: <IconCheck className="h-3 w-3" /> };
     case "Cancelled":
       return { classes: "bg-red-50 text-red-700 border-red-200", icon: <XCircle className="h-3 w-3" /> };
   }
@@ -206,17 +208,22 @@ export const MarkObsoleteModal: React.FC<MarkObsoleteModalProps> = ({
             const isCurrent = i === step;
             return (
               <React.Fragment key={s.label}>
-                <div className="flex flex-col items-center gap-1.5">
-                  <div className={cn(
-                    "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all",
-                    isDone ? "bg-emerald-600 text-white" :
-                    isCurrent ? "bg-red-600 text-white ring-4 ring-red-100" :
-                    "bg-slate-200 text-slate-500"
-                  )}>
-                    {isDone ? <CheckCircle className="h-4 w-4" /> : i + 1}
+                <div className="flex flex-col items-center gap-2">
+                  <div className="relative">
+                    {isCurrent && (
+                      <span className="absolute inset-0 rounded-full bg-red-400 opacity-75 animate-ping" />
+                    )}
+                    <div className={cn(
+                      "relative w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-sm",
+                      isDone ? "bg-emerald-600 text-white" :
+                      isCurrent ? "bg-red-600 text-white ring-4 ring-red-100 scale-110" :
+                      "bg-slate-100 text-slate-400 border border-slate-200"
+                    )}>
+                      {isDone ? <IconCheck className="h-5 w-5" /> : i + 1}
+                    </div>
                   </div>
                   <span className={cn(
-                    "text-xs font-medium text-center leading-tight",
+                    "text-xs font-semibold text-center leading-tight transition-colors",
                     isCurrent ? "text-red-700" : isDone ? "text-emerald-700" : "text-slate-400"
                   )}>
                     {s.label}
@@ -224,8 +231,8 @@ export const MarkObsoleteModal: React.FC<MarkObsoleteModalProps> = ({
                 </div>
                 {i < STEPS.length - 1 && (
                   <div className={cn(
-                    "flex-1 mx-3 h-px transition-all max-w-[60px] mb-5",
-                    isDone ? "bg-emerald-400" : "bg-slate-200"
+                    "flex-1 mx-3 h-0.5 transition-all max-w-[60px] mb-6 rounded-full",
+                    isDone ? "bg-emerald-500" : "bg-slate-200"
                   )} />
                 )}
               </React.Fragment>
@@ -371,34 +378,20 @@ export const MarkObsoleteModal: React.FC<MarkObsoleteModalProps> = ({
                 </p>
               </div>
 
-              {/* Reason radio cards */}
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+              {/* Reason select */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">
                   Select Reason <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-2">
-                  {JUSTIFICATION_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => { setJustificationCode(opt.value); if (opt.value !== "replaced_new_version") setReplacedByCode(""); }}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-all",
-                        justificationCode === opt.value
-                          ? "border-amber-500 bg-amber-50/50"
-                          : "border-slate-200 hover:border-slate-300 bg-white"
-                      )}
-                    >
-                      <div className={cn(
-                        "w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors",
-                        justificationCode === opt.value ? "border-amber-500 bg-amber-500" : "border-slate-300"
-                      )}>
-                        {justificationCode === opt.value && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                      </div>
-                      <span className="text-sm text-slate-800 font-medium">{opt.label}</span>
-                    </button>
-                  ))}
-                </div>
+                <Select
+                  value={justificationCode}
+                  onChange={(val) => {
+                    setJustificationCode(val);
+                    if (val !== "replaced_new_version") setReplacedByCode("");
+                  }}
+                  options={JUSTIFICATION_OPTIONS}
+                  placeholder="Choose a reason..."
+                />
               </div>
 
               {/* Replaced-by code – only visible when "replaced_new_version" selected */}
@@ -414,7 +407,7 @@ export const MarkObsoleteModal: React.FC<MarkObsoleteModalProps> = ({
                       value={replacedByCode}
                       onChange={(e) => setReplacedByCode(e.target.value)}
                       placeholder="e.g. TM-PDF-003 v2.0"
-                      className="w-full h-9 pl-10 pr-4 border border-amber-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500 focus:border-amber-500 text-sm placeholder:text-slate-400"
+                      className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm placeholder:text-slate-400"
                     />
                   </div>
                   <p className="text-xs text-slate-500">
@@ -434,12 +427,7 @@ export const MarkObsoleteModal: React.FC<MarkObsoleteModalProps> = ({
                   onChange={(e) => setJustificationNote(e.target.value)}
                   rows={3}
                   placeholder="Provide any additional context or notes about this decision..."
-                  className={cn(
-                    "w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-1 text-sm placeholder:text-slate-400 resize-none transition-colors",
-                    justificationCode === "other" && !justificationNote.trim()
-                      ? "border-amber-300 focus:ring-amber-500 focus:border-amber-500"
-                      : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
-                  )}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm placeholder:text-slate-400 resize-none"
                 />
               </div>
             </div>

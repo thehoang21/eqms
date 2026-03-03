@@ -160,6 +160,7 @@ export interface CourseApproval {
   location?: string;                 // Training location
   scheduledDate?: string;            // Scheduled date
   capacity?: number;                 // Max participants
+  enrolled?: number;                 // Current enrolled count
   distributionList?: string[];       // Target departments
   instruction?: string;              // Training instruction/notes
   examTemplate?: string;             // Exam template file name

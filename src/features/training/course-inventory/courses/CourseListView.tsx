@@ -49,7 +49,6 @@ export const CourseListView: React.FC = () => {
     dateTo: "",
   });
   const [methodFilter, setMethodFilter] = useState<TrainingMethod | "All">("All");
-  const [instructorFilter, setInstructorFilter] = useState<string>("All");
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -81,17 +80,6 @@ export const CourseListView: React.FC = () => {
     { label: "Obsoleted", value: "Obsoleted" },
   ];
 
-  const instructorOptions = useMemo(() => {
-    const uniqueInstructors = Array.from(new Set(MOCK_TRAININGS.map(t => t.instructor)));
-    return [
-      { label: "All Instructors", value: "All" },
-      ...uniqueInstructors.map(instructor => ({
-        label: instructor,
-        value: instructor
-      }))
-    ];
-  }, []);
-
   // Filtered Data
   const filteredData = useMemo(() => {
     return MOCK_TRAININGS.filter((training) => {
@@ -102,7 +90,6 @@ export const CourseListView: React.FC = () => {
       const matchesType = filters.typeFilter === "All" || training.type === filters.typeFilter;
       const matchesStatus = filters.statusFilter === "All" || training.status === filters.statusFilter;
       const matchesMethod = methodFilter === "All" || training.trainingMethod === methodFilter;
-      const matchesInstructor = instructorFilter === "All" || training.instructor === instructorFilter;
       
       let matchesDateFrom = true;
       let matchesDateTo = true;
@@ -114,9 +101,9 @@ export const CourseListView: React.FC = () => {
         matchesDateTo = new Date(training.scheduledDate) <= new Date(filters.dateTo);
       }
 
-      return matchesSearch && matchesType && matchesStatus && matchesMethod && matchesInstructor && matchesDateFrom && matchesDateTo;
+      return matchesSearch && matchesType && matchesStatus && matchesMethod && matchesDateFrom && matchesDateTo;
     });
-  }, [filters, methodFilter, instructorFilter]);
+  }, [filters, methodFilter]);
 
   // Paginated Data
   const paginatedData = useMemo(() => {
@@ -274,10 +261,10 @@ export const CourseListView: React.FC = () => {
 
       {/* Filters */}
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
-        {/* Row 1: Search + Type + Instructor */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+        {/* Row 1: Search + Type + Method */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           {/* Search */}
-          <div className="md:col-span-2 xl:col-span-6">
+          <div>
             <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
               Search
             </label>
@@ -296,7 +283,7 @@ export const CourseListView: React.FC = () => {
           </div>
 
           {/* Training Type */}
-          <div className="xl:col-span-3">
+          <div>
             <Select
               label="Training Type"
               value={filters.typeFilter}
@@ -307,19 +294,6 @@ export const CourseListView: React.FC = () => {
             />
           </div>
 
-          {/* Instructor */}
-          <div className="xl:col-span-3">
-            <Select
-              label="Instructor"
-              value={instructorFilter}
-              onChange={(val) => setInstructorFilter(val)}
-              options={instructorOptions}
-            />
-          </div>
-        </div>
-
-        {/* Row 2: Method + Status + Date Range */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-end mt-4">
           {/* Training Method */}
           <div>
             <Select
@@ -329,7 +303,10 @@ export const CourseListView: React.FC = () => {
               options={methodOptions}
             />
           </div>
+        </div>
 
+        {/* Row 2: Status + Date From + Date To */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mt-4">
           {/* Status */}
           <div>
             <Select
@@ -524,7 +501,6 @@ export const CourseListView: React.FC = () => {
                 dateTo: "",
               });
               setMethodFilter("All");
-              setInstructorFilter("All");
               setCurrentPage(1);
             }}
           />

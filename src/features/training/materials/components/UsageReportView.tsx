@@ -236,7 +236,6 @@ export const UsageReportView: React.FC = () => {
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [versionFilter, setVersionFilter] = useState("All");
   const [departmentFilter, setDepartmentFilter] = useState("All");
 
   const statusOptions = [
@@ -246,11 +245,6 @@ export const UsageReportView: React.FC = () => {
     { label: "Completed", value: "Completed" },
     { label: "Cancelled", value: "Cancelled" },
   ];
-
-  const versionOptions = useMemo(() => {
-    const versions = [...new Set(allRecords.map((r) => r.materialVersion))].sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
-    return [{ label: "All Versions", value: "All" }, ...versions.map((v) => ({ label: `v${v}`, value: v }))];
-  }, [allRecords]);
 
   const departmentOptions = useMemo(() => {
     const depts = [...new Set(allRecords.map((r) => r.department))].sort();
@@ -266,11 +260,10 @@ export const UsageReportView: React.FC = () => {
         r.department.toLowerCase().includes(q) ||
         r.instructor.toLowerCase().includes(q);
       const matchesStatus = statusFilter === "All" || r.courseStatus === statusFilter;
-      const matchesVersion = versionFilter === "All" || r.materialVersion === versionFilter;
       const matchesDept = departmentFilter === "All" || r.department === departmentFilter;
-      return matchesSearch && matchesStatus && matchesVersion && matchesDept;
+      return matchesSearch && matchesStatus && matchesDept;
     });
-  }, [allRecords, searchQuery, statusFilter, versionFilter, departmentFilter]);
+  }, [allRecords, searchQuery, statusFilter, departmentFilter]);
 
   // Summary stats
   const stats = useMemo(() => {
@@ -593,9 +586,12 @@ export const UsageReportView: React.FC = () => {
           </div>
 
           {/* Filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
             {/* Search */}
-            <div className="sm:col-span-2 xl:col-span-1">
+            <div>
+              <label className="text-xs sm:text-sm font-medium text-slate-700 mb-1.5 block">
+                Search
+              </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
@@ -608,18 +604,14 @@ export const UsageReportView: React.FC = () => {
               </div>
             </div>
             <Select
+              label="Status"
               value={statusFilter}
               onChange={(v) => setStatusFilter(v as string)}
               options={statusOptions}
               placeholder="All Statuses"
             />
             <Select
-              value={versionFilter}
-              onChange={(v) => setVersionFilter(v as string)}
-              options={versionOptions}
-              placeholder="All Versions"
-            />
-            <Select
+              label="Department"
               value={departmentFilter}
               onChange={(v) => setDepartmentFilter(v as string)}
               options={departmentOptions}
