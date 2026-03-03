@@ -293,7 +293,7 @@ export const MaterialsView: React.FC = () => {
 
   const handleApprovalAction = (id: string) => {
     setOpenDropdownId(null);
-    navigate(ROUTES.TRAINING.MATERIAL_REVIEW(id));
+    navigate(ROUTES.TRAINING.MATERIAL_APPROVAL(id));
   };
 
   const handleSubmitForReview = (id: string) => {

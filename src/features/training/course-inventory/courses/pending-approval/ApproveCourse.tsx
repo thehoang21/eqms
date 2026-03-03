@@ -1,21 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "@/app/routes.constants";
-import {
-  XCircle,
-  Check,
-} from "lucide-react";
+import { XCircle, Check } from "lucide-react";
 import { IconLayoutDashboard } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { cn } from "@/components/ui/utils";
-import { CourseApproval, TrainingFile } from "../../types";
-import { MOCK_APPROVAL_DETAILS as MOCK_APPROVALS, MOCK_TRAINING_FILES } from "./mockData";
-import { BasicInfoTab } from "../shared/BasicInfoTab";
-import { DocumentTab } from "../shared/DocumentTab";
-import { ConfigTab } from "../shared/ConfigTab";
+import { MOCK_APPROVAL_DETAILS } from "../mockData";
+import { BasicInfoTab } from "../../shared/BasicInfoTab";
+import { DocumentTab } from "../../shared/DocumentTab";
+import { ConfigTab } from "../../shared/ConfigTab";
 
-// Tab types
 type TabType = "basic-info" | "document-training" | "training-config";
 
 const TABS: { id: TabType; label: string }[] = [
@@ -24,70 +19,48 @@ const TABS: { id: TabType; label: string }[] = [
   { id: "training-config", label: "Assessment Config" },
 ];
 
-// Workflow stepper steps (Rejected is an exception, shown as a banner)
-const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved"] as const;
+const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved", "Obsoleted"] as const;
+type WorkflowStep = typeof WORKFLOW_STEPS[number];
 
-export const ApprovalDetailView: React.FC = () => {
+export const ApproveCourse: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const [activeTab, setActiveTab] = useState<TabType>("basic-info");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showESignModal, setShowESignModal] = useState(false);
-  const [eSignAction, setESignAction] = useState<"confirm-review" | "approve" | "reject" | null>(null);
+  const [eSignAction, setESignAction] = useState<"approve" | "reject" | null>(null);
 
-  // Find approval by ID
-  const approval = MOCK_APPROVALS.find((a) => a.id === id);
+  const original = MOCK_APPROVAL_DETAILS.find((a) => a.id === id);
 
-  if (!approval) {
+  // Local status override to reflect stepper advancement after action
+  const [localStatus, setLocalStatus] = useState<string | null>(null);
+  const [rejectionReason, setRejectionReason] = useState<string>("");
+
+  if (!original) {
     return (
       <div className="space-y-6 w-full flex-1 flex flex-col">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => window.history.back()}
-            className="gap-2"
-          >
+          <Button variant="ghost" size="sm" onClick={() => navigate(ROUTES.TRAINING.PENDING_APPROVAL)} className="gap-2">
             Back
           </Button>
         </div>
         <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-          <p className="text-lg font-medium text-slate-900">Course approval not found</p>
-          <p className="text-sm text-slate-500 mt-1">The requested approval does not exist.</p>
+          <p className="text-lg font-medium text-slate-900">Course not found</p>
+          <p className="text-sm text-slate-500 mt-1">The requested course does not exist.</p>
         </div>
       </div>
     );
   }
 
-  const isPendingReview = approval.approvalStatus === "Pending Review";
-  const isPendingApproval = approval.approvalStatus === "Pending Approval";
-  const isActionable = isPendingReview || isPendingApproval;
-  const isRejected = approval.approvalStatus === "Rejected";
+  const approval = { ...original, approvalStatus: localStatus ?? original.approvalStatus };
+  const effectiveStatus = approval.approvalStatus;
+  const isRejected = effectiveStatus === "Rejected";
+  const currentStepIndex = isRejected
+    ? -1
+    : WORKFLOW_STEPS.indexOf(effectiveStatus as WorkflowStep);
 
-  const handleBack = () => {
-    if (isPendingReview) {
-      navigate(ROUTES.TRAINING.PENDING_REVIEW);
-    } else if (isPendingApproval) {
-      navigate(ROUTES.TRAINING.PENDING_APPROVAL);
-    } else {
-      window.history.back();
-    }
-  };
-
-  const queueLabel =
-    isPendingReview
-      ? "Pending Review"
-      : isPendingApproval
-      ? "Pending Approval"
-      : isRejected
-      ? "Course History"
-      : "Approved Courses";
-
-  const handleConfirmReview = () => {
-    setESignAction("confirm-review");
-    setShowESignModal(true);
-  };
+  const canAct = effectiveStatus === "Pending Approval";
 
   const handleApprove = () => {
     setESignAction("approve");
@@ -102,25 +75,18 @@ export const ApprovalDetailView: React.FC = () => {
   const handleESignConfirm = (reason: string) => {
     setIsSubmitting(true);
     setShowESignModal(false);
-    
+
     setTimeout(() => {
-      if (eSignAction === "confirm-review") {
-        // TODO: Implement API call for content review confirmation
-      } else if (eSignAction === "approve") {
-        // TODO: Implement API call for approval
+      if (eSignAction === "approve") {
+        setLocalStatus("Approved");
       } else {
-        // TODO: Implement API call for rejection
+        setRejectionReason(reason);
+        setLocalStatus("Rejected");
       }
-      
       setIsSubmitting(false);
       setESignAction(null);
-      handleBack();
     }, 500);
   };
-
-  const currentStepIndex = isRejected
-    ? -1
-    : WORKFLOW_STEPS.indexOf(approval.approvalStatus as typeof WORKFLOW_STEPS[number]);
 
   const trainingFiles = approval.trainingFiles || [];
 
@@ -177,11 +143,10 @@ export const ApprovalDetailView: React.FC = () => {
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        {/* Title & Breadcrumb with Action Buttons */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 lg:gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-              {queueLabel}
+              Pending Approval
             </h1>
             <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
               <IconLayoutDashboard className="h-4 w-4" />
@@ -192,35 +157,23 @@ export const ApprovalDetailView: React.FC = () => {
               <span className="hidden sm:inline">Course Inventory</span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <span className="text-slate-700 font-medium">{queueLabel}</span>
+              <span className="text-slate-700 font-medium">Pending Approval</span>
             </div>
           </div>
 
-          {/* Action Buttons (Header) */}
+          {/* Header Action Buttons */}
           <div className="flex items-center gap-2 shrink-0">
-            <Button variant="outline" size="sm" onClick={handleBack}>
+            <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.TRAINING.PENDING_APPROVAL)}>
               Cancel
             </Button>
-            {isPendingReview && (
-              <>
-                <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
-                  <span className="hidden sm:inline">{isSubmitting ? "Processing..." : "Reject"}</span>
-                  <span className="sm:hidden">{isSubmitting ? "..." : "Reject"}</span>
-                </Button>
-                <Button size="sm" onClick={handleConfirmReview} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
-                  <span className="hidden sm:inline">{isSubmitting ? "Processing..." : "Review"}</span>
-                  <span className="sm:hidden">{isSubmitting ? "..." : "Review"}</span>
-                </Button>
-              </>
-            )}
-            {isPendingApproval && (
+            {canAct && (
               <>
                 <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
                   <span className="hidden sm:inline">{isSubmitting ? "Processing..." : "Reject"}</span>
                   <span className="sm:hidden">{isSubmitting ? "..." : "Reject"}</span>
                 </Button>
                 <Button size="sm" onClick={handleApprove} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
-                  <span className="hidden sm:inline">{isSubmitting ? "Processing..." : "Approve"}</span>
+                  <span className="hidden sm:inline">{isSubmitting ? "Processing..." : "Complete Approve"}</span>
                   <span className="sm:hidden">{isSubmitting ? "..." : "Approve"}</span>
                 </Button>
               </>
@@ -229,7 +182,7 @@ export const ApprovalDetailView: React.FC = () => {
         </div>
       </div>
 
-      {/* Status Workflow Stepper */}
+      {/* Workflow Stepper */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100">
           <div className="flex items-stretch min-w-full">
@@ -255,7 +208,10 @@ export const ApprovalDetailView: React.FC = () => {
                   />
                   <div className="relative z-10 flex items-center gap-2 px-6">
                     {!isRejected && isCompleted && <Check className="h-4 w-4 text-emerald-600 shrink-0" />}
-                    <span className={cn("text-xs md:text-sm font-medium text-center", !isRejected && isCurrent ? "text-white" : !isRejected && isCompleted ? "text-slate-700" : "text-slate-400")}>
+                    <span className={cn(
+                      "text-xs md:text-sm font-medium text-center",
+                      !isRejected && isCurrent ? "text-white" : !isRejected && isCompleted ? "text-slate-700" : "text-slate-400"
+                    )}>
                       {step}
                     </span>
                   </div>
@@ -269,8 +225,8 @@ export const ApprovalDetailView: React.FC = () => {
             <XCircle className="h-4 w-4 text-red-600 mt-0.5 shrink-0" />
             <div>
               <p className="text-sm font-semibold text-red-800">Course Rejected</p>
-              {approval.rejectionReason && (
-                <p className="text-xs text-red-700 mt-0.5 leading-relaxed">{approval.rejectionReason}</p>
+              {rejectionReason && (
+                <p className="text-xs text-red-700 mt-0.5 leading-relaxed">{rejectionReason}</p>
               )}
             </div>
           </div>
@@ -279,7 +235,6 @@ export const ApprovalDetailView: React.FC = () => {
 
       {/* Tab Container */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        {/* Tab Navigation */}
         <div className="border-b border-slate-200">
           <div className="flex overflow-x-auto">
             {TABS.map((tab) => {
@@ -295,55 +250,40 @@ export const ApprovalDetailView: React.FC = () => {
                       : "border-b-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                   )}
                 >
-                  <span>{tab.label}</span>
+                  {tab.label}
                 </button>
               );
             })}
           </div>
         </div>
-
-        {/* Tab Content */}
         <div className="animate-in fade-in duration-200">
           {renderTabContent()}
         </div>
       </div>
 
       {/* Footer Actions */}
-      {isActionable && (
-        <div className="flex items-center justify-start gap-3">
-          <Button variant="outline" size="sm" onClick={handleBack}>Cancel</Button>
-          {isPendingReview && (
-            <>
-              <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
-                {isSubmitting ? "Processing..." : "Reject"}
-              </Button>
-              <Button size="sm" onClick={handleConfirmReview} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
-                {isSubmitting ? "Processing..." : "Review"}
-              </Button>
-            </>
-          )}
-          {isPendingApproval && (
-            <>
-              <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
-                {isSubmitting ? "Processing..." : "Reject"}
-              </Button>
-              <Button size="sm" onClick={handleApprove} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
-                {isSubmitting ? "Processing..." : "Approve"}
-              </Button>
-            </>
-          )}
-        </div>
-      )}
+      <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+        <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.TRAINING.PENDING_APPROVAL)}>
+          Cancel
+        </Button>
+        {canAct && (
+          <>
+            <Button size="sm" onClick={handleReject} disabled={isSubmitting} className="bg-red-600 hover:bg-red-700 text-white">
+              {isSubmitting ? "Processing..." : "Reject"}
+            </Button>
+            <Button size="sm" onClick={handleApprove} disabled={isSubmitting} className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5">
+              {isSubmitting ? "Processing..." : "Complete Approve"}
+            </Button>
+          </>
+        )}
+      </div>
 
       {/* E-Signature Modal */}
       <ESignatureModal
         isOpen={showESignModal}
-        onClose={() => {
-          setShowESignModal(false);
-          setESignAction(null);
-        }}
+        onClose={() => { setShowESignModal(false); setESignAction(null); }}
         onConfirm={handleESignConfirm}
-        actionTitle={eSignAction === "confirm-review" ? "Confirm Content Review" : eSignAction === "approve" ? "Approve Course" : "Reject Course"}
+        actionTitle={eSignAction === "approve" ? "Approve Course" : "Reject Course"}
       />
     </div>
   );

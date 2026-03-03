@@ -73,9 +73,10 @@ const CourseStatusView = lazy(() => import('@/features/training/compliance-track
 const EmployeeTrainingFilesView = lazy(() => import('@/features/training/records-archive/EmployeeTrainingFilesView').then(m => ({ default: m.EmployeeTrainingFilesView })));
 const ExportRecordsView = lazy(() => import('@/features/training/records-archive/ExportRecordsView').then(m => ({ default: m.ExportRecordsView })));
 const CreateCourseView = lazy(() => import('@/features/training').then(m => ({ default: m.CreateCourseView })));
-const PendingReviewView = lazy(() => import('@/features/training/course-inventory/approval/PendingReviewView').then(m => ({ default: m.PendingReviewView })));
-const PendingApprovalView = lazy(() => import('@/features/training/course-inventory/approval/PendingApprovalView').then(m => ({ default: m.PendingApprovalView })));
-const ApprovalDetailView = lazy(() => import('@/features/training/course-inventory/approval/ApprovalDetailView').then(m => ({ default: m.ApprovalDetailView })));
+const PendingReviewView = lazy(() => import('@/features/training/course-inventory/courses/pending-review/PendingReviewView').then(m => ({ default: m.PendingReviewView })));
+const PendingApprovalView = lazy(() => import('@/features/training/course-inventory/courses/pending-approval/PendingApprovalView').then(m => ({ default: m.PendingApprovalView })));
+const ReviewCourse = lazy(() => import('@/features/training/course-inventory/courses/pending-review/ReviewCourse').then(m => ({ default: m.ReviewCourse })));
+const ApproveCourse = lazy(() => import('@/features/training/course-inventory/courses/pending-approval/ApproveCourse').then(m => ({ default: m.ApproveCourse })));
 const ResultEntryPage = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.ResultEntryPage })));
 const CourseDetailView = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.CourseDetailView })));
 const EditCourseView = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.EditCourseView })));
@@ -303,9 +304,9 @@ export const AppRoutes: React.FC = () => {
           <Route path="training-materials/:materialId/review" element={<Suspense fallback={<LoadingFallback />}><MaterialReviewView /></Suspense>} />
           <Route path="training-materials/:materialId/approval" element={<Suspense fallback={<LoadingFallback />}><MaterialApprovalView /></Suspense>} />
           <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingReviewView /></Suspense>} />
-          <Route path="pending-review/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
+          <Route path="pending-review/:id" element={<Suspense fallback={<LoadingFallback />}><ReviewCourse /></Suspense>} />
           <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingApprovalView /></Suspense>} />
-          <Route path="pending-approval/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
+          <Route path="pending-approval/:id" element={<Suspense fallback={<LoadingFallback />}><ApproveCourse /></Suspense>} />
           <Route path="courses/:courseId" element={<Suspense fallback={<LoadingFallback />}><CourseDetailView /></Suspense>} />
           <Route path="courses/:courseId/edit" element={<Suspense fallback={<LoadingFallback />}><EditCourseView /></Suspense>} />
           <Route path="courses/:courseId/progress" element={<Suspense fallback={<LoadingFallback />}><CourseProgressView /></Suspense>} />

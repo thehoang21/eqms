@@ -81,6 +81,7 @@ export const ROUTES = {
     PENDING_REVIEW: '/training-management/pending-review',
     PENDING_APPROVAL: '/training-management/pending-approval',
     APPROVAL_DETAIL: (id: string) => `/training-management/pending-review/${id}`,
+    APPROVE_DETAIL: (id: string) => `/training-management/pending-approval/${id}`,
     // Compliance Tracking
     TRAINING_MATRIX: '/training-management/training-matrix',
     COURSE_STATUS: '/training-management/course-status',

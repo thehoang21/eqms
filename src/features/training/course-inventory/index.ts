@@ -1,4 +1,4 @@
-// Courses
+// Courses & Approval workflow
 export {
   CourseListView,
   CreateCourseView,
@@ -6,11 +6,8 @@ export {
   CourseDetailView,
   CourseProgressView,
   ResultEntryPage,
-} from "./courses";
-
-// Approval workflow
-export {
   PendingReviewView,
   PendingApprovalView,
-  ApprovalDetailView,
-} from "./approval";
+  ReviewCourse,
+  ApproveCourse,
+} from "./courses";

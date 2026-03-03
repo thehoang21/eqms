@@ -31,6 +31,7 @@ const WORKFLOW_STEPS = [
   "Pending Review",
   "Pending Approval",
   "Approved",
+  "Obsoleted",
 ] as const;
 
 // Mock existing course data — in real app, fetch from API by courseId

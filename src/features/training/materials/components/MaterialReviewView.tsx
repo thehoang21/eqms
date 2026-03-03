@@ -536,6 +536,34 @@ export const MaterialReviewView: React.FC = () => {
         </div>
       </div>
 
+      {/* ─── Bottom Actions ─────────────────────────────────────── */}
+      <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+        <Button
+          variant="outline"
+          size="sm"
+          className="whitespace-nowrap gap-2"
+          onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)}
+        >
+          Back
+        </Button>
+
+        {canReview && (
+          <>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="whitespace-nowrap gap-2"
+              onClick={handleReviewReject}
+            >
+              Reject
+            </Button>
+            <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleReviewApprove}>
+              Complete Review
+            </Button>
+          </>
+        )}
+      </div>
+
       {/* ─── Alert Modal ────────────────────────────────────────── */}
       <AlertModal
         isOpen={isModalOpen}

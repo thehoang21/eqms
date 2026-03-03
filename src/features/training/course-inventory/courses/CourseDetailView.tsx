@@ -36,20 +36,20 @@ const TABS: { id: TabType; label: string }[] = [
 ];
 
 // Workflow stepper steps
-const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved"] as const;
+const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved", "Obsoleted"] as const;
 
 const getStatusColor = (status: TrainingStatus): string => {
   switch (status) {
-    case "Scheduled":
-      return "bg-cyan-50 text-cyan-700 border-cyan-200";
-    case "In-Progress":
+    case "Draft":
+      return "bg-slate-100 text-slate-700 border-slate-200";
+    case "Pending Review":
+      return "bg-amber-50 text-amber-700 border-amber-200";
+    case "Pending Approval":
       return "bg-blue-50 text-blue-700 border-blue-200";
-    case "Completed":
+    case "Approved":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    case "Overdue":
-      return "bg-red-50 text-red-700 border-red-200";
-    case "Cancelled":
-      return "bg-slate-50 text-slate-700 border-slate-200";
+    case "Obsoleted":
+      return "bg-rose-50 text-rose-700 border-rose-200";
     default:
       return "bg-slate-50 text-slate-700 border-slate-200";
   }
@@ -58,10 +58,16 @@ const getStatusColor = (status: TrainingStatus): string => {
 const getWorkflowStepForStatus = (status: TrainingStatus) => {
   // Mapping training status to workflow step
   switch (status) {
-    case "Scheduled":
-    case "In-Progress":
-    case "Completed":
-      return 3; // Approved (past all steps)
+    case "Draft":
+      return 0;
+    case "Pending Review":
+      return 1;
+    case "Pending Approval":
+      return 2;
+    case "Approved":
+      return 3;
+    case "Obsoleted":
+      return 4;
     default:
       return 0;
   }

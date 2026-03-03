@@ -21,7 +21,7 @@ import {
   ClipboardList,
   BarChart3,
 } from "lucide-react";
-import { IconLayoutDashboard, IconPlus, IconInfoCircle } from "@tabler/icons-react";
+import { IconLayoutDashboard, IconPlus, IconInfoCircle, IconEyeCheck, IconChecks } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
@@ -74,11 +74,11 @@ export const CourseListView: React.FC = () => {
 
   const statusOptions = [
     { label: "All Status", value: "All" },
-    { label: "Scheduled", value: "Scheduled" },
-    { label: "In Progress", value: "In Progress" },
-    { label: "Completed", value: "Completed" },
-    { label: "Overdue", value: "Overdue" },
-    { label: "Cancelled", value: "Cancelled" },
+    { label: "Draft", value: "Draft" },
+    { label: "Pending Review", value: "Pending Review" },
+    { label: "Pending Approval", value: "Pending Approval" },
+    { label: "Approved", value: "Approved" },
+    { label: "Obsoleted", value: "Obsoleted" },
   ];
 
   const instructorOptions = useMemo(() => {
@@ -128,12 +128,12 @@ export const CourseListView: React.FC = () => {
 
   const getStatusColor = (status: TrainingStatus): string => {
     switch (status) {
-      case "Scheduled":   return "bg-cyan-50 text-cyan-700 border-cyan-200";
-      case "In-Progress": return "bg-blue-50 text-blue-700 border-blue-200";
-      case "Completed":   return "bg-emerald-50 text-emerald-700 border-emerald-200";
-      case "Overdue":     return "bg-red-50 text-red-700 border-red-200";
-      case "Cancelled":   return "bg-slate-50 text-slate-700 border-slate-200";
-      default:            return "bg-slate-50 text-slate-700 border-slate-200";
+      case "Draft":            return "bg-slate-100 text-slate-700 border-slate-200";
+      case "Pending Review":   return "bg-amber-50 text-amber-700 border-amber-200";
+      case "Pending Approval": return "bg-blue-50 text-blue-700 border-blue-200";
+      case "Approved":         return "bg-emerald-50 text-emerald-700 border-emerald-200";
+      case "Obsoleted":        return "bg-rose-50 text-rose-700 border-rose-200";
+      default:                 return "bg-slate-50 text-slate-700 border-slate-200";
     }
   };
 
@@ -213,6 +213,16 @@ export const CourseListView: React.FC = () => {
 
   const handleViewProgress = (id: string) => {
     navigate(ROUTES.TRAINING.COURSE_PROGRESS(id));
+    setOpenDropdownId(null);
+  };
+
+  const handleReviewCourse = (id: string) => {
+    navigate(ROUTES.TRAINING.APPROVAL_DETAIL(id));
+    setOpenDropdownId(null);
+  };
+
+  const handleApproveCourse = (id: string) => {
+    navigate(ROUTES.TRAINING.APPROVE_DETAIL(id));
     setOpenDropdownId(null);
   };
 
@@ -542,63 +552,97 @@ export const CourseListView: React.FC = () => {
               transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none'
             }}
           >
-            <div className="py-1">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleViewCourse(openDropdownId);
-                  setOpenDropdownId(null);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">View Detail Course</span>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEditCourse(openDropdownId);
-                  setOpenDropdownId(null);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <Edit className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Edit Course</span>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleResultEntry(openDropdownId);
-                  setOpenDropdownId(null);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <ClipboardList className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Result Entry</span>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleViewProgress(openDropdownId);
-                  setOpenDropdownId(null);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <BarChart3 className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">View Progress</span>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleExportPDF(openDropdownId);
-                  setOpenDropdownId(null);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <Download className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Export PDF</span>
-              </button>
-            </div>
+            {(() => {
+              const currentTraining = MOCK_TRAININGS.find(t => t.id === openDropdownId);
+              const isPendingReview = currentTraining?.status === "Pending Review";
+              const isPendingApproval = currentTraining?.status === "Pending Approval";
+
+              return (
+                <div className="py-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewCourse(openDropdownId);
+                      setOpenDropdownId(null);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                  >
+                    <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
+                    <span className="font-medium">View Detail Course</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditCourse(openDropdownId);
+                      setOpenDropdownId(null);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                  >
+                    <Edit className="h-4 w-4 flex-shrink-0" />
+                    <span className="font-medium">Edit Course</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleResultEntry(openDropdownId);
+                      setOpenDropdownId(null);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                  >
+                    <ClipboardList className="h-4 w-4 flex-shrink-0" />
+                    <span className="font-medium">Result Entry</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewProgress(openDropdownId);
+                      setOpenDropdownId(null);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                  >
+                    <BarChart3 className="h-4 w-4 flex-shrink-0" />
+                    <span className="font-medium">View Progress</span>
+                  </button>
+                  {isPendingReview && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleReviewCourse(openDropdownId);
+                        setOpenDropdownId(null);
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                    >
+                      <IconEyeCheck className="h-4 w-4 flex-shrink-0" />
+                      <span className="font-medium">Review Course</span>
+                    </button>
+                  )}
+                  {isPendingApproval && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleApproveCourse(openDropdownId);
+                        setOpenDropdownId(null);
+                      }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                    >
+                      <IconChecks className="h-4 w-4 flex-shrink-0" />
+                      <span className="font-medium">Approve Course</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleExportPDF(openDropdownId);
+                      setOpenDropdownId(null);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                  >
+                    <Download className="h-4 w-4 flex-shrink-0" />
+                    <span className="font-medium">Export PDF</span>
+                  </button>
+                </div>
+              );
+            })()}
           </div>
         </>,
         document.body

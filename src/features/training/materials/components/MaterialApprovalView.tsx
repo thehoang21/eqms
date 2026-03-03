@@ -268,7 +268,6 @@ export const MaterialApprovalView: React.FC = () => {
                 Reject
               </Button>
               <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleApprove}>
-                <IconChecks className="h-4 w-4" />
                 Complete Approve
               </Button>
             </>
@@ -563,6 +562,46 @@ export const MaterialApprovalView: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ─── Bottom Actions ─────────────────────────────────────── */}
+      <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+        <Button
+          variant="outline"
+          size="sm"
+          className="whitespace-nowrap gap-2"
+          onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)}
+        >
+          Back
+        </Button>
+
+        {canApprove && (
+          <>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="whitespace-nowrap gap-2"
+              onClick={handleReject}
+            >
+              Reject
+            </Button>
+            <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleApprove}>
+              Complete Approve
+            </Button>
+          </>
+        )}
+
+        {material.status === "Approved" && (
+          <Button
+            variant="destructive"
+            size="sm"
+            className="whitespace-nowrap gap-2"
+            onClick={handleMarkObsolete}
+          >
+            <XCircle className="h-4 w-4" />
+            Mark Obsoleted
+          </Button>
+        )}
       </div>
 
       {/* ─── Alert Modal ────────────────────────────────────────── */}

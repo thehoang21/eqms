@@ -21,7 +21,7 @@ const TABS: { id: TabType; label: string }[] = [
 ];
 
 // Workflow stepper steps
-const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved"] as const;
+const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved", "Obsoleted"] as const;
 
 export const CreateCourseView: React.FC = () => {
     const navigate = useNavigate();

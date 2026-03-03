@@ -1,31 +1,41 @@
 import React, { useState, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
-  Eye,
-  FileText,
-  ClipboardList,
-  Info,
+  GraduationCap,
   Download,
+  MoreVertical,
 } from "lucide-react";
-import { IconInfoCircle, IconLayoutDashboard } from "@tabler/icons-react";
+import { IconLayoutDashboard, IconInfoCircle, IconEyeCheck } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
-import { formatDateUS } from "@/utils/format";
-import { CourseApproval } from "../../types";
-import { MOCK_PENDING_REVIEWS as MOCK_APPROVALS } from "./mockData";
+import { CourseApproval, CourseWorkflowStatus, TrainingMethod } from "../../../types";
+import { MOCK_PENDING_REVIEWS as MOCK_APPROVALS } from "../mockData";
 
-const getMethodBadge = (method: "Read & Understood" | "Quiz (Paper-based/Manual)" | "Hands-on/OJT") => {
-  return method === "Quiz (Paper-based/Manual)"
-    ? "bg-purple-50 text-purple-700 border-purple-200"
-    : method === "Hands-on/OJT"
-    ? "bg-amber-50 text-amber-700 border-amber-200"
-    : "bg-slate-50 text-slate-700 border-slate-200";
+const getMethodConfig = (method: TrainingMethod) => {
+  switch (method) {
+    case "Read & Understood": return { label: "Read & Understood", className: "bg-slate-50 text-slate-700 border-slate-200" };
+    case "Quiz (Paper-based/Manual)": return { label: "Quiz (Manual)", className: "bg-purple-50 text-purple-700 border-purple-200" };
+    case "Hands-on/OJT":     return { label: "Hands-on / OJT",    className: "bg-amber-50 text-amber-700 border-amber-200" };
+  }
+};
+
+const getStatusColor = (status: CourseWorkflowStatus): string => {
+  switch (status) {
+    case "Draft":            return "bg-slate-100 text-slate-700 border-slate-200";
+    case "Pending Review":   return "bg-amber-50 text-amber-700 border-amber-200";
+    case "Pending Approval": return "bg-blue-50 text-blue-700 border-blue-200";
+    case "Approved":         return "bg-emerald-50 text-emerald-700 border-emerald-200";
+    case "Obsoleted":        return "bg-rose-50 text-rose-700 border-rose-200";
+    case "Rejected":         return "bg-red-50 text-red-700 border-red-200";
+    default:                 return "bg-slate-50 text-slate-700 border-slate-200";
+  }
 };
 
 // --- Constants ---
@@ -98,8 +108,44 @@ export const PendingReviewView: React.FC = () => {
     return filteredData.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredData, currentPage, itemsPerPage]);
 
-  const handleViewDetail = (approval: CourseApproval) => {
-    navigate(ROUTES.TRAINING.APPROVAL_DETAIL(approval.id));
+  // Action Dropdown
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
+
+  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (openDropdownId === id) {
+      setOpenDropdownId(null);
+    } else {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const menuHeight = 100;
+      const menuWidth = 200;
+      const safeMargin = 8;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
+      let top = shouldShowAbove ? rect.top + window.scrollY - 4 : rect.bottom + window.scrollY + 4;
+      const viewportWidth = window.innerWidth;
+      let left = rect.right + window.scrollX - menuWidth;
+      if (left + menuWidth > viewportWidth - safeMargin) {
+        left = viewportWidth - menuWidth - safeMargin + window.scrollX;
+      }
+      if (left < safeMargin + window.scrollX) {
+        left = safeMargin + window.scrollX;
+      }
+      setDropdownPosition({ top, left, showAbove: shouldShowAbove });
+      setOpenDropdownId(id);
+    }
+  };
+
+  const handleViewDetail = (id: string) => {
+    navigate(ROUTES.TRAINING.APPROVAL_DETAIL(id));
+    setOpenDropdownId(null);
+  };
+
+  const handleReviewCourse = (id: string) => {
+    navigate(ROUTES.TRAINING.APPROVAL_DETAIL(id));
+    setOpenDropdownId(null);
   };
 
   return (
@@ -237,28 +283,31 @@ export const PendingReviewView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-12">
+                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
                   No.
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
-                  Training ID
+                  Course ID
                 </th>
                 <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Course Name
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
-                  Related Document
-                </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Method
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                  Status
+                </th>
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Submitted By
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                  Department
+                </th>
+                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Submitted Date
                 </th>
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-20 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
                   Action
                 </th>
               </tr>
@@ -266,7 +315,7 @@ export const PendingReviewView: React.FC = () => {
             <tbody className="divide-y divide-slate-200 bg-white">
               {paginatedData.length === 0 ? (
                 <tr>
-                  <td colSpan={8}>
+                  <td colSpan={9}>
                     <TableEmptyState
                       title="No approvals found"
                       description="No course approvals match your current filters."
@@ -276,60 +325,69 @@ export const PendingReviewView: React.FC = () => {
               ) : (
                 paginatedData.map((item, index) => {
                   const rowNumber = (currentPage - 1) * itemsPerPage + index + 1;
+                  const methodCfg = getMethodConfig(item.trainingMethod);
 
                   return (
                     <tr
                       key={item.id}
-                      onClick={() => handleViewDetail(item)}
+                      onClick={() => handleViewDetail(item.id)}
                       className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                     >
-                      <td className="py-3.5 px-4 text-sm text-slate-500 whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-500 font-medium">
                         {rowNumber}
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span className="font-mono text-slate-600">{item.trainingId}</span>
+                        <span className="font-medium text-slate-900">{item.trainingId}</span>
                       </td>
                       <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span className="font-medium text-slate-900">{item.courseTitle}</span>
-                      </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
-                        <div className="flex items-center gap-1.5">
-                          <FileText className="h-3.5 w-3.5 text-slate-400 shrink-0" />
-                          <span>{item.relatedDocument}</span>
+                        <div className="flex items-start gap-2">
+                          <GraduationCap className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <p className="font-medium text-slate-900">{item.courseTitle}</p>
+                            <p className="text-xs text-slate-500 mt-0.5">{item.relatedDocument}</p>
+                          </div>
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap hidden lg:table-cell">
-                        <span
-                          className={cn(
-                            "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
-                            getMethodBadge(item.trainingMethod)
-                          )}
-                        >
-                          {item.trainingMethod}
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                        <span className={cn(
+                          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+                          methodCfg.className
+                        )}>
+                          {methodCfg.label}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden lg:table-cell">
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                        <span className={cn(
+                          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+                          getStatusColor(item.approvalStatus)
+                        )}>
+                          {item.approvalStatus}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
                         {item.submittedBy}
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
-                        {formatDateUS(item.submittedAt)}
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                        {item.department}
+                      </td>
+                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                        {new Date(item.submittedAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
                       </td>
                       <td
                         onClick={(e) => e.stopPropagation()}
-                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-10 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                       >
-                        <div className="flex items-center justify-center gap-1.5">
-                          <Button
-                            size="xs"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleViewDetail(item);
-                            }}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
-                          >
-                            Review
-                          </Button>
-                        </div>
+                        <button
+                          onClick={(e) => handleDropdownToggle(item.id, e)}
+                          className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                          aria-label="Actions"
+                        >
+                          <MoreVertical className="h-4 w-4 text-slate-600" />
+                        </button>
                       </td>
                     </tr>
                   );
@@ -352,6 +410,52 @@ export const PendingReviewView: React.FC = () => {
           />
         )}
       </div>
+
+      {/* Action Dropdown Portal */}
+      {openDropdownId && createPortal(
+        <>
+          <div
+            className="fixed inset-0 z-40 animate-in fade-in duration-150"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpenDropdownId(null);
+            }}
+            aria-hidden="true"
+          />
+          <div
+            className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+            style={{
+              top: `${dropdownPosition.top}px`,
+              left: `${dropdownPosition.left}px`,
+              transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none'
+            }}
+          >
+            <div className="py-1">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewDetail(openDropdownId);
+                }}
+                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+              >
+                <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">View Details</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleReviewCourse(openDropdownId);
+                }}
+                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+              >
+                <IconEyeCheck className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">Review Course</span>
+              </button>
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
     </div>
   );
 };

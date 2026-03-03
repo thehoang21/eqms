@@ -4,11 +4,11 @@
  */
 
 export type TrainingStatus = 
-  | "Scheduled" 
-  | "In-Progress" 
-  | "Completed" 
-  | "Cancelled" 
-  | "Overdue";
+  | "Draft" 
+  | "Pending Review" 
+  | "Pending Approval" 
+  | "Approved" 
+  | "Obsoleted";
 
 export type TrainingType = 
   | "GMP" 
@@ -125,7 +125,8 @@ export type CourseWorkflowStatus =
   | "Pending Review"
   | "Pending Approval"
   | "Approved"
-  | "Rejected";
+  | "Rejected"
+  | "Obsoleted";
 
 // Alias kept for backward compatibility
 export type CourseApprovalStatus = CourseWorkflowStatus;
