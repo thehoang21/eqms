@@ -328,7 +328,7 @@ const SYSTEM_MODULES: NavItem[] = [
       {
         id: "info-sys",
         label: "System Information",
-        icon: IconInfoCircle,
+        icon: IconSettings2,
         path: "/settings/system-info",
       },
     ],
@@ -336,7 +336,7 @@ const SYSTEM_MODULES: NavItem[] = [
   {
     id: "user-manual",
     label: "User Manual",
-    icon: IconBook2,
+    icon: BookOpen,
     path: "/user-manual",
   },
 ];
