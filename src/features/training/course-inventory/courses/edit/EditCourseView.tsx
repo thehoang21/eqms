@@ -142,7 +142,7 @@ export const EditCourseView: React.FC = () => {
       "Are you sure you want to cancel? All unsaved changes will be lost."
     );
     setModalAction(() => () => {
-      navigate(ROUTES.TRAINING.COURSE_DETAIL(courseId));
+      navigate(ROUTES.TRAINING.COURSE_DETAIL(courseId ?? ""));
     });
     setIsModalOpen(true);
   };
@@ -227,7 +227,7 @@ export const EditCourseView: React.FC = () => {
         "The training course has been updated. Changes will be reflected immediately."
       );
       setModalAction(() => () => {
-        navigate(ROUTES.TRAINING.COURSE_DETAIL(courseId));
+        navigate(ROUTES.TRAINING.COURSE_DETAIL(courseId ?? ""));
       });
       setIsModalOpen(true);
     } catch (error) {

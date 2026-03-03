@@ -17,7 +17,6 @@ export { MultiDocumentUpload } from './components/MultiDocumentUpload';
 
 // Review & Approval
 export { RevisionReviewView } from './review-revision/RevisionReviewView';
-export { RevisionReviewViewWithBatch } from './review-revision/RevisionReviewViewWithBatch';
 export { RevisionApprovalView } from './approval-revision/RevisionApprovalView';
 
 // Controlled Copy

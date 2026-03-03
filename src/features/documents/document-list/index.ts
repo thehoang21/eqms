@@ -9,7 +9,6 @@ export { DocumentsView } from './DocumentsView';
 
 // Single document creation
 export { NewDocumentView } from './document-creation/NewDocumentView';
-export { SingleDocumentView } from './document-creation/SingleDocumentView';
 
 // Tabs (re-exported from document-creation for backwards compatibility)
 export * from './document-creation/new-tabs';

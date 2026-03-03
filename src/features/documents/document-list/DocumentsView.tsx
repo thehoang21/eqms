@@ -1,5 +1,5 @@
 ﻿import React, { useState, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ROUTES } from '@/app/routes.constants';
 import { createPortal } from "react-dom";
 import {
@@ -287,6 +287,7 @@ interface DocumentsViewProps {
 
 export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDocument }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Configuration based on viewType
   const config = useMemo(() => {
@@ -311,11 +312,12 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
             { id: 'type', label: 'Document Type', visible: true, order: 6 },
             { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
             { id: 'correlatedDocuments', label: 'Correlated Document', visible: true, order: 8 },
-            { id: 'department', label: 'Department', visible: true, order: 9 },
-            { id: 'author', label: 'Author', visible: true, order: 10 },
-            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 11 },
-            { id: 'validUntil', label: 'Valid Until', visible: true, order: 12 },
-            { id: 'action', label: 'Action', visible: true, order: 13, locked: true },
+            { id: 'template', label: 'Template', visible: true, order: 9 },
+            { id: 'department', label: 'Department', visible: true, order: 10 },
+            { id: 'author', label: 'Author', visible: true, order: 11 },
+            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 12 },
+            { id: 'validUntil', label: 'Valid Until', visible: true, order: 13 },
+            { id: 'action', label: 'Action', visible: true, order: 14, locked: true },
           ] as TableColumn[],
         };
       case "owned-by-me":
@@ -338,11 +340,12 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
             { id: 'type', label: 'Document Type', visible: true, order: 6 },
             { id: 'relatedDocuments', label: 'Related Document', visible: true, order: 7 },
             { id: 'correlatedDocuments', label: 'Correlated Document', visible: true, order: 8 },
-            { id: 'department', label: 'Department', visible: true, order: 9 },
-            { id: 'author', label: 'Author', visible: true, order: 10 },
-            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 11 },
-            { id: 'validUntil', label: 'Valid Until', visible: true, order: 12 },
-            { id: 'action', label: 'Action', visible: true, order: 13, locked: true },
+            { id: 'template', label: 'Template', visible: true, order: 9 },
+            { id: 'department', label: 'Department', visible: true, order: 10 },
+            { id: 'author', label: 'Author', visible: true, order: 11 },
+            { id: 'effectiveDate', label: 'Effective Date', visible: true, order: 12 },
+            { id: 'validUntil', label: 'Valid Until', visible: true, order: 13 },
+            { id: 'action', label: 'Action', visible: true, order: 14, locked: true },
           ] as TableColumn[],
         };
     }
@@ -360,6 +363,9 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
   const [validToDate, setValidToDate] = useState<string>("");
   const [authorFilter, setAuthorFilter] = useState<string>(config.defaultAuthorFilter);
   const [versionFilter, setVersionFilter] = useState<string>("");
+  const [relatedDocumentFilter, setRelatedDocumentFilter] = useState<string>("All");
+  const [correlatedDocumentFilter, setCorrelatedDocumentFilter] = useState<string>("All");
+  const [templateFilter, setTemplateFilter] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [columns, setColumns] = useState<TableColumn[]>(config.defaultColumns);
@@ -371,6 +377,12 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
   const [isCreateLinkModalOpen, setIsCreateLinkModalOpen] = useState(false);
   const [selectedDocumentForLink, setSelectedDocumentForLink] = useState<Document | null>(null);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Reset to list view when user navigates to this page from sidebar (each navigation generates a new location.key)
+  useEffect(() => {
+    setSelectedDocumentId(null);
+    setSelectedDocumentTab("general");
+  }, [location.key]);
 
   // Update authorFilter when viewType changes
   useEffect(() => {
@@ -394,6 +406,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
     } else if (document?.status === "Pending Approval") {
       navigate(ROUTES.DOCUMENTS.REVISIONS.APPROVAL(documentId));
     } else {
+      window.document.getElementById('main-scroll-container')?.scrollTo({ top: 0, behavior: 'instant' });
       setSelectedDocumentId(documentId);
       setSelectedDocumentTab(tab);
     }
@@ -490,12 +503,25 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
         }
       }
 
+      const matchesRelatedDocument =
+        relatedDocumentFilter === "All" ||
+        (relatedDocumentFilter === "yes" ? !!doc.hasRelatedDocuments : !doc.hasRelatedDocuments);
+
+      const matchesCorrelatedDocument =
+        correlatedDocumentFilter === "All" ||
+        (correlatedDocumentFilter === "yes" ? !!doc.hasCorrelatedDocuments : !doc.hasCorrelatedDocuments);
+
+      const matchesTemplate =
+        templateFilter === "All" ||
+        (templateFilter === "yes" ? !!doc.isTemplate : !doc.isTemplate);
+
       return matchesSearch && matchesStatus && matchesType && matchesDepartment && matchesAuthor && matchesVersion &&
              matchesCreatedFrom && matchesCreatedTo && matchesEffectiveFrom && matchesEffectiveTo &&
-             matchesValidFrom && matchesValidTo;
+             matchesValidFrom && matchesValidTo && matchesRelatedDocument && matchesCorrelatedDocument && matchesTemplate;
     });
   }, [searchQuery, statusFilter, typeFilter, departmentFilter, authorFilter, versionFilter,
-      createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, validFromDate, validToDate, config]);
+      createdFromDate, createdToDate, effectiveFromDate, effectiveToDate, validFromDate, validToDate,
+      relatedDocumentFilter, correlatedDocumentFilter, templateFilter, config]);
 
   const visibleColumns = useMemo(() => {
     return columns.filter(col => col.visible).sort((a, b) => a.order - b.order);
@@ -573,6 +599,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
         initialStatus={selectedDocument.status}
         customStatusSteps={["Draft", "Active", "Obsoleted", "Closed - Cancelled"]}
         onBack={() => {
+          window.document.getElementById('main-scroll-container')?.scrollTo({ top: 0, behavior: 'instant' });
           setSelectedDocumentId(null);
           setSelectedDocumentTab("general");
         }}
@@ -687,6 +714,21 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
           setValidToDate(dateStr);
           setCurrentPage(1);
         }}
+        relatedDocumentFilter={relatedDocumentFilter}
+        onRelatedDocumentFilterChange={(value) => {
+          setRelatedDocumentFilter(value);
+          setCurrentPage(1);
+        }}
+        correlatedDocumentFilter={correlatedDocumentFilter}
+        onCorrelatedDocumentFilterChange={(value) => {
+          setCorrelatedDocumentFilter(value);
+          setCurrentPage(1);
+        }}
+        templateFilter={templateFilter}
+        onTemplateFilterChange={(value) => {
+          setTemplateFilter(value);
+          setCurrentPage(1);
+        }}
       />
 
       {/* Table Container with Pagination */}
@@ -796,6 +838,17 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                               <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
                                 Yes
                               </span>
+                            ) : (
+                              <span className="text-slate-600 font-medium">No</span>
+                            )}
+                          </td>
+                        );
+                      }
+                      if (col.id === 'template') {
+                        return (
+                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                            {doc.isTemplate ? (
+                              <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
                             ) : (
                               <span className="text-slate-600 font-medium">No</span>
                             )}

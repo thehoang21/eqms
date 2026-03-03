@@ -1,5 +1,6 @@
-import React, { useState, useMemo, useRef, createRef } from "react";
+import React, { useState, useMemo, useRef, createRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useLocation } from "react-router-dom";
 import {
   Search,
   MoreVertical,
@@ -237,8 +238,15 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
 // --- Main Component ---
 export const AuditTrailView: React.FC = () => {
+  const location = useLocation();
+
   // View state
   const [selectedRecord, setSelectedRecord] = useState<AuditTrailRecord | null>(null);
+
+  // Reset to list view when user navigates to this page from sidebar
+  useEffect(() => {
+    setSelectedRecord(null);
+  }, [location.key]);
   
   // Filters state
   const [searchQuery, setSearchQuery] = useState("");
@@ -439,7 +447,10 @@ export const AuditTrailView: React.FC = () => {
     return (
       <AuditTrailDetailView
         record={selectedRecord}
-        onBack={() => setSelectedRecord(null)}
+        onBack={() => {
+          document.getElementById('main-scroll-container')?.scrollTo({ top: 0, behavior: 'instant' });
+          setSelectedRecord(null);
+        }}
       />
     );
   }
@@ -696,6 +707,7 @@ export const AuditTrailView: React.FC = () => {
             onViewDetails={() => {
               const record = paginatedData.find((r) => r.id === openDropdownId);
               if (record) {
+                document.getElementById('main-scroll-container')?.scrollTo({ top: 0, behavior: 'instant' });
                 setSelectedRecord(record);
                 setOpenDropdownId(null);
               }

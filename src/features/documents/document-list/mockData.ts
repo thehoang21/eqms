@@ -16,6 +16,7 @@ export interface Document {
   description?: string;
   hasRelatedDocuments?: boolean;
   hasCorrelatedDocuments?: boolean;
+  isTemplate?: boolean;
 }
 
 export const MOCK_DOCUMENTS: Document[] = [
@@ -35,6 +36,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     description: "Comprehensive procedure for conducting quality control tests on pharmaceutical products",
     hasRelatedDocuments: true,
     hasCorrelatedDocuments: true,
+    isTemplate: true,
   },
   {
     id: "2",
@@ -69,6 +71,7 @@ export const MOCK_DOCUMENTS: Document[] = [
     description: "Guidelines for maintaining and reviewing batch production records",
     hasRelatedDocuments: true,
     hasCorrelatedDocuments: false,
+    isTemplate: true,
   },
   {
     id: "4",

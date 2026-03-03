@@ -57,6 +57,7 @@ interface Revision {
   approvers?: ReviewerApprover[];
   hasRelatedDocuments?: boolean;
   hasCorrelatedDocuments?: boolean;
+  isTemplate?: boolean;
 }
 
 // --- Mock Data ---
@@ -86,6 +87,7 @@ const convertDocumentToRevision = (doc: any, isReview: boolean): Revision => {
     department: doc.department,
     hasRelatedDocuments: doc.hasRelatedDocuments,
     hasCorrelatedDocuments: doc.hasCorrelatedDocuments,
+    isTemplate: doc.isTemplate,
     // Assign current user as reviewer/approver for documents with matching status
     ...(isReview
       ? {
@@ -435,6 +437,9 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
   const [effectiveToDate, setEffectiveToDate] = useState<string>("");
   const [validFromDate, setValidFromDate] = useState<string>("");
   const [validToDate, setValidToDate] = useState<string>("");
+  const [relatedDocumentFilter, setRelatedDocumentFilter] = useState("All");
+  const [correlatedDocumentFilter, setCorrelatedDocumentFilter] = useState("All");
+  const [templateFilter, setTemplateFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({
@@ -582,6 +587,18 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
         }
       }
 
+      const matchesRelatedDocument =
+        relatedDocumentFilter === "All" ||
+        (relatedDocumentFilter === "yes" ? !!rev.hasRelatedDocuments : !rev.hasRelatedDocuments);
+
+      const matchesCorrelatedDocument =
+        correlatedDocumentFilter === "All" ||
+        (correlatedDocumentFilter === "yes" ? !!rev.hasCorrelatedDocuments : !rev.hasCorrelatedDocuments);
+
+      const matchesTemplate =
+        templateFilter === "All" ||
+        (templateFilter === "yes" ? !!rev.isTemplate : !rev.isTemplate);
+
       return (
         matchesSearch &&
         matchesStatus &&
@@ -592,7 +609,10 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
         matchesEffectiveFrom &&
         matchesEffectiveTo &&
         matchesValidFrom &&
-        matchesValidTo
+        matchesValidTo &&
+        matchesRelatedDocument &&
+        matchesCorrelatedDocument &&
+        matchesTemplate
       );
     });
   }, [
@@ -608,6 +628,9 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
     effectiveToDate,
     validFromDate,
     validToDate,
+    relatedDocumentFilter,
+    correlatedDocumentFilter,
+    templateFilter,
   ]);
 
   const totalPages = Math.ceil(filteredRevisions.length / itemsPerPage);
@@ -757,6 +780,21 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
         onValidToDateChange={setValidToDate}
         disableStatusFilter={true}
         authorFilterDisabled={true}
+        relatedDocumentFilter={relatedDocumentFilter}
+        onRelatedDocumentFilterChange={(value) => {
+          setRelatedDocumentFilter(value);
+          setCurrentPage(1);
+        }}
+        correlatedDocumentFilter={correlatedDocumentFilter}
+        onCorrelatedDocumentFilterChange={(value) => {
+          setCorrelatedDocumentFilter(value);
+          setCurrentPage(1);
+        }}
+        templateFilter={templateFilter}
+        onTemplateFilterChange={(value) => {
+          setTemplateFilter(value);
+          setCurrentPage(1);
+        }}
       />
 
       {/* Table */}
@@ -799,6 +837,9 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
                     </th>
                     <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Correlated Document
+                    </th>
+                    <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                      Template
                     </th>
                     <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Department
@@ -868,6 +909,13 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
                           </td>
                           <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
                             {rev.hasCorrelatedDocuments ? (
+                              <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+                            ) : (
+                              <span className="text-slate-600 font-medium">No</span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                            {rev.isTemplate ? (
                               <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
                             ) : (
                               <span className="text-slate-600 font-medium">No</span>

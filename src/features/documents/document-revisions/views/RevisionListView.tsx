@@ -60,6 +60,9 @@ export const RevisionListView: React.FC = () => {
   const [effectiveToDate, setEffectiveToDate] = useState("");
   const [validFromDate, setValidFromDate] = useState("");
   const [validToDate, setValidToDate] = useState("");
+  const [relatedDocumentFilter, setRelatedDocumentFilter] = useState("All");
+  const [correlatedDocumentFilter, setCorrelatedDocumentFilter] = useState("All");
+  const [templateFilter, setTemplateFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
@@ -155,6 +158,18 @@ export const RevisionListView: React.FC = () => {
         return matchesFrom && matchesTo;
       })();
 
+      const matchesRelatedDocument =
+        relatedDocumentFilter === "All" ||
+        (relatedDocumentFilter === "yes" ? !!revision.hasRelatedDocuments : !revision.hasRelatedDocuments);
+
+      const matchesCorrelatedDocument =
+        correlatedDocumentFilter === "All" ||
+        (correlatedDocumentFilter === "yes" ? !!revision.hasCorrelatedDocuments : !revision.hasCorrelatedDocuments);
+
+      const matchesTemplate =
+        templateFilter === "All" ||
+        (templateFilter === "yes" ? !!revision.isTemplate : !revision.isTemplate);
+
       return (
         matchesSearch &&
         matchesStatus &&
@@ -163,7 +178,10 @@ export const RevisionListView: React.FC = () => {
         matchesAuthor &&
         matchesCreatedDate &&
         matchesEffectiveDate &&
-        matchesValidDate
+        matchesValidDate &&
+        matchesRelatedDocument &&
+        matchesCorrelatedDocument &&
+        matchesTemplate
       );
     });
   }, [
@@ -178,6 +196,9 @@ export const RevisionListView: React.FC = () => {
     effectiveToDate,
     validFromDate,
     validToDate,
+    relatedDocumentFilter,
+    correlatedDocumentFilter,
+    templateFilter,
   ]);
 
   // Pagination
@@ -243,9 +264,9 @@ export const RevisionListView: React.FC = () => {
 
   const handleNewRevision = (revision: Revision) => {
     if (revision.hasRelatedDocuments) {
-      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_MULTI(revision.id));
+      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_MULTI(revision.id), { state: { from: ROUTES.DOCUMENTS.REVISIONS.ALL } });
     } else {
-      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_STANDALONE(revision.id));
+      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_STANDALONE(revision.id), { state: { from: ROUTES.DOCUMENTS.REVISIONS.ALL } });
     }
     setOpenDropdownId(null);
   };
@@ -398,6 +419,21 @@ export const RevisionListView: React.FC = () => {
         }}
         showTypeFilter={true}
         showDepartmentFilter={true}
+        relatedDocumentFilter={relatedDocumentFilter}
+        onRelatedDocumentFilterChange={(value) => {
+          setRelatedDocumentFilter(value);
+          setCurrentPage(1);
+        }}
+        correlatedDocumentFilter={correlatedDocumentFilter}
+        onCorrelatedDocumentFilterChange={(value) => {
+          setCorrelatedDocumentFilter(value);
+          setCurrentPage(1);
+        }}
+        templateFilter={templateFilter}
+        onTemplateFilterChange={(value) => {
+          setTemplateFilter(value);
+          setCurrentPage(1);
+        }}
       />
 
       {/* Table Container - Match DocumentListView wrapper */}
@@ -421,6 +457,7 @@ export const RevisionListView: React.FC = () => {
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Type</th>
                   <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Related Document</th>
                   <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Correlated Document</th>
+                  <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Template</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Department</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Author</th>
                   <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Effective Date</th>
@@ -461,6 +498,13 @@ export const RevisionListView: React.FC = () => {
                     </td>
                     <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
                       {revision.hasCorrelatedDocuments ? (
+                        <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+                      ) : (
+                        <span className="text-slate-600 font-medium">No</span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                      {revision.isTemplate ? (
                         <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
                       ) : (
                         <span className="text-slate-600 font-medium">No</span>
@@ -597,7 +641,7 @@ export const RevisionListView: React.FC = () => {
                       className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 transition-colors"
                     >
                       <FilePlusCorner className="h-4 w-4 text-slate-500" />
-                      <span>New Revision</span>
+                      <span>Upgrade Revision</span>
                     </button>
                     <button
                       onClick={(e) => {

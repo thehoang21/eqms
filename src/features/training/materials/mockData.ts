@@ -1,19 +1,4 @@
-interface TrainingMaterial {
-  id: string;
-  materialId: string;
-  title: string;
-  description: string;
-  type: "Video" | "PDF" | "Image" | "Document";
-  version: string;
-  department: string;
-  status: "Draft" | "Pending" | "Approved" | "Obsolete";
-  uploadedAt: string;
-  uploadedBy: string;
-  fileSize: string;
-  fileSizeBytes: number;
-  usageCount: number;
-  linkedCourses: string[];
-}
+import { TrainingMaterial } from "./types";
 
 // Mock Data — expanded for dashboard
 export const MOCK_MATERIALS: TrainingMaterial[] = [
@@ -31,7 +16,7 @@ export const MOCK_MATERIALS: TrainingMaterial[] = [
   },
   {
     id: "3", materialId: "TM-PDF-003", title: "Equipment Handling Guide", description: "Visual guide for proper equipment handling and maintenance",
-    type: "PDF", version: "1.5", department: "Engineering", status: "Pending", uploadedAt: "2026-02-08", uploadedBy: "Mike Johnson",
+    type: "PDF", version: "1.5", department: "Engineering", status: "Pending Review", uploadedAt: "2026-02-08", uploadedBy: "Mike Johnson",
     fileSize: "8.2 MB", fileSizeBytes: 8597504, usageCount: 18,
     linkedCourses: ["TRN-2026-003"],
   },
@@ -55,7 +40,7 @@ export const MOCK_MATERIALS: TrainingMaterial[] = [
   },
   {
     id: "7", materialId: "TM-PDF-007", title: "Chemical Handling Procedures", description: "Safe practices for chemical storage, handling, and disposal",
-    type: "PDF", version: "1.2", department: "HSE", status: "Obsolete", uploadedAt: "2026-01-28", uploadedBy: "David Miller",
+    type: "PDF", version: "1.2", department: "HSE", status: "Obsoleted", uploadedAt: "2026-01-28", uploadedBy: "David Miller",
     fileSize: "3.0 MB", fileSizeBytes: 3145728, usageCount: 25,
     linkedCourses: ["TRN-2026-005", "TRN-2026-011", "TRN-2026-013"],
   },
@@ -79,7 +64,7 @@ export const MOCK_MATERIALS: TrainingMaterial[] = [
   },
   {
     id: "11", materialId: "TM-DOC-011", title: "Batch Record Review Checklist", description: "Comprehensive checklist for batch record review process",
-    type: "Document", version: "1.8", department: "Quality Assurance", status: "Pending", uploadedAt: "2026-02-20", uploadedBy: "James Taylor",
+    type: "Document", version: "1.8", department: "Quality Assurance", status: "Pending Approval", uploadedAt: "2026-02-20", uploadedBy: "James Taylor",
     fileSize: "0.8 MB", fileSizeBytes: 838860, usageCount: 14,
     linkedCourses: ["TRN-2026-004", "TRN-2026-008"],
   },

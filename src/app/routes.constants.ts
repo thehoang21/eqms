@@ -76,6 +76,7 @@ export const ROUTES = {
     MATERIAL_NEW_REVISION: (id: string) => `/training-management/training-materials/${id}/new-revision`,
     MATERIAL_USAGE_REPORT: (id: string) => `/training-management/training-materials/${id}/usage-report`,
     MATERIAL_REVIEW: (id: string) => `/training-management/training-materials/${id}/review`,
+    MATERIAL_APPROVAL: (id: string) => `/training-management/training-materials/${id}/approval`,
     // Approval
     PENDING_REVIEW: '/training-management/pending-review',
     PENDING_APPROVAL: '/training-management/pending-approval',

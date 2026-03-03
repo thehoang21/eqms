@@ -34,6 +34,13 @@ interface DocumentFiltersProps {
     disableStatusFilter?: boolean;
     authorFilterDisabled?: boolean;
     allowedStatuses?: DocumentStatus[];
+
+    relatedDocumentFilter?: string;
+    onRelatedDocumentFilterChange?: (value: string) => void;
+    correlatedDocumentFilter?: string;
+    onCorrelatedDocumentFilterChange?: (value: string) => void;
+    templateFilter?: string;
+    onTemplateFilterChange?: (value: string) => void;
 }
 
 export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
@@ -64,6 +71,12 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
     disableStatusFilter = false,
     authorFilterDisabled = false,
     allowedStatuses,
+    relatedDocumentFilter = "All",
+    onRelatedDocumentFilterChange = () => {},
+    correlatedDocumentFilter = "All",
+    onCorrelatedDocumentFilterChange = () => {},
+    templateFilter = "All",
+    onTemplateFilterChange = () => {},
 }) => {
     // Default status options for All Revisions view
     const defaultStatusOptions = [
@@ -190,6 +203,51 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                         placeholder="Select author"
                         searchPlaceholder="Search author..."
                         disabled={authorFilterDisabled}
+                    />
+                </div>
+
+                {/* Related Document Filter */}
+                <div className="w-full">
+                    <Select
+                        label="Related Document"
+                        value={relatedDocumentFilter}
+                        onChange={(value) => onRelatedDocumentFilterChange(value)}
+                        options={[
+                            { label: "All", value: "All" },
+                            { label: "Yes", value: "yes" },
+                            { label: "No", value: "no" },
+                        ]}
+                        placeholder="Select option"
+                    />
+                </div>
+
+                {/* Correlated Document Filter */}
+                <div className="w-full">
+                    <Select
+                        label="Correlated Document"
+                        value={correlatedDocumentFilter}
+                        onChange={(value) => onCorrelatedDocumentFilterChange(value)}
+                        options={[
+                            { label: "All", value: "All" },
+                            { label: "Yes", value: "yes" },
+                            { label: "No", value: "no" },
+                        ]}
+                        placeholder="Select option"
+                    />
+                </div>
+
+                {/* Is Template Filter */}
+                <div className="w-full">
+                    <Select
+                        label="Is Template"
+                        value={templateFilter}
+                        onChange={(value) => onTemplateFilterChange(value)}
+                        options={[
+                            { label: "All", value: "All" },
+                            { label: "Yes", value: "yes" },
+                            { label: "No", value: "no" },
+                        ]}
+                        placeholder="Select option"
                     />
                 </div>
 

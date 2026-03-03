@@ -3,8 +3,6 @@ import { createPortal } from "react-dom";
 import {
   X,
   AlertTriangle,
-  ChevronRight,
-  ChevronLeft,
   BookOpen,
   CheckCircle,
   XCircle,
@@ -14,7 +12,6 @@ import {
   AlertCircle,
   Link2,
   ShieldAlert,
-  FileX2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";

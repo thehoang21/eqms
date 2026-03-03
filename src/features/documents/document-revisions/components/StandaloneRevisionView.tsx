@@ -1,26 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { ROUTES } from '@/app/routes.constants';
 import { 
-    ChevronRight, 
-    Home, 
     FileText, 
     AlertCircle,
-    Upload,
-    X,
-    Save,
-    Loader2,
-    ArrowLeft,
     CheckCircle,
-    ArrowRight,
     Check,
 } from "lucide-react";
 import { Loading } from '@/components/ui/loading/Loading';
 import { Button } from '@/components/ui/button/Button';
-import { Select } from '@/components/ui/select/Select';
 import { cn } from '@/components/ui/utils';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
-import { DateTimePicker } from '@/components/ui/datetime-picker/DateTimePicker';
 import { IconLayoutDashboard } from "@tabler/icons-react";
 
 // --- Types ---
@@ -59,8 +49,11 @@ const fetchSourceDocument = async (id: string): Promise<SourceDocument> => {
 
 export const StandaloneRevisionView: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchParams] = useSearchParams();
     const sourceDocId = searchParams.get("sourceDocId");
+    // Preserve the origin so Cancel returns to the correct list
+    const fromPath: string = (location.state as { from?: string })?.from ?? ROUTES.DOCUMENTS.REVISIONS.ALL;
     
     // Loading state
     const [isLoadingDocument, setIsLoadingDocument] = useState(true);
@@ -191,7 +184,7 @@ export const StandaloneRevisionView: React.FC = () => {
     };
 
     const handleCancel = () => {
-        navigate(ROUTES.DOCUMENTS.ALL);
+        navigate(fromPath);
     };
 
     // Loading state
@@ -211,8 +204,8 @@ export const StandaloneRevisionView: React.FC = () => {
                     <div className="flex-1 min-w-0">
                         <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
                             {sourceDocument 
-                                ? `New Revision - Standalone [${sourceDocument.documentId}]`
-                                : 'New Revision - Standalone'
+                                ? `Upgrade Revision [${sourceDocument.documentId}]`
+                                : 'Upgrade Revision'
                             }
                         </h1>
                         <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
@@ -228,7 +221,7 @@ export const StandaloneRevisionView: React.FC = () => {
                             </span>
                             <span className="sm:hidden">...</span>
                             <span className="text-slate-400 mx-1">/</span>
-                            <span className="text-slate-700 font-medium">New Revision</span>
+                            <span className="text-slate-700 font-medium">Upgrade Revision</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 md:gap-3 flex-wrap">

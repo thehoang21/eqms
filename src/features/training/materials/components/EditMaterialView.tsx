@@ -2,7 +2,6 @@ import React, { useState, useRef, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "@/app/routes.constants";
 import {
-  Upload,
   FileText,
   Video,
   FileImage,
@@ -12,7 +11,6 @@ import {
   AlertCircle,
   Link2,
   ArrowLeft,
-  Pencil,
   Lock,
   RefreshCw,
 } from "lucide-react";

@@ -26,7 +26,7 @@ import { getFileIconSrc } from "@/utils/fileIcons";
 import { formatDateUS } from "@/utils/format";
 
 // ─── Types ─────────────────────────────────────────────────────────
-type MaterialStatus = "Draft" | "Pending" | "Approved" | "Obsolete";
+type MaterialStatus = "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Obsoleted";
 
 interface TrainingMaterial {
   id: string;
@@ -51,23 +51,25 @@ interface TrainingMaterial {
 
 // ─── Mock Data ─────────────────────────────────────────────────────
 const MOCK_MATERIAL: TrainingMaterial = {
-  id: "3",
-  materialId: "TM-PDF-003",
-  title: "Equipment Handling Guide",
+  id: "11",
+  materialId: "TM-DOC-011",
+  title: "Batch Record Review Checklist",
   description:
-    "Visual guide for proper equipment handling and maintenance procedures. This document covers safety protocols, step-by-step handling instructions, common troubleshooting procedures, and emergency response guidelines for all major equipment in the production facility.",
-  type: "PDF",
-  version: "1.5",
-  department: "Engineering",
-  status: "Pending",
-  uploadedAt: "2026-02-08",
-  uploadedBy: "Mike Johnson",
-  fileSize: "8.2 MB",
+    "Comprehensive checklist for batch record review process. This document outlines the required steps and checkpoints for reviewing batch records to ensure compliance with GMP requirements and regulatory standards.",
+  type: "Document",
+  version: "1.8",
+  department: "Quality Assurance",
+  status: "Pending Approval",
+  uploadedAt: "2026-02-20",
+  uploadedBy: "James Taylor",
+  fileSize: "0.8 MB",
   reviewer: "Jane Smith",
   approver: "Dr. A. Smith",
+  reviewedAt: "2026-02-22",
+  reviewComment: "Material reviewed. Content is accurate and complete. Approved for final approval step.",
 };
 
-const WORKFLOW_STEPS: MaterialStatus[] = ["Draft", "Pending", "Approved", "Obsolete"];
+const WORKFLOW_STEPS: MaterialStatus[] = ["Draft", "Pending Review", "Pending Approval", "Approved", "Obsoleted"];
 
 // ─── Activity log mock ─────────────────────────────────────────────
 interface ActivityEntry {
@@ -93,7 +95,12 @@ const generateActivityLog = (material: TrainingMaterial): ActivityEntry[] => {
     },
   ];
 
-  if (material.status === "Pending" || material.status === "Approved") {
+  if (
+    material.status === "Pending Review" ||
+    material.status === "Pending Approval" ||
+    material.status === "Approved" ||
+    material.status === "Obsoleted"
+  ) {
     logs.push({
       id: "2",
       action: "Submitted for Review",
@@ -111,7 +118,7 @@ const generateActivityLog = (material: TrainingMaterial): ActivityEntry[] => {
       action: "Review Completed",
       user: material.reviewer,
       timestamp: material.reviewedAt,
-      comment: material.reviewComment || "Reviewed and approved.",
+      comment: material.reviewComment || "Reviewed and passed for approval.",
       icon: <CheckCircle className="h-4 w-4" />,
       color: "bg-emerald-100 text-emerald-600",
     });
@@ -133,7 +140,7 @@ const generateActivityLog = (material: TrainingMaterial): ActivityEntry[] => {
 };
 
 // ─── Component ─────────────────────────────────────────────────────
-export const ReviewApprovalView: React.FC = () => {
+export const MaterialApprovalView: React.FC = () => {
   const navigate = useNavigate();
   const { materialId } = useParams<{ materialId: string }>();
 
@@ -141,10 +148,8 @@ export const ReviewApprovalView: React.FC = () => {
   const currentStepIndex = WORKFLOW_STEPS.indexOf(material.status);
   const activityLog = useMemo(() => generateActivityLog(material), [material]);
 
-  const isReviewer = true;
   const isApprover = true;
-  const canReview = material.status === "Pending" && isReviewer;
-  const canApprove = material.status === "Pending" && isApprover && !!material.reviewedAt;
+  const canApprove = material.status === "Pending Approval" && isApprover;
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -156,26 +161,20 @@ export const ReviewApprovalView: React.FC = () => {
 
   // E-Sign modal
   const [showESignModal, setShowESignModal] = useState(false);
-  const [eSignAction, setESignAction] = useState<
-    "review-approve" | "review-reject" | "approve" | "reject" | "obsolete" | null
-  >(null);
+  const [eSignAction, setESignAction] = useState<"approve" | "reject" | "obsolete" | null>(null);
 
-  const [reviewComment, setReviewComment] = useState("");
+  const [approvalComment, setApprovalComment] = useState("");
 
-  const handleReviewApprove = () => { setESignAction("review-approve"); setShowESignModal(true); };
-  const handleReviewReject  = () => { setESignAction("review-reject");  setShowESignModal(true); };
-  const handleApprove       = () => { setESignAction("approve");        setShowESignModal(true); };
-  const handleReject        = () => { setESignAction("reject");         setShowESignModal(true); };
-  const handleMarkObsolete  = () => { setESignAction("obsolete");       setShowESignModal(true); };
+  const handleApprove     = () => { setESignAction("approve");   setShowESignModal(true); };
+  const handleReject      = () => { setESignAction("reject");    setShowESignModal(true); };
+  const handleMarkObsolete = () => { setESignAction("obsolete"); setShowESignModal(true); };
 
   const getESignTitle = () => {
     switch (eSignAction) {
-      case "review-approve": return "Review & Approve Material";
-      case "review-reject":  return "Reject Material (Review)";
-      case "approve":        return "Approve Material";
-      case "reject":         return "Reject Material (Approval)";
-      case "obsolete":       return "Mark Material as Obsolete";
-      default:               return "";
+      case "approve":   return "Approve Training Material";
+      case "reject":    return "Reject Material (Approval)";
+      case "obsolete":  return "Mark Material as Obsoleted";
+      default:          return "";
     }
   };
 
@@ -187,26 +186,6 @@ export const ReviewApprovalView: React.FC = () => {
       setIsLoading(false);
 
       switch (eSignAction) {
-        case "review-approve":
-          setMaterial((prev) => ({
-            ...prev,
-            reviewedAt: new Date().toISOString().split("T")[0],
-            reviewComment: reason,
-          }));
-          setModalType("success");
-          setModalTitle("Review Completed");
-          setModalDescription("Material has been reviewed successfully. It is now ready for approval.");
-          setModalAction(null);
-          break;
-
-        case "review-reject":
-          setMaterial((prev) => ({ ...prev, status: "Draft", reviewComment: reason }));
-          setModalType("success");
-          setModalTitle("Material Returned");
-          setModalDescription("Material has been returned to draft. The author will be notified to make changes.");
-          setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
-          break;
-
         case "approve":
           setMaterial((prev) => ({
             ...prev,
@@ -216,7 +195,9 @@ export const ReviewApprovalView: React.FC = () => {
           }));
           setModalType("success");
           setModalTitle("Material Approved");
-          setModalDescription("Training material has been approved and is now available for use in courses.");
+          setModalDescription(
+            "Training material has been approved and is now available for use in training courses."
+          );
           setModalAction(null);
           break;
 
@@ -224,15 +205,19 @@ export const ReviewApprovalView: React.FC = () => {
           setMaterial((prev) => ({ ...prev, status: "Draft", approvalComment: reason }));
           setModalType("success");
           setModalTitle("Material Rejected");
-          setModalDescription("Material has been rejected and returned to draft. The author will be notified.");
+          setModalDescription(
+            "Material has been rejected and returned to Draft. The author will be notified to revise and resubmit."
+          );
           setModalAction(() => () => navigate(ROUTES.TRAINING.TRAINING_MATERIALS));
           break;
 
         case "obsolete":
-          setMaterial((prev) => ({ ...prev, status: "Obsolete" }));
+          setMaterial((prev) => ({ ...prev, status: "Obsoleted" }));
           setModalType("success");
           setModalTitle("Material Obsoleted");
-          setModalDescription("Material has been marked as obsolete and will no longer be available for new courses.");
+          setModalDescription(
+            "Material has been marked as Obsoleted and will no longer be available for new training courses."
+          );
           setModalAction(null);
           break;
       }
@@ -248,7 +233,7 @@ export const ReviewApprovalView: React.FC = () => {
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
         <div className="flex-1 min-w-0">
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Review &amp; Approval Material
+            Approve Material
           </h1>
           <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
             <IconLayoutDashboard className="h-4 w-4" />
@@ -259,7 +244,7 @@ export const ReviewApprovalView: React.FC = () => {
             <span className="hidden sm:inline">Training Materials</span>
             <span className="sm:hidden">...</span>
             <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">Review &amp; Approval Material</span>
+            <span className="text-slate-700 font-medium">Approve Material</span>
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
@@ -272,22 +257,6 @@ export const ReviewApprovalView: React.FC = () => {
             Back
           </Button>
 
-          {canReview && !material.reviewedAt && (
-            <>
-              <Button
-                variant="destructive"
-                size="sm"
-                className="whitespace-nowrap gap-2"
-                onClick={handleReviewReject}
-              >
-                Reject
-              </Button>
-              <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleReviewApprove}>
-                Review &amp; Approve
-              </Button>
-            </>
-          )}
-
           {canApprove && (
             <>
               <Button
@@ -299,7 +268,8 @@ export const ReviewApprovalView: React.FC = () => {
                 Reject
               </Button>
               <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleApprove}>
-                Approve
+                <IconChecks className="h-4 w-4" />
+                Complete Approve
               </Button>
             </>
           )}
@@ -312,7 +282,7 @@ export const ReviewApprovalView: React.FC = () => {
               onClick={handleMarkObsolete}
             >
               <XCircle className="h-4 w-4" />
-              Mark Obsolete
+              Mark Obsoleted
             </Button>
           )}
         </div>
@@ -337,7 +307,7 @@ export const ReviewApprovalView: React.FC = () => {
                     className={cn(
                       "absolute inset-0 transition-all",
                       isCurrent
-                        ? step === "Obsolete" ? "bg-red-500" : "bg-emerald-600"
+                        ? step === "Obsoleted" ? "bg-red-500" : "bg-emerald-600"
                         : isCompleted
                         ? "bg-emerald-100"
                         : "bg-slate-100"
@@ -386,14 +356,19 @@ export const ReviewApprovalView: React.FC = () => {
                   ) : (
                     <img
                       src={getFileIconSrc(
-                        material.type === "PDF"    ? "file.pdf"  :
-                        material.type === "Video"  ? "file.mp4"  :
-                        material.type === "Image"  ? "file.jpg"  :
-                        "file.docx"
+                        material.type === "PDF"
+                          ? "file.pdf"
+                          : material.type === "Video"
+                          ? "file.mp4"
+                          : material.type === "Image"
+                          ? "file.jpg"
+                          : "file.docx"
                       )}
                       alt="file icon"
                       className="h-6 w-6 object-contain"
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
                     />
                   )}
                 </div>
@@ -493,21 +468,16 @@ export const ReviewApprovalView: React.FC = () => {
                       <CheckCircle className="h-3.5 w-3.5" />
                       Reviewed on {formatDateUS(material.reviewedAt)}
                     </div>
-                  ) : material.status === "Pending" ? (
-                    <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium">
-                      <Clock className="h-3.5 w-3.5" />
-                      Awaiting review
-                    </div>
                   ) : (
                     <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                       <Clock className="h-3.5 w-3.5" />
-                      Not started
+                      Not reviewed yet
                     </div>
                   )}
                 </div>
 
                 {/* Approver */}
-                <div className="p-4 rounded-lg border border-slate-200 bg-slate-50/50">
+                <div className="p-4 rounded-lg border border-emerald-200 bg-emerald-50/40">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
                       <IconChecks className="h-4 w-4 text-emerald-600" />
@@ -522,15 +492,15 @@ export const ReviewApprovalView: React.FC = () => {
                       <CheckCircle className="h-3.5 w-3.5" />
                       Approved on {formatDateUS(material.approvedAt)}
                     </div>
-                  ) : material.reviewedAt ? (
-                    <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium">
+                  ) : material.status === "Pending Approval" ? (
+                    <div className="flex items-center gap-1.5 text-xs text-blue-600 font-medium">
                       <Clock className="h-3.5 w-3.5" />
                       Awaiting approval
                     </div>
                   ) : (
                     <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                       <Clock className="h-3.5 w-3.5" />
-                      Pending review first
+                      Not yet
                     </div>
                   )}
                 </div>
@@ -576,15 +546,15 @@ export const ReviewApprovalView: React.FC = () => {
                 </div>
               </div>
 
-              {canReview && !material.reviewedAt && (
+              {canApprove && (
                 <div className="mt-5 pt-5 border-t border-slate-200">
                   <label className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2 block">
-                    Review Comment
+                    Approval Comment
                   </label>
                   <textarea
-                    value={reviewComment}
-                    onChange={(e) => setReviewComment(e.target.value)}
-                    placeholder="Add a comment for review..."
+                    value={approvalComment}
+                    onChange={(e) => setApprovalComment(e.target.value)}
+                    placeholder="Add an approval comment..."
                     rows={3}
                     className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400 resize-none"
                   />

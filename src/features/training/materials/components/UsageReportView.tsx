@@ -387,7 +387,7 @@ export const UsageReportView: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <button
-              onClick={() => navigate(ROUTES.TRAINING.MATERIAL_DETAIL(materialId))}
+              onClick={() => navigate(ROUTES.TRAINING.MATERIAL_DETAIL(materialId ?? ""))}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
             >
               <Eye className="h-3.5 w-3.5" />

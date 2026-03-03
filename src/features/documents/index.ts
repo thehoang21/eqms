@@ -42,12 +42,6 @@ export type {
 } from './types/controlled-copy.types';
 
 // =============================================================================
-// HOOKS
-// =============================================================================
-export { useBatchNavigation } from './hooks';
-export type { BatchDocument, UseBatchNavigationReturn } from './hooks';
-
-// =============================================================================
 // SHARED COMPONENTS & LAYOUTS
 // =============================================================================
 export { DocumentFilters, CreateLinkModal } from './shared/components';
@@ -70,7 +64,6 @@ export { DetailDocumentView } from './document-detail/DetailDocumentView';
 
 // Document Creation
 export { NewDocumentView } from './document-list/document-creation/NewDocumentView';
-export { SingleDocumentView } from './document-list/document-creation/SingleDocumentView';
 
 // =============================================================================
 // DOCUMENT REVISIONS

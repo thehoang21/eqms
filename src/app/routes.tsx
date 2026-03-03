@@ -67,7 +67,7 @@ const RoleDetailView = lazy(() => import('@/features/settings/role-permission').
 // Quality Management
 // Training Management Views
 const CourseListView = lazy(() => import('@/features/training/course-inventory/courses').then(m => ({ default: m.CourseListView })));
-const MaterialsView = lazy(() => import('@/features/training/materials/MaterialsView').then(m => ({ default: m.MaterialsView })));
+const MaterialsView = lazy(() => import('@/features/training/materials/views/MaterialsView').then(m => ({ default: m.MaterialsView })));
 const TrainingMatrixView = lazy(() => import('@/features/training/compliance-tracking/TrainingMatrixView').then(m => ({ default: m.TrainingMatrixView })));
 const CourseStatusView = lazy(() => import('@/features/training/compliance-tracking/CourseStatusView').then(m => ({ default: m.CourseStatusView })));
 const EmployeeTrainingFilesView = lazy(() => import('@/features/training/records-archive/EmployeeTrainingFilesView').then(m => ({ default: m.EmployeeTrainingFilesView })));
@@ -85,7 +85,8 @@ const MaterialDetailView = lazy(() => import('@/features/training/materials').th
 const EditMaterialView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.EditMaterialView })));
 const NewMaterialRevisionView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.NewRevisionView })));
 const MaterialUsageReportView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.UsageReportView })));
-const MaterialReviewApprovalView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.ReviewApprovalView })));
+const MaterialReviewView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.MaterialReviewView })));
+const MaterialApprovalView = lazy(() => import('@/features/training/materials').then(m => ({ default: m.MaterialApprovalView })));
 
 const DeviationsView = lazy(() => import('@/features/deviations').then(m => ({ default: m.DeviationsView })));
 const CAPAView = lazy(() => import('@/features/capa').then(m => ({ default: m.CAPAView })));
@@ -246,6 +247,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="review" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
             <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
             <Route path="new" element={<Suspense fallback={<LoadingFallback />}><NewRevisionView /></Suspense>} />
+            <Route path="new-multi" element={<Suspense fallback={<LoadingFallback />}><NewRevisionView /></Suspense>} />
             <Route path="new-standalone" element={<Suspense fallback={<LoadingFallback />}><StandaloneRevisionView /></Suspense>} />
             <Route path="workspace" element={<Suspense fallback={<LoadingFallback />}><RevisionWorkspaceView /></Suspense>} />
             <Route path="review/:id" element={<RevisionReviewViewWrapper />} />
@@ -298,7 +300,8 @@ export const AppRoutes: React.FC = () => {
           <Route path="training-materials/:materialId/edit" element={<Suspense fallback={<LoadingFallback />}><EditMaterialView /></Suspense>} />
           <Route path="training-materials/:materialId/new-revision" element={<Suspense fallback={<LoadingFallback />}><NewMaterialRevisionView /></Suspense>} />
           <Route path="training-materials/:materialId/usage-report" element={<Suspense fallback={<LoadingFallback />}><MaterialUsageReportView /></Suspense>} />
-          <Route path="training-materials/:materialId/review" element={<Suspense fallback={<LoadingFallback />}><MaterialReviewApprovalView /></Suspense>} />
+          <Route path="training-materials/:materialId/review" element={<Suspense fallback={<LoadingFallback />}><MaterialReviewView /></Suspense>} />
+          <Route path="training-materials/:materialId/approval" element={<Suspense fallback={<LoadingFallback />}><MaterialApprovalView /></Suspense>} />
           <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingReviewView /></Suspense>} />
           <Route path="pending-review/:id" element={<Suspense fallback={<LoadingFallback />}><ApprovalDetailView /></Suspense>} />
           <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingApprovalView /></Suspense>} />

@@ -70,6 +70,7 @@ interface Revision {
   author: string;
   hasRelatedDocuments?: boolean;
   hasCorrelatedDocuments?: boolean;
+  isTemplate?: boolean;
 }
 
 // Helper to map status string to StatusType
@@ -109,6 +110,7 @@ const MOCK_MY_REVISIONS: Revision[] = Array.from({ length: 18 }, (_, i) => {
     author: ["Dr. Sarah Johnson", "Michael Chen", "Emily Davis", "Robert Brown"][i % 4],
     hasRelatedDocuments: status === "Effective" && i % 2 === 0, // Some Effective revisions have related docs
     hasCorrelatedDocuments: i % 3 === 0, // Some revisions have correlated docs
+    isTemplate: i % 4 === 0,
   };
 });
 
@@ -127,11 +129,12 @@ const DEFAULT_COLUMNS: TableColumn[] = [
   { id: "type", label: "Document Type", visible: true, order: 8 },
   { id: "relatedDocuments", label: "Related Document", visible: true, order: 9 },
   { id: "correlatedDocuments", label: "Correlated Document", visible: true, order: 10 },
-  { id: "department", label: "Department", visible: true, order: 11 },
-  { id: "author", label: "Author", visible: true, order: 12 },
-  { id: "effectiveDate", label: "Effective Date", visible: true, order: 13 },
-  { id: "validUntil", label: "Valid Until", visible: true, order: 14 },
-  { id: "action", label: "Action", visible: true, order: 15, locked: true },
+  { id: "template", label: "Template", visible: true, order: 11 },
+  { id: "department", label: "Department", visible: true, order: 12 },
+  { id: "author", label: "Author", visible: true, order: 13 },
+  { id: "effectiveDate", label: "Effective Date", visible: true, order: 14 },
+  { id: "validUntil", label: "Valid Until", visible: true, order: 15 },
+  { id: "action", label: "Action", visible: true, order: 16, locked: true },
 ];
 
 // --- Main Component ---
@@ -152,6 +155,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
   const [effectiveToDate, setEffectiveToDate] = useState("");
   const [validFromDate, setValidFromDate] = useState("");
   const [validToDate, setValidToDate] = useState("");
+  const [relatedDocumentFilter, setRelatedDocumentFilter] = useState("All");
+  const [correlatedDocumentFilter, setCorrelatedDocumentFilter] = useState("All");
+  const [templateFilter, setTemplateFilter] = useState("All");
   const [columns, setColumns] = useState<TableColumn[]>([...DEFAULT_COLUMNS]);
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -259,6 +265,18 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         return matchesFrom && matchesTo;
       })();
 
+      const matchesRelatedDocument =
+        relatedDocumentFilter === "All" ||
+        (relatedDocumentFilter === "yes" ? !!revision.hasRelatedDocuments : !revision.hasRelatedDocuments);
+
+      const matchesCorrelatedDocument =
+        correlatedDocumentFilter === "All" ||
+        (correlatedDocumentFilter === "yes" ? !!revision.hasCorrelatedDocuments : !revision.hasCorrelatedDocuments);
+
+      const matchesTemplate =
+        templateFilter === "All" ||
+        (templateFilter === "yes" ? !!revision.isTemplate : !revision.isTemplate);
+
       return (
         matchesSearch &&
         matchesStatus &&
@@ -267,7 +285,10 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         matchesAuthor &&
         matchesCreatedDate &&
         matchesEffectiveDate &&
-        matchesValidDate
+        matchesValidDate &&
+        matchesRelatedDocument &&
+        matchesCorrelatedDocument &&
+        matchesTemplate
       );
     });
   }, [
@@ -282,6 +303,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
     effectiveToDate,
     validFromDate,
     validToDate,
+    relatedDocumentFilter,
+    correlatedDocumentFilter,
+    templateFilter,
   ]);
 
   // Pagination
@@ -356,9 +380,9 @@ export const RevisionsOwnedByMeView: React.FC = () => {
 
   const handleNewRevision = (revision: Revision) => {
     if (revision.hasRelatedDocuments) {
-      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_MULTI(revision.id));
+      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_MULTI(revision.id), { state: { from: ROUTES.DOCUMENTS.REVISIONS.OWNED } });
     } else {
-      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_STANDALONE(revision.id));
+      navigate(ROUTES.DOCUMENTS.REVISIONS.NEW_STANDALONE(revision.id), { state: { from: ROUTES.DOCUMENTS.REVISIONS.OWNED } });
     }
     setOpenDropdownId(null);
   };
@@ -447,6 +471,12 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         );
       case "correlatedDocuments":
         return revision.hasCorrelatedDocuments ? (
+          <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
+        ) : (
+          <span className="text-slate-600 font-medium">No</span>
+        );
+      case "template":
+        return revision.isTemplate ? (
           <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
         ) : (
           <span className="text-slate-600 font-medium">No</span>
@@ -563,6 +593,21 @@ export const RevisionsOwnedByMeView: React.FC = () => {
         }}
         showTypeFilter={true}
         showDepartmentFilter={true}
+        relatedDocumentFilter={relatedDocumentFilter}
+        onRelatedDocumentFilterChange={(value) => {
+          setRelatedDocumentFilter(value);
+          setCurrentPage(1);
+        }}
+        correlatedDocumentFilter={correlatedDocumentFilter}
+        onCorrelatedDocumentFilterChange={(value) => {
+          setCorrelatedDocumentFilter(value);
+          setCurrentPage(1);
+        }}
+        templateFilter={templateFilter}
+        onTemplateFilterChange={(value) => {
+          setTemplateFilter(value);
+          setCurrentPage(1);
+        }}
       />
 
       {/* Table Container */}
@@ -710,7 +755,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                       className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
                     >
                       <FilePlusCorner className="h-4 w-4 flex-shrink-0" />
-                      <span className="font-medium">New Revision</span>
+                      <span className="font-medium">Upgrade Revision</span>
                     </button>
                     <button
                       onClick={(e) => {

@@ -17,6 +17,7 @@ export interface Revision {
   department: string;
   hasRelatedDocuments?: boolean;
   hasCorrelatedDocuments?: boolean;
+  isTemplate?: boolean;
 }
 
 // --- Mock Data ---
@@ -102,6 +103,7 @@ export const MOCK_REVISIONS: Revision[] = [
       department: ["Quality Assurance", "Production", "R&D", "Regulatory Affairs"][i % 4],
       hasRelatedDocuments: status === "Effective" && i % 3 === 0, // Some Effective revisions have related docs
       hasCorrelatedDocuments: i % 2 === 0, // Some revisions have correlated docs
+      isTemplate: i % 4 === 0,
     };
   }),
 ];

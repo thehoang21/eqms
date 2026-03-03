@@ -20,9 +20,10 @@ import {
   XCircle,
   FilePlusCorner,
   Link2,
+  Send,
 } from "lucide-react";
-import { MarkObsoleteModal, ObsoleteResult } from "./components/MarkObsoleteModal";
-import { IconLayoutDashboard, IconChecks, IconInfoCircle } from "@tabler/icons-react";
+import { MarkObsoleteModal, ObsoleteResult } from "../components/MarkObsoleteModal";
+import { IconLayoutDashboard, IconChecks, IconInfoCircle, IconEyeCheck } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { TablePagination } from "@/components/ui/table/TablePagination";
@@ -30,7 +31,7 @@ import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { StatusBadge, StatusType } from "@/components/ui/statusbadge/StatusBadge";
 import { cn } from "@/components/ui/utils";
 import { formatDateUS } from "@/utils/format";
-import { MOCK_MATERIALS } from "./mockData";
+import { MOCK_MATERIALS } from "../mockData";
 
 interface TrainingMaterial {
   id: string;
@@ -40,7 +41,7 @@ interface TrainingMaterial {
   type: "Video" | "PDF" | "Image" | "Document";
   version: string;
   department: string;
-  status: "Draft" | "Pending" | "Approved" | "Obsolete";
+  status: "Draft" | "Pending Review" | "Pending Approval" | "Approved" | "Obsoleted";
   uploadedAt: string;
   uploadedBy: string;
   fileSize: string;
@@ -62,13 +63,15 @@ const calcDashboardStats = (materials: TrainingMaterial[]) => {
   const totalVideos = materials.filter((m) => m.type === "Video").length;
   const totalDocuments = materials.filter((m) => m.type === "PDF" || m.type === "Document").length;
   const totalImages = materials.filter((m) => m.type === "Image").length;
-  const pending = materials.filter((m) => m.status === "Pending").length;
-  const obsolete = materials.filter((m) => m.status === "Obsolete").length;
+  const pendingReview = materials.filter((m) => m.status === "Pending Review").length;
+  const pendingApproval = materials.filter((m) => m.status === "Pending Approval").length;
+  const needsAction = pendingReview + pendingApproval;
+  const obsoleted = materials.filter((m) => m.status === "Obsoleted").length;
   const totalUsage = materials.reduce((sum, m) => sum + m.usageCount, 0);
   const totalStorageBytes = materials.reduce((sum, m) => sum + m.fileSizeBytes, 0);
   const totalStorageGB = (totalStorageBytes / (1024 * 1024 * 1024)).toFixed(2);
   const totalStorageMB = (totalStorageBytes / (1024 * 1024)).toFixed(0);
-  return { totalMaterials, totalVideos, totalDocuments, totalImages, pending, obsolete, totalUsage, totalStorageMB, totalStorageGB };
+  return { totalMaterials, totalVideos, totalDocuments, totalImages, pendingReview, pendingApproval, needsAction, obsoleted, totalUsage, totalStorageMB, totalStorageGB };
 };
 
 export const MaterialsView: React.FC = () => {
@@ -118,25 +121,28 @@ export const MaterialsView: React.FC = () => {
   const statusOptions = [
     { label: "All Status", value: "All" },
     { label: "Draft", value: "Draft" },
-    { label: "Pending", value: "Pending" },
+    { label: "Pending Review", value: "Pending Review" },
+    { label: "Pending Approval", value: "Pending Approval" },
     { label: "Approved", value: "Approved" },
-    { label: "Obsolete", value: "Obsolete" },
+    { label: "Obsoleted", value: "Obsoleted" },
   ];
 
   // Effective status helper
   const getEffectiveStatus = (m: TrainingMaterial) =>
-    obsoleteOverrides[m.id] !== undefined ? "Obsolete" as const : m.status;
+    obsoleteOverrides[m.id] !== undefined ? "Obsoleted" as const : m.status;
 
   // Map material status to StatusBadge type
   const mapMaterialStatusToStatusType = (status: TrainingMaterial["status"]): StatusType => {
     switch (status) {
       case "Draft":
         return "draft";
-      case "Pending":
+      case "Pending Review":
         return "pendingReview";
+      case "Pending Approval":
+        return "pendingApproval";
       case "Approved":
         return "approved";
-      case "Obsolete":
+      case "Obsoleted":
         return "obsolete";
       default:
         return "draft";
@@ -146,7 +152,7 @@ export const MaterialsView: React.FC = () => {
   // Filtered & Paginated
   const filteredData = useMemo(() => {
     return MOCK_MATERIALS.filter((m) => {
-      const effectiveStatus = obsoleteOverrides[m.id] !== undefined ? "Obsolete" : m.status;
+      const effectiveStatus = obsoleteOverrides[m.id] !== undefined ? "Obsoleted" : m.status;
       const matchesSearch =
         m.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
         m.materialId.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
@@ -173,8 +179,9 @@ export const MaterialsView: React.FC = () => {
 
   // Pending/Obsolete materials
   const pendingObsoleteMaterials = useMemo(
-    () => MOCK_MATERIALS.filter((m) => m.status === "Pending" || m.status === "Obsolete")
-      .sort((a, b) => b.uploadedAt.localeCompare(a.uploadedAt)),
+    () => MOCK_MATERIALS.filter(
+      (m) => m.status === "Pending Review" || m.status === "Pending Approval" || m.status === "Obsoleted"
+    ).sort((a, b) => b.uploadedAt.localeCompare(a.uploadedAt)),
     []
   );
 
@@ -284,6 +291,17 @@ export const MaterialsView: React.FC = () => {
     navigate(ROUTES.TRAINING.MATERIAL_REVIEW(id));
   };
 
+  const handleApprovalAction = (id: string) => {
+    setOpenDropdownId(null);
+    navigate(ROUTES.TRAINING.MATERIAL_REVIEW(id));
+  };
+
+  const handleSubmitForReview = (id: string) => {
+    setOpenDropdownId(null);
+    // In a real app this would call an API; here we just navigate to the review route
+    navigate(ROUTES.TRAINING.MATERIAL_REVIEW(id));
+  };
+
   const handleObsolete = (id: string) => {
     setOpenDropdownId(null);
     setObsoleteTargetId(id);
@@ -389,15 +407,16 @@ export const MaterialsView: React.FC = () => {
           </div>
         </div>
 
-        {/* Pending Review */}
+        {/* Needs Action (Pending Review + Pending Approval) */}
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
               <Clock className="h-5 w-5 text-amber-600" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs text-amber-600 font-medium">Pending</p>
-              <p className="text-xl font-bold text-amber-700">{stats.pending}</p>
+              <p className="text-xs text-amber-600 font-medium">Needs Action</p>
+              <p className="text-xl font-bold text-amber-700">{stats.needsAction}</p>
+              <p className="text-xs text-slate-400 leading-tight">{stats.pendingReview}R · {stats.pendingApproval}A</p>
             </div>
           </div>
         </div>
@@ -458,7 +477,7 @@ export const MaterialsView: React.FC = () => {
           <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-amber-600" />
-              <h3 className="text-sm font-semibold text-slate-900">Pending & Obsolete</h3>
+              <h3 className="text-sm font-semibold text-slate-900">Needs Action & Obsoleted</h3>
             </div>
             <span className={cn(
               "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold",
@@ -481,7 +500,9 @@ export const MaterialsView: React.FC = () => {
                 <div key={material.id} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors cursor-pointer">
                   <div className={cn(
                     "flex-shrink-0 w-2 h-2 rounded-full",
-                    material.status === "Obsolete" ? "bg-red-500" : "bg-amber-500"
+                    material.status === "Obsoleted" ? "bg-red-500" :
+                    material.status === "Pending Approval" ? "bg-blue-500" :
+                    "bg-amber-500"
                   )} />
                   <div className="flex-shrink-0">{getTypeIcon(material.type)}</div>
                   <div className="flex-1 min-w-0">
@@ -629,7 +650,7 @@ export const MaterialsView: React.FC = () => {
                   {/* Material Title */}
                   <td className="py-3.5 px-4 text-sm">
                     <div>
-                      <p className={cn("font-medium", getEffectiveStatus(material) === "Obsolete" ? "text-slate-400 line-through" : "text-slate-900")}>{material.title}</p>
+                      <p className={cn("font-medium", getEffectiveStatus(material) === "Obsoleted" ? "text-slate-400 line-through" : "text-slate-900")}>{material.title}</p>
                       <p className="text-xs text-slate-500 mt-0.5">{material.description}</p>
                       {obsoleteOverrides[material.id]?.replacedBy && (
                         <div className="flex items-center gap-1 mt-1">
@@ -760,65 +781,81 @@ export const MaterialsView: React.FC = () => {
                 <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
                 <span className="font-medium">View Details</span>
               </button>
-              {MOCK_MATERIALS.find((m) => m.id === openDropdownId)?.status === "Draft" && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEdit(openDropdownId);
-                  }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                >
-                  <Edit className="h-4 w-4 flex-shrink-0" />
-                  <span className="font-medium">Edit Material</span>
-                </button>
-              )}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleNewRevision(openDropdownId);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <FilePlusCorner className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">New Revision</span>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleUsageReport(openDropdownId);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <BarChart3 className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Usage Report</span>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleApprove(openDropdownId);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <IconChecks className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">Review & Approval</span>
-              </button>
               {(() => {
-                const dropdownMaterial = MOCK_MATERIALS.find((m) => m.id === openDropdownId);
-                const dropdownEffectiveStatus = dropdownMaterial
-                  ? (obsoleteOverrides[dropdownMaterial.id] !== undefined ? "Obsolete" : dropdownMaterial.status)
-                  : null;
-                return dropdownEffectiveStatus !== "Obsolete" ? (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleObsolete(openDropdownId);
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-red-50 active:bg-red-100 transition-colors text-red-600"
-                  >
-                    <XCircle className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-medium">Mark as Obsolete</span>
-                  </button>
-                ) : null;
+                const dm = MOCK_MATERIALS.find((m) => m.id === openDropdownId);
+                const ds = dm ? (obsoleteOverrides[dm.id] !== undefined ? "Obsoleted" : dm.status) : null;
+                return (
+                  <>
+                    {/* Edit — Draft only */}
+                    {ds === "Draft" && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleEdit(openDropdownId); }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                      >
+                        <Edit className="h-4 w-4 flex-shrink-0" />
+                        <span className="font-medium">Edit Material</span>
+                      </button>
+                    )}
+                    {/* Upgrade Revision — Approved only */}
+                    {ds === "Approved" && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleNewRevision(openDropdownId); }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                      >
+                        <FilePlusCorner className="h-4 w-4 flex-shrink-0" />
+                        <span className="font-medium">Upgrade Revision</span>
+                      </button>
+                    )}
+                    {/* Usage Report — always */}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleUsageReport(openDropdownId); }}
+                      className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                    >
+                      <BarChart3 className="h-4 w-4 flex-shrink-0" />
+                      <span className="font-medium">Usage Report</span>
+                    </button>
+                    {/* Submit for Review — Draft only */}
+                    {ds === "Draft" && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleSubmitForReview(openDropdownId); }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
+                      >
+                        <Send className="h-4 w-4 flex-shrink-0" />
+                        <span className="font-medium">Submit for Review</span>
+                      </button>
+                    )}
+                    {/* Review — Pending Review only */}
+                    {ds === "Pending Review" && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleApprove(openDropdownId); }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                      >
+                        <IconEyeCheck className="h-4 w-4 text-slate-500 flex-shrink-0" />
+                        <span className="font-medium">Review Material</span>
+                      </button>
+                    )}
+                    {/* Approve — Pending Approval only */}
+                    {ds === "Pending Approval" && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleApprovalAction(openDropdownId); }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                      >
+                        <IconChecks className="h-4 w-4 text-slate-500 flex-shrink-0" />
+                        <span className="font-medium">Approve Material</span>
+                      </button>
+                    )}
+                    {/* Mark Obsoleted — Approved only */}
+                    {ds === "Approved" && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleObsolete(openDropdownId); }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-red-50 active:bg-red-100 transition-colors text-red-600"
+                      >
+                        <XCircle className="h-4 w-4 flex-shrink-0" />
+                        <span className="font-medium">Mark as Obsoleted</span>
+                      </button>
+                    )}
+                  </>
+                );
               })()}
             </div>
           </div>
