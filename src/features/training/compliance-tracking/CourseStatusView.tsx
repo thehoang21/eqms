@@ -315,34 +315,34 @@ export const CourseStatusView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-10 sm:w-[60px]">
                   No.
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Course ID
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Course Name
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Type
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Total Assigned
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Completed
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   In Progress
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Overdue
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Avg. Score
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Completion
                 </th>
               </tr>
@@ -357,65 +357,65 @@ export const CourseStatusView: React.FC = () => {
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                     onClick={() => console.log("View details:", course.id)}
                   >
-                    <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-500 font-medium">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center whitespace-nowrap text-slate-500 font-medium">
                       {rowNumber}
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <span className="font-medium text-slate-900">
                         {course.courseId}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-start gap-2">
-                        <BookOpen className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                        <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
                         <span className="font-medium text-slate-900">
                           {course.courseTitle}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-blue-50 text-blue-700 border-blue-200">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border bg-blue-50 text-blue-700 border-blue-200">
                         {course.courseType}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-slate-400" />
+                        <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400" />
                         <span className="text-slate-900 font-medium">
                           {course.totalAssigned}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                        <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600" />
                         <span className="text-emerald-900 font-medium">
                           {course.completed}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-blue-600" />
+                        <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600" />
                         <span className="text-blue-900 font-medium">
                           {course.inProgress}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-red-600" />
+                        <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-600" />
                         <span className="text-red-900 font-medium">
                           {course.overdue}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <span className="text-slate-900 font-medium">
                         {course.averageScore}%
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <div className="flex-1 max-w-[100px]">
                           <div className="h-2 bg-slate-200 rounded-full overflow-hidden">

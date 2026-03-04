@@ -248,7 +248,9 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
 
   const handleViewOriginalDocument = () => {
     // Navigate to original document detail view
-    navigate(ROUTES.DOCUMENTS.DETAIL(controlledCopy.documentId));
+    if (controlledCopy.documentId) {
+      navigate(ROUTES.DOCUMENTS.DETAIL(controlledCopy.documentId));
+    }
   };
 
   const handleMarkAsDestroyed = (
@@ -318,8 +320,11 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
               <span className="hidden sm:inline">Controlled Copies</span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
+              <span className="hidden sm:inline">All Controlled Copies</span>
+              <span className="sm:hidden">...</span>
+              <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">
-                {controlledCopy.controlNumber}
+                Controlled Copy Details
               </span>
             </div>
           </div>
@@ -446,7 +451,7 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
         </div>
 
         {/* Tab Content */}
-        <div className="p-6">
+        <div className="p-3 sm:p-4 md:p-6">
           {activeTab === "document" && (
             <DocumentInformationTab controlledCopy={controlledCopy} />
           )}

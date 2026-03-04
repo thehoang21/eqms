@@ -43,6 +43,7 @@ export const ROUTES = {
       NEW_STANDALONE: (sourceDocId: string) => `/documents/revisions/new-standalone?sourceDocId=${sourceDocId}`,
       STANDALONE: '/documents/revisions/standalone',
       WORKSPACE: '/documents/revisions/workspace',
+      DETAIL: (id: string) => `/documents/revisions/${id}`,
       REVIEW: (id: string) => `/documents/revisions/review/${id}`,
       APPROVAL: (id: string) => `/documents/revisions/approval/${id}`,
     },

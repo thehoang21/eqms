@@ -720,7 +720,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                 </div>
 
                 {/* Tab Content */}
-                <div className="p-6">
+                <div className="p-3 sm:p-4 md:p-6">
                     {activeTab === "document" && (
                         <MultiDocumentUpload
                             documents={workspaceDocuments.map((doc) => ({

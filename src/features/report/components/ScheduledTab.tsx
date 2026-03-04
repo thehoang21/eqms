@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button/Button';
+import { TablePagination } from '@/components/ui/table/TablePagination';
 import { cn } from '@/components/ui/utils';
 import { getTypeColor } from '../types';
 import { MOCK_SCHEDULED_REPORTS } from '../data';
@@ -22,6 +23,14 @@ import { MOCK_SCHEDULED_REPORTS } from '../data';
 export function useScheduledTab() {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(MOCK_SCHEDULED_REPORTS.length / itemsPerPage);
+  const paginatedSchedules = MOCK_SCHEDULED_REPORTS.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -87,82 +96,82 @@ export function useScheduledTab() {
   // --- Content section (below the unified card) ---
   const contentElement = (
     <>
-      <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+      <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-10 sm:w-[60px]">
                   No.
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Report Name
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Type
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                   Schedule
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                   Next Run
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                   Last Run
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                   Recipients
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Status
                 </th>
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-40 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
-              {MOCK_SCHEDULED_REPORTS.map((schedule, index) => (
+              {paginatedSchedules.map((schedule, index) => (
                 <tr key={schedule.id} className="hover:bg-slate-50/80 transition-colors group">
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-500">
-                    {index + 1}
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-500">
+                    {(currentPage - 1) * itemsPerPage + index + 1}
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                     <div className="font-medium text-slate-900">{schedule.reportName}</div>
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                     <span
                       className={cn(
-                        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border',
+                        'inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border',
                         getTypeColor(schedule.type)
                       )}
                     >
                       {schedule.type}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                     <div className="flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-slate-400" />
+                      <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-slate-400" />
                       {schedule.schedule}
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden lg:table-cell">
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden lg:table-cell">
                     {schedule.nextRun}
                   </td>
-                  <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden lg:table-cell">
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden lg:table-cell">
                     {schedule.lastRun}
                   </td>
-                  <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                     <div className="flex items-center gap-1">
-                      <Users className="h-3.5 w-3.5 text-slate-400" />
+                      <Users className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-slate-400" />
                       {schedule.recipients.length} recipient
                       {schedule.recipients.length > 1 ? 's' : ''}
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                     <span
                       className={cn(
-                        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border',
+                        'inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border',
                         schedule.status === 'Active' &&
                           'bg-emerald-50 text-emerald-700 border-emerald-200',
                         schedule.status === 'Paused' &&
@@ -178,14 +187,14 @@ export function useScheduledTab() {
                   </td>
                   <td
                     onClick={(e) => e.stopPropagation()}
-                    className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                    className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                   >
                     <button
                       onClick={(e) => handleDropdownToggle(schedule.id, e)}
-                      className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                      className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
                       aria-label="More actions"
                     >
-                      <MoreVertical className="h-4 w-4 text-slate-600" />
+                      <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                     </button>
                   </td>
                 </tr>
@@ -193,6 +202,18 @@ export function useScheduledTab() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {MOCK_SCHEDULED_REPORTS.length > 0 && (
+          <TablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={MOCK_SCHEDULED_REPORTS.length}
+            itemsPerPage={itemsPerPage}
+            showItemsPerPageSelector={false}
+          />
+        )}
       </div>
 
       {/* Dropdown Menu */}

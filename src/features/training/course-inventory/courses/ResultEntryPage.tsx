@@ -577,37 +577,37 @@ export const ResultEntryPage: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-10 sm:w-[60px]">
                   No.
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   User ID
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Employee Name
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                   Email
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden xl:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden xl:table-cell">
                   Job Title
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                   Department
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Business Unit
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[180px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[140px] sm:w-[180px]">
                   Exam Date
                 </th>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[120px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap min-w-[120px] sm:min-w-[130px]">
                   {course.passingGradeType === "pass_fail" ? "Result" : "Score"}
                 </th>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[100px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[80px] sm:w-[100px]">
                   Status
                 </th>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[140px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[110px] sm:w-[140px]">
                   Evidence
                 </th>
               </tr>
@@ -627,42 +627,42 @@ export const ResultEntryPage: React.FC = () => {
                     )}
                   >
                     {/* No. */}
-                    <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-500 font-medium">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center whitespace-nowrap text-slate-500 font-medium">
                       {rowNumber}
                     </td>
 
                     {/* User ID */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <span className="font-mono text-slate-700">{row.userId}</span>
                     </td>
 
                     {/* Employee Name */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <span className="font-medium text-slate-900">{row.name}</span>
                     </td>
 
                     {/* Email */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600 hidden lg:table-cell">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600 hidden lg:table-cell">
                       {row.email}
                     </td>
 
                     {/* Job Title */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600 hidden xl:table-cell">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600 hidden xl:table-cell">
                       {row.jobTitle}
                     </td>
 
                     {/* Department */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600 hidden md:table-cell">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600 hidden md:table-cell">
                       {row.department}
                     </td>
 
                     {/* Business Unit */}
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700">
                       {row.businessUnit}
                     </td>
 
                     {/* Exam Date */}
-                    <td className="py-3.5 px-3 whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-3 whitespace-nowrap">
                       <DateTimePicker
                         value={row.examDate}
                         onChange={(val) => updateRow(row.userId, { examDate: val })}
@@ -671,7 +671,7 @@ export const ResultEntryPage: React.FC = () => {
                     </td>
 
                     {/* Score */}
-                    <td className="py-3.5 px-3 whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-3 whitespace-nowrap min-w-[120px] sm:min-w-[130px]">
                       {course.passingGradeType === "pass_fail" ? (
                         <div className="flex items-center justify-center gap-1">
                           <button
@@ -715,7 +715,7 @@ export const ResultEntryPage: React.FC = () => {
                           onChange={(e) => handleScoreChange(row.userId, e.target.value)}
                           placeholder={course.passingGradeType === "score_10" ? "0-10" : "0-100"}
                           className={cn(
-                            "w-full h-9 px-3 border rounded-lg text-sm text-center focus:outline-none focus:ring-1 transition-colors",
+                            "w-full min-w-[80px] h-9 px-3 border rounded-lg text-sm text-center focus:outline-none focus:ring-1 transition-colors",
                             hasError
                               ? "border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50"
                               : "border-slate-200 focus:ring-emerald-500 focus:border-emerald-500"
@@ -725,7 +725,7 @@ export const ResultEntryPage: React.FC = () => {
                     </td>
 
                     {/* Status */}
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
                       {status === "none" ? (
                         <span className="text-xs text-slate-400">—</span>
                       ) : status === "pass" ? (
@@ -742,7 +742,7 @@ export const ResultEntryPage: React.FC = () => {
                     </td>
 
                     {/* Evidence Image */}
-                    <td className="py-3.5 px-3 whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-3 whitespace-nowrap">
                       <input
                         ref={(el) => { fileInputRefs.current[row.userId] = el; }}
                         type="file"

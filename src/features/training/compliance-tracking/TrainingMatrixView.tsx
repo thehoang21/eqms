@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 
 import type { MatrixFilters, CellStatus, TrainingCell, SOPColumn, EmployeeRow } from "./types";
-import { MOCK_EMPLOYEES, MOCK_SOPS, MOCK_CELLS, getCell, computeKPIs } from "./mockData";
+import { MOCK_EMPLOYEES, MOCK_SOPS, MOCK_CELLS, getCell } from "./mockData";
 import {
-  KPICards,
   FilterBar,
   MatrixTable,
   CellDetailDrawer,
@@ -65,11 +64,6 @@ export const TrainingMatrixView: React.FC = () => {
       return matchesSearch && matchesDept && matchesJob;
     });
   }, [filters]);
-
-  const kpis = useMemo(
-    () => computeKPIs(MOCK_EMPLOYEES, MOCK_SOPS, MOCK_CELLS),
-    []
-  );
 
   const hasActiveFilters =
     filters.searchQuery !== "" ||
@@ -150,9 +144,6 @@ export const TrainingMatrixView: React.FC = () => {
           </Button>
         </div>
       </div>
-
-      {/* KPI Cards */}
-      <KPICards kpis={kpis} />
 
       {/* Filter Bar */}
       <FilterBar

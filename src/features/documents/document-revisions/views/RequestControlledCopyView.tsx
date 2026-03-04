@@ -470,9 +470,9 @@ export const RequestControlledCopyView: React.FC = () => {
                             }
                           }}
                           disabled={quantity <= 1}
-                          className="lg:h-11 lg:w-11"
+                          className="lg:h-9 lg:w-9"
                         >
-                          <span className="text-base lg:text-lg font-medium text-slate-700">−</span>
+                          <span className="text-base lg:text-xl font-medium text-slate-700">−</span>
                         </Button>
                         
                         <input
@@ -508,9 +508,9 @@ export const RequestControlledCopyView: React.FC = () => {
                             }
                           }}
                           disabled={quantity >= 50}
-                          className="lg:h-11 lg:w-11"
+                          className="lg:h-9 lg:w-9"
                         >
-                          <span className="text-base lg:text-lg font-medium text-slate-700">+</span>
+                          <span className="text-base lg:text-xl font-medium text-slate-700">+</span>
                         </Button>
                       </div>
                       {errors.quantity && (

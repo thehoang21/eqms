@@ -294,7 +294,7 @@ export const DestroyControlledCopyView: React.FC = () => {
       </div>
 
       {/* Controlled Copy Information */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-4">
           Controlled Copy Information
         </h2>
@@ -361,7 +361,7 @@ export const DestroyControlledCopyView: React.FC = () => {
       </div>
 
       {/* Destruction Form */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-6">
         <h2 className="text-lg font-semibold text-slate-900 mb-6">
           {destructionType} Report Details
         </h2>

@@ -89,7 +89,7 @@ export const ExportRecordsView: React.FC = () => {
       </div>
 
       {/* Export Configuration Form */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <div className="bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-sm">
         <h2 className="text-lg font-semibold text-slate-900 mb-6">Export Configuration</h2>
 
         <div className="space-y-6">

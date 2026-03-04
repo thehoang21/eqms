@@ -427,34 +427,34 @@ export const CourseProgressView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-10 sm:w-[60px]">
                   No.
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Employee ID
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Name
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                   Email
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                   Department
                 </th>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Enrollment
                 </th>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Score
                 </th>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Result
                 </th>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                   Attempts
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden xl:table-cell">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden xl:table-cell">
                   Completed At
                 </th>
               </tr>
@@ -464,35 +464,35 @@ export const CourseProgressView: React.FC = () => {
                 const rowNumber = (currentPage - 1) * itemsPerPage + index + 1;
                 return (
                   <tr key={emp.userId} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-500 font-medium">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center whitespace-nowrap text-slate-500 font-medium">
                       {rowNumber}
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <span className="font-mono text-slate-700">{emp.userId}</span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div>
                         <p className="font-medium text-slate-900">{emp.name}</p>
-                        <p className="text-xs text-slate-500">{emp.jobTitle}</p>
+                        <p className="text-[10px] sm:text-xs text-slate-500">{emp.jobTitle}</p>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600 hidden lg:table-cell">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600 hidden lg:table-cell">
                       {emp.email}
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700 hidden md:table-cell">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700 hidden md:table-cell">
                       {emp.department}
                     </td>
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
                       <span
                         className={cn(
-                          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+                          "inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border",
                           getEnrollmentColor(emp.enrollmentStatus)
                         )}
                       >
                         {emp.enrollmentStatus}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center whitespace-nowrap">
                       {emp.score !== null ? (
                         <span
                           className={cn(
@@ -508,10 +508,10 @@ export const CourseProgressView: React.FC = () => {
                         <span className="text-slate-400">—</span>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
                       <span
                         className={cn(
-                          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+                          "inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border",
                           getResultColor(emp.resultStatus)
                         )}
                       >
@@ -524,10 +524,10 @@ export const CourseProgressView: React.FC = () => {
                         {emp.resultStatus}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-700 hidden lg:table-cell">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center whitespace-nowrap text-slate-700 hidden lg:table-cell">
                       {emp.attempts > 0 ? emp.attempts : "—"}
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700 hidden xl:table-cell">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700 hidden xl:table-cell">
                       {emp.completedAt ? formatDateUS(emp.completedAt) : "—"}
                     </td>
                   </tr>

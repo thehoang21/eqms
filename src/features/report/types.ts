@@ -10,6 +10,9 @@ export type ReportType =
   | 'Complaint'
   | 'Audit'
   | 'Compliance'
+  | 'Supplier'
+  | 'Risk Management'
+  | 'Equipment'
   | 'All';
 
 export type ReportFormat = 'PDF' | 'Excel' | 'CSV';
@@ -18,6 +21,16 @@ export type TabView = 'templates' | 'history' | 'scheduled' | 'compliance';
 export type ReportStatus = 'Completed' | 'In Progress' | 'Failed';
 export type ScheduleStatus = 'Active' | 'Paused' | 'Expired';
 
+/** A customizable field a user can toggle on/off for a report template */
+export interface ReportField {
+  id: string;
+  label: string;
+  description?: string;
+  defaultEnabled: boolean;
+  /** Grouping category for the field */
+  group?: string;
+}
+
 export interface ReportTemplate {
   id: string;
   name: string;
@@ -25,6 +38,8 @@ export interface ReportTemplate {
   description: string;
   icon: React.ComponentType<{ className?: string }>;
   regulatoryRef?: string;
+  /** Fields users can toggle to customize report content */
+  fields?: ReportField[];
 }
 
 export interface ReportHistory {
@@ -61,6 +76,9 @@ export const getTypeColor = (type: ReportType): string => {
     Complaint: 'bg-orange-50 text-orange-700 border-orange-200',
     Audit: 'bg-slate-50 text-slate-700 border-slate-200',
     Compliance: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    Supplier: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+    'Risk Management': 'bg-rose-50 text-rose-700 border-rose-200',
+    Equipment: 'bg-teal-50 text-teal-700 border-teal-200',
   };
   return colors[type] || 'bg-slate-50 text-slate-700 border-slate-200';
 };

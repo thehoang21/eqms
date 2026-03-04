@@ -110,7 +110,7 @@ export const DictionariesView: React.FC = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="flex-1 overflow-auto p-6">
+          <div className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
             {renderTabContent()}
           </div>
         </div>

@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { ROUTES } from '@/app/routes.constants';
 import { useAuth } from '@/contexts/AuthContext';
+import { FullPageLoading } from '@/components/ui/loading/Loading';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -17,11 +18,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Show loading state while checking authentication
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="spinner" />
-      </div>
-    );
+    return <FullPageLoading text="Authenticating..." />;
   }
 
   // Redirect to login if not authenticated

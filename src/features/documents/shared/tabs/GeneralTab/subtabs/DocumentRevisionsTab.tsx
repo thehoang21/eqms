@@ -61,22 +61,22 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revi
                     <table className="w-full">
                         <thead className="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-16">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-10 sm:w-16">
                                     No.
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                     Revision Number
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                                     Created
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                                     Opened by
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                     Revision Name
                                 </th>
-                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                     State
                                 </th>
                             </tr>
@@ -88,24 +88,24 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revi
                                         key={revision.id}
                                         className="hover:bg-slate-50/80 transition-colors"
                                     >
-                                        <td className="py-3.5 px-4 text-sm text-slate-500 whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-500 whitespace-nowrap">
                                             {startIndex + index + 1}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                                             <span className="font-medium text-slate-900">
                                                 {revision.revisionNumber}
                                             </span>
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                                             {revision.created}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                                             {revision.openedBy}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm text-slate-900 whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-900 whitespace-nowrap">
                                             {revision.revisionName}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                                             <StatusBadge status={revision.state} />
                                         </td>
                                     </tr>

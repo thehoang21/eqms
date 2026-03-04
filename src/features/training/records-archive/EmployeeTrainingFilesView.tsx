@@ -315,34 +315,34 @@ export const EmployeeTrainingFilesView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-[60px]">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-10 sm:w-[60px]">
                   No.
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Employee ID
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Employee Name
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Position
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Department
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Required
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Completed
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Overdue
                 </th>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Avg. Score
                 </th>
-                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap text-center sticky right-0 bg-slate-50 z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm">
+                <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>
@@ -356,52 +356,52 @@ export const EmployeeTrainingFilesView: React.FC = () => {
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                     onClick={() => console.log("View employee:", employee.id)}
                   >
-                    <td className="py-3.5 px-4 text-sm text-center whitespace-nowrap text-slate-500 font-medium">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center whitespace-nowrap text-slate-500 font-medium">
                       {(currentPage - 1) * itemsPerPage + index + 1}
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <span className="font-medium text-slate-900">
                         {employee.employeeId}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-emerald-600" />
+                        <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600" />
                         <span className="font-medium text-slate-900">
                           {employee.employeeName}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700">
                       {employee.jobPosition}
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700">
                       {employee.department}
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <span className="text-slate-900 font-medium">
                         {employee.totalCoursesRequired}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                        <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600" />
                         <span className="text-emerald-900 font-medium">
                           {employee.coursesCompleted}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <XCircle className={`h-4 w-4 ${employee.coursesOverdue > 0 ? 'text-red-600' : 'text-slate-400'}`} />
+                        <XCircle className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${employee.coursesOverdue > 0 ? 'text-red-600' : 'text-slate-400'}`} />
                         <span className={`font-medium ${employee.coursesOverdue > 0 ? 'text-red-900' : 'text-slate-500'}`}>
                           {employee.coursesOverdue}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <Award className="h-4 w-4 text-amber-600" />
+                        <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" />
                         <span className="text-slate-900 font-medium">
                           {employee.averageScore}%
                         </span>
@@ -409,17 +409,17 @@ export const EmployeeTrainingFilesView: React.FC = () => {
                     </td>
                     <td
                       onClick={(e) => e.stopPropagation()}
-                      className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                      className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                     >
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           console.log("Action clicked");
                         }}
-                        className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                        className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
                         aria-label="More actions"
                       >
-                        <MoreVertical className="h-4 w-4 text-slate-600" />
+                        <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                       </button>
                     </td>
                   </tr>

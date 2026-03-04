@@ -159,19 +159,19 @@ export const DatabaseTab: React.FC<DatabaseTabProps> = ({ data }) => {
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Table Name</th>
-                  <th className="py-2.5 px-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Rows</th>
-                  <th className="py-2.5 px-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Size</th>
-                  <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Last Updated</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Table Name</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-right text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Rows</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-right text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Size</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">Last Updated</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 bg-white">
                 {data.tableStats.map((table) => (
                   <tr key={table.name} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-2.5 px-5 text-sm font-semibold text-slate-900 font-mono">{table.name}</td>
-                    <td className="py-2.5 px-5 text-sm text-slate-700 text-right font-semibold">{table.rowCount.toLocaleString()}</td>
-                    <td className="py-2.5 px-5 text-sm text-slate-600 text-right hidden sm:table-cell">{table.size}</td>
-                    <td className="py-2.5 px-5 text-sm text-slate-600 hidden md:table-cell">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm font-semibold text-slate-900 font-mono">{table.name}</td>
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-700 text-right font-semibold">{table.rowCount.toLocaleString()}</td>
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 text-right hidden sm:table-cell">{table.size}</td>
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 hidden md:table-cell">
                       {formatDateUS(table.lastModified)}
                     </td>
                   </tr>

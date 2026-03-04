@@ -96,15 +96,15 @@ export const TableCell: React.FC<TableCellProps> = ({
         align === 'right' && 'text-right',
         
         // Header specific (Đã sửa từ mảng [] sang chuỗi/điều kiện rời)
-        isHeader && 'font-semibold text-slate-700 text-xs md:text-sm uppercase tracking-wider',
+        isHeader && 'font-bold text-slate-700 text-xs md:text-sm uppercase tracking-wider',
         
         // Cell specific
         !isHeader && 'text-slate-900',
         
         // Sticky column (Sử dụng object hoặc chuỗi thay vì mảng)
-        sticky === 'right' && 'sticky right-0 bg-white z-20 before:content-[""] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]',
+        sticky === 'right' && 'sticky right-0 bg-white z-30 before:content-[""] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]',
         
-        sticky === 'left' && 'sticky left-0 bg-white z-20 after:content-[""] after:absolute after:right-0 after:top-0 after:bottom-0 after:w-[1px] after:bg-slate-200 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.05)]',
+        sticky === 'left' && 'sticky left-0 bg-white z-30 after:content-[""] after:absolute after:right-0 after:top-0 after:bottom-0 after:w-[1px] after:bg-slate-200 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.05)]',
         
         className
       )}

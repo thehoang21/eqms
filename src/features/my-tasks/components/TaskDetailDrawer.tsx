@@ -217,7 +217,7 @@ export const TaskDetailDrawer: React.FC<{
         </div>
 
         {/* Body - Scrollable */}
-        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar bg-slate-50/30">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar bg-slate-50/30">
           {/* Status & Alerts */}
           <div className="flex flex-col gap-4 mb-8">
             {overdue && (

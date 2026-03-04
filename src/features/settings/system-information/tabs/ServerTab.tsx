@@ -225,20 +225,20 @@ export const ServerTab: React.FC<ServerTabProps> = ({ data }) => {
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Interface</th>
-                  <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">IP Address</th>
-                  <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Type</th>
-                  <th className="py-2.5 px-5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Interface</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">IP Address</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Type</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 bg-white">
                 {data.networkInterfaces.map((iface: any, idx: number) => (
                   <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-2.5 px-5 text-sm font-semibold text-slate-900">{iface.name}</td>
-                    <td className="py-2.5 px-5 text-sm text-slate-700 font-mono">{iface.ip}</td>
-                    <td className="py-2.5 px-5 text-sm text-slate-600 hidden sm:table-cell">{iface.type}</td>
-                    <td className="py-2.5 px-5 text-center">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm font-semibold text-slate-900">{iface.name}</td>
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-700 font-mono">{iface.ip}</td>
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 hidden sm:table-cell">{iface.type}</td>
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-center">
+                      <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border ${
                         iface.status === "active"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : "bg-slate-50 text-slate-600 border-slate-200"

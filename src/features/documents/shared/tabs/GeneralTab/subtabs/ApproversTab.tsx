@@ -231,25 +231,25 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
                         <table className="w-full">
                             <thead className="bg-slate-50 border-b border-slate-200">
                                 <tr>
-                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-16">
+                                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-10 sm:w-16">
                                         No.
                                     </th>
-                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                         User
                                     </th>
-                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                                         Email
                                     </th>
-                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
                                         Position
                                     </th>
-                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">
                                         Department
                                     </th>
-                                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                                         Role
                                     </th>
-                                    <th className="py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-24">
+                                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-16 sm:w-24">
                                         Action
                                     </th>
                                 </tr>
@@ -257,33 +257,33 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
                             <tbody className="divide-y divide-slate-200 bg-white">
                                 {approvers.map((approver, index) => (
                                     <tr key={approver.id} className="hover:bg-slate-50/80 transition-colors">
-                                        <td className="py-3.5 px-4 text-sm text-slate-500 whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-500 whitespace-nowrap">
                                             {index + 1}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                                            <div className="flex items-center gap-3">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+                                            <div className="flex items-center gap-2 sm:gap-3">
                                                 <div>
                                                     <div className="font-medium text-slate-900">{approver.name}</div>
-                                                    <div className="text-xs text-slate-500">{approver.username}</div>
+                                                    <div className="text-[10px] sm:text-xs text-slate-500">{approver.username}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                                             {approver.email}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden lg:table-cell">
                                             {approver.role}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                                             {approver.department}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                                <CheckCircle className="h-3 w-3 mr-1" />
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+                                            <span className="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                                <CheckCircle className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1" />
                                                 Approver
                                             </span>
                                         </td>
-                                        <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
                                             <Button
                                                 onClick={removeApprover}
                                                 variant="ghost"
@@ -291,7 +291,7 @@ export const ApproversTab: React.FC<ApproversTabProps> = ({
                                                 className="text-slate-400 hover:text-red-500 hover:bg-red-50"
                                                 title="Remove approver"
                                             >
-                                                <Trash2 className="h-4 w-4" />
+                                                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                             </Button>
                                         </td>
                                     </tr>

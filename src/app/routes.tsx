@@ -37,6 +37,7 @@ const KnowledgeView = lazy(() => import('@/features/documents/knowledge').then(m
 
 
 // Document Revisions
+const DetailRevisionView = lazy(() => import('@/features/documents').then(m => ({ default: m.DetailRevisionView })));
 const RevisionListView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionListView })));
 const NewRevisionView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.NewRevisionView })));
 const RevisionsOwnedByMeView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionsOwnedByMeView })));
@@ -128,6 +129,16 @@ const DetailDocumentViewWrapper = () => (
     render={(id, navigate) => (
       <Suspense fallback={<LoadingFallback />}>
         <DetailDocumentView documentId={id} onBack={() => navigate(-1)} />
+      </Suspense>
+    )} 
+  />
+);
+
+const DetailRevisionViewWrapper = () => (
+  <RouteWrapper 
+    render={(id, navigate) => (
+      <Suspense fallback={<LoadingFallback />}>
+        <DetailRevisionView documentId={id} onBack={() => navigate(-1)} />
       </Suspense>
     )} 
   />
@@ -245,15 +256,16 @@ export const AppRoutes: React.FC = () => {
           <Route path="revisions">
             <Route path="all" element={<Suspense fallback={<LoadingFallback />}><RevisionListView /></Suspense>} />
             <Route path="owned" element={<Suspense fallback={<LoadingFallback />}><RevisionsOwnedByMeView /></Suspense>} />
-            <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="review" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
-            <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
+            <Route path=":id" element={<DetailRevisionViewWrapper />} />
+            <Route path="pending-review" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="review" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.REVISIONS.DETAIL(id))} /></Suspense>} />
+            <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.REVISIONS.DETAIL(id))} /></Suspense>} />
             <Route path="new" element={<Suspense fallback={<LoadingFallback />}><NewRevisionView /></Suspense>} />
             <Route path="new-multi" element={<Suspense fallback={<LoadingFallback />}><NewRevisionView /></Suspense>} />
             <Route path="new-standalone" element={<Suspense fallback={<LoadingFallback />}><StandaloneRevisionView /></Suspense>} />
             <Route path="workspace" element={<Suspense fallback={<LoadingFallback />}><RevisionWorkspaceView /></Suspense>} />
             <Route path="review/:id" element={<RevisionReviewViewWrapper />} />
             <Route path="approval/:id" element={<RevisionApprovalViewWrapper />} />
-            <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.DETAIL(id))} /></Suspense>} />
+            <Route path="*" element={<Suspense fallback={<LoadingFallback />}><DocumentsView viewType="all" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.REVISIONS.DETAIL(id))} /></Suspense>} />
           </Route>
           
           {/* Controlled Copies */}

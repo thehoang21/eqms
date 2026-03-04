@@ -325,25 +325,25 @@ export const RoleListView: React.FC = () => {
               <table className="w-full">
                 <thead className="bg-slate-50 border-b-2 border-slate-200">
                   <tr>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       No.
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Role Name
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Description
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Type
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Users
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Permissions
                     </th>
-                    <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                    <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                       Action
                     </th>
                   </tr>
@@ -355,19 +355,19 @@ export const RoleListView: React.FC = () => {
                       onClick={() => handleViewRole(role.id)}
                       className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
                     >
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700">
                         {startIndex + index + 1}
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                         <span className="font-medium text-emerald-600">{role.name}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-700 max-w-md">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-700 max-w-md">
                         <span className="line-clamp-2">{role.description}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                         <span
                           className={cn(
-                            "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
+                            "inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border",
                             role.type === "custom"
                               ? "bg-amber-50 text-amber-700 border-amber-200"
                               : "bg-slate-50 text-slate-700 border-slate-200"
@@ -376,13 +376,13 @@ export const RoleListView: React.FC = () => {
                           {role.type === "system" ? "System" : "Custom"}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700">
                         <div className="flex items-center gap-1.5">
-                          <Users className="h-3.5 w-3.5 text-slate-400" />
+                          <Users className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-slate-400" />
                           <span className="font-medium">{role.userCount}</span>
                         </div>
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700">
                         <div className="flex items-center gap-1.5">
                           <span className="font-medium">
                             {role.permissions.length}
@@ -393,7 +393,7 @@ export const RoleListView: React.FC = () => {
                       </td>
                       <td
                         onClick={(e) => e.stopPropagation()}
-                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                        className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                       >
                         <button
                           ref={getButtonRef(role.id)}
@@ -401,10 +401,10 @@ export const RoleListView: React.FC = () => {
                             e.stopPropagation();
                             handleDropdownToggle(role.id, e);
                           }}
-                          className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                          className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
                           aria-label="More actions"
                         >
-                          <MoreVertical className="h-4 w-4 text-slate-600" />
+                          <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                         </button>
                       </td>
                     </tr>

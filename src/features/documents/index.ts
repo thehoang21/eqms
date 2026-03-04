@@ -71,6 +71,7 @@ export { NewDocumentView } from './document-list/document-creation/NewDocumentVi
 export { RevisionListView } from './document-revisions/views/RevisionListView';
 export { RevisionsOwnedByMeView } from './document-revisions/views/RevisionsOwnedByMeView';
 export { PendingDocumentsView } from './document-revisions/views/PendingDocumentsView';
+export { DetailRevisionView } from './document-revisions/detail-revision/DetailRevisionView';
 export { NewRevisionView } from './document-revisions/components/NewRevisionView';
 export { RevisionWorkspaceView } from './document-revisions/components/RevisionWorkspaceView';
 export { StandaloneRevisionView } from './document-revisions/components/StandaloneRevisionView';

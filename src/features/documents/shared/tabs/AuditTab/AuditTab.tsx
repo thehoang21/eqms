@@ -468,7 +468,7 @@ export const AuditTab: React.FC = () => {
             </div>
 
             {/* Modal Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
               {selectedEntry.changes && selectedEntry.changes.length > 0 ? (
                 <div className="space-y-4">
                   {selectedEntry.changes.map((change, index) => (

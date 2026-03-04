@@ -10,6 +10,11 @@ import slide1 from "@/assets/images/slide-image/ipad1.webp";
 import slide2 from "@/assets/images/slide-image/ipad2.webp";
 import slide3 from "@/assets/images/slide-image/ipad3.webp";
 import slide4 from "@/assets/images/slide-image/ipad4.webp";
+import slide5 from "@/assets/images/slide-image/ipad5.webp";
+import slide6 from "@/assets/images/slide-image/ipad6.webp";
+import slide7 from "@/assets/images/slide-image/ipad7.webp";
+import slide8 from "@/assets/images/slide-image/ipad8.webp";
+import slide9 from "@/assets/images/slide-image/ipad9.webp";
 
 // ============================================================================
 // CONSTANTS & CONFIGURATION
@@ -19,7 +24,7 @@ const CAROUSEL_INTERVAL = 3000; // 3 seconds per slide
 const MIN_PASSWORD_LENGTH = 6;
 const LOGIN_SIMULATION_DELAY = 3500; // 1.5 seconds
 
-const SLIDE_IMAGES = [slide1, slide2, slide3, slide4] as const;
+const SLIDE_IMAGES = [slide1, slide2, slide3, slide4, slide5, slide6, slide7, slide8, slide9] as const;
 
 const SLIDE_CONTENT = [
   {
@@ -41,6 +46,31 @@ const SLIDE_CONTENT = [
     tag: "Global Synergy",
     title: "Unified Quality Ecosystem",
     description: "Break down operational silos. Foster seamless collaboration across departments and geographies in a secure, centralized environment."
+  },
+  {
+    tag: "Audit Readiness",
+    title: "Always Inspection-Ready",
+    description: "Maintain complete audit trails for every action, document, and decision. Stay perpetually prepared for regulatory inspections with immutable, timestamped records."
+  },
+  {
+    tag: "Risk Intelligence",
+    title: "Proactive Risk Management",
+    description: "Identify, assess, and mitigate quality risks before they escalate. Leverage integrated risk registers and automated escalation workflows to protect product integrity."
+  },
+  {
+    tag: "Supplier Trust",
+    title: "End-to-End Supplier Control",
+    description: "Manage supplier qualifications, audits, and performance metrics in one place. Ensure your supply chain meets the highest GxP and regulatory standards."
+  },
+  {
+    tag: "Training Excellence",
+    title: "Competency-Driven Workforce",
+    description: "Automate training assignments, track completions, and verify competencies across your organization. Build a culture of quality from the ground up."
+  },
+  {
+    tag: "Smart Automation",
+    title: "Intelligent Process Control",
+    description: "Eliminate manual bottlenecks with intelligent workflows and automated notifications. Accelerate review cycles while maintaining full regulatory traceability."
   }
 ];
 

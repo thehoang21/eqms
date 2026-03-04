@@ -278,17 +278,17 @@ export const NewRevisionView: React.FC = () => {
       {/* Impact Analysis Table */}
       <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
         {/* Table Header */}
-        <div className="bg-white border-b border-slate-200 px-4 lg:px-6 py-3 lg:py-4">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2 lg:gap-0">
+        <div className="bg-white border-b border-slate-200 px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
             <div>
-              <h2 className="text-sm lg:text-base font-semibold text-slate-900">
+              <h2 className="text-xs sm:text-sm lg:text-base font-semibold text-slate-900">
                 Related Documents ({MOCK_LINKED_DOCUMENTS.length})
               </h2>
-              <p className="text-xs lg:text-sm text-slate-500 mt-0.5 lg:mt-1">
+              <p className="text-[10px] sm:text-xs lg:text-sm text-slate-500 mt-0.5 sm:mt-1">
                 {upgradeCount} document(s) selected for upgrade
               </p>
             </div>
-            <div className="flex items-center gap-2 text-xs lg:text-sm flex-wrap">
+            <div className="flex items-center gap-2 text-[10px] sm:text-xs lg:text-sm flex-wrap">
               <span className="text-slate-600">Legend:</span>
               <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-100">
                 <div className="w-3 h-3 rounded-full bg-slate-300"></div>
@@ -307,25 +307,25 @@ export const NewRevisionView: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50/80 border-b border-slate-200">
               <tr>
-                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider w-12 lg:w-16">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider w-10 sm:w-16">
                   No.
                 </th>
-                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Revision Number
                 </th>
-                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Revision Name
                 </th>
-                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">
                   Type
                 </th>
-                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">
                   Current Version
                 </th>
-                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Next Version
                 </th>
-                <th className="py-3 lg:py-3.5 px-3 lg:px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Decision
                 </th>
               </tr>
@@ -343,19 +343,19 @@ export const NewRevisionView: React.FC = () => {
                         : "hover:bg-slate-50",
                     )}
                   >
-                    <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm text-slate-700">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-700">
                       {index + 1}
                     </td>
-                    <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm font-medium text-emerald-600">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm font-medium text-emerald-600">
                       {doc.code}
                     </td>
-                    <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm text-slate-700">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-700">
                       {doc.name}
                     </td>
-                    <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm hidden md:table-cell">
                       <span
                         className={cn(
-                          "inline-flex items-center px-2 lg:px-2.5 py-0.5 lg:py-1 rounded-full text-xs font-medium border",
+                          "inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border",
                           doc.type === "Form" &&
                             "bg-blue-50 text-blue-700 border-blue-200",
                           doc.type === "Annex" &&
@@ -367,10 +367,10 @@ export const NewRevisionView: React.FC = () => {
                         {doc.type}
                       </span>
                     </td>
-                    <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs sm:text-sm font-medium text-slate-700">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm font-medium text-slate-700 hidden md:table-cell">
                       {doc.currentVersion}
                     </td>
-                    <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-xs lg:text-sm">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm">
                       {isUpgrade ? (
                         <span className="font-semibold text-blue-600">
                           {doc.nextVersion}
@@ -381,8 +381,8 @@ export const NewRevisionView: React.FC = () => {
                         </span>
                       )}
                     </td>
-                    <td className="py-3 lg:py-3.5 px-3 lg:px-4 text-center">
-                      <div className="flex items-center justify-center gap-1.5 lg:gap-3">
+                    <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-center">
+                      <div className="flex items-center justify-center gap-1 sm:gap-3">
                         <span
                           className={cn(
                             "text-xs font-medium transition-colors",
@@ -394,7 +394,7 @@ export const NewRevisionView: React.FC = () => {
                         <button
                           onClick={() => handleToggleDecision(doc.id)}
                           className={cn(
-                            "relative inline-flex h-5 w-9 lg:h-6 lg:w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:ring-offset-2",
+                            "relative inline-flex h-5 w-9 sm:h-6 sm:w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:ring-offset-2",
                             isUpgrade ? "bg-emerald-500" : "bg-slate-300",
                           )}
                           role="switch"
@@ -402,10 +402,10 @@ export const NewRevisionView: React.FC = () => {
                         >
                           <span
                             className={cn(
-                              "inline-block h-3.5 w-3.5 lg:h-4 lg:w-4 transform rounded-full bg-white transition-transform duration-200",
+                              "inline-block h-3.5 w-3.5 sm:h-4 sm:w-4 transform rounded-full bg-white transition-transform duration-200",
                               isUpgrade
-                                ? "translate-x-5 lg:translate-x-6"
-                                : "translate-x-0.5 lg:translate-x-1",
+                                ? "translate-x-5 sm:translate-x-6"
+                                : "translate-x-0.5 sm:translate-x-1",
                             )}
                           />
                         </button>

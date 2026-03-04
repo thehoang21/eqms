@@ -183,10 +183,10 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Method</th>
-                  <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Path</th>
-                  <th className="py-2.5 px-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Resp. Time</th>
-                  <th className="py-2.5 px-5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Method</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Path</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-right text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Resp. Time</th>
+                  <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 bg-white">
@@ -194,15 +194,15 @@ export const ApiTab: React.FC<ApiTabProps> = ({ data }) => {
                   const statusInfo = getStatusIndicator(endpoint.status);
                   return (
                     <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-2.5 px-5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold border ${getMethodColor(endpoint.method)}`}>
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4">
+                        <span className={`inline-flex items-center px-1.5 py-0.5 sm:px-2 rounded text-[10px] sm:text-xs font-bold border ${getMethodColor(endpoint.method)}`}>
                           {endpoint.method}
                         </span>
                       </td>
-                      <td className="py-2.5 px-5 text-sm text-slate-900 font-mono">{endpoint.path}</td>
-                      <td className="py-2.5 px-5 text-sm text-slate-600 text-right hidden sm:table-cell">{endpoint.avgResponseTime}</td>
-                      <td className="py-2.5 px-5 text-center">
-                        <span className="inline-flex items-center gap-1.5 text-xs font-medium">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-900 font-mono">{endpoint.path}</td>
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 text-right hidden sm:table-cell">{endpoint.avgResponseTime}</td>
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-center">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-medium">
                           <span className={`h-1.5 w-1.5 rounded-full ${statusInfo.color}`} />
                           <span className="text-slate-600">{statusInfo.label}</span>
                         </span>

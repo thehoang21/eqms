@@ -155,7 +155,7 @@ export const AddUserView: React.FC = () => {
 
       {/* Form Card */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {/* Employee ID */}

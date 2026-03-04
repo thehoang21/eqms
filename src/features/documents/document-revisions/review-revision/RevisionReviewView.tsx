@@ -31,7 +31,7 @@ import {
   WorkingNotesTab,
   DocumentInformationTab,
   ReviewSignaturesTab,
-} from "@/features/documents/document-detail/tabs";
+} from "@/features/documents/document-revisions/detail-revision/tabs";
 import { TrainingTab } from "@/features/documents/shared/tabs";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
@@ -289,6 +289,8 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
     { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
     { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
     { label: "Pending My Review", onClick: onBack },
+    //Review Revision
+    { label: "Review Revision"},
     { label: document.documentId, isActive: true },
   ];
 

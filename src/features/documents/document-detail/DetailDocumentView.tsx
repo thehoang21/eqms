@@ -56,7 +56,6 @@ interface DetailDocumentViewProps {
   documentId: string;
   onBack: () => void;
   initialTab?: TabType;
-  customStatusSteps?: DocumentStatus[];
   initialStatus?: DocumentStatus;
 }
 
@@ -157,7 +156,6 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
   documentId,
   onBack,
   initialTab = "general",
-  customStatusSteps,
   initialStatus,
 }) => {
   const location = useLocation();
@@ -172,20 +170,16 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
   };
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
-  // Status workflow steps
-  const statusSteps: DocumentStatus[] = customStatusSteps || [
+  // Document status workflow steps
+  const statusSteps: DocumentStatus[] = [
     "Draft",
-    "Pending Review",
-    "Pending Approval",
-    "Pending Training",
-    "Ready for Publishing",
-    "Effective",
+    "Active",
     "Obsoleted",
     "Closed - Cancelled",
   ];
   const currentStepIndex = statusSteps.indexOf(document.status) !== -1 
     ? statusSteps.indexOf(document.status) 
-    : statusSteps.indexOf("Effective"); // Fallback for mock if mismatched
+    : statusSteps.indexOf("Active"); // Fallback for mock if mismatched
 
   const handleShare = () => {
     console.log("Share document:", documentId);
@@ -224,7 +218,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">
-                {document.documentId}
+                Document Details
               </span>
             </div>
           </div>
@@ -325,7 +319,7 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
         </div>
 
         {/* Tab Content */}
-        <div className="p-6">
+        <div className="p-3 sm:p-4 md:p-6">
           {activeTab === "general" && (
             <GeneralInformationTab document={document} />
           )}

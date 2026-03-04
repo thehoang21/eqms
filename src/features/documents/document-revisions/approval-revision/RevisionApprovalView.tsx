@@ -19,7 +19,7 @@ import { formatDate } from '@/utils/format';
 import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
 import { GeneralTab, TrainingTab, SignaturesTab, AuditTab, type GeneralTabFormData } from "@/features/documents/shared/tabs";
-import { WorkingNotesTab, DocumentInformationTab, ReviewSignaturesTab } from "@/features/documents/document-detail/tabs";
+import { WorkingNotesTab, DocumentInformationTab, ReviewSignaturesTab } from "@/features/documents/document-revisions/detail-revision/tabs";
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconMessage2 } from "@tabler/icons-react";
 
@@ -263,12 +263,13 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
         { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
         { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
         { label: "Pending My Approval", onClick: onBack },
+        { label: "Revision Approval"},
         { label: revision.documentId, isActive: true },
     ];
 
     return (
         <DocumentWorkflowLayout
-            title="Revision Approval"
+            title={`Revision Approval: ${revision.documentId}`}
             breadcrumbs={breadcrumbs}
             onBack={onBack}
             documentId={`${revision.documentId} v${revision.version}`}

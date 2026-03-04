@@ -13,9 +13,11 @@ interface HeaderProps {
   isMobileMenuOpen: boolean;
   onNavigateToProfile?: () => void;
   onLogout?: () => void;
+  headerTitle?: string;
+  showHeaderTitle?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSidebarCollapsed, isMobileMenuOpen, onNavigateToProfile, onLogout }) => {
+export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSidebarCollapsed, isMobileMenuOpen, onNavigateToProfile, onLogout, headerTitle, showHeaderTitle }) => {
   const { user } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -139,6 +141,18 @@ export const Header: React.FC<HeaderProps> = React.memo(({ onToggleSidebar, isSi
                   : "opacity-0 -rotate-180 scale-90"
               )} />
           </Button>
+        </div>
+
+        {/* CENTER: Page Title (appears when page h1 scrolls out of view) */}
+        <div className={cn(
+          "flex-1 flex items-center min-w-0 transition-all duration-300 ease-out overflow-hidden",
+          showHeaderTitle && headerTitle
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-2 pointer-events-none"
+        )}>
+          <span className="text-sm sm:text-base md:text-lg font-bold text-slate-900 truncate max-w-[160px] sm:max-w-[240px] md:max-w-sm lg:max-w-md">
+            {headerTitle}
+          </span>
         </div>
 
         {/* RIGHT: Notifications & Profile */}

@@ -136,29 +136,29 @@ export const StorageTab: React.FC<StorageTabProps> = ({ data }) => {
           <table className="w-full">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">File Name</th>
-                <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Uploaded By</th>
-                <th className="py-2.5 px-5 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Date</th>
-                <th className="py-2.5 px-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">Size</th>
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">File Name</th>
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Uploaded By</th>
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">Date</th>
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-right text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Size</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 bg-white">
               {data.recentUploads.map((upload, idx) => (
                 <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="py-2.5 px-5 text-sm text-slate-900 font-medium">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-slate-400 flex-shrink-0" />
-                      <span className="truncate max-w-[200px]">{upload.fileName}</span>
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-900 font-medium">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-400 flex-shrink-0" />
+                      <span className="truncate max-w-[150px] sm:max-w-[200px]">{upload.fileName}</span>
                     </div>
                   </td>
-                  <td className="py-2.5 px-5 text-sm text-slate-600 hidden sm:table-cell">{upload.uploadedBy}</td>
-                  <td className="py-2.5 px-5 text-sm text-slate-600 hidden md:table-cell">
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 hidden sm:table-cell">{upload.uploadedBy}</td>
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 hidden md:table-cell">
                     <div className="flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-slate-400" />
+                      <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-slate-400" />
                       {formatDateTime(upload.uploadedAt)}
                     </div>
                   </td>
-                  <td className="py-2.5 px-5 text-sm text-slate-700 font-medium text-right">{upload.size}</td>
+                  <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-700 font-medium text-right">{upload.size}</td>
                 </tr>
               ))}
             </tbody>

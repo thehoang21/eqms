@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { ROUTES } from '@/app/routes.constants';
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar';
@@ -17,11 +17,73 @@ export const MainLayout: React.FC = () => {
   const { activeId, handleNavigate } = useNavigation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Page title in header (shown when scrolled past page h1)
+  const [headerTitle, setHeaderTitle] = useState('');
+  const [showHeaderTitle, setShowHeaderTitle] = useState(false);
+
   // Scroll to top on route change
   useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({ top: 0, behavior: 'instant' });
     }
+  }, [location.pathname]);
+
+  // Observe page title (h1) visibility for sticky header title
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    // Reset on route change
+    setShowHeaderTitle(false);
+    setHeaderTitle('');
+
+    let intersectionObserver: IntersectionObserver | null = null;
+    let currentH1: Element | null = null;
+    let currentTitle = '';
+
+    const syncTitle = () => {
+      const h1 = scrollContainer.querySelector('main h1');
+      if (h1) {
+        // Always check text content — catches state-based navigation
+        const newTitle = h1.textContent?.trim() || '';
+        if (newTitle !== currentTitle) {
+          currentTitle = newTitle;
+          setHeaderTitle(newTitle);
+        }
+
+        // Re-attach IntersectionObserver only when the element changes
+        if (h1 !== currentH1) {
+          currentH1 = h1;
+          intersectionObserver?.disconnect();
+          intersectionObserver = new IntersectionObserver(
+            ([entry]) => {
+              setShowHeaderTitle(!entry.isIntersecting);
+            },
+            { root: scrollContainer, threshold: 0 }
+          );
+          intersectionObserver.observe(h1);
+        }
+      } else if (currentH1) {
+        // h1 removed (transitioning between pages)
+        currentH1 = null;
+        currentTitle = '';
+        setHeaderTitle('');
+        setShowHeaderTitle(false);
+        intersectionObserver?.disconnect();
+      }
+    };
+
+    // Initial check
+    syncTitle();
+
+    // Watch DOM for any changes (handles lazy loading + state-based navigation)
+    const domObserver = new MutationObserver(syncTitle);
+    domObserver.observe(scrollContainer, { childList: true, subtree: true, characterData: true });
+
+    return () => {
+      domObserver.disconnect();
+      intersectionObserver?.disconnect();
+    };
   }, [location.pathname]);
 
   // Reset viewport zoom on iOS Safari
@@ -86,6 +148,8 @@ export const MainLayout: React.FC = () => {
           isMobileMenuOpen={isMobileMenuOpen}
           onNavigateToProfile={() => navigate(ROUTES.PROFILE)}
           onLogout={handleLogout}
+          headerTitle={headerTitle}
+          showHeaderTitle={showHeaderTitle}
         />
 
         {/* Scrollable Content Area - ONLY this div scrolls */}

@@ -29,7 +29,6 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="User Created Successfully"
-      description="Account credentials generated"
       confirmText="Done"
       showCancel={false}
       size="md"
