@@ -546,35 +546,35 @@ export const AuditTrailView: React.FC = () => {
                 {/* Table Header */}
                 <thead className="bg-slate-50 border-b-2 border-slate-200">
                   <tr>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       No.
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Timestamp
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       User
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Module
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Action
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Entity
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Description
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       IP Address
                     </th>
-                    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                    <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       Device
                     </th>
 
-                    <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                    <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                       Action
                     </th>
                   </tr>
@@ -588,80 +588,80 @@ export const AuditTrailView: React.FC = () => {
                       className="hover:bg-slate-50/80 transition-colors group"
                     >
                       {/* No. */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-900">
                         {startItem + index}
                       </td>
 
                       {/* Timestamp */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-900">
                         {formatDateTime(record.timestamp)}
                       </td>
 
                       {/* User */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                         <div className="flex flex-col">
                           <span className="font-medium text-slate-900">
                             {record.user}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-[10px] sm:text-xs text-slate-500">
                             {record.userId}
                           </span>
                         </div>
                       </td>
 
                       {/* Module */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-slate-50 text-slate-700 border-slate-200">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border bg-slate-50 text-slate-700 border-slate-200">
                           {record.module}
                         </span>
                       </td>
 
                       {/* Action */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border bg-emerald-50 text-emerald-700 border-emerald-200">
                           {record.action}
                         </span>
                       </td>
 
                       {/* Entity */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                         <div className="flex flex-col">
                           <span className="font-medium text-slate-900">
                             {record.entityId}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-[10px] sm:text-xs text-slate-500">
                             {record.entityName}
                           </span>
                         </div>
                       </td>
 
                       {/* Description */}
-                      <td className="py-3.5 px-4 text-sm text-slate-700 whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-700 whitespace-nowrap">
                         {record.description}
                       </td>
 
                       {/* IP Address */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-mono">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-900 font-mono">
                         {record.ipAddress}
                       </td>
 
                       {/* Device */}
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-900 font-mono">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-900 font-mono">
                         {record.device || "-"}
                       </td>
 
                       {/* Action Column */}
                       <td
                         onClick={(e) => e.stopPropagation()}
-                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                        className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                       >
                         <button
                           ref={getButtonRef(record.id)}
                           onClick={(e) => handleDropdownToggle(record.id, e)}
-                          className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                          className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
                           aria-label="More options"
                         >
-                          <MoreVertical className="h-4 w-4 text-slate-600" />
+                          <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                         </button>
                       </td>
                     </tr>

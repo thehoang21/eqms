@@ -278,22 +278,22 @@ export const AuditTrailTab: React.FC = () => {
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-30">
               <tr>
-                <th className="px-4 py-3.5 text-center text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="px-2 py-2.5 sm:px-4 sm:py-3.5 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   No.
                 </th>
-                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="px-2 py-2.5 sm:px-4 sm:py-3.5 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Timestamp
                 </th>
-                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="px-2 py-2.5 sm:px-4 sm:py-3.5 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   User
                 </th>
-                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="px-2 py-2.5 sm:px-4 sm:py-3.5 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Action
                 </th>
-                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="px-2 py-2.5 sm:px-4 sm:py-3.5 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   Reason
                 </th>
-                <th className="px-4 py-3.5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <th className="px-2 py-2.5 sm:px-4 sm:py-3.5 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                   IP / Device
                 </th>
               </tr>
@@ -320,25 +320,25 @@ export const AuditTrailTab: React.FC = () => {
                   const rowNumber = (currentPage - 1) * itemsPerPage + index + 1;
                   return (
                     <tr key={entry.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="px-4 py-3.5 text-center text-sm text-slate-600 font-medium">
+                      <td className="px-2 py-2 sm:px-4 sm:py-3.5 text-center text-xs sm:text-sm text-slate-600 font-medium">
                         {rowNumber}
                       </td>
-                      <td className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+                      <td className="px-2 py-2 sm:px-4 sm:py-3.5 text-xs sm:text-sm text-slate-700 whitespace-nowrap">
                         {entry.timestamp}
                       </td>
-                      <td className="px-4 py-3.5 text-sm">
+                      <td className="px-2 py-2 sm:px-4 sm:py-3.5 text-xs sm:text-sm">
                         <div>
                           <div className="font-medium text-slate-900">{entry.user.name}</div>
-                          <div className="text-xs text-slate-500">
+                          <div className="text-[10px] sm:text-xs text-slate-500">
                             {entry.user.role} - {entry.user.department}
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-sm whitespace-nowrap">
-                        <div className="flex items-center gap-2">
+                      <td className="px-2 py-2 sm:px-4 sm:py-3.5 text-xs sm:text-sm whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 sm:gap-2">
                           <span
                             className={cn(
-                              "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
+                              "inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border",
                               getActionBadge(entry.actionType)
                             )}
                           >
@@ -346,17 +346,17 @@ export const AuditTrailTab: React.FC = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-sm text-slate-700">
+                      <td className="px-2 py-2 sm:px-4 sm:py-3.5 text-xs sm:text-sm text-slate-700">
                         <div className="max-w-xs">
                           {entry.reason || (
                             <span className="text-slate-400 italic">No reason provided</span>
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-sm">
+                      <td className="px-2 py-2 sm:px-4 sm:py-3.5 text-xs sm:text-sm">
                         <div className="text-slate-700">
-                          <div className="text-xs font-mono">{entry.ipAddress}</div>
-                          <div className="text-xs text-slate-500 mt-0.5">{entry.device}</div>
+                          <div className="text-[10px] sm:text-xs font-mono">{entry.ipAddress}</div>
+                          <div className="text-[10px] sm:text-xs text-slate-500 mt-0.5">{entry.device}</div>
                         </div>
                       </td>
                     </tr>

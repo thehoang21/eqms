@@ -623,7 +623,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                     <th
                       key={column.id}
                       className={cn(
-                        "py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
+                        "py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
                         column.id === "action"
                           ? "sticky right-0 bg-slate-50 text-center z-10 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm"
                           : "text-left",
@@ -646,7 +646,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                         <td
                           key={column.id}
                           onClick={(e) => e.stopPropagation()}
-                          className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                          className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                         >
                           <button
                             ref={getButtonRef(revision.id)}
@@ -654,16 +654,16 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                               e.stopPropagation();
                               handleDropdownToggle(revision.id, e);
                             }}
-                            className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                            className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
                             aria-label="More actions"
                           >
-                            <MoreVertical className="h-4 w-4 text-slate-600" />
+                            <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                           </button>
                         </td>
                       ) : (
                         <td
                           key={column.id}
-                          className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700"
+                          className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700"
                         >
                           {renderCell(column, revision, index)}
                         </td>

@@ -743,7 +743,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                   <th
                     key={col.id}
                     className={cn(
-                      "py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
+                      "py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
                       col.id === 'action' && "sticky right-0 bg-slate-50 text-center z-10 backdrop-blur-sm shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200"
                     )}
                   >
@@ -764,35 +764,35 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                     {visibleColumns.map(col => {
                       if (col.id === 'no') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700">
                             {globalIndex}
                           </td>
                         );
                       }
                       if (col.id === 'documentId') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                             <span className="font-medium text-emerald-600">{doc.documentId}</span>
                           </td>
                         );
                       }
                       if (col.id === 'created') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                             {formatDateUS(doc.created)}
                           </td>
                         );
                       }
                       if (col.id === 'openedBy') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                             {doc.openedBy}
                           </td>
                         );
                       }
                       if (col.id === 'title') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                             <div className="font-medium text-slate-900">
                               {doc.title}
                             </div>
@@ -801,16 +801,16 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       }
                       if (col.id === 'status') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                             <StatusBadge status={mapDocumentStatusToStatusType(doc.status)} />
                           </td>
                         );
                       }
                       if (col.id === 'type') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                             <span className={cn(
-                              "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border",
+                              "inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border",
                               getTypeColor(doc.type)
                             )}>
                               {doc.type}
@@ -820,7 +820,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       }
                       if (col.id === 'relatedDocuments' && config.showRelatedDocumentsColumn) {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-center">
                             {doc.hasRelatedDocuments ? (
                               <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
                                 Yes
@@ -833,7 +833,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       }
                       if (col.id === 'correlatedDocuments') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-center">
                             {doc.hasCorrelatedDocuments ? (
                               <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
                                 Yes
@@ -846,7 +846,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       }
                       if (col.id === 'template') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-center">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-center">
                             {doc.isTemplate ? (
                               <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">Yes</span>
                             ) : (
@@ -857,28 +857,28 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                       }
                       if (col.id === 'department') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                             {doc.department}
                           </td>
                         );
                       }
                       if (col.id === 'author') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                             {doc.author}
                           </td>
                         );
                       }
                       if (col.id === 'effectiveDate') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                             {formatDateUS(doc.effectiveDate)}
                           </td>
                         );
                       }
                       if (col.id === 'validUntil') {
                         return (
-                          <td key={col.id} className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                          <td key={col.id} className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                             {formatDateUS(doc.validUntil)}
                           </td>
                         );
@@ -888,7 +888,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                           <td
                             key={col.id}
                             onClick={(e) => e.stopPropagation()}
-                            className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                            className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                           >
                             <button
                               ref={getButtonRef(doc.id)}
@@ -896,9 +896,9 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({ viewType, onViewDo
                                 e.stopPropagation();
                                 handleDropdownToggle(doc.id, e);
                               }}
-                              className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                              className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
                             >
-                              <MoreVertical className="h-4 w-4 text-slate-600" />
+                              <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                             </button>
                             <DropdownMenu
                               document={doc}

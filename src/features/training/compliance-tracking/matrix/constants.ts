@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import { Hourglass, type LucideIcon } from "lucide-react";
 import {
   IconAlertTriangle,
   IconCheck,
@@ -21,7 +21,7 @@ export const CELL_CONFIG: Record<
   }
 > = {
   Qualified:    { bg: "bg-emerald-100", hoverBg: "hover:bg-emerald-200", Icon: IconCheck,          iconColor: "text-emerald-600", label: "Qualified",     border: "border-emerald-300" },
-  Pending:      { bg: "bg-amber-100",   hoverBg: "hover:bg-amber-200",   Icon: IconHourglassEmpty, iconColor: "text-amber-600",   label: "Pending",       border: "border-amber-300"  },
+  Pending:      { bg: "bg-amber-100",   hoverBg: "hover:bg-amber-200",   Icon: Hourglass, iconColor: "text-amber-600",   label: "Pending",       border: "border-amber-300"  },
   Overdue:      { bg: "bg-red-100",     hoverBg: "hover:bg-red-200",     Icon: IconX,              iconColor: "text-red-600",     label: "Overdue",       border: "border-red-300"    },
   ExpiringSoon: { bg: "bg-orange-100",  hoverBg: "hover:bg-orange-200",  Icon: IconAlertTriangle,  iconColor: "text-orange-600",  label: "Expiring Soon", border: "border-orange-300" },
   NotRequired:  { bg: "bg-slate-50",    hoverBg: "hover:bg-slate-100",   Icon: IconMinus,          iconColor: "text-slate-400",   label: "Not Required",  border: "border-slate-200"  },

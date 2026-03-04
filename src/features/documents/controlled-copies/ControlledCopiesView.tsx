@@ -613,18 +613,18 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
           <table className="w-full">
             <thead className="bg-slate-50 border-b-2 border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-16">
+                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-10 sm:w-16">
                   No.
                 </th>
                 {DEFAULT_COLUMNS.filter((c) => c.visible).map((col) => (
                   <th
                     key={col.id}
-                    className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap"
+                    className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap"
                   >
                     {col.label}
                   </th>
                 ))}
-                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>
@@ -650,48 +650,48 @@ export const ControlledCopiesView: React.FC<ControlledCopiesViewProps> = ({ view
                       onClick={() => handleViewRow(copy)}
                       className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                     >
-                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap">
                         {rowNumber}
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                         <span className="font-medium text-emerald-600">{copy.documentNumber}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap">
                         {formatDateTimeParts(copy.createdDate, copy.createdTime)}
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap">
                         {copy.openedBy}
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-900 whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-900 whitespace-nowrap">
                         {copy.name}
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${statusConfig.color}`}
+                          className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border ${statusConfig.color}`}
                         >
                           {copy.status}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap">
                         {formatDateUS(copy.validUntil)}
                       </td>
-                      <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                         <span className="font-medium text-slate-900">{copy.document}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap">
                         {copy.distributionList}
                       </td>
                       <td
                         onClick={(e) => e.stopPropagation()}
-                        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                        className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-[5] whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                       >
                         <button
                           ref={getButtonRef(copy.id)}
                           onClick={(e) => handleDropdownToggle(copy.id, e)}
-                          className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
+                          className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
                           aria-label="More actions"
                         >
-                          <MoreVertical className="h-4 w-4 text-slate-600" />
+                          <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                         </button>
                       </td>
                     </tr>

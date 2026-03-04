@@ -27,8 +27,8 @@ export const MatrixTable: React.FC<MatrixTableProps> = ({
 }) => {
   return (
     <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col flex-1">
-      {/* Scrollable grid — fixed height showing ~10 rows */}
-      <div className="overflow-auto max-h-[400px] relative [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-slate-400 [&::-webkit-scrollbar-corner]:bg-slate-100">
+      {/* Scrollable grid — max 10 rows visible, scroll when exceeding */}
+      <div className="overflow-auto max-h-[340px] sm:max-h-[420px] md:max-h-[480px] relative [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-slate-400 [&::-webkit-scrollbar-corner]:bg-slate-100">
         <table className="border-separate border-spacing-0">
           <MatrixHead onSOPHeaderClick={onSOPHeaderClick} />
           <MatrixBody
@@ -213,7 +213,7 @@ const MatrixBody: React.FC<MatrixBodyProps> = ({
                   ) : (
                     <>
                       <cfg.Icon className={cn("h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0", cfg.iconColor)} />
-                      <span className="hidden md:inline text-[11px] font-normal text-slate-600 select-none">
+                      <span className="hidden md:inline text-[11px] font-semibold text-slate-600 select-none">
                         {cfg.label}
                       </span>
                     </>

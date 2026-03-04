@@ -87,15 +87,15 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   return (
     <div
       className={cn(
-        'flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-4 md:px-6 py-3 md:py-4 border-t border-slate-200 bg-white',
+        'flex items-center justify-between gap-2 sm:gap-3 md:gap-4 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 border-t border-slate-200 bg-white',
         className
       )}
     >
       {/* Left section: Item count + Items per page selector */}
-      <div className="flex items-center gap-3 md:gap-4">
+      <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
         {/* Item count */}
         {showItemCount && (
-          <div className="text-xs md:text-sm text-slate-600">
+          <div className="text-[10px] sm:text-xs md:text-sm text-slate-600">
             Showing{' '}
             <span className="font-medium text-slate-900">{startItem}</span> to{' '}
             <span className="font-medium text-slate-900">{endItem}</span> of{' '}
@@ -106,8 +106,8 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
 
         {/* Items per page selector */}
         {showItemsPerPageSelector && onItemsPerPageChange && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs md:text-sm text-slate-600 whitespace-nowrap">Show:</span>
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="text-[10px] sm:text-xs md:text-sm text-slate-600 whitespace-nowrap">Show:</span>
             <Select
               value={itemsPerPage}
               onChange={(value) => {
@@ -118,8 +118,8 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                 label: option.toString(),
                 value: option,
               }))}
-              className="w-20"
-              triggerClassName="h-8 text-xs md:text-sm"
+              className="w-16 sm:w-20"
+              triggerClassName="h-7 sm:h-8 text-[10px] sm:text-xs md:text-sm"
               enableSearch={false}
             />
           </div>
@@ -127,17 +127,25 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
       </div>
 
       {/* Navigation buttons */}
-      <div className="flex items-center gap-1.5 md:gap-2">
+      <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
         {/* Previous button */}
         <Button
           variant="outline"
-          size="sm"
-          className="text-xs md:text-sm px-2.5 md:px-4"
+          size="xs"
+          className="sm:hidden text-[10px] px-2"
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
         >
-          <span className="hidden xs:inline">Previous</span>
-          <span className="xs:hidden">Prev</span>
+          Prev
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="hidden sm:inline-flex text-xs md:text-sm px-2.5 md:px-4"
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
         </Button>
 
         {/* Page numbers (optional) */}
@@ -147,12 +155,12 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
               <>
                 <button
                   onClick={() => onPageChange(1)}
-                  className="h-9 w-9 md:h-8 md:w-8 text-sm font-medium rounded-lg transition-all text-slate-700 hover:bg-slate-100"
+                  className="h-8 w-8 md:h-8 md:w-8 text-xs sm:text-sm font-medium rounded-lg transition-all text-slate-700 hover:bg-slate-100"
                 >
                   1
                 </button>
                 {pageNumbers[0] > 2 && (
-                  <span className="px-1 text-slate-400">...</span>
+                  <span className="px-0.5 sm:px-1 text-slate-400">...</span>
                 )}
               </>
             )}
@@ -162,8 +170,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
                 key={page}
                 onClick={() => onPageChange(page)}
                 className={cn(
-                  // Larger touch targets for better mobile UX
-                  'h-9 w-9 md:h-8 md:w-8 text-sm font-medium rounded-lg transition-all',
+                  'h-8 w-8 md:h-8 md:w-8 text-xs sm:text-sm font-medium rounded-lg transition-all',
                   page === currentPage
                     ? 'bg-emerald-600 text-white'
                     : 'text-slate-700 hover:bg-slate-100'
@@ -176,11 +183,11 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
             {pageNumbers[pageNumbers.length - 1] < totalPages && (
               <>
                 {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-                  <span className="px-1 text-slate-400">...</span>
+                  <span className="px-0.5 sm:px-1 text-slate-400">...</span>
                 )}
                 <button
                   onClick={() => onPageChange(totalPages)}
-                  className="h-9 w-9 md:h-8 md:w-8 text-sm font-medium rounded-lg transition-all text-slate-700 hover:bg-slate-100"
+                  className="h-8 w-8 md:h-8 md:w-8 text-xs sm:text-sm font-medium rounded-lg transition-all text-slate-700 hover:bg-slate-100"
                 >
                   {totalPages}
                 </button>
@@ -189,11 +196,27 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           </div>
         )}
 
+        {/* Page indicator for mobile (when page numbers enabled) */}
+        {showPageNumbers && (
+          <span className="sm:hidden text-[10px] text-slate-500 px-1.5">
+            {currentPage}/{totalPages}
+          </span>
+        )}
+
         {/* Next button */}
         <Button
           variant="outline"
+          size="xs"
+          className="sm:hidden text-[10px] px-2"
+          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </Button>
+        <Button
+          variant="outline"
           size="sm"
-          className="text-xs md:text-sm px-2.5 md:px-4"
+          className="hidden sm:inline-flex text-xs md:text-sm px-2.5 md:px-4"
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
         >

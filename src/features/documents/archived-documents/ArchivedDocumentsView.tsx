@@ -164,31 +164,31 @@ export const ArchivedDocumentsView: React.FC = () => {
                     <table className="w-full">
                         <thead className="bg-slate-50 border-b-2 border-slate-200">
                             <tr>
-                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center whitespace-nowrap w-16">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-center whitespace-nowrap w-10 sm:w-16">
                                     No.
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Document Code
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Document Name
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Version
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Archived Date
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Last Approver
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Retention Period
                                 </th>
-                                <th className="py-3.5 px-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
+                                <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Retention Status
                                 </th>
-                                <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                                <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                                     Actions
                                 </th>
                             </tr>
@@ -199,37 +199,37 @@ export const ArchivedDocumentsView: React.FC = () => {
                                 const rowNumber = startIndex + index + 1;
                                 return (
                                     <tr key={doc.id} className="hover:bg-slate-50/80 transition-colors group">
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-center text-slate-600">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-center text-slate-600">
                                             {rowNumber}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                                             <span className="font-medium text-slate-900">{doc.code}</span>
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm">
                                             <div className="max-w-md">
                                                 <p className="font-medium text-slate-900 truncate">{doc.documentName}</p>
-                                                <p className="text-xs text-slate-500 mt-0.5">{doc.department}</p>
+                                                <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">{doc.department}</p>
                                             </div>
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                                             {doc.version}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                                             {new Date(doc.archivedDate).toLocaleDateString("en-GB", {
                                                 day: "2-digit",
                                                 month: "2-digit",
                                                 year: "numeric",
                                             })}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                                             {doc.lastApprover}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-600">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                                             {formatRetentionPeriod(doc.retentionPeriod)}
                                         </td>
-                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                                             <span className={cn(
-                                                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border w-fit",
+                                                "inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border w-fit",
                                                 getRetentionBadgeStyle(retentionStatus.status)
                                             )}>
                                                 {retentionStatus.message}
@@ -237,7 +237,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                                         </td>
                                         <td 
                                             onClick={(e) => e.stopPropagation()}
-                                            className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+                                            className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                                         >
                                             <Button
                                                 variant="ghost"
@@ -245,7 +245,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                                                 onClick={(e) => handleDropdownToggle(doc.id, e)}
                                                 aria-label="More actions"
                                             >
-                                                <MoreVertical className="h-4 w-4 text-slate-600" />
+                                                <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                                             </Button>
                                         </td>
                                     </tr>
