@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FileBarChart, ShieldAlert, History, Clock } from 'lucide-react';
 import { cn } from '@/components/ui/utils';
-import { IconLayoutDashboard } from '@tabler/icons-react';
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { report } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import type { TabView } from './types';
 import { useTemplatesTab } from './components/TemplatesTab';
 import { useHistoryTab } from './components/HistoryTab';
@@ -24,11 +25,7 @@ export const ReportView: React.FC = () => {
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             Reports & Analytics
           </h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconLayoutDashboard className="h-4 w-4" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">Reports & Analytics</span>
-          </div>
+          <Breadcrumb items={report()} />
         </div>
       </div>
 

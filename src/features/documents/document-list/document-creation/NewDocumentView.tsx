@@ -29,7 +29,8 @@ import {
     type UploadedFile,
 } from "@/features/documents/document-list/document-creation/new-tabs";
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { newDocument } from "@/components/ui/breadcrumb/breadcrumbs.config";
 
 // --- Types ---
 type TabType = "general" | "training" | "document" | "signatures" | "audit";
@@ -313,17 +314,7 @@ export const NewDocumentView: React.FC = () => {
                         <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
                             New Document
                         </h1>
-                        <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                            <IconLayoutDashboard className="h-4 w-4" />
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="hidden sm:inline">Document Control</span>
-                            <span className="sm:hidden">...</span>
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="hidden sm:inline">All Documents</span>
-                            <span className="sm:hidden">...</span>
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="text-slate-700 font-medium">New Document</span>
-                        </div>
+                        <Breadcrumb items={newDocument(navigate)} />
                     </div>
 
                     {/* Action Buttons */}

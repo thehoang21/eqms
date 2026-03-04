@@ -11,7 +11,8 @@ import { Loading } from '@/components/ui/loading/Loading';
 import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb';
+import { standaloneRevision } from '@/components/ui/breadcrumb/breadcrumbs.config';
 
 // --- Types ---
 interface SourceDocument {
@@ -208,21 +209,7 @@ export const StandaloneRevisionView: React.FC = () => {
                                 : 'Upgrade Revision'
                             }
                         </h1>
-                        <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                            <IconLayoutDashboard className="h-4 w-4" />
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="hidden sm:inline">
-                                Document Control
-                            </span>
-                            <span className="sm:hidden">...</span>
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="hidden sm:inline">
-                                All Documents
-                            </span>
-                            <span className="sm:hidden">...</span>
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="text-slate-700 font-medium">Upgrade Revision</span>
-                        </div>
+                        <Breadcrumb items={standaloneRevision(navigate)} />
                     </div>
                     <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                         <Button 

@@ -23,7 +23,8 @@ import {
   Activity,
   Eye,
 } from "lucide-react";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { materialUsageReport } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { formatDateUS } from "@/utils/format";
 import { Select } from "@/components/ui/select/Select";
@@ -336,17 +337,7 @@ export const UsageReportView: React.FC = () => {
               {material.materialCode}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconLayoutDashboard className="h-4 w-4" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Training Management</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Training Materials</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">Usage Report</span>
-          </div>
+          <Breadcrumb items={materialUsageReport(navigate)} />
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)} className="gap-2">

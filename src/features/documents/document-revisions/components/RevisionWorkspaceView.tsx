@@ -29,7 +29,9 @@ import {
 } from "../revision-tabs";
 import { MultiDocumentUpload } from "./MultiDocumentUpload";
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
-import { IconChevronRight, IconLayoutDashboard } from "@tabler/icons-react";
+import { IconChevronRight } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { revisionWorkspace } from "@/components/ui/breadcrumb/breadcrumbs.config";
 
 // --- Types ---
 type TabType =
@@ -467,21 +469,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                         <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
                             Revision Workspace
                         </h1>
-                        <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                            <IconLayoutDashboard className="h-4 w-4" />
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="hidden sm:inline">Document Control</span>
-                            <span className="sm:hidden">...</span>
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="hidden sm:inline">
-                                All Revisions
-                            </span>
-                            <span className="sm:hidden">...</span>
-                            <span className="text-slate-400 mx-1">/</span>
-                            <span className="text-slate-700 font-medium">
-                                Revision Workspace
-                            </span>
-                        </div>
+                        <Breadcrumb items={revisionWorkspace(navigate)} />
                         {/* {state?.sourceDocument && (
                             <div className="mt-2 text-sm text-slate-600">
                                 <span className="font-medium">Source:</span> {state.sourceDocument.code} - {state.sourceDocument.name}

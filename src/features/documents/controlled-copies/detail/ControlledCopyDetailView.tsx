@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from '@/app/routes.constants';
 import {
-  ChevronRight,
-  Home,
   Calendar,
   MapPin,
   User,
@@ -27,7 +25,9 @@ import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { useToast } from "@/components/ui/toast/Toast";
 import { ControlledCopy, ControlledCopyStatus, CurrentStage } from "../types";
 import { DestructionTypeSelectionModal } from "../components/DestructionTypeSelectionModal";
-import { IconFileShredder, IconShare3, IconLayoutDashboard } from "@tabler/icons-react";
+import { IconFileShredder, IconShare3 } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { controlledCopyDetail } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import {
   DocumentInformationTab,
   DistributionInformationTab,
@@ -311,22 +311,7 @@ export const ControlledCopyDetailView: React.FC<ControlledCopyDetailViewProps> =
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
               Controlled Copy Details
             </h1>
-            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <IconLayoutDashboard className="h-4 w-4" />
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">Document Control</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">Controlled Copies</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">All Controlled Copies</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="text-slate-700 font-medium">
-                Controlled Copy Details
-              </span>
-            </div>
+            <Breadcrumb items={controlledCopyDetail(navigate)} />
           </div>
 
           {/* Action buttons */}

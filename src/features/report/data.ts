@@ -8,13 +8,11 @@ import {
   AlertTriangle,
   BarChart3,
   CheckCircle2,
-  RefreshCw,
   ShieldAlert,
   MessageSquareWarning,
   History,
   ClipboardCheck,
   BookOpen,
-  Package,
   Truck,
   Activity,
   Target,
@@ -31,6 +29,7 @@ import {
   Building2,
 } from 'lucide-react';
 import type { ReportTemplate, ReportHistory, ScheduledReport } from './types';
+import { IconRefresh } from '@tabler/icons-react';
 
 // --- Report Templates ---
 export const REPORT_TEMPLATES: ReportTemplate[] = [
@@ -352,7 +351,7 @@ export const REPORT_TEMPLATES: ReportTemplate[] = [
     name: 'Change Control Summary',
     type: 'Change Control',
     description: 'Overview of all changes by type, status, and impact assessment.',
-    icon: RefreshCw,
+    icon: IconRefresh,
     fields: [
       { id: 'change-number', label: 'Change Number', group: 'General', defaultEnabled: true },
       { id: 'change-title', label: 'Title', group: 'General', defaultEnabled: true },

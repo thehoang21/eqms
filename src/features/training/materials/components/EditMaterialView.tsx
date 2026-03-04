@@ -12,9 +12,10 @@ import {
   Link2,
   ArrowLeft,
   Lock,
-  RefreshCw,
 } from "lucide-react";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { IconRefresh } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { materialEdit } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { ButtonLoading } from "@/components/ui/loading/Loading";
 import { Select } from "@/components/ui/select/Select";
@@ -387,17 +388,7 @@ const EditMaterialForm: React.FC<EditMaterialFormProps> = ({ materialId, existin
               Edit Training Material
             </h1>
           </div>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconLayoutDashboard className="h-4 w-4" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Training Management</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Training Materials</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">Edit Training Material</span>
-          </div>
+          <Breadcrumb items={materialEdit(navigate)} />
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <Button variant="outline" onClick={handleCancel} size="sm" className="whitespace-nowrap gap-2">
@@ -551,7 +542,7 @@ const EditMaterialForm: React.FC<EditMaterialFormProps> = ({ materialId, existin
                         onClick={() => { setIsReplacingFile(true); setTimeout(() => fileInputRef.current?.click(), 50); }}
                         className="mt-3 inline-flex items-center gap-1.5 text-xs text-amber-600 hover:text-amber-700 font-medium transition-colors"
                       >
-                        <RefreshCw className="h-3.5 w-3.5" />
+                        <IconRefresh className="h-3.5 w-3.5" />
                         Replace with a different file
                       </button>
                     </div>

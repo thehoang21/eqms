@@ -18,7 +18,9 @@ import {
     formatRetentionPeriod,
     logAuditTrail
 } from './utils';
-import { IconInfoCircle, IconLayoutDashboard } from '@tabler/icons-react';
+import { IconInfoCircle } from '@tabler/icons-react';
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { archivedDocuments } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { MOCK_ARCHIVED_DOCS } from './mockData';
 
 export const ArchivedDocumentsView: React.FC = () => {
@@ -119,14 +121,7 @@ export const ArchivedDocumentsView: React.FC = () => {
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
                 <div className="flex-1 min-w-0">
                     <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">Archived Documents</h1>
-                    <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-1 whitespace-nowrap overflow-x-auto">
-                        <IconLayoutDashboard className="h-4 w-4" />
-                        <span className="text-slate-400 mx-1">/</span>
-                        <span className="hidden sm:inline">Document Control</span>
-                        <span className="sm:hidden">...</span>
-                        <span className="text-slate-400 mx-1">/</span>
-                        <span className="text-slate-700 font-medium">Archived Documents</span>
-                    </div>
+                    <Breadcrumb items={archivedDocuments()} />
                 </div>
                 <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                     <Button

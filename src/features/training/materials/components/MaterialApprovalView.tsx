@@ -17,7 +17,9 @@ import {
   Link2,
   ExternalLink,
 } from "lucide-react";
-import { IconLayoutDashboard, IconChecks } from "@tabler/icons-react";
+import { IconChecks } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { materialApproval } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
 import { ESignatureModal } from "@/components/ui/esignmodal";
@@ -235,17 +237,7 @@ export const MaterialApprovalView: React.FC = () => {
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             Approve Material
           </h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconLayoutDashboard className="h-4 w-4" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Training Management</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Training Materials</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">Approve Material</span>
-          </div>
+          <Breadcrumb items={materialApproval(navigate)} />
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <Button

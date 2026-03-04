@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from '@/app/routes.constants';
 import {
   User,
   MessageSquare,
@@ -19,6 +18,7 @@ import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { formatDate } from "@/utils/format";
+import { revisionReview } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import {
   DocumentWorkflowLayout,
   DEFAULT_WORKFLOW_TABS,
@@ -285,16 +285,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
   ];
 
   // Breadcrumbs
-  const breadcrumbs = [
-    { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
-    //Document Control
-    { label: "Document Control", onClick: () => navigate(ROUTES.DOCUMENTS.ALL) },
-    { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
-    { label: "Pending My Review", onClick: onBack },
-    //Review Revision
-    { label: "Review Revision"},
-    { label: document.documentId, isActive: true },
-  ];
+  const breadcrumbs = revisionReview(navigate, onBack, document.documentId);
 
   return (
     <DocumentWorkflowLayout

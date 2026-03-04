@@ -9,7 +9,9 @@ import {
   Download,
   MoreVertical,
 } from "lucide-react";
-import { IconLayoutDashboard, IconInfoCircle, IconChecks } from "@tabler/icons-react";
+import { IconInfoCircle, IconChecks } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { coursePendingApproval } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
 import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
@@ -144,17 +146,7 @@ export const PendingApprovalView: React.FC = () => {
               Pending Approval
             </h1>
           </div>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconLayoutDashboard className="h-4 w-4" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Training Management</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Course Inventory</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">Pending Approval</span>
-          </div>
+          <Breadcrumb items={coursePendingApproval(navigate)} />
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <Button

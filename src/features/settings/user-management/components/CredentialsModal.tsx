@@ -1,9 +1,10 @@
 import React from "react";
-import { Copy, Check, RefreshCw } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { FormModal } from "@/components/ui/modal/FormModal";
 import { cn } from "@/components/ui/utils";
 import { useToast } from "@/components/ui/toast";
+import { IconRefresh } from "@tabler/icons-react";
 
 interface CredentialsModalProps {
   isOpen: boolean;
@@ -94,7 +95,7 @@ export const CredentialsModal: React.FC<CredentialsModalProps> = ({
                   className="flex items-center justify-center h-10 w-11 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-emerald-300 hover:text-emerald-600 transition-all duration-200"
                   title="Regenerate Password"
                 >
-                  <RefreshCw className="h-4 w-4" />
+                  <IconRefresh className="h-4 w-4" />
                 </Button>
                 <CopyButton text={password} label="Password" showToast={showToast} />
               </div>

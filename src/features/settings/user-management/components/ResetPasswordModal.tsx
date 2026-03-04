@@ -1,8 +1,9 @@
 import React from "react";
-import { Info, RefreshCw, Copy } from "lucide-react";
+import { Info, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { FormModal } from "@/components/ui/modal/FormModal";
 import { useToast } from "@/components/ui/toast";
+import { IconRefresh } from "@tabler/icons-react";
 
 interface ResetPasswordModalProps {
   isOpen: boolean;
@@ -109,7 +110,7 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
               className="flex items-center justify-center h-10 w-11 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-blue-300 hover:text-blue-600 transition-all duration-200"
               title="Regenerate Password"
             >
-              <RefreshCw className="h-4 w-4" />
+              <IconRefresh className="h-4 w-4" />
             </Button>
             <Button
               onClick={handleCopyPassword}

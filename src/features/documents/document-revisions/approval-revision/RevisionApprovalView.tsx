@@ -16,6 +16,7 @@ import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 import { useToast } from '@/components/ui/toast';
 import { formatDate } from '@/utils/format';
+import { revisionApproval } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
 import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
 import { GeneralTab, TrainingTab, SignaturesTab, AuditTab, type GeneralTabFormData } from "@/features/documents/shared/tabs";
@@ -259,15 +260,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Pending Training", "Ready for Publishing", "Effective", "Obsoleted", "Closed - Cancelled"];
 
     // Breadcrumbs
-    const breadcrumbs = [
-        { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
-        //Document Control
-            { label: "Document Control", onClick: () => navigate(ROUTES.DOCUMENTS.ALL) },
-        { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
-        { label: "Pending My Approval", onClick: onBack },
-        { label: "Approve Revision"},
-        { label: revision.documentId, isActive: true },
-    ];
+    const breadcrumbs = revisionApproval(navigate, onBack, revision.documentId);
 
     return (
         <DocumentWorkflowLayout

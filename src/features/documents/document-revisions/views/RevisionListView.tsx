@@ -21,7 +21,9 @@ import { TablePagination } from '@/components/ui/table/TablePagination';
 import { TableEmptyState } from '@/components/ui/table/TableEmptyState';
 import { DocumentFilters } from "@/features/documents/shared/components";
 import { cn } from '@/components/ui/utils';
-import { IconFileCheck, IconFileTime, IconInfoCircle, IconFileExport, IconLayoutDashboard, IconEyeCheck, IconChecks } from "@tabler/icons-react";
+import { IconFileCheck, IconFileTime, IconInfoCircle, IconFileExport, IconEyeCheck, IconChecks } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { revisionList } from "@/components/ui/breadcrumb/breadcrumbs.config";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { Revision, MOCK_REVISIONS } from "./mockData";
@@ -327,21 +329,7 @@ export const RevisionListView: React.FC = () => {
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             All Revisions
           </h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconLayoutDashboard className="h-4 w-4" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">
-              Document Control
-            </span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">
-              Document Revisions
-            </span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">All Revisions</span>
-          </div>
+          <Breadcrumb items={revisionList(navigate)} />
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           <Button

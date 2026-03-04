@@ -230,7 +230,6 @@ export const DashboardView: React.FC = () => {
               >
                 <div className="absolute inset-0 w-full h-full bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
                 <span className="relative">View My Tasks</span>
-                <CheckSquare className="w-4 h-4 relative" />
               </motion.button>
 
               <motion.button
@@ -239,7 +238,6 @@ export const DashboardView: React.FC = () => {
                 className="px-4 py-2.5 sm:px-6 sm:py-3 bg-white text-slate-700 border border-slate-200 rounded-xl font-semibold hover:border-emerald-200 hover:text-emerald-700 transition-colors shadow-sm flex items-center gap-2 text-sm sm:text-base"
               >
                 <span>Latest Deviations</span>
-                <AlertTriangle className="w-4 h-4 text-amber-500" />
               </motion.button>
             </motion.div>
           </div>

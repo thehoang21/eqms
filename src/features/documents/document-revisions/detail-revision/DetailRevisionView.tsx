@@ -15,7 +15,8 @@ import {
   AuditTrailTab,
 } from "./tabs";
 import { Button } from "@/components/ui/button/Button";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { revisionDetail } from "@/components/ui/breadcrumb/breadcrumbs.config";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 
@@ -198,22 +199,7 @@ export const DetailRevisionView: React.FC<DetailRevisionViewProps> = ({
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
               Document Revision Details
             </h1>
-            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <IconLayoutDashboard className="h-4 w-4" />
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">Document Control</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">Document Revisions</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">All Revisions</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="text-slate-700 font-medium">
-                Document Revision Details
-              </span>
-            </div>
+            <Breadcrumb items={revisionDetail(navigate)} />
           </div>
           <div className="flex items-center gap-2 md:gap-3 flex-wrap">
             <Button

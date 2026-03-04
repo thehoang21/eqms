@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '../button/Button';
 import { Select } from '../select/Select';
 import { cn } from '../utils';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 /**
  * TablePagination Component
@@ -136,7 +137,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
         >
-          Prev
+          <IconChevronLeft className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
@@ -211,7 +212,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
         >
-          Next
+          <IconChevronRight className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"

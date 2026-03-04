@@ -9,7 +9,6 @@ import {
   Search,
   MoreVertical,
   Trash2,
-  RefreshCw,
   Filter,
 } from 'lucide-react';
 import { createPortal } from 'react-dom';
@@ -20,6 +19,7 @@ import { cn } from '@/components/ui/utils';
 import type { ReportType, ReportStatus } from '../types';
 import { getTypeColor } from '../types';
 import { MOCK_REPORT_HISTORY } from '../data';
+import { IconRefresh } from '@tabler/icons-react';
 
 /**
  * Custom hook managing the History tab.
@@ -405,7 +405,7 @@ export function useHistoryTab() {
                       }}
                       className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
                     >
-                      <RefreshCw className="h-4 w-4 flex-shrink-0" />
+                      <IconRefresh className="h-4 w-4 flex-shrink-0" />
                       <span className="font-medium">Regenerate</span>
                     </button>
                     <button

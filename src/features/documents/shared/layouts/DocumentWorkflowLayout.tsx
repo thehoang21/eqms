@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import {
-    ChevronRight,
     Clock,
     CheckCircle2,
     AlertCircle,
     Check,
-    ArrowLeft,
-    Home,
-    ChevronLeft,
     ChevronRight as ChevronRightIcon,
     List,
     CheckCircle,
@@ -15,7 +11,8 @@ import {
 } from "lucide-react";
 import { cn } from '@/components/ui/utils';
 import { Button } from "@/components/ui/button/Button";
-import { IconChevronLeft, IconLayoutDashboard } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import type { BreadcrumbItem } from "@/components/ui/breadcrumb/Breadcrumb";
 
 import type { DocumentStatus } from "@/features/documents/types";
 
@@ -30,11 +27,7 @@ interface BatchDocument {
     isCompleted?: boolean;
 }
 
-interface BreadcrumbItem {
-    label: string;
-    onClick?: () => void;
-    isActive?: boolean;
-}
+// BreadcrumbItem type is imported from @/components/ui/breadcrumb/Breadcrumb
 
 interface TabItem {
     id: TabType;
@@ -328,25 +321,7 @@ export const DocumentWorkflowLayout: React.FC<DocumentWorkflowLayoutProps> = ({
                         <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
                             {title}
                         </h1>
-                        <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                            {breadcrumbs.map((item, index) => (
-                                <React.Fragment key={index}>
-                                    {index === 0 ? (
-                                        <IconLayoutDashboard className="h-4 w-4" />
-                                    ) : item.isActive ? (
-                                        <span className="text-slate-700 font-medium">{item.label}</span>
-                                    ) : (
-                                        <>
-                                            <span className="hidden sm:inline">{item.label}</span>
-                                            <span className="sm:hidden">...</span>
-                                        </>
-                                    )}
-                                    {index < breadcrumbs.length - 1 && (
-                                        <span className="text-slate-400 mx-1">/</span>
-                                    )}
-                                </React.Fragment>
-                            ))}
-                        </div>
+                        <Breadcrumb items={breadcrumbs} />
                     </div>
                     <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                         <Button

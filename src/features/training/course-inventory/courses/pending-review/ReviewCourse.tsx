@@ -2,7 +2,8 @@ import React, { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "@/app/routes.constants";
 import { XCircle, Check } from "lucide-react";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { coursePendingReview } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { cn } from "@/components/ui/utils";
@@ -149,17 +150,7 @@ export const ReviewCourse: React.FC = () => {
             <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
               Pending Review
             </h1>
-            <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-              <IconLayoutDashboard className="h-4 w-4" />
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">Training Management</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">Course Inventory</span>
-              <span className="sm:hidden">...</span>
-              <span className="text-slate-400 mx-1">/</span>
-              <span className="text-slate-700 font-medium">Pending Review</span>
-            </div>
+            <Breadcrumb items={coursePendingReview(navigate)} />
           </div>
 
           {/* Header Action Buttons */}

@@ -36,6 +36,8 @@ import {
   IconSettings2,
 } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { userManual } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Select } from "@/components/ui/select/Select";
 import manualContentData from "./userManualContent.json";
 
@@ -300,11 +302,7 @@ export const UserManualView: React.FC = () => {
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             User Manual
           </h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconLayoutDashboard className="h-4 w-4" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">User Manual</span>
-          </div>
+          <Breadcrumb items={userManual()} />
         </div>
 
         {/* Search */}

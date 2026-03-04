@@ -8,7 +8,9 @@ import { Checkbox } from '@/components/ui/checkbox/Checkbox';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
 import { useToast } from '@/components/ui/toast/Toast';
-import { IconChevronLeft, IconLayoutDashboard } from '@tabler/icons-react';
+import { IconChevronLeft } from '@tabler/icons-react';
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { requestControlledCopy } from "@/components/ui/breadcrumb/breadcrumbs.config";
 
 // --- Types ---
 interface DistributionLocation {
@@ -226,19 +228,7 @@ export const RequestControlledCopyView: React.FC = () => {
                 <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
                   Request Controlled Copy
                 </h1>
-                <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-                  <IconLayoutDashboard className="h-4 w-4" />
-                  <span className="text-slate-400 mx-1">/</span>
-                  <span className="hidden sm:inline">
-                    Document Control
-                  </span>
-                  <span className="sm:hidden">...</span>
-                  <span className="text-slate-400 mx-1">/</span>
-                  <span className="hidden sm:inline">Document Revisions</span>
-                  <span className="sm:hidden">...</span>
-                  <span className="text-slate-400 mx-1">/</span>
-                  <span className="text-slate-700 font-medium">{documentId}</span>
-                </div>
+                <Breadcrumb items={requestControlledCopy(navigate, documentId)} />
               </div>
               <div className="flex items-center gap-2 md:gap-3 flex-wrap">
                 <Button

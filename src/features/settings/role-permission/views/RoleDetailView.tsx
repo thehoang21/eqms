@@ -32,7 +32,8 @@ import { useToast } from "@/components/ui/toast";
 import { cn } from "@/components/ui/utils";
 import { Role, PermissionGroup } from "../types";
 import { MOCK_ROLES, PERMISSION_GROUPS, isALCOAPlusRequired } from "../constants";
-import { IconLayoutDashboard } from "@tabler/icons-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { roleDetail } from "@/components/ui/breadcrumb/breadcrumbs.config";
 
 export const RoleDetailView: React.FC = () => {
   const navigate = useNavigate();
@@ -264,19 +265,7 @@ export const RoleDetailView: React.FC = () => {
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             {isNewRole ? "New Role" : isEditMode ? "Edit Role" : "Role Details"}
           </h1>
-          <div className="flex items-center gap-1.5 text-slate-500 mt-1 text-xs whitespace-nowrap overflow-x-auto">
-            <IconLayoutDashboard className="h-4 w-4" />
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Settings</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="hidden sm:inline">Role & Permissions</span>
-            <span className="sm:hidden">...</span>
-            <span className="text-slate-400 mx-1">/</span>
-            <span className="text-slate-700 font-medium">
-              {isNewRole ? "New Role" : isEditMode ? "Edit Role" : "Role Details"}
-            </span>
-          </div>
+          <Breadcrumb items={roleDetail(navigate, isNewRole ? "new" : isEditMode ? "edit" : "view")} />
         </div>
         <div className="flex items-center gap-2 md:gap-3 flex-wrap">
           {isViewMode ? (
