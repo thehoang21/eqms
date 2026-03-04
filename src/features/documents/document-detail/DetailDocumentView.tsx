@@ -214,7 +214,9 @@ export const DetailDocumentView: React.FC<DetailDocumentViewProps> = ({
               <span className="hidden sm:inline">Document Control</span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
-              <span className="hidden sm:inline">All Documents</span>
+              <span className="hidden sm:inline">
+                {state?.fromArchive ? "Archived Documents" : "All Documents"}
+              </span>
               <span className="sm:hidden">...</span>
               <span className="text-slate-400 mx-1">/</span>
               <span className="text-slate-700 font-medium">

@@ -261,15 +261,17 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     // Breadcrumbs
     const breadcrumbs = [
         { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
+        //Document Control
+            { label: "Document Control", onClick: () => navigate(ROUTES.DOCUMENTS.ALL) },
         { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
         { label: "Pending My Approval", onClick: onBack },
-        { label: "Revision Approval"},
+        { label: "Approve Revision"},
         { label: revision.documentId, isActive: true },
     ];
 
     return (
         <DocumentWorkflowLayout
-            title={`Revision Approval: ${revision.documentId}`}
+            title={`Approve Revision: ${revision.documentId}`}
             breadcrumbs={breadcrumbs}
             onBack={onBack}
             documentId={`${revision.documentId} v${revision.version}`}

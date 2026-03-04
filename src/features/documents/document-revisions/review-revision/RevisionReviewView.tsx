@@ -287,6 +287,8 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
   // Breadcrumbs
   const breadcrumbs = [
     { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
+    //Document Control
+    { label: "Document Control", onClick: () => navigate(ROUTES.DOCUMENTS.ALL) },
     { label: "Document Revisions", onClick: () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) },
     { label: "Pending My Review", onClick: onBack },
     //Review Revision
