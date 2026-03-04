@@ -296,7 +296,7 @@ export const PasswordTab: React.FC<PasswordTabProps> = ({
                                         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
                                             <h4 className="text-xs sm:text-sm font-semibold text-slate-900">{session.device}</h4>
                                             {session.current && (
-                                                <span className="px-1.5 sm:px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-medium rounded whitespace-nowrap">
+                                                <span className="px-1.5 sm:px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-medium rounded-full whitespace-nowrap">
                                                     Current
                                                 </span>
                                             )}

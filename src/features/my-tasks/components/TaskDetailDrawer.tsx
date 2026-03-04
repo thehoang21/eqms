@@ -85,26 +85,24 @@ export const TaskDetailDrawer: React.FC<{
 
   // Using React Portal to render outside of the nested DOM structure (Fixes z-index issues)
   return createPortal(
-    <div className="fixed inset-0 z-50 flex justify-center md:justify-end items-end md:items-stretch pointer-events-none">
-      {/* 
-               Animation Styles injected locally with Media Queries for cleaner responsive behavior
-            */}
+    <div className="fixed inset-0 z-50 flex justify-center md:justify-end items-end md:items-center pointer-events-none">
+      {/* Animation Styles */}
       <style>{`
                 @keyframes slideInRight {
-                    from { transform: translateX(100%); }
-                    to { transform: translateX(0); }
+                    from { transform: translateX(calc(100% + 20px)); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
                 }
                 @keyframes slideInBottom {
-                    from { transform: translateY(100%); }
-                    to { transform: translateY(0); }
+                    from { transform: translateY(calc(100% + 16px)); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
                 }
                 @keyframes slideOutRight {
-                    from { transform: translateX(0); }
-                    to { transform: translateX(100%); }
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(calc(100% + 20px)); opacity: 0; }
                 }
                 @keyframes slideOutBottom {
-                    from { transform: translateY(0); }
-                    to { transform: translateY(100%); }
+                    from { transform: translateY(0); opacity: 1; }
+                    to { transform: translateY(calc(100% + 16px)); opacity: 0; }
                 }
                 @keyframes fadeIn {
                     from { opacity: 0; }
@@ -114,78 +112,66 @@ export const TaskDetailDrawer: React.FC<{
                     from { opacity: 1; }
                     to { opacity: 0; }
                 }
-                
-                /* Base Animation Class Configuration */
+
                 .responsive-drawer-enter {
-                    animation-duration: 0.3s;
+                    animation-duration: 0.32s;
                     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
                     animation-fill-mode: forwards;
                 }
                 .responsive-drawer-exit {
-                    animation-duration: 0.3s;
+                    animation-duration: 0.22s;
                     animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
                     animation-fill-mode: forwards;
                 }
 
-                /* Mobile: Slide from Bottom */
                 @media (max-width: 767px) {
-                    .responsive-drawer-enter {
-                        animation-name: slideInBottom;
-                    }
-                    .responsive-drawer-exit {
-                        animation-name: slideOutBottom;
-                    }
+                    .responsive-drawer-enter { animation-name: slideInBottom; }
+                    .responsive-drawer-exit  { animation-name: slideOutBottom; }
                 }
-
-                /* Desktop/Tablet: Slide from Right */
                 @media (min-width: 768px) {
-                    .responsive-drawer-enter {
-                        animation-name: slideInRight;
-                    }
-                    .responsive-drawer-exit {
-                        animation-name: slideOutRight;
-                    }
+                    .responsive-drawer-enter { animation-name: slideInRight; }
+                    .responsive-drawer-exit  { animation-name: slideOutRight; }
                 }
 
-                .backdrop-enter {
-                    animation: fadeIn 0.3s ease-out forwards;
-                }
-                .backdrop-exit {
-                    animation: fadeOut 0.3s ease-in forwards;
-                }
+                .backdrop-enter { animation: fadeIn 0.25s ease-out forwards; }
+                .backdrop-exit  { animation: fadeOut 0.22s ease-in forwards; }
             `}</style>
 
       {/* Backdrop */}
       <div
         className={cn(
-          "absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] pointer-events-auto",
+          "absolute inset-0 bg-slate-900/50 backdrop-blur-[3px] pointer-events-auto",
           isClosing ? "backdrop-exit" : "backdrop-enter"
         )}
         onClick={handleClose}
       />
 
-      {/* Drawer Panel */}
+      {/* Floating Drawer Panel */}
       <div
         ref={drawerRef}
         className={cn(
-          "pointer-events-auto bg-white shadow-2xl flex flex-col relative",
-          // Mobile: Bottom Sheet (Height 85%)
-          "w-full h-[85vh] rounded-t-2xl",
-          // Tablet: Side Sheet (Width 600px)
-          "md:h-full md:w-[600px] md:rounded-t-none md:rounded-l-xl",
-          // Desktop: Side Sheet (Width 420px)
+          "pointer-events-auto bg-white flex flex-col relative",
+          // Floating shadow & border
+          "shadow-[0_24px_64px_-12px_rgba(0,0,0,0.25),0_8px_24px_-8px_rgba(0,0,0,0.12)] ring-1 ring-slate-200/60",
+          // Clip children to border-radius
+          "overflow-hidden",
+          // Mobile: floating bottom sheet with gap on all sides
+          "w-[calc(100%-24px)] mx-3 mb-3 h-[88vh] rounded-2xl",
+          // Tablet+: floating side panel with gap from all edges
+          "md:w-[460px] md:mx-0 md:mr-4 md:h-[calc(100vh-32px)] md:rounded-2xl",
+          // Desktop
           "lg:w-[420px]",
           // Animation
           isClosing ? "responsive-drawer-exit" : "responsive-drawer-enter"
         )}
       >
         {/* Mobile Drag Handle Indicator */}
-        <div className="md:hidden flex justify-center pt-3 pb-1 shrink-0">
-          <div className="h-1.5 w-12 bg-slate-200 rounded-full"></div>
+        <div className="md:hidden flex justify-center pt-3 pb-1 shrink-0 bg-white">
+          <div className="h-1 w-10 bg-slate-200 rounded-full"></div>
         </div>
 
         {/* Header (Sticky) */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-start justify-between bg-white shrink-0 rounded-t-2xl md:rounded-none">
+        <div className="px-6 py-4 border-b border-slate-100 flex items-start justify-between bg-white shrink-0">
           <div className="flex-1 pr-4">
             <div className="flex items-center gap-2 mb-2">
               <span
@@ -204,7 +190,7 @@ export const TaskDetailDrawer: React.FC<{
                 {task.taskId}
               </span>
             </div>
-            <h2 className="text-xl font-bold text-slate-900 leading-tight">
+            <h2 className="text-lg font-bold text-slate-900 leading-tight">
               {task.title}
             </h2>
           </div>
@@ -235,12 +221,12 @@ export const TaskDetailDrawer: React.FC<{
               </div>
             )}
 
-            <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
               <div className="flex justify-between items-center mb-3">
                 <span className="text-sm font-bold text-slate-700 uppercase tracking-wide">
                   Workflow Progress
                 </span>
-                <span className="text-sm font-bold text-primary">
+                <span className="text-sm font-bold text-emerald-600">
                   {task.progress}%
                 </span>
               </div>

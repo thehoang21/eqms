@@ -479,6 +479,18 @@ export const systemInformation = (navigate?: (path: string) => void): Breadcrumb
   { label: "System Information", isActive: true },
 ];
 
+// --- My Tasks ---
+export const myTasks = (navigate?: (path: string) => void): BreadcrumbItem[] => [
+  dashboard(navigate),
+  { label: "My Tasks", isActive: true },
+];
+
+// --- Notifications ---
+export const notifications = (navigate?: (path: string) => void): BreadcrumbItem[] => [
+  dashboard(navigate),
+  { label: "Notifications", isActive: true },
+];
+
 // ============================================================================
 // CONVENIENCE: Object export for easy access
 // ============================================================================
@@ -540,6 +552,10 @@ const breadcrumbs = {
   courseStatus,
   employeeTrainingFiles,
   exportRecords,
+
+  // My Tasks & Notifications
+  myTasks,
+  notifications,
 
   // Settings
   userManagement,

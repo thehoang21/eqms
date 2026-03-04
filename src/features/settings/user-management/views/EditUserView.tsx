@@ -93,7 +93,7 @@ export const EditUserView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 md:space-y-6 w-full">
+    <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
       <div className="flex flex-col gap-3 md:gap-4">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 md:gap-4">

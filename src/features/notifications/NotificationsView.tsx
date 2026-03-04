@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb';
+import { notifications as notificationsBreadcrumb } from '@/components/ui/breadcrumb/breadcrumbs.config';
 import {
   Search,
   Bell,
@@ -63,7 +65,7 @@ const getTypeColor = (type: NotificationType) => {
     "comment-reply": { bg: "bg-slate-100", text: "text-slate-600", badge: "bg-slate-500" },
     "deviation-assignment": { bg: "bg-red-100", text: "text-red-600", badge: "bg-red-500" },
     "change-control": { bg: "bg-indigo-100", text: "text-indigo-600", badge: "bg-indigo-500" },
-    system: { bg: "bg-gray-100", text: "text-gray-600", badge: "bg-gray-500" },
+    system: { bg: "bg-slate-100", text: "text-slate-600", badge: "bg-slate-500" },
   };
   return colors[type] || colors.system;
 };
@@ -217,7 +219,7 @@ const NotificationFilters: React.FC<{
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search notifications..."
-              className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400"
+              className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 transition-colors"
             />
           </div>
         </FilterCard.Item>
@@ -799,6 +801,7 @@ export const NotificationsView: React.FC = () => {
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             Notifications
           </h1>
+          <Breadcrumb items={notificationsBreadcrumb(navigate)} />
         </div>
         <div className="flex items-center gap-2 md:gap-3 shrink-0 flex-wrap">
           <Button
@@ -908,7 +911,7 @@ export const NotificationsView: React.FC = () => {
                 <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden sm:table-cell">
                   Time
                 </th>
-                <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                   Action
                 </th>
               </tr>

@@ -407,7 +407,7 @@ export const MarkObsoleteModal: React.FC<MarkObsoleteModalProps> = ({
                       value={replacedByCode}
                       onChange={(e) => setReplacedByCode(e.target.value)}
                       placeholder="e.g. TM-PDF-003 v2.0"
-                      className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm placeholder:text-slate-400"
+                      className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors text-sm placeholder:text-slate-400"
                     />
                   </div>
                   <p className="text-xs text-slate-500">

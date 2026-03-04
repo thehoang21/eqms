@@ -1,5 +1,31 @@
+/**
+ * Universal date parser - handles ISO (YYYY-MM-DD, YYYY-MM-DDTHH:mm:ss) and
+ * localized formats (dd/MM/yyyy, dd/MM/yyyy, HH:mm:ss)
+ */
+function parseAnyDate(input: string | Date): Date {
+  if (input instanceof Date) return input;
+  if (!input) return new Date('invalid');
+
+  // dd/MM/yyyy, HH:mm:ss
+  const dtMatch = input.match(/^(\d{2})\/(\d{2})\/(\d{4}),?\s+(\d{2}):(\d{2}):(\d{2})$/);
+  if (dtMatch) {
+    const [, d, m, y, hh, mm, ss] = dtMatch;
+    return new Date(+y, +m - 1, +d, +hh, +mm, +ss);
+  }
+
+  // dd/MM/yyyy
+  const dMatch = input.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (dMatch) {
+    const [, d, m, y] = dMatch;
+    return new Date(+y, +m - 1, +d);
+  }
+
+  // ISO and anything else
+  return new Date(input);
+}
+
 export function formatDate(date: string | Date, format: 'short' | 'long' | 'full' = 'short'): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const dateObj = typeof date === 'string' ? parseAnyDate(date) : date;
 
   if (isNaN(dateObj.getTime())) {
     return 'Invalid Date';
@@ -29,7 +55,7 @@ export function formatDate(date: string | Date, format: 'short' | 'long' | 'full
  * Format date to dd/MM/yyyy string
  */
 export function formatDateISO(date: Date | string): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const dateObj = parseAnyDate(date);
   const day = String(dateObj.getDate()).padStart(2, '0');
   const month = String(dateObj.getMonth() + 1).padStart(2, '0');
   const year = dateObj.getFullYear();
@@ -37,74 +63,69 @@ export function formatDateISO(date: Date | string): string {
 }
 
 /**
- * Format date in US format with month name (e.g., "Jan 15, 2026")
+ * Format date in dd/MM/yyyy format (e.g., "15/01/2026")
  * Returns "-" if invalid date
  */
 export function formatDateUS(dateString: string | Date): string {
   if (!dateString) return "-";
-  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  const date = parseAnyDate(dateString);
   if (isNaN(date.getTime())) return "-";
-  
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 /**
- * Format date and time (e.g., "Jan 15, 2026, 14:30")
- * Uses 24-hour format. Returns "-" if invalid date
+ * Format date and time as dd/MM/yyyy, HH:mm:ss
+ * Returns "-" if invalid date
  */
 export function formatDateTime(dateString: string | Date): string {
   if (!dateString) return "-";
-  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  const date = parseAnyDate(dateString);
   if (isNaN(date.getTime())) return "-";
-  
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
 }
 
 /**
- * Format date in long US format (e.g., "January 15, 2026")
+ * Format date as dd/MM/yyyy (e.g., "15/01/2026")
  * Returns "-" if invalid
  */
 export function formatDateLong(dateInput: string | Date): string {
   if (!dateInput) return "-";
-  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  const date = parseAnyDate(dateInput);
   if (isNaN(date.getTime())) return "-";
 
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 /**
- * Format date+time in long US format (e.g., "January 15, 2026, 14:30:45")
+ * Format date+time as dd/MM/yyyy, HH:mm:ss
  * Returns "-" if invalid
  */
 export function formatDateTimeLong(dateInput: string | Date): string {
   if (!dateInput) return "-";
-  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  const date = parseAnyDate(dateInput);
   if (isNaN(date.getTime())) return "-";
 
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).format(date);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
 }
 
 /**
@@ -113,7 +134,7 @@ export function formatDateTimeLong(dateInput: string | Date): string {
  */
 export function formatRelativeTime(dateString: string | Date): string {
   if (!dateString) return "-";
-  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  const date = parseAnyDate(dateString);
   if (isNaN(date.getTime())) return "-";
   
   const now = new Date();
@@ -135,69 +156,63 @@ export function formatRelativeTime(dateString: string | Date): string {
 
 /**
  * Format date and time from separate date and time strings
- * (e.g., date="2026-01-15", time="14:30:00" => "Jan 15, 2026, 14:30:00")
+ * (e.g., date="2026-01-15", time="14:30:00" => "15/01/2026, 14:30:00")
  * Returns "-" if invalid
  */
 export function formatDateTimeParts(date: string, time: string): string {
   if (!date || !time) return "-";
-  const dateObj = new Date(`${date}T${time}`);
+  const dateObj = parseAnyDate(date);
   if (isNaN(dateObj.getTime())) return "-";
-  
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).format(dateObj);
+
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  const hours = time.substring(0, 2);
+  const minutes = time.substring(3, 5);
+  const seconds = time.length >= 8 ? time.substring(6, 8) : '00';
+  return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
 }
 
 /**
- * Format date and time from separate date and time strings using numeric format
- * (e.g., date="2026-01-15", time="14:30:00" => "01/15/2026, 14:30:00")
+ * Format date and time from separate date and time strings
+ * (e.g., date="2026-01-15", time="14:30:00" => "15/01/2026, 14:30:00")
  * Returns "-" if invalid
  */
 export function formatDateTimePartsNumeric(date: string, time: string): string {
   if (!date || !time) return "-";
-  const dateObj = new Date(`${date}T${time}`);
+  const dateObj = parseAnyDate(date);
   if (isNaN(dateObj.getTime())) return "-";
-  
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).format(dateObj);
+
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const year = dateObj.getFullYear();
+  const hours = time.substring(0, 2);
+  const minutes = time.substring(3, 5);
+  const seconds = time.length >= 8 ? time.substring(6, 8) : '00';
+  return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
 }
 
 /**
- * Format date as numeric US format (MM/DD/YYYY)
- * (e.g., "2026-01-15" => "01/15/2026")
+ * Format date as dd/MM/yyyy (e.g., "15/01/2026")
  * Returns "-" if invalid
  */
 export function formatDateNumeric(dateInput: string | Date): string {
   if (!dateInput) return "-";
-  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  const date = parseAnyDate(dateInput);
   if (isNaN(date.getTime())) return "-";
-  
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(date);
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 /**
  * Calculate days between two dates
  */
 export function daysBetween(date1: string | Date, date2: string | Date): number {
-  const d1 = typeof date1 === 'string' ? new Date(date1) : date1;
-  const d2 = typeof date2 === 'string' ? new Date(date2) : date2;
+  const d1 = parseAnyDate(date1);
+  const d2 = parseAnyDate(date2);
   const diffTime = Math.abs(d2.getTime() - d1.getTime());
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
@@ -206,7 +221,7 @@ export function daysBetween(date1: string | Date, date2: string | Date): number 
  * Check if date is overdue
  */
 export function isOverdue(dueDate: string | Date): boolean {
-  const due = typeof dueDate === 'string' ? new Date(dueDate) : dueDate;
+  const due = parseAnyDate(dueDate);
   return due < new Date();
 }
 

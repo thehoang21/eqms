@@ -590,7 +590,7 @@ export const UsageReportView: React.FC = () => {
                   placeholder="Search course ID, name, instructor..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+                  className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400 transition-colors"
                 />
               </div>
             </div>
@@ -633,10 +633,10 @@ export const UsageReportView: React.FC = () => {
                 <tr>
                   <td colSpan={10} className="py-16 text-center">
                     <div className="flex flex-col items-center gap-2">
-                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
-                        <BarChart3 className="h-6 w-6 text-slate-400" />
+                      <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center">
+                        <BarChart3 className="h-6 w-6 text-slate-300" />
                       </div>
-                      <p className="text-sm font-medium text-slate-700">No records found</p>
+                      <p className="text-sm font-medium text-slate-900">No records found</p>
                       <p className="text-xs text-slate-500">Try adjusting your filters.</p>
                     </div>
                   </td>

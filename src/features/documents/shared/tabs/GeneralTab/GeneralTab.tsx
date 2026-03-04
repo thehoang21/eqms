@@ -228,10 +228,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               !isObsoleted && setFormData({ title: e.target.value })
             }
             placeholder="Enter document name"
-            disabled={isObsoleted}
+            readOnly={isObsoleted}
             className={cn(
-              "w-full h-9 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
-              isObsoleted && "bg-slate-100 cursor-not-allowed",
+              "w-full h-9 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 read-only:focus:ring-0",
+              isObsoleted && "bg-slate-50 cursor-default text-slate-500",
             )}
           />
         </div>
@@ -271,10 +271,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               !isObsoleted && setFormData({ knowledgeBase: e.target.value })
             }
             placeholder="Enter knowledge base"
-            disabled={isObsoleted}
+            readOnly={isObsoleted}
             className={cn(
-              "w-full h-9 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
-              isObsoleted && "bg-slate-100 cursor-not-allowed",
+              "w-full h-9 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 read-only:focus:ring-0",
+              isObsoleted && "bg-slate-50 cursor-default text-slate-500",
             )}
           />
         </div>
@@ -335,10 +335,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               })
             }
             placeholder="Enter review cycle in months"
-            disabled={isObsoleted}
+            readOnly={isObsoleted}
             className={cn(
-              "w-full h-9 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
-              isObsoleted && "bg-slate-100 cursor-not-allowed",
+              "w-full h-9 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 read-only:focus:ring-0",
+              isObsoleted && "bg-slate-50 cursor-default text-slate-500",
             )}
           />
         </div>
@@ -359,10 +359,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
               })
             }
             placeholder="Enter notification days before review"
-            disabled={isObsoleted}
+            readOnly={isObsoleted}
             className={cn(
-              "w-full h-9 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500",
-              isObsoleted && "bg-slate-100 cursor-not-allowed",
+              "w-full h-9 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 read-only:focus:ring-0",
+              isObsoleted && "bg-slate-50 cursor-default text-slate-500",
             )}
           />
         </div>
@@ -438,10 +438,10 @@ export const GeneralTab: React.FC<GeneralTabProps> = ({
             }
             placeholder="Enter document description"
             rows={4}
-            disabled={isObsoleted}
+            readOnly={isObsoleted}
             className={cn(
-              "w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none",
-              isObsoleted && "bg-slate-100 cursor-not-allowed",
+              "w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none read-only:focus:ring-0",
+              isObsoleted && "bg-slate-50 cursor-default text-slate-500",
             )}
           />
         </div>

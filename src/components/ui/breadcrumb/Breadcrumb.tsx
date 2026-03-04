@@ -79,7 +79,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
             )}
 
             {/* Separator */}
-            {!isLast && <span className="text-slate-400 mx-1"><IconChevronsRight className="h-4 w-4 inline-block" /></span>}
+            {!isLast && <span className="text-slate-400 mx-1">/</span>}
           </React.Fragment>
         );
       })}

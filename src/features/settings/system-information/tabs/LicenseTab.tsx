@@ -148,7 +148,7 @@ export const LicenseTab: React.FC<LicenseTabProps> = ({ data }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
             {data.modules.map((module, index) => (
               <div key={index} className="flex items-center gap-2.5 px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-lg">
-                <div className="flex items-center justify-center h-6 w-6 rounded bg-emerald-100 flex-shrink-0">
+                <div className="flex items-center justify-center h-6 w-6 rounded-lg bg-emerald-100 flex-shrink-0">
                   <Check className="h-3.5 w-3.5 text-emerald-600" />
                 </div>
                 <span className="text-sm font-medium text-slate-900">{module}</span>

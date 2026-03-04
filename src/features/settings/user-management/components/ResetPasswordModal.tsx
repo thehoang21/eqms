@@ -106,8 +106,8 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
             <Button
               onClick={onRegeneratePassword}
               variant="outline"
-              size="icon"
-              className="flex items-center justify-center h-10 w-11 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-blue-300 hover:text-blue-600 transition-all duration-200"
+              size="icon-sm"
+              className="flex items-center justify-center h-10 w-11 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-emerald-300 hover:text-emerald-600 transition-all duration-200"
               title="Regenerate Password"
             >
               <IconRefresh className="h-4 w-4" />
@@ -115,7 +115,7 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
             <Button
               onClick={handleCopyPassword}
               variant="outline"
-              size="icon"
+              size="icon-sm"
               className="flex items-center justify-center h-10 w-11 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all duration-200"
               title="Copy Password"
             >

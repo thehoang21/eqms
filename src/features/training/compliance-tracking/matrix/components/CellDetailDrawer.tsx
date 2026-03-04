@@ -23,8 +23,13 @@ export const CellDetailDrawer: React.FC<CellDetailDrawerProps> = ({
   const cfg = CELL_CONFIG[cell.status];
   const isOverdue = cell.status === "Overdue";
   const isExpiring = cell.status === "ExpiringSoon";
+  const parseDMY = (d: string): Date => {
+    const m = d.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+    return new Date(d);
+  };
   const daysRemaining = cell.expiryDate
-    ? Math.ceil((new Date(cell.expiryDate).getTime() - Date.now()) / 86400000)
+    ? Math.ceil((parseDMY(cell.expiryDate).getTime() - Date.now()) / 86400000)
     : null;
   const expiryTone = isOverdue
     ? "text-red-700"
@@ -58,30 +63,32 @@ export const CellDetailDrawer: React.FC<CellDetailDrawerProps> = ({
   }, []);
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex justify-center md:justify-end items-end md:items-stretch pointer-events-none">
+    <div className="fixed inset-0 z-50 flex justify-center md:justify-end items-end md:items-center pointer-events-none">
       <style>{DRAWER_STYLES}</style>
 
       {/* Backdrop */}
       <div
         className={cn(
-          "absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] pointer-events-auto",
+          "absolute inset-0 bg-slate-900/50 backdrop-blur-[3px] pointer-events-auto",
           isClosing ? "tm-backdrop-exit" : "tm-backdrop-enter"
         )}
         onClick={handleClose}
       />
 
-      {/* Drawer panel */}
+      {/* Floating Drawer panel */}
       <div
         className={cn(
-          "pointer-events-auto bg-white shadow-2xl flex flex-col relative",
-          "w-full h-[85vh] rounded-t-2xl",
-          "md:h-full md:w-[480px] md:rounded-t-none md:rounded-l-xl",
+          "pointer-events-auto bg-white flex flex-col relative",
+          "shadow-[0_24px_64px_-12px_rgba(0,0,0,0.25),0_8px_24px_-8px_rgba(0,0,0,0.12)] ring-1 ring-slate-200/60",
+          "overflow-hidden",
+          "w-[calc(100%-24px)] mx-3 mb-3 h-[88vh] rounded-2xl",
+          "md:w-[480px] md:mx-0 md:mr-4 md:h-[calc(100vh-32px)] md:rounded-2xl",
           isClosing ? "tm-drawer-exit" : "tm-drawer-enter"
         )}
       >
         {/* Mobile drag handle */}
-        <div className="md:hidden flex justify-center pt-3 pb-1 shrink-0">
-          <div className="h-1.5 w-12 bg-slate-200 rounded-full" />
+        <div className="md:hidden flex justify-center pt-3 pb-1 shrink-0 bg-white">
+          <div className="h-1 w-10 bg-slate-200 rounded-full" />
         </div>
 
         {/* Header */}
@@ -277,7 +284,9 @@ export const CellDetailDrawer: React.FC<CellDetailDrawerProps> = ({
                     </p>
                     {/* Days remaining */}
                     {cell.expiryDate && (() => {
-                      const days = Math.ceil((new Date(cell.expiryDate).getTime() - Date.now()) / 86400000);
+                      const m = cell.expiryDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                      const d = m ? new Date(+m[3], +m[2] - 1, +m[1]) : new Date(cell.expiryDate);
+                      const days = Math.ceil((d.getTime() - Date.now()) / 86400000);
                       if (days < 0) return (
                         <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
                           {Math.abs(days)} days overdue

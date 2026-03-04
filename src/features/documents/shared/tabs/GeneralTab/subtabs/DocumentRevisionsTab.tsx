@@ -50,7 +50,7 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revi
                         placeholder="Search by revision number, name, or author..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                 </div>
             </div>
@@ -113,11 +113,16 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revi
                             ) : (
                                 <tr>
                                     <td colSpan={6} className="py-12 text-center">
-                                        <p className="text-sm text-slate-500">
-                                            {searchQuery
-                                                ? "No revisions found matching your search."
-                                                : "No revisions available."}
-                                        </p>
+                                        <div className="flex flex-col items-center justify-center gap-2.5">
+                                            <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
+                                                <Search className="h-5 w-5 text-slate-300" />
+                                            </div>
+                                            <p className="text-sm font-medium text-slate-500">
+                                                {searchQuery
+                                                    ? "No revisions found matching your search."
+                                                    : "No revisions available."}
+                                            </p>
+                                        </div>
                                     </td>
                                 </tr>
                             )}

@@ -15,6 +15,7 @@ import { createPortal } from 'react-dom';
 import { Select } from '@/components/ui/select/Select';
 import { DateRangePicker } from '@/components/ui/datetime-picker/DateRangePicker';
 import { TablePagination } from '@/components/ui/table/TablePagination';
+import { Button } from '@/components/ui/button/Button';
 import { cn } from '@/components/ui/utils';
 import type { ReportType, ReportStatus } from '../types';
 import { getTypeColor } from '../types';
@@ -157,7 +158,7 @@ export function useHistoryTab() {
               value={historySearch}
               onChange={(e) => setHistorySearch(e.target.value)}
               placeholder="Search by report name..."
-              className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+              className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400 transition-colors"
             />
           </div>
         </div>
@@ -242,7 +243,7 @@ export function useHistoryTab() {
               <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-left text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                 Status
               </th>
-              <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-40 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+              <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                 Action
               </th>
             </tr>
@@ -251,15 +252,16 @@ export function useHistoryTab() {
             {paginatedHistory.length === 0 ? (
               <tr>
                 <td colSpan={10} className="py-12 text-center">
-                  <FileBarChart className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                  <p className="text-slate-500 font-medium">No reports found</p>
-                  <p className="text-sm text-slate-400 mt-1">Try adjusting your filters</p>
-                  <button
-                    onClick={handleClearFilters}
-                    className="inline-flex items-center gap-2 px-4 py-2 mt-4 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 active:scale-95 transition-all"
-                  >
-                    Clear Filters
-                  </button>
+                  <div className="flex flex-col items-center justify-center gap-2.5">
+                    <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center">
+                      <FileBarChart className="h-6 w-6 text-slate-300" />
+                    </div>
+                    <p className="text-sm font-semibold text-slate-900">No reports found</p>
+                    <p className="text-xs text-slate-400">Try adjusting your filters</p>
+                    <Button variant="outline" size="sm" onClick={handleClearFilters} className="mt-1">
+                      Clear Filters
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ) : (

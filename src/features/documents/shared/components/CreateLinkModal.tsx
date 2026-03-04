@@ -214,7 +214,7 @@ export const CreateLinkModal: React.FC<CreateLinkModalProps> = ({
           {/* Document Info */}
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <div className="flex items-center justify-center w-8 h-8 rounded bg-emerald-100 flex-shrink-0">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 flex-shrink-0">
                 <Link2 className="h-4 w-4 text-emerald-600" />
               </div>
               <div className="flex-1 min-w-0">

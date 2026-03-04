@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   Calendar,
@@ -8,6 +9,8 @@ import {
   BarChart3,
 } from "lucide-react";
 import { Button } from '@/components/ui/button/Button';
+import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb';
+import { myTasks } from '@/components/ui/breadcrumb/breadcrumbs.config';
 import { Select } from '@/components/ui/select/Select';
 import { DateRangePicker } from '@/components/ui/datetime-picker/DateRangePicker';
 import { TablePagination } from '@/components/ui/table/TablePagination';
@@ -178,7 +181,7 @@ const TaskFilters: React.FC<{
               placeholder="Search by ID, name or description..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="block w-full pl-9 sm:pl-10 pr-3 h-9 sm:h-9 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm transition-all placeholder:text-slate-400"
+              className="block w-full pl-9 sm:pl-10 pr-3 h-9 sm:h-9 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-xs sm:text-sm transition-colors placeholder:text-slate-400"
             />
           </div>
         </FilterCard.Item>
@@ -252,6 +255,7 @@ const TaskFilters: React.FC<{
 // --- Main Container ---
 
 export const MyTasksView: React.FC = () => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   // View Mode State
@@ -362,6 +366,7 @@ export const MyTasksView: React.FC = () => {
           <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
             My Tasks
           </h1>
+          <Breadcrumb items={myTasks(navigate)} />
         </div>
 
         {/* View Mode Toggle */}

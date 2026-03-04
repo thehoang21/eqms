@@ -620,11 +620,11 @@ export const NotificationTab: React.FC<NotificationTabProps> = ({ config, onChan
                   </p>
                 </div>
                 <p className="text-xs text-slate-500">
-                  <strong>Available Variables:</strong> <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700">{'{userName}'}</code>, 
-                  <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 ml-1">{'{documentTitle}'}</code>, 
-                  <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 ml-1">{'{taskName}'}</code>, 
-                  <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 ml-1">{'{dueDate}'}</code>, 
-                  <code className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 ml-1">{'{systemName}'}</code>
+                  <strong>Available Variables:</strong> <code className="px-1 py-0.5 bg-slate-200 rounded-lg text-slate-700">{'{userName}'}</code>, 
+                  <code className="px-1 py-0.5 bg-slate-200 rounded-lg text-slate-700 ml-1">{'{documentTitle}'}</code>, 
+                  <code className="px-1 py-0.5 bg-slate-200 rounded-lg text-slate-700 ml-1">{'{taskName}'}</code>, 
+                  <code className="px-1 py-0.5 bg-slate-200 rounded-lg text-slate-700 ml-1">{'{dueDate}'}</code>, 
+                  <code className="px-1 py-0.5 bg-slate-200 rounded-lg text-slate-700 ml-1">{'{systemName}'}</code>
                 </p>
               </div>
             </div>

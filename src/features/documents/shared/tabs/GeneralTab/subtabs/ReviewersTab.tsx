@@ -95,7 +95,7 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                             placeholder="Search by name, role, or department..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full h-9 pl-9 pr-4 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                            className="w-full h-9 pl-9 pr-4 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 transition-colors"
                             autoFocus
                         />
                     </div>
@@ -144,8 +144,10 @@ const UserSelectionModal: React.FC<UserSelectionModalProps> = ({ isOpen, onClose
                         </div>
                     ) : (
                         <div className="text-center py-12">
-                            <User className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-                            <p className="text-sm text-slate-500">No users found matching "{searchTerm}"</p>
+                            <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3">
+                                <User className="h-6 w-6 text-slate-300" />
+                            </div>
+                            <p className="text-sm font-medium text-slate-900">No users found matching "{searchTerm}"</p>
                         </div>
                     )}
                 </div>

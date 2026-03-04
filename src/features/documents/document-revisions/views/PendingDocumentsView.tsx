@@ -302,8 +302,8 @@ const StatusBadge = ({ status }: { status: DocumentStatus }) => {
     "Pending Review": "bg-amber-50 text-amber-700 border-amber-200",
     "Pending Approval": "bg-blue-50 text-blue-700 border-blue-200",
     Approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    Effective: "bg-green-50 text-green-700 border-green-200",
-    Archive: "bg-gray-100 text-gray-600 border-gray-200",
+    Effective: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    Archive: "bg-slate-100 text-slate-600 border-slate-200",
   };
 
   const icons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -843,7 +843,7 @@ export const PendingDocumentsView: React.FC<PendingDocumentsViewProps> = ({
                       Valid Until
                     </th>
                     <th
-                      className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]"
+                      className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]"
                       style={{ width: "60px" }}
                     >
                       Action

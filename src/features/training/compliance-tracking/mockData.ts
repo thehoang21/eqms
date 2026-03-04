@@ -13,52 +13,59 @@ import type {
 
 // ─── SOP / Training Material Columns ────────────────────────────────
 export const MOCK_SOPS: SOPColumn[] = [
-  { id: "SOP-001", code: "SOP-001", title: "GMP Basic Training", category: "GMP", version: "v3.0", effectiveDate: "2025-01-15" },
-  { id: "SOP-002", code: "SOP-002", title: "Cleanroom Operations", category: "Technical", version: "v2.1", effectiveDate: "2025-03-01" },
-  { id: "SOP-003", code: "SOP-003", title: "Workplace Safety & HSE", category: "Safety", version: "v4.0", effectiveDate: "2025-02-10" },
-  { id: "SOP-004", code: "SOP-004", title: "ISO 9001 Internal Auditor", category: "Compliance", version: "v1.2", effectiveDate: "2024-11-20" },
-  { id: "SOP-005", code: "SOP-005", title: "SOP Documentation & Control", category: "GMP", version: "v2.0", effectiveDate: "2025-04-01" },
-  { id: "SOP-006", code: "SOP-006", title: "HPLC Operations", category: "Technical", version: "v3.1", effectiveDate: "2025-01-20" },
-  { id: "SOP-007", code: "SOP-007", title: "Validation IQ/OQ/PQ", category: "Technical", version: "v2.0", effectiveDate: "2025-05-15" },
-  { id: "SOP-008", code: "SOP-008", title: "Risk Assessment & FMEA", category: "Compliance", version: "v1.5", effectiveDate: "2024-12-01" },
-  { id: "SOP-009", code: "SOP-009", title: "Chemical Safety", category: "Safety", version: "v3.2", effectiveDate: "2025-06-01" },
-  { id: "SOP-010", code: "SOP-010", title: "Data Integrity (ALCOA+)", category: "Compliance", version: "v2.0", effectiveDate: "2025-03-15" },
-  { id: "SOP-011", code: "SOP-011", title: "Deviation & CAPA", category: "GMP", version: "v2.3", effectiveDate: "2025-02-20" },
-  { id: "SOP-012", code: "SOP-012", title: "Change Control Process", category: "GMP", version: "v1.1", effectiveDate: "2025-04-10" },
-  { id: "SOP-013", code: "SOP-013", title: "Sampling Procedures", category: "Technical", version: "v2.0", effectiveDate: "2025-01-05" },
-  { id: "SOP-014", code: "SOP-014", title: "Equipment Calibration", category: "Technical", version: "v3.0", effectiveDate: "2025-07-01" },
-  { id: "SOP-015", code: "SOP-015", title: "Batch Record Review", category: "GMP", version: "v1.8", effectiveDate: "2025-05-20" },
+  { id: "SOP-001", code: "SOP-001", title: "GMP Basic Training", category: "GMP", version: "v3.0", effectiveDate: "15/01/2025" },
+  { id: "SOP-002", code: "SOP-002", title: "Cleanroom Operations", category: "Technical", version: "v2.1", effectiveDate: "01/03/2025" },
+  { id: "SOP-003", code: "SOP-003", title: "Workplace Safety & HSE", category: "Safety", version: "v4.0", effectiveDate: "10/02/2025" },
+  { id: "SOP-004", code: "SOP-004", title: "ISO 9001 Internal Auditor", category: "Compliance", version: "v1.2", effectiveDate: "20/11/2024" },
+  { id: "SOP-005", code: "SOP-005", title: "SOP Documentation & Control", category: "GMP", version: "v2.0", effectiveDate: "01/04/2025" },
+  { id: "SOP-006", code: "SOP-006", title: "HPLC Operations", category: "Technical", version: "v3.1", effectiveDate: "20/01/2025" },
+  { id: "SOP-007", code: "SOP-007", title: "Validation IQ/OQ/PQ", category: "Technical", version: "v2.0", effectiveDate: "15/05/2025" },
+  { id: "SOP-008", code: "SOP-008", title: "Risk Assessment & FMEA", category: "Compliance", version: "v1.5", effectiveDate: "01/12/2024" },
+  { id: "SOP-009", code: "SOP-009", title: "Chemical Safety", category: "Safety", version: "v3.2", effectiveDate: "01/06/2025" },
+  { id: "SOP-010", code: "SOP-010", title: "Data Integrity (ALCOA+)", category: "Compliance", version: "v2.0", effectiveDate: "15/03/2025" },
+  { id: "SOP-011", code: "SOP-011", title: "Deviation & CAPA", category: "GMP", version: "v2.3", effectiveDate: "20/02/2025" },
+  { id: "SOP-012", code: "SOP-012", title: "Change Control Process", category: "GMP", version: "v1.1", effectiveDate: "10/04/2025" },
+  { id: "SOP-013", code: "SOP-013", title: "Sampling Procedures", category: "Technical", version: "v2.0", effectiveDate: "05/01/2025" },
+  { id: "SOP-014", code: "SOP-014", title: "Equipment Calibration", category: "Technical", version: "v3.0", effectiveDate: "01/07/2025" },
+  { id: "SOP-015", code: "SOP-015", title: "Batch Record Review", category: "GMP", version: "v1.8", effectiveDate: "20/05/2025" },
 ];
 
 // ─── Employee Rows ──────────────────────────────────────────────────
 export const MOCK_EMPLOYEES: EmployeeRow[] = [
-  { id: "EMP-001", name: "Dr. Anna Smith", employeeCode: "QA-001", department: "Quality Assurance", jobTitle: "QA Manager", hireDate: "2019-03-15" },
-  { id: "EMP-002", name: "James Carter", employeeCode: "QA-002", department: "Quality Assurance", jobTitle: "QA Specialist", hireDate: "2020-06-01" },
-  { id: "EMP-003", name: "Maria Lopez", employeeCode: "QA-003", department: "Quality Assurance", jobTitle: "QA Manager", hireDate: "2021-01-10" },
-  { id: "EMP-004", name: "Robert Johnson", employeeCode: "QC-001", department: "Quality Control", jobTitle: "QC Analyst", hireDate: "2022-08-20" },
-  { id: "EMP-005", name: "Linda Chen", employeeCode: "QC-002", department: "Quality Control", jobTitle: "QC Analyst", hireDate: "2023-02-14" },
-  { id: "EMP-006", name: "David Park", employeeCode: "QC-003", department: "Quality Control", jobTitle: "Lab Technician", hireDate: "2020-04-10" },
-  { id: "EMP-007", name: "Sarah Kim", employeeCode: "PRD-001", department: "Production", jobTitle: "Production Operator", hireDate: "2021-07-20" },
-  { id: "EMP-008", name: "Michael Brown", employeeCode: "PRD-002", department: "Production", jobTitle: "Production Operator", hireDate: "2022-01-15" },
-  { id: "EMP-009", name: "Emily Davis", employeeCode: "PRD-003", department: "Production", jobTitle: "Production Supervisor", hireDate: "2019-09-05" },
-  { id: "EMP-010", name: "Kevin Wilson", employeeCode: "PRD-004", department: "Production", jobTitle: "Production Operator", hireDate: "2023-03-12" },
-  { id: "EMP-011", name: "Jennifer Lee", employeeCode: "ENG-001", department: "Engineering", jobTitle: "Validation Engineer", hireDate: "2020-11-01" },
-  { id: "EMP-012", name: "Thomas Wright", employeeCode: "ENG-002", department: "Engineering", jobTitle: "Validation Engineer", hireDate: "2021-05-10" },
-  { id: "EMP-013", name: "Jessica Martinez", employeeCode: "ENG-003", department: "Engineering", jobTitle: "Engineering Manager", hireDate: "2018-08-15" },
-  { id: "EMP-014", name: "Daniel Taylor", employeeCode: "DOC-001", department: "Documentation", jobTitle: "Document Controller", hireDate: "2022-02-01" },
-  { id: "EMP-015", name: "Amanda Garcia", employeeCode: "DOC-002", department: "Documentation", jobTitle: "Document Controller", hireDate: "2023-06-20" },
-  { id: "EMP-016", name: "Chris Anderson", employeeCode: "HSE-001", department: "HSE", jobTitle: "HSE Coordinator", hireDate: "2020-10-05" },
-  { id: "EMP-017", name: "Patricia White", employeeCode: "HSE-002", department: "HSE", jobTitle: "HSE Specialist", hireDate: "2021-12-15" },
-  { id: "EMP-018", name: "Steven Harris", employeeCode: "SC-001", department: "Supply Chain", jobTitle: "Warehouse Operator", hireDate: "2022-04-10" },
-  { id: "EMP-019", name: "Nancy Clark", employeeCode: "SC-002", department: "Supply Chain", jobTitle: "Warehouse Operator", hireDate: "2023-07-20" },
-  { id: "EMP-020", name: "Richard Moore", employeeCode: "QC-004", department: "Quality Control", jobTitle: "QC Analyst", hireDate: "2020-02-15" },
+  { id: "EMP-001", name: "Dr. Anna Smith", employeeCode: "QA-001", department: "Quality Assurance", jobTitle: "QA Manager", hireDate: "15/03/2019" },
+  { id: "EMP-002", name: "James Carter", employeeCode: "QA-002", department: "Quality Assurance", jobTitle: "QA Specialist", hireDate: "01/06/2020" },
+  { id: "EMP-003", name: "Maria Lopez", employeeCode: "QA-003", department: "Quality Assurance", jobTitle: "QA Manager", hireDate: "10/01/2021" },
+  { id: "EMP-004", name: "Robert Johnson", employeeCode: "QC-001", department: "Quality Control", jobTitle: "QC Analyst", hireDate: "20/08/2022" },
+  { id: "EMP-005", name: "Linda Chen", employeeCode: "QC-002", department: "Quality Control", jobTitle: "QC Analyst", hireDate: "14/02/2023" },
+  { id: "EMP-006", name: "David Park", employeeCode: "QC-003", department: "Quality Control", jobTitle: "Lab Technician", hireDate: "10/04/2020" },
+  { id: "EMP-007", name: "Sarah Kim", employeeCode: "PRD-001", department: "Production", jobTitle: "Production Operator", hireDate: "20/07/2021" },
+  { id: "EMP-008", name: "Michael Brown", employeeCode: "PRD-002", department: "Production", jobTitle: "Production Operator", hireDate: "15/01/2022" },
+  { id: "EMP-009", name: "Emily Davis", employeeCode: "PRD-003", department: "Production", jobTitle: "Production Supervisor", hireDate: "05/09/2019" },
+  { id: "EMP-010", name: "Kevin Wilson", employeeCode: "PRD-004", department: "Production", jobTitle: "Production Operator", hireDate: "12/03/2023" },
+  { id: "EMP-011", name: "Jennifer Lee", employeeCode: "ENG-001", department: "Engineering", jobTitle: "Validation Engineer", hireDate: "01/11/2020" },
+  { id: "EMP-012", name: "Thomas Wright", employeeCode: "ENG-002", department: "Engineering", jobTitle: "Validation Engineer", hireDate: "10/05/2021" },
+  { id: "EMP-013", name: "Jessica Martinez", employeeCode: "ENG-003", department: "Engineering", jobTitle: "Engineering Manager", hireDate: "15/08/2018" },
+  { id: "EMP-014", name: "Daniel Taylor", employeeCode: "DOC-001", department: "Documentation", jobTitle: "Document Controller", hireDate: "01/02/2022" },
+  { id: "EMP-015", name: "Amanda Garcia", employeeCode: "DOC-002", department: "Documentation", jobTitle: "Document Controller", hireDate: "20/06/2023" },
+  { id: "EMP-016", name: "Chris Anderson", employeeCode: "HSE-001", department: "HSE", jobTitle: "HSE Coordinator", hireDate: "05/10/2020" },
+  { id: "EMP-017", name: "Patricia White", employeeCode: "HSE-002", department: "HSE", jobTitle: "HSE Specialist", hireDate: "15/12/2021" },
+  { id: "EMP-018", name: "Steven Harris", employeeCode: "SC-001", department: "Supply Chain", jobTitle: "Warehouse Operator", hireDate: "10/04/2022" },
+  { id: "EMP-019", name: "Nancy Clark", employeeCode: "SC-002", department: "Supply Chain", jobTitle: "Warehouse Operator", hireDate: "20/07/2023" },
+  { id: "EMP-020", name: "Richard Moore", employeeCode: "QC-004", department: "Quality Control", jobTitle: "QC Analyst", hireDate: "15/02/2020" },
 ];
 
 // ─── Helper: random date in range ───────────────────────────────────
+const parseDMY = (d: string): Date => {
+  const m = d.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+  return new Date(d);
+};
+
 const randomDate = (start: string, end: string): string => {
-  const s = new Date(start).getTime();
-  const e = new Date(end).getTime();
-  return new Date(s + Math.random() * (e - s)).toISOString().split("T")[0];
+  const s = parseDMY(start).getTime();
+  const e = parseDMY(end).getTime();
+  const d = new Date(s + Math.random() * (e - s));
+  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
 };
 
 // ─── Generate Training Cells ────────────────────────────────────────
@@ -108,8 +115,8 @@ const generateCell = (emp: EmployeeRow, sop: SOPColumn): TrainingCell => {
   if (statusSeed < 55) {
     // 55% Qualified
     status = "Qualified";
-    lastTrainedDate = randomDate("2025-01-01", "2025-12-31");
-    expiryDate = randomDate("2026-06-01", "2027-06-01");
+    lastTrainedDate = randomDate("01/01/2025", "31/12/2025");
+    expiryDate = randomDate("01/06/2026", "01/06/2027");
     score = 75 + (hash % 26); // 75-100
     attempts = 1 + (hash % 2);
   } else if (statusSeed < 70) {
@@ -122,22 +129,22 @@ const generateCell = (emp: EmployeeRow, sop: SOPColumn): TrainingCell => {
   } else if (statusSeed < 82) {
     // 12% Overdue
     status = "Overdue";
-    lastTrainedDate = randomDate("2023-01-01", "2024-06-01");
-    expiryDate = randomDate("2024-07-01", "2025-12-31");
+    lastTrainedDate = randomDate("01/01/2023", "01/06/2024");
+    expiryDate = randomDate("01/07/2024", "31/12/2025");
     score = hash % 2 === 0 ? 60 + (hash % 20) : null;
     attempts = hash % 2 === 0 ? 1 : 0;
   } else if (statusSeed < 92) {
     // 10% ExpiringSoon
     status = "ExpiringSoon";
-    lastTrainedDate = randomDate("2025-01-01", "2025-10-01");
-    expiryDate = randomDate("2026-03-01", "2026-04-02"); // within ~30 days of "today" March 3, 2026
+    lastTrainedDate = randomDate("01/01/2025", "01/10/2025");
+    expiryDate = randomDate("01/03/2026", "02/04/2026"); // within ~30 days of "today" March 3, 2026
     score = 70 + (hash % 31);
     attempts = 1;
   } else {
     // 8% Overdue again for variation
     status = "Overdue";
-    lastTrainedDate = randomDate("2023-06-01", "2024-12-01");
-    expiryDate = randomDate("2025-01-01", "2025-11-30");
+    lastTrainedDate = randomDate("01/06/2023", "01/12/2024");
+    expiryDate = randomDate("01/01/2025", "30/11/2025");
     score = null;
     attempts = 0;
   }

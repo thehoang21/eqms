@@ -204,7 +204,9 @@ export const DocumentTab: React.FC<DocumentTrainingTabProps> = ({
                 <div className="space-y-4">
                     {trainingFiles.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-12 text-center">
-                            <Upload className="h-12 w-12 text-slate-300 mb-4" />
+                            <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center mb-3">
+                                <Upload className="h-6 w-6 text-slate-300" />
+                            </div>
                             <p className="text-sm font-medium text-slate-900">No training materials uploaded</p>
                             <p className="text-xs text-slate-500 mt-1">
                                 Training documents will appear here once uploaded.

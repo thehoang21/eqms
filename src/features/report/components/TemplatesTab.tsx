@@ -405,8 +405,10 @@ export function useTemplatesTab(mode: 'templates' | 'compliance') {
 
         {filteredTemplates.length === 0 && (
           <div className="text-center py-12">
-            <FileBarChart className="h-10 w-10 md:h-12 md:w-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-sm md:text-base text-slate-500 font-medium">No report templates found</p>
+            <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3">
+              <FileBarChart className="h-6 w-6 text-slate-300" />
+            </div>
+            <p className="text-sm md:text-base text-slate-900 font-semibold">No report templates found</p>
             <p className="text-xs md:text-sm text-slate-400 mt-1">Try adjusting your filters</p>
           </div>
         )}

@@ -4,7 +4,7 @@ import type { AuditTrailRecord } from "./types";
 export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   {
     id: "1",
-    timestamp: "2026-02-03T14:32:18Z",
+    timestamp: "03/02/2026, 14:32:18",
     user: "Dr. Sarah Johnson",
     userId: "USR001",
     module: "Document",
@@ -22,7 +22,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "2",
-    timestamp: "2026-02-03T13:15:42Z",
+    timestamp: "03/02/2026, 13:15:42",
     user: "John Smith",
     userId: "USR005",
     module: "User",
@@ -40,7 +40,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "3",
-    timestamp: "2026-02-03T12:48:03Z",
+    timestamp: "03/02/2026, 12:48:03",
     user: "Michael Chen",
     userId: "USR003",
     module: "CAPA",
@@ -58,7 +58,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "4",
-    timestamp: "2026-02-03T11:22:56Z",
+    timestamp: "03/02/2026, 11:22:56",
     user: "Emily Rodriguez",
     userId: "USR008",
     module: "Deviation",
@@ -72,7 +72,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "5",
-    timestamp: "2026-02-03T10:55:31Z",
+    timestamp: "03/02/2026, 10:55:31",
     user: "Admin User",
     userId: "USR001",
     module: "System",
@@ -86,7 +86,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "6",
-    timestamp: "2026-02-03T10:15:22Z",
+    timestamp: "03/02/2026, 10:15:22",
     user: "Dr. Sarah Johnson",
     userId: "USR001",
     module: "Document",
@@ -100,7 +100,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "7",
-    timestamp: "2026-02-03T09:43:17Z",
+    timestamp: "03/02/2026, 09:43:17",
     user: "Robert Lee",
     userId: "USR012",
     module: "Training",
@@ -114,7 +114,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "8",
-    timestamp: "2026-02-03T09:12:48Z",
+    timestamp: "03/02/2026, 09:12:48",
     user: "Michael Chen",
     userId: "USR003",
     module: "CAPA",
@@ -128,7 +128,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "9",
-    timestamp: "2026-02-02T18:45:33Z",
+    timestamp: "02/02/2026, 18:45:33",
     user: "Jane Doe",
     userId: "USR025",
     module: "Document",
@@ -145,7 +145,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "10",
-    timestamp: "2026-02-02T16:32:11Z",
+    timestamp: "02/02/2026, 16:32:11",
     user: "Admin User",
     userId: "USR001",
     module: "Settings",
@@ -163,7 +163,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "11",
-    timestamp: "2026-02-02T15:18:44Z",
+    timestamp: "02/02/2026, 15:18:44",
     user: "Emily Rodriguez",
     userId: "USR008",
     module: "Controlled Copy",
@@ -177,7 +177,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "12",
-    timestamp: "2026-02-02T14:05:29Z",
+    timestamp: "02/02/2026, 14:05:29",
     user: "David Park",
     userId: "USR015",
     module: "Deviation",
@@ -191,7 +191,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "13",
-    timestamp: "2026-02-02T13:42:55Z",
+    timestamp: "02/02/2026, 13:42:55",
     user: "John Smith",
     userId: "USR005",
     module: "User",
@@ -205,7 +205,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "14",
-    timestamp: "2026-02-02T12:28:37Z",
+    timestamp: "02/02/2026, 12:28:37",
     user: "Dr. Sarah Johnson",
     userId: "USR001",
     module: "Report",
@@ -219,7 +219,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "15",
-    timestamp: "2026-02-02T11:15:22Z",
+    timestamp: "02/02/2026, 11:15:22",
     user: "Michael Chen",
     userId: "USR003",
     module: "Document",
@@ -233,7 +233,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "16",
-    timestamp: "2026-02-02T10:47:13Z",
+    timestamp: "02/02/2026, 10:47:13",
     user: "Robert Lee",
     userId: "USR012",
     module: "Task",
@@ -247,7 +247,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "17",
-    timestamp: "2026-02-01T17:33:48Z",
+    timestamp: "01/02/2026, 17:33:48",
     user: "Jane Doe",
     userId: "USR025",
     module: "CAPA",
@@ -261,7 +261,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "18",
-    timestamp: "2026-02-01T16:12:35Z",
+    timestamp: "01/02/2026, 16:12:35",
     user: "Emily Rodriguez",
     userId: "USR008",
     module: "Notification",
@@ -275,7 +275,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "19",
-    timestamp: "2026-02-01T14:55:29Z",
+    timestamp: "01/02/2026, 14:55:29",
     user: "David Park",
     userId: "USR015",
     module: "Document",
@@ -289,7 +289,7 @@ export const MOCK_AUDIT_RECORDS: AuditTrailRecord[] = [
   },
   {
     id: "20",
-    timestamp: "2026-02-01T13:28:17Z",
+    timestamp: "01/02/2026, 13:28:17",
     user: "Admin User",
     userId: "USR001",
     module: "System",

@@ -3,7 +3,7 @@ import type { SystemInfo, ChangelogEntry } from "./types";
 export const MOCK_CHANGELOG: ChangelogEntry[] = [
   {
     version: "2.5.1",
-    releaseDate: "2026-02-01",
+    releaseDate: "01/02/2026",
     changes: {
       features: [
         "Added system health monitoring dashboard",
@@ -23,7 +23,7 @@ export const MOCK_CHANGELOG: ChangelogEntry[] = [
   },
   {
     version: "2.5.0",
-    releaseDate: "2026-01-15",
+    releaseDate: "15/01/2026",
     changes: {
       features: [
         "Added license management interface",
@@ -38,7 +38,7 @@ export const MOCK_CHANGELOG: ChangelogEntry[] = [
   },
   {
     version: "2.4.8",
-    releaseDate: "2025-12-20",
+    releaseDate: "20/12/2025",
     changes: {
       improvements: [
         "Enhanced error handling for system metrics collection",
@@ -53,7 +53,7 @@ export const MOCK_CHANGELOG: ChangelogEntry[] = [
   },
   {
     version: "2.4.5",
-    releaseDate: "2025-11-10",
+    releaseDate: "10/11/2025",
     changes: {
       features: [
         "Added comprehensive system information view",
@@ -71,7 +71,7 @@ export const MOCK_SYSTEM_INFO: SystemInfo = {
     name: "eQMS - Quality Management System",
     version: "2.5.1",
     environment: "production",
-    buildDate: "2026-02-01T10:30:00Z",
+    buildDate: "01/02/2026, 10:30:00",
     buildNumber: "20260201.1030",
     description: "Enterprise Quality Management System for pharmaceutical and medical device industries",
     frameworkVersion: "React 18.3.1",
@@ -106,7 +106,7 @@ export const MOCK_SYSTEM_INFO: SystemInfo = {
     port: "5432",
     database: "eqms_production",
     connectionStatus: "connected",
-    lastBackup: "2026-02-09T02:00:00Z",
+    lastBackup: "09/02/2026, 02:00:00",
     connectionPool: {
       maxSize: 50,
       activeConnections: 18,
@@ -115,14 +115,14 @@ export const MOCK_SYSTEM_INFO: SystemInfo = {
       avgResponseTime: "3.2 ms",
     },
     tableStats: [
-      { name: "documents", rowCount: 15420, size: "2.3 GB", lastModified: "2026-02-26T08:15:00Z" },
-      { name: "users", rowCount: 287, size: "12 MB", lastModified: "2026-02-26T07:30:00Z" },
-      { name: "audit_logs", rowCount: 892451, size: "4.1 GB", lastModified: "2026-02-26T09:00:00Z" },
-      { name: "tasks", rowCount: 3247, size: "156 MB", lastModified: "2026-02-25T16:45:00Z" },
-      { name: "training_records", rowCount: 8124, size: "340 MB", lastModified: "2026-02-24T14:20:00Z" },
-      { name: "capa_records", rowCount: 542, size: "89 MB", lastModified: "2026-02-25T11:30:00Z" },
-      { name: "deviations", rowCount: 1203, size: "198 MB", lastModified: "2026-02-26T06:00:00Z" },
-      { name: "change_controls", rowCount: 387, size: "67 MB", lastModified: "2026-02-23T09:15:00Z" },
+      { name: "documents", rowCount: 15420, size: "2.3 GB", lastModified: "26/02/2026, 08:15:00" },
+      { name: "users", rowCount: 287, size: "12 MB", lastModified: "26/02/2026, 07:30:00" },
+      { name: "audit_logs", rowCount: 892451, size: "4.1 GB", lastModified: "26/02/2026, 09:00:00" },
+      { name: "tasks", rowCount: 3247, size: "156 MB", lastModified: "25/02/2026, 16:45:00" },
+      { name: "training_records", rowCount: 8124, size: "340 MB", lastModified: "24/02/2026, 14:20:00" },
+      { name: "capa_records", rowCount: 542, size: "89 MB", lastModified: "25/02/2026, 11:30:00" },
+      { name: "deviations", rowCount: 1203, size: "198 MB", lastModified: "26/02/2026, 06:00:00" },
+      { name: "change_controls", rowCount: 387, size: "67 MB", lastModified: "23/02/2026, 09:15:00" },
     ],
     totalSize: "8.7 GB",
     activeConnections: 18,
@@ -132,7 +132,7 @@ export const MOCK_SYSTEM_INFO: SystemInfo = {
     baseUrl: "https://api.eqms.company.com/v2",
     version: "2.5.1",
     status: "online",
-    lastHealthCheck: "2026-02-09T08:45:32Z",
+    lastHealthCheck: "09/02/2026, 08:45:32",
     responseTime: "42 ms",
     endpoints: [
       { method: "GET", path: "/api/v2/documents", description: "List documents", status: "healthy", avgResponseTime: "38 ms" },
@@ -254,8 +254,8 @@ export const MOCK_SYSTEM_INFO: SystemInfo = {
   license: {
     licenseType: "Enterprise",
     companyName: "Pharmaceutical Manufacturing Co., Ltd.",
-    issuedDate: "2025-03-01",
-    expiryDate: "2027-02-28",
+    issuedDate: "01/03/2025",
+    expiryDate: "28/02/2027",
     daysUntilExpiry: 384,
     maxUsers: 500,
     activeUsers: 287,
@@ -293,35 +293,35 @@ export const MOCK_SYSTEM_INFO: SystemInfo = {
       {
         fileName: "SOP-QC-2025-001.pdf",
         uploadedBy: "Dr. Sarah Johnson",
-        uploadedAt: "2025-07-14T10:23:00Z",
+        uploadedAt: "14/07/2025, 10:23:00",
         size: "4.2 MB",
         type: "PDF",
       },
       {
         fileName: "Training-Record-Batch-45.xlsx",
         uploadedBy: "Michael Chen",
-        uploadedAt: "2025-07-14T09:15:00Z",
+        uploadedAt: "14/07/2025, 09:15:00",
         size: "1.8 MB",
         type: "XLSX",
       },
       {
         fileName: "Deviation-Report-DEV-2025-089.pdf",
         uploadedBy: "Emily Watson",
-        uploadedAt: "2025-07-13T16:45:00Z",
+        uploadedAt: "13/07/2025, 16:45:00",
         size: "3.1 MB",
         type: "PDF",
       },
       {
         fileName: "CAPA-Evidence-IMG-001.png",
         uploadedBy: "James Rodriguez",
-        uploadedAt: "2025-07-13T14:30:00Z",
+        uploadedAt: "13/07/2025, 14:30:00",
         size: "5.7 MB",
         type: "Images",
       },
       {
         fileName: "Change-Control-CC-2025-012.docx",
         uploadedBy: "Lisa Park",
-        uploadedAt: "2025-07-13T11:20:00Z",
+        uploadedAt: "13/07/2025, 11:20:00",
         size: "2.4 MB",
         type: "DOCX",
       },

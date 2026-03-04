@@ -246,7 +246,7 @@ const PopoverField = ({ label, value }: { label: string; value: string }) => (
       type="text"
       value={value}
       readOnly
-      className="w-full px-2 py-1 bg-slate-100 border border-slate-200 rounded text-xs text-slate-700 focus:outline-none h-7"
+      className="w-full px-2 py-1 bg-slate-100 border border-slate-200 rounded-lg text-xs text-slate-700 focus:outline-none h-7"
     />
   </div>
 );

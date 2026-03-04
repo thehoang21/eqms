@@ -98,7 +98,7 @@ export const RelatedDocumentsTab: React.FC<RelatedDocumentsTabProps> = ({
                             setSearchQuery(e.target.value);
                             setCurrentPage(1);
                         }}
-                        className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                        className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg text-sm placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                 </div>
             </div>
@@ -147,8 +147,13 @@ export const RelatedDocumentsTab: React.FC<RelatedDocumentsTabProps> = ({
                         <tbody className="divide-y divide-slate-200 bg-white">
                             {currentDocuments.length === 0 ? (
                                 <tr>
-                                    <td colSpan={11} className="py-12 text-center text-slate-500">
-                                        <p className="text-sm">No related documents found</p>
+                                    <td colSpan={11} className="py-12 text-center">
+                                        <div className="flex flex-col items-center justify-center gap-2.5">
+                                            <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center">
+                                                <Search className="h-5 w-5 text-slate-300" />
+                                            </div>
+                                            <p className="text-sm font-medium text-slate-500">No related documents found</p>
+                                        </div>
                                     </td>
                                 </tr>
                             ) : (

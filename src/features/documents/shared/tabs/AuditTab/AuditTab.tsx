@@ -220,7 +220,7 @@ export const AuditTab: React.FC = () => {
                   setCurrentPage(1);
                 }}
                 placeholder="Search by user or action..."
-                className="block w-full pl-10 pr-3 h-9 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
+                className="block w-full pl-10 pr-3 h-9 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-colors placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -450,7 +450,7 @@ export const AuditTab: React.FC = () => {
       {/* Changes Detail Modal */}
       {showChangesModal && selectedEntry && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
               <div>
@@ -481,8 +481,8 @@ export const AuditTab: React.FC = () => {
                           <div className="text-xs font-medium text-red-700 mb-1">Old Value:</div>
                           <div className="text-sm text-slate-700">{change.oldValue}</div>
                         </div>
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                          <div className="text-xs font-medium text-green-700 mb-1">New Value:</div>
+                        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                          <div className="text-xs font-medium text-emerald-700 mb-1">New Value:</div>
                           <div className="text-sm text-slate-700">{change.newValue}</div>
                         </div>
                       </div>

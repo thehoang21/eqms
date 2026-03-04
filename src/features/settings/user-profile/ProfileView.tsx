@@ -167,7 +167,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ onBack }) => {
     };
 
     return (
-        <div className="space-y-4 md:space-y-6">
+        <div className="space-y-6 w-full flex-1 flex flex-col">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>

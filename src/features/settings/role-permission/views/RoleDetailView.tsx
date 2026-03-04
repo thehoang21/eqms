@@ -258,7 +258,7 @@ export const RoleDetailView: React.FC = () => {
   const permissionCounts = getFilteredPermissionCounts();
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 lg:gap-4">
         <div className="flex-1 min-w-0">
@@ -582,7 +582,7 @@ export const RoleDetailView: React.FC = () => {
                                   {isALCOAPlusRequired(permission.id) && (
                                     <div
                                       title="Audit Trail Required"
-                                      className="flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100 w-fit"
+                                      className="flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-100 w-fit"
                                     >
                                       <IconFilter2Search className="h-3 w-3" />
                                       <span className="sm:inline">Audit</span>

@@ -27,7 +27,7 @@ const DEPARTMENTS: Department[] = [
     { id: "maintenance", name: "Maintenance", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 18, color: "text-orange-600" },
     { id: "engineering", name: "Engineering", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 34, color: "text-indigo-600" },
     { id: "hr", name: "Human Resources (HR)", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 15, color: "text-pink-600" },
-    { id: "finance", name: "Finance & Accounting", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 27, color: "text-green-600" },
+    { id: "finance", name: "Finance & Accounting", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 27, color: "text-emerald-600" },
     { id: "procurement", name: "Procurement", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 20, color: "text-teal-600" },
     { id: "logistics", name: "Logistics", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 16, color: "text-sky-600" },
     { id: "it", name: "IT Department", icon: <IconFolderFilled className="h-12 w-12" />, documentCount: 31, color: "text-violet-600" },
@@ -58,7 +58,7 @@ export const KnowledgeView: React.FC = () => {
     const totalDocuments = DEPARTMENTS.reduce((sum, dept) => sum + dept.documentCount, 0);
 
     return (
-        <div className="space-y-4 md:space-y-6 w-full flex-1 flex flex-col">
+        <div className="space-y-6 w-full flex-1 flex flex-col">
             {/* Header: Title + Breadcrumb */}
             <div 
                 className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4"
@@ -174,8 +174,10 @@ export const KnowledgeView: React.FC = () => {
                 <div className="p-4 md:p-6">
                     {filteredDepartments.length === 0 ? (
                         <div className="text-center py-8 md:py-12">
-                            <IconFolderFilled className="h-12 w-12 md:h-16 md:w-16 text-slate-300 mx-auto mb-3 md:mb-4" />
-                            <p className="text-sm md:text-base text-slate-600 font-medium">No departments found</p>
+                            <div className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                <IconFolderFilled className="h-6 w-6 md:h-7 md:w-7 text-slate-300" />
+                            </div>
+                            <p className="text-sm md:text-base text-slate-900 font-semibold">No departments found</p>
                             <p className="text-xs md:text-sm text-slate-500 mt-1">Try adjusting your search query</p>
                         </div>
                     ) : viewMode === "grid" ? (

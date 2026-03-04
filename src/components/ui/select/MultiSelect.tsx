@@ -281,13 +281,13 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         onKeyDown={handleKeyDown}
         disabled={disabled}
         className={cn(
-          "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm transition-colors",
+          "flex w-full items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm transition-colors focus:outline-none",
           "min-h-[40px]",
           disabled
-            ? "bg-slate-50 text-slate-900 cursor-not-allowed border-slate-200"
+            ? "bg-slate-50 text-slate-500 cursor-default border-slate-200"
             : isOpen
-            ? "border-emerald-500 ring-2 ring-emerald-500/20"
-            : "border-slate-200 hover:border-slate-400",
+            ? "border-emerald-500 ring-1 ring-emerald-500"
+            : "border-slate-200 hover:border-slate-300 focus-visible:ring-1 focus-visible:ring-emerald-500 focus-visible:border-emerald-500",
           triggerClassName
         )}
       >

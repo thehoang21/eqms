@@ -494,7 +494,7 @@ export const DashboardView: React.FC = () => {
                           <div>
                              <p className="text-sm font-semibold text-slate-900 line-clamp-1">{item.title}</p>
                              <div className="flex items-center gap-2 mt-1.5">
-                                <span className="text-xs text-slate-500 bg-white border border-slate-200 px-1.5 py-0.5 rounded">{item.module}</span>
+                                <span className="text-xs text-slate-500 bg-white border border-slate-200 px-1.5 py-0.5 rounded-full">{item.module}</span>
                                 {item.priority === 'high' && (
                                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-wide flex items-center gap-1">
                                       <AlertCircle className="h-3 w-3" /> Critical

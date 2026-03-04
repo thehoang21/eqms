@@ -112,7 +112,7 @@ export const AddUserView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 md:space-y-6 w-full">
+    <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
       <div className="flex flex-col gap-3 md:gap-4">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 md:gap-4">
@@ -216,7 +216,7 @@ export const AddUserView: React.FC = () => {
                 {newUser.fullName.trim() && (
                   <div className="flex items-center gap-1.5 mt-1.5 text-xs text-slate-600">
                     <span>Username will be:</span>
-                    <span className="font-mono font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    <span className="font-mono font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                       {generateUsername(newUser.fullName, [])}
                     </span>
                   </div>

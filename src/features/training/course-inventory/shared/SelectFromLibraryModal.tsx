@@ -139,7 +139,7 @@ export const SelectFromLibraryModal: React.FC<SelectFromLibraryModalProps> = ({
                         placeholder="Search by title, ID, or category..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400"
+                        className="w-full h-9 pl-10 pr-4 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400 transition-colors"
                         autoFocus
                     />
                 </div>
@@ -152,7 +152,9 @@ export const SelectFromLibraryModal: React.FC<SelectFromLibraryModalProps> = ({
             >
                 {filtered.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <FolderOpen className="h-10 w-10 text-slate-300 mb-3" />
+                        <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center mb-3">
+                            <FolderOpen className="h-6 w-6 text-slate-300" />
+                        </div>
                         <p className="text-sm font-medium text-slate-900">No materials found</p>
                         <p className="text-xs text-slate-500 mt-1">
                             Try a different search term or all materials have already been added.

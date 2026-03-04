@@ -467,9 +467,9 @@ export const NewDocumentView: React.FC = () => {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={cn(
-                                        "flex items-center justify-center gap-2 px-3 sm:px-4 md:px-6 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-all whitespace-nowrap border-r border-slate-200 last:border-r-0",
+                                        "flex items-center justify-center gap-2 px-3 sm:px-4 md:px-6 py-2.5 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap border-r border-slate-200 last:border-r-0",
                                         activeTab === tab.id
-                                            ? "border-b-emerald-600 text-emerald-700"
+                                            ? "border-b-emerald-600 text-emerald-700 bg-emerald-50/50"
                                             : "border-b-transparent text-slate-600 hover:text-emerald-600 hover:bg-slate-50"
                                     )}
                                 >

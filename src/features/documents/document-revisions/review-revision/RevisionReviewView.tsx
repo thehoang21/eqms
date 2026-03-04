@@ -534,7 +534,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                                 <div className="flex items-center gap-2 flex-wrap">
                                   <h4 className="font-medium text-sm lg:text-base text-slate-900 truncate">{reviewer.name}</h4>
                                   {isCurrentUserReviewer && (
-                                    <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded shrink-0">
+                                    <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full shrink-0">
                                       You
                                     </span>
                                   )}
@@ -628,7 +628,7 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
                     rows={3}
-                    className="flex-1 px-3 md:px-4 py-2 md:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500/20 focus:border-emerald-500 resize-none"
+                    className="flex-1 px-3 md:px-4 py-2 md:py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 resize-none"
                   />
                   <button
                     onClick={handleAddComment}

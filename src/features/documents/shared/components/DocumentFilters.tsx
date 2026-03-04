@@ -119,7 +119,7 @@ export const DocumentFilters: React.FC<DocumentFiltersProps> = ({
                             placeholder="Search by document name, ID, author, department..."
                             value={searchQuery}
                             onChange={(e) => onSearchChange(e.target.value)}
-                            className="block w-full pl-10 pr-3 h-9 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-all placeholder:text-slate-400"
+                            className="block w-full pl-10 pr-3 h-9 border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-sm transition-colors placeholder:text-slate-400"
                         />
                     </div>
                 </div>

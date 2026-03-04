@@ -94,8 +94,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
         
-        const popoverWidth = 320;
-        const realHeight = popoverRef.current?.offsetHeight || 420;
+        const popoverWidth = 280;
+        const realHeight = popoverRef.current?.offsetHeight || 370;
         
         let left = triggerRect.left;
         let style: React.CSSProperties = {
@@ -239,8 +239,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
   const renderMonthView = () => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return (
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-3 px-1">
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-2 px-1">
           <button 
             onClick={() => setViewMode('calendar')} 
             className="p-1 hover:bg-slate-100 rounded-full text-slate-500"
@@ -250,13 +250,13 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           <span className="font-semibold text-slate-900 text-sm">Select Month</span>
           <div className="w-6"></div>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1.5">
           {months.map((m, idx) => (
             <button
               key={m}
               onClick={() => handleMonthSelect(idx)}
               className={cn(
-                "h-10 rounded-lg text-sm font-medium hover:bg-slate-100 transition-colors",
+                "h-8 rounded-lg text-xs font-medium hover:bg-slate-100 transition-colors",
                 viewDate.getMonth() === idx ? "bg-emerald-50 text-emerald-600" : "text-slate-700"
               )}
             >
@@ -277,8 +277,8 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     }
 
     return (
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-3 px-1">
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-2 px-1">
           <button 
             onClick={() => {
               const d = new Date(viewDate);
@@ -303,13 +303,13 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1.5">
           {years.map((y) => (
             <button
               key={y}
               onClick={() => handleYearSelect(y)}
               className={cn(
-                "h-10 rounded-lg text-sm font-medium hover:bg-slate-100 transition-colors",
+                "h-8 rounded-lg text-xs font-medium hover:bg-slate-100 transition-colors",
                 viewDate.getFullYear() === y ? "bg-emerald-50 text-emerald-600" : "text-slate-700"
               )}
             >
@@ -358,7 +358,7 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           type="button"
           onClick={() => handleDateClick(day)}
           className={cn(
-            "h-9 w-9 rounded-full text-xs flex items-center justify-center transition-all",
+            "h-8 w-8 rounded-full text-xs flex items-center justify-center transition-colors",
             isSelected 
               ? 'bg-emerald-600 text-white font-semibold shadow-sm hover:bg-emerald-700' 
               : isToday
@@ -372,12 +372,12 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
     }
 
     return (
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-3 px-1">
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-2 px-1">
           <button
             type="button"
             onClick={() => navigateMonth('prev')}
-            className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+            className="p-1.5 hover:bg-slate-100 rounded-full text-slate-500 transition-colors min-w-[30px] min-h-[30px] flex items-center justify-center"
             aria-label="Previous month"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -386,13 +386,13 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           <div className="flex items-center gap-1">
             <button 
               onClick={() => setViewMode('month')}
-              className="font-semibold text-slate-900 text-sm hover:bg-slate-100 px-2 py-1 rounded transition-colors"
+              className="font-semibold text-slate-900 text-sm hover:bg-slate-100 px-1.5 py-0.5 rounded transition-colors"
             >
               {monthNames[month]}
             </button>
             <button 
               onClick={() => setViewMode('year')}
-              className="font-semibold text-slate-900 text-sm hover:bg-slate-100 px-2 py-1 rounded transition-colors"
+              className="font-semibold text-slate-900 text-sm hover:bg-slate-100 px-1.5 py-0.5 rounded transition-colors"
             >
               {year}
             </button>
@@ -401,22 +401,22 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           <button
             type="button"
             onClick={() => navigateMonth('next')}
-            className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+            className="p-1.5 hover:bg-slate-100 rounded-full text-slate-500 transition-colors min-w-[30px] min-h-[30px] flex items-center justify-center"
             aria-label="Next month"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="grid grid-cols-7 gap-0 mb-2">
+        <div className="grid grid-cols-7 gap-0 mb-1">
           {dayNames.map((day, idx) => (
-            <div key={idx} className="h-7 flex items-center justify-center text-xs font-medium text-slate-400">
+            <div key={idx} className="h-6 flex items-center justify-center text-xs font-medium text-slate-400">
               {day}
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-y-1">
+        <div className="grid grid-cols-7 gap-y-0.5">
           {days}
         </div>
       </div>
@@ -457,13 +457,13 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
         }}
         disabled={disabled}
         className={cn(
-          'flex items-center justify-between gap-2 w-full px-3 py-2 h-9 rounded-lg text-sm transition-all duration-200',
+          'flex items-center justify-between gap-2 w-full px-3 py-2 h-9 rounded-lg text-sm transition-colors focus:outline-none',
           'border bg-white',
           disabled
-            ? 'bg-slate-100 cursor-not-allowed opacity-60'
+            ? 'bg-slate-50 cursor-default text-slate-500 border-slate-200'
             : isOpen
               ? 'ring-1 ring-emerald-500 border-emerald-500'
-              : 'border-slate-200 hover:border-slate-200 focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500'
+              : 'border-slate-200 hover:border-slate-300 focus-visible:ring-1 focus-visible:ring-emerald-500 focus-visible:border-emerald-500'
         )}
       >
         <div className="flex items-center gap-2 truncate">
@@ -488,11 +488,11 @@ export const DateTimePicker: React.FC<DateTimePickerProps> = ({
           aria-modal="true"
           aria-label="Choose date"
           style={popoverStyle}
-          className="bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden flex flex-col w-[320px]"
+          className="bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden flex flex-col w-[280px]"
         >
           {renderCalendar()}
           
-          <div className="border-t border-slate-100 p-3 bg-slate-50/50">
+          <div className="border-t border-slate-100 p-2 px-3 bg-slate-50/50">
             <div className="flex items-center justify-between gap-2">
               <Button 
                 variant="ghost" 

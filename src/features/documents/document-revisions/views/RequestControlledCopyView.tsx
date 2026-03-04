@@ -359,12 +359,12 @@ export const RequestControlledCopyView: React.FC = () => {
                                 </span>
                                 <span className="text-xs text-slate-500">v{doc.version}</span>
                                 {doc.isParent && (
-                                  <span className="px-1.5 lg:px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                  <span className="px-1.5 lg:px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                                     Parent
                                   </span>
                                 )}
                                 {doc.status !== 'Effective' && (
-                                  <span className="px-1.5 lg:px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                  <span className="px-1.5 lg:px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
                                     {doc.status}
                                   </span>
                                 )}
@@ -480,8 +480,8 @@ export const RequestControlledCopyView: React.FC = () => {
                           max={50}
                           className={`h-9 lg:h-9 w-20 lg:w-24 px-2 lg:px-3 py-2 border rounded-lg text-xs lg:text-sm text-center font-medium focus:outline-none focus:ring-1 transition-colors ${
                             errors.quantity
-                              ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                              : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                              ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+                              : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
                           }`}
                         />
                         
@@ -535,8 +535,8 @@ export const RequestControlledCopyView: React.FC = () => {
                         rows={3}
                         className={`w-full px-3 py-2 lg:py-2.5 border rounded-lg text-xs lg:text-sm focus:outline-none focus:ring-1 transition-colors resize-none ${
                           errors.reason
-                            ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                            : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20'
+                            ? 'border-red-300 focus:border-red-500 focus:ring-red-500'
+                            : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-500'
                         }`}
                       />
                       {errors.reason && (

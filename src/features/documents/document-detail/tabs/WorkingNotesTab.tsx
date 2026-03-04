@@ -34,9 +34,9 @@ export const WorkingNotesTab: React.FC<WorkingNotesTabProps> = ({
           value={value}
           onChange={(e) => handleChange(e.target.value)}
           placeholder="Enter your working notes here..."
-          disabled={isReadOnly}
+          readOnly={isReadOnly}
           rows={10}
-          className="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all resize-y disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed"
+          className="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-y read-only:bg-slate-50 read-only:text-slate-500 read-only:cursor-default read-only:focus:ring-0"
         />
         {!isReadOnly && (
           <p className="text-xs text-slate-500 mt-1.5">

@@ -76,7 +76,7 @@ const getWorkflowStepForStatus = (status: TrainingStatus) => {
 
 export const CourseDetailView: React.FC = () => {
   const navigate = useNavigate();
-  const { courseId } = useParams<{ courseId: string }>();
+  const { courseId = "" } = useParams<{ courseId: string }>();
   const [activeTab, setActiveTab] = useState<TabType>("basic-info");
 
   // Find course by ID

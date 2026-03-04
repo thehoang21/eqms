@@ -97,7 +97,7 @@ const FileUploadZone: React.FC<{
             <div className="flex items-center gap-2">
                 <label className="text-xs sm:text-sm font-medium text-slate-700">{label}</label>
                 {isRestricted && (
-                    <span className="inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
+                    <span className="inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-100">
                         <Lock className="h-3 w-3" />
                         Admin/Reviewer only
                     </span>
@@ -277,7 +277,7 @@ export const AssessmentConfigContent: React.FC<AssessmentConfigContentProps> = (
                             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                 Answer Key
                             </span>
-                            <span className="inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100">
+                            <span className="inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-100">
                                 <Lock className="h-3 w-3" />
                                 Restricted
                             </span>

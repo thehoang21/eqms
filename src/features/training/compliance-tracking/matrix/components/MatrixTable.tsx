@@ -141,7 +141,9 @@ const MatrixBody: React.FC<MatrixBodyProps> = ({
         <tr>
           <td colSpan={MOCK_SOPS.length + 2} className="py-20 text-center">
             <div className="flex flex-col items-center gap-3">
-              <Search className="h-10 w-10 text-slate-300" />
+              <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center">
+                <Search className="h-6 w-6 text-slate-300" />
+              </div>
               <p className="text-sm font-medium text-slate-900">No employees found</p>
               <p className="text-xs text-slate-500">Try adjusting your filters</p>
               {hasActiveFilters && (

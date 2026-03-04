@@ -9,6 +9,7 @@ import {
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button/Button';
 import { TablePagination } from '@/components/ui/table/TablePagination';
+import { TableEmptyState } from '@/components/ui/table/TableEmptyState';
 import { cn } from '@/components/ui/utils';
 import { ArchivedDocumentFilters } from './components/ArchivedDocumentFilters';
 import { ArchivedDocument, RetentionFilter } from './types';
@@ -183,7 +184,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                                 <th className="py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider text-left whitespace-nowrap">
                                     Retention Status
                                 </th>
-                                <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-10 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+                                <th className="sticky right-0 bg-slate-50 py-2.5 px-2 sm:py-3.5 sm:px-4 text-center text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
                                     Actions
                                 </th>
                             </tr>
@@ -250,11 +251,11 @@ export const ArchivedDocumentsView: React.FC = () => {
                     </table>
 
                     {paginatedDocuments.length === 0 && (
-                        <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-                            <Archive className="h-12 w-12 text-slate-300 mb-4" />
-                            <p className="text-lg font-medium text-slate-600">No archived documents found</p>
-                            <p className="text-sm">Try adjusting your filters</p>
-                        </div>
+                        <TableEmptyState
+                            icon={<Archive className="h-5 w-5 sm:h-7 sm:w-7 md:h-8 md:w-8 text-slate-300" />}
+                            title="No Archived Documents Found"
+                            description="Try adjusting your filters or clear your search criteria."
+                        />
                     )}
                 </div>
 

@@ -10,7 +10,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Document",
     priority: "high",
     status: "unread",
-    createdAt: "2026-01-29T08:30:00Z",
+    createdAt: "29/01/2026, 08:30:00",
     sender: { id: "u1", name: "John Smith" },
     relatedItem: {
       id: "doc1",
@@ -28,7 +28,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Deviation",
     priority: "medium",
     status: "unread",
-    createdAt: "2026-01-29T07:45:00Z",
+    createdAt: "29/01/2026, 07:45:00",
     sender: { id: "u2", name: "Sarah Johnson" },
     relatedItem: {
       id: "dev1",
@@ -46,7 +46,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "CAPA",
     priority: "critical",
     status: "unread",
-    createdAt: "2026-01-29T06:00:00Z",
+    createdAt: "29/01/2026, 06:00:00",
     relatedItem: {
       id: "capa1",
       type: "capa",
@@ -63,8 +63,8 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Training",
     priority: "low",
     status: "read",
-    createdAt: "2026-01-28T14:30:00Z",
-    readAt: "2026-01-28T16:00:00Z",
+    createdAt: "28/01/2026, 14:30:00",
+    readAt: "28/01/2026, 16:00:00",
     sender: { id: "u3", name: "Mike Wilson" },
     relatedItem: {
       id: "trn1",
@@ -82,8 +82,8 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Document",
     priority: "medium",
     status: "read",
-    createdAt: "2026-01-28T10:15:00Z",
-    readAt: "2026-01-28T11:30:00Z",
+    createdAt: "28/01/2026, 10:15:00",
+    readAt: "28/01/2026, 11:30:00",
     sender: { id: "u4", name: "Quality Team" },
     relatedItem: {
       id: "doc2",
@@ -101,8 +101,8 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Document",
     priority: "low",
     status: "read",
-    createdAt: "2026-01-27T16:45:00Z",
-    readAt: "2026-01-27T18:00:00Z",
+    createdAt: "27/01/2026, 16:45:00",
+    readAt: "27/01/2026, 18:00:00",
     sender: { id: "u5", name: "Emma Davis" },
   },
   {
@@ -113,7 +113,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "CAPA",
     priority: "high",
     status: "unread",
-    createdAt: "2026-01-27T09:30:00Z",
+    createdAt: "27/01/2026, 09:30:00",
     sender: { id: "u6", name: "Lisa Chen" },
     relatedItem: {
       id: "capa2",
@@ -131,8 +131,8 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Document",
     priority: "medium",
     status: "read",
-    createdAt: "2026-01-26T14:00:00Z",
-    readAt: "2026-01-26T15:30:00Z",
+    createdAt: "26/01/2026, 14:00:00",
+    readAt: "26/01/2026, 15:30:00",
     sender: { id: "u7", name: "Regulatory Team" },
     relatedItem: {
       id: "doc3",
@@ -150,8 +150,8 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Training",
     priority: "low",
     status: "read",
-    createdAt: "2026-01-25T11:20:00Z",
-    readAt: "2026-01-25T12:00:00Z",
+    createdAt: "25/01/2026, 11:20:00",
+    readAt: "25/01/2026, 12:00:00",
     sender: { id: "u8", name: "David Brown" },
     relatedItem: {
       id: "trn2",
@@ -169,8 +169,8 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Change Control",
     priority: "high",
     status: "read",
-    createdAt: "2026-01-24T16:30:00Z",
-    readAt: "2026-01-24T17:00:00Z",
+    createdAt: "24/01/2026, 16:30:00",
+    readAt: "24/01/2026, 17:00:00",
     sender: { id: "u9", name: "Maria Garcia" },
     relatedItem: {
       id: "chg1",
@@ -188,7 +188,7 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Deviation",
     priority: "critical",
     status: "unread",
-    createdAt: "2026-01-23T08:00:00Z",
+    createdAt: "23/01/2026, 08:00:00",
     relatedItem: {
       id: "dev2",
       type: "deviation",
@@ -205,8 +205,8 @@ export const MOCK_NOTIFICATIONS: Notification[] = [
     module: "Document",
     priority: "medium",
     status: "read",
-    createdAt: "2026-01-22T13:45:00Z",
-    readAt: "2026-01-22T14:30:00Z",
+    createdAt: "22/01/2026, 13:45:00",
+    readAt: "22/01/2026, 14:30:00",
     sender: { id: "u10", name: "Production Team" },
     relatedItem: {
       id: "doc4",

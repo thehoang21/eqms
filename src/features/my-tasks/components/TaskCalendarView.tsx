@@ -218,7 +218,7 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
                 {day.date}
               </span>
               {dayTasks.length > 0 && (
-                <span className="text-[8px] sm:text-[10px] font-bold text-emerald-600 bg-emerald-100 px-0.5 sm:px-1 py-0.5 rounded leading-none">
+                <span className="text-[8px] sm:text-[10px] font-bold text-emerald-600 bg-emerald-100 px-0.5 sm:px-1 py-0.5 rounded-full leading-none">
                   {dayTasks.length}
                 </span>
               )}

@@ -71,8 +71,8 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
           <input
             type="text"
             value={displayName}
-            disabled
-            className="w-full h-9 px-4 border border-slate-200 rounded-lg bg-slate-50 text-slate-700 text-sm cursor-not-allowed"
+            readOnly
+            className="w-full h-9 px-4 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-slate-200 focus:border-slate-200 cursor-default"
           />
           <p className="text-xs text-slate-500 mt-1.5">
             Note: The uploaded file will be renamed to the name above
@@ -87,8 +87,8 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
           <input
             type="text"
             value={revisionNumber}
-            disabled
-            className="w-full h-9 px-4 border border-slate-200 rounded-lg bg-slate-50 text-slate-700 text-sm cursor-not-allowed"
+            readOnly
+            className="w-full h-9 px-4 border border-slate-200 rounded-lg bg-slate-50 text-slate-500 text-sm focus:outline-none focus:ring-1 focus:ring-slate-200 focus:border-slate-200 cursor-default"
           />
         </div>
 
