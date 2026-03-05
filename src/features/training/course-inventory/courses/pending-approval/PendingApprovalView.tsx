@@ -320,7 +320,7 @@ export const PendingApprovalView: React.FC = () => {
                         {rowNumber}
                       </td>
                       <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
-                        <span className="font-medium text-slate-900">{item.trainingId}</span>
+                        <span className="font-medium text-emerald-600">{item.trainingId}</span>
                       </td>
                       <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                         <div className="flex items-start gap-1.5 sm:gap-2">

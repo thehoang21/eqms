@@ -375,7 +375,7 @@ export const CourseListView: React.FC = () => {
                     {(currentPage - 1) * itemsPerPage + index + 1}
                   </td>
                   <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
-                    <span className="font-medium text-slate-900">
+                    <span className="font-medium text-emerald-600">
                       {training.trainingId}
                     </span>
                   </td>

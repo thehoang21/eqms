@@ -199,7 +199,7 @@ export const ArchivedDocumentsView: React.FC = () => {
                                             {rowNumber}
                                         </td>
                                         <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
-                                            <span className="font-medium text-slate-900">{doc.code}</span>
+                                            <span className="font-medium text-emerald-600">{doc.code}</span>
                                         </td>
                                         <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm">
                                             <div className="max-w-md">

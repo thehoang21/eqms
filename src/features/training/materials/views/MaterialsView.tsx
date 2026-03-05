@@ -657,7 +657,7 @@ export const MaterialsView: React.FC = () => {
                   </td>
                   {/* Material ID */}
                   <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
-                    <span className="font-medium text-emerald-700">{material.materialId}</span>
+                    <span className="font-medium text-emerald-600">{material.materialId}</span>
                   </td>
                   {/* Material Title */}
                   <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm">
