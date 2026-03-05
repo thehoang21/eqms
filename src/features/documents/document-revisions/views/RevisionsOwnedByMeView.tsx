@@ -613,7 +613,7 @@ export const RevisionsOwnedByMeView: React.FC = () => {
                       className={cn(
                         "py-2.5 px-2 sm:py-3.5 sm:px-4 text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap",
                         column.id === "action"
-                          ? "sticky right-0 bg-slate-50 text-center z-40 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] backdrop-blur-sm"
+                          ? "sticky right-0 bg-slate-50 text-center z-[1] before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]"
                           : "text-left",
                       )}
                     >
