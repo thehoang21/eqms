@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/app/routes.constants";
@@ -9,7 +9,6 @@ import {
   FileImage,
   Download,
   Edit,
-  MoreVertical,
   Upload,
   FolderOpen,
   AlertTriangle,
@@ -21,10 +20,11 @@ import {
   FilePlusCorner,
   Link2,
   Send,
+  MoreVertical,
 } from "lucide-react";
 import { MarkObsoleteModal, ObsoleteResult } from "../components/MarkObsoleteModal";
 import { IconChecks, IconInfoCircle, IconEyeCheck } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { trainingMaterials } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -76,6 +76,90 @@ const calcDashboardStats = (materials: TrainingMaterial[]) => {
   return { totalMaterials, totalVideos, totalDocuments, totalImages, pendingReview, pendingApproval, needsAction, obsoleted, totalUsage, totalStorageMB, totalStorageGB };
 };
 
+// ── Local Dropdown ────────────────────────────────────────────────
+interface MaterialDropdownMenuProps {
+  material: TrainingMaterial;
+  effectiveStatus: TrainingMaterial["status"];
+  isOpen: boolean;
+  onClose: () => void;
+  position: { top: number; left: number; showAbove?: boolean };
+  navigate: ReturnType<typeof useNavigate>;
+  onMarkObsolete: (id: string) => void;
+}
+
+const MaterialDropdownMenu: React.FC<MaterialDropdownMenuProps> = ({
+  material,
+  effectiveStatus,
+  isOpen,
+  onClose,
+  position,
+  navigate,
+  onMarkObsolete,
+}) => {
+  if (!isOpen) return null;
+
+  type MenuItem =
+    | { isDivider: true }
+    | { isDivider?: false; icon: React.ElementType; label: string; onClick: () => void; color?: string };
+
+  const menuItems: MenuItem[] = [
+    { icon: IconInfoCircle, label: "View Details",   onClick: () => { navigate(ROUTES.TRAINING.MATERIAL_DETAIL(material.id)); onClose(); }, color: "text-slate-500" },
+    ...(effectiveStatus === "Draft" ? [
+      { icon: Edit,   label: "Edit Material",     onClick: () => { navigate(ROUTES.TRAINING.MATERIAL_EDIT(material.id)); onClose(); },   color: "text-slate-500" } as MenuItem,
+      { icon: Send,   label: "Submit for Review", onClick: () => { navigate(ROUTES.TRAINING.MATERIAL_REVIEW(material.id)); onClose(); }, color: "text-slate-500" } as MenuItem,
+    ] : []),
+    ...(effectiveStatus === "Pending Review" ? [
+      { icon: IconEyeCheck, label: "Review Material",  onClick: () => { navigate(ROUTES.TRAINING.MATERIAL_REVIEW(material.id)); onClose(); },   color: "text-slate-500" } as MenuItem,
+    ] : []),
+    ...(effectiveStatus === "Pending Approval" ? [
+      { icon: IconChecks,   label: "Approve Material", onClick: () => { navigate(ROUTES.TRAINING.MATERIAL_APPROVAL(material.id)); onClose(); }, color: "text-slate-500" } as MenuItem,
+    ] : []),
+    ...(effectiveStatus === "Approved" ? [
+      { icon: FilePlusCorner, label: "Upgrade Revision", onClick: () => { navigate(ROUTES.TRAINING.MATERIAL_NEW_REVISION(material.id)); onClose(); }, color: "text-slate-500" } as MenuItem,
+    ] : []),
+    { icon: BarChart3, label: "Usage Report", onClick: () => { navigate(ROUTES.TRAINING.MATERIAL_USAGE_REPORT(material.id)); onClose(); }, color: "text-slate-500" },
+    ...(effectiveStatus === "Approved" ? [
+      { isDivider: true } as MenuItem,
+      { icon: XCircle, label: "Mark as Obsoleted", onClick: () => { onMarkObsolete(material.id); onClose(); }, color: "text-slate-500" } as MenuItem,
+    ] : []),
+  ];
+
+  return createPortal(
+    <>
+      <div
+        className="fixed inset-0 z-40 animate-in fade-in duration-150"
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        aria-hidden="true"
+      />
+      <div
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        style={{ top: `${position.top}px`, left: `${position.left}px`, transform: position.showAbove ? "translateY(-100%)" : "none" }}
+      >
+        <div className="py-1">
+          {menuItems.map((item, i) => {
+            if ("isDivider" in item && item.isDivider) {
+              return <div key={i} className="my-1 border-t border-slate-100" />;
+            }
+            const mi = item as Exclude<MenuItem, { isDivider: true }>;
+            const Icon = mi.icon;
+            return (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); mi.onClick(); }}
+                className={cn("flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors", mi.color)}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">{mi.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </>,
+    window.document.body
+  );
+};
+
 export const MaterialsView: React.FC = () => {
   const navigate = useNavigate();
   const stats = useMemo(() => calcDashboardStats(MOCK_MATERIALS), []);
@@ -92,16 +176,38 @@ export const MaterialsView: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // Action Dropdown
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
-
   // Obsolete overrides (local state — persists for session)
   const [obsoleteOverrides, setObsoleteOverrides] = useState<Record<string, { replacedBy: string }>>({});
 
   // Mark Obsolete modal
   const [obsoleteModalOpen, setObsoleteModalOpen] = useState(false);
   const [obsoleteTargetId, setObsoleteTargetId] = useState<string | null>(null);
+
+  // Dropdown state
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
+  const buttonRefs = useRef<Record<string, React.RefObject<HTMLButtonElement | null>>>({});
+
+  const getButtonRef = (id: string) => {
+    if (!buttonRefs.current[id]) {
+      buttonRefs.current[id] = React.createRef<HTMLButtonElement>();
+    }
+    return buttonRefs.current[id];
+  };
+
+  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (openDropdownId === id) { setOpenDropdownId(null); return; }
+    const rect = event.currentTarget.getBoundingClientRect();
+    const menuHeight = 200; const menuWidth = 200; const safeMargin = 8;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const shouldShowAbove = spaceBelow < menuHeight && rect.top > menuHeight;
+    const top = shouldShowAbove ? rect.top + window.scrollY - 4 : rect.bottom + window.scrollY + 4;
+    let left = rect.right + window.scrollX - menuWidth;
+    left = Math.max(safeMargin, Math.min(left, window.innerWidth - menuWidth - safeMargin));
+    setDropdownPosition({ top, left, showAbove: shouldShowAbove });
+    setOpenDropdownId(id);
+  };
 
   const typeOptions = [
     { label: "All Types", value: "All" },
@@ -221,94 +327,7 @@ export const MaterialsView: React.FC = () => {
     }
   };
 
-  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    
-    if (openDropdownId === id) {
-      setOpenDropdownId(null);
-    } else {
-      const rect = event.currentTarget.getBoundingClientRect();
-      
-      // Menu dimensions (varies by content, estimate max)
-      const menuHeight = 280;
-      const menuWidth = 200;
-      const safeMargin = 8;
-      
-      // Check available space
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      
-      // Show above if not enough space below AND there's more space above
-      const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
-      
-      // Calculate vertical position
-      let top: number;
-      if (shouldShowAbove) {
-        top = rect.top + window.scrollY - 4;
-      } else {
-        top = rect.bottom + window.scrollY + 4;
-      }
-      
-      // Calculate horizontal position with safe margins
-      const viewportWidth = window.innerWidth;
-      let left = rect.right + window.scrollX - menuWidth;
-      
-      // Ensure menu doesn't overflow right edge
-      if (left + menuWidth > viewportWidth - safeMargin) {
-        left = viewportWidth - menuWidth - safeMargin + window.scrollX;
-      }
-      
-      // Ensure menu doesn't overflow left edge
-      if (left < safeMargin + window.scrollX) {
-        left = safeMargin + window.scrollX;
-      }
-      
-      setDropdownPosition({ top, left, showAbove: shouldShowAbove });
-      setOpenDropdownId(id);
-    }
-  };
 
-  const handlePreview = (id: string) => {
-    setOpenDropdownId(null);
-    navigate(ROUTES.TRAINING.MATERIAL_DETAIL(id));
-  };
-
-  const handleEdit = (id: string) => {
-    setOpenDropdownId(null);
-    navigate(ROUTES.TRAINING.MATERIAL_EDIT(id));
-  };
-
-  const handleNewRevision = (id: string) => {
-    setOpenDropdownId(null);
-    navigate(ROUTES.TRAINING.MATERIAL_NEW_REVISION(id));
-  };
-
-  const handleUsageReport = (id: string) => {
-    setOpenDropdownId(null);
-    navigate(ROUTES.TRAINING.MATERIAL_USAGE_REPORT(id));
-  };
-
-  const handleApprove = (id: string) => {
-    setOpenDropdownId(null);
-    navigate(ROUTES.TRAINING.MATERIAL_REVIEW(id));
-  };
-
-  const handleApprovalAction = (id: string) => {
-    setOpenDropdownId(null);
-    navigate(ROUTES.TRAINING.MATERIAL_APPROVAL(id));
-  };
-
-  const handleSubmitForReview = (id: string) => {
-    setOpenDropdownId(null);
-    // In a real app this would call an API; here we just navigate to the review route
-    navigate(ROUTES.TRAINING.MATERIAL_REVIEW(id));
-  };
-
-  const handleObsolete = (id: string) => {
-    setOpenDropdownId(null);
-    setObsoleteTargetId(id);
-    setObsoleteModalOpen(true);
-  };
 
   const handleObsoleteConfirm = (result: ObsoleteResult) => {
     if (obsoleteTargetId) {
@@ -324,29 +343,27 @@ export const MaterialsView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* ─── Header ─────────────────────────────────────────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Training Materials
-          </h1>
-          <Breadcrumb items={trainingMaterials()} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button
-            onClick={() => console.log("Export materials")}
-            variant="outline"
-            size="sm"
-            className="whitespace-nowrap gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-          <Button onClick={() => navigate(ROUTES.TRAINING.UPLOAD_MATERIAL)} size="sm" className="whitespace-nowrap gap-2">
-            <Upload className="h-4 w-4" />
-            Upload Material
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Training Materials"
+        breadcrumbItems={trainingMaterials()}
+        actions={
+          <>
+            <Button
+              onClick={() => console.log("Export materials")}
+              variant="outline"
+              size="sm"
+              className="whitespace-nowrap gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+            <Button onClick={() => navigate(ROUTES.TRAINING.UPLOAD_MATERIAL)} size="sm" className="whitespace-nowrap gap-2">
+              <Upload className="h-4 w-4" />
+              Upload Material
+            </Button>
+          </>
+        }
+      />
 
       {/* ─── Dashboard Stats Cards ──────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 lg:gap-4">
@@ -706,12 +723,22 @@ export const MaterialsView: React.FC = () => {
                     className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                   >
                     <button
+                      ref={getButtonRef(material.id)}
                       onClick={(e) => handleDropdownToggle(material.id, e)}
                       className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
                       aria-label="More actions"
                     >
                       <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                     </button>
+                    <MaterialDropdownMenu
+                      material={material}
+                      effectiveStatus={getEffectiveStatus(material)}
+                      isOpen={openDropdownId === material.id}
+                      onClose={() => setOpenDropdownId(null)}
+                      position={dropdownPosition}
+                      navigate={navigate}
+                      onMarkObsolete={(id) => { setObsoleteTargetId(id); setObsoleteModalOpen(true); }}
+                    />
                   </td>
                 </tr>
               ))}
@@ -744,119 +771,7 @@ export const MaterialsView: React.FC = () => {
         )}
       </div>
 
-      {/* Action Dropdown Portal */}
-      {openDropdownId && createPortal(
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40 animate-in fade-in duration-150"
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpenDropdownId(null);
-            }}
-            aria-hidden="true"
-          />
-          {/* Menu */}
-          <div
-            className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-            style={{
-              top: `${dropdownPosition.top}px`,
-              left: `${dropdownPosition.left}px`,
-              transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none'
-            }}
-          >
-            <div className="py-1">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePreview(openDropdownId);
-                }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-              >
-                <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
-                <span className="font-medium">View Details</span>
-              </button>
-              {(() => {
-                const dm = MOCK_MATERIALS.find((m) => m.id === openDropdownId);
-                const ds = dm ? (obsoleteOverrides[dm.id] !== undefined ? "Obsoleted" : dm.status) : null;
-                return (
-                  <>
-                    {/* Edit — Draft only */}
-                    {ds === "Draft" && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleEdit(openDropdownId); }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                      >
-                        <Edit className="h-4 w-4 flex-shrink-0" />
-                        <span className="font-medium">Edit Material</span>
-                      </button>
-                    )}
-                    {/* Upgrade Revision — Approved only */}
-                    {ds === "Approved" && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleNewRevision(openDropdownId); }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                      >
-                        <FilePlusCorner className="h-4 w-4 flex-shrink-0" />
-                        <span className="font-medium">Upgrade Revision</span>
-                      </button>
-                    )}
-                    {/* Usage Report — always */}
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleUsageReport(openDropdownId); }}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                    >
-                      <BarChart3 className="h-4 w-4 flex-shrink-0" />
-                      <span className="font-medium">Usage Report</span>
-                    </button>
-                    {/* Submit for Review — Draft only */}
-                    {ds === "Draft" && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleSubmitForReview(openDropdownId); }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                      >
-                        <Send className="h-4 w-4 flex-shrink-0" />
-                        <span className="font-medium">Submit for Review</span>
-                      </button>
-                    )}
-                    {/* Review — Pending Review only */}
-                    {ds === "Pending Review" && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleApprove(openDropdownId); }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
-                      >
-                        <IconEyeCheck className="h-4 w-4 text-slate-500 flex-shrink-0" />
-                        <span className="font-medium">Review Material</span>
-                      </button>
-                    )}
-                    {/* Approve — Pending Approval only */}
-                    {ds === "Pending Approval" && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleApprovalAction(openDropdownId); }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
-                      >
-                        <IconChecks className="h-4 w-4 text-slate-500 flex-shrink-0" />
-                        <span className="font-medium">Approve Material</span>
-                      </button>
-                    )}
-                    {/* Mark Obsoleted — Approved only */}
-                    {ds === "Approved" && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleObsolete(openDropdownId); }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-red-50 active:bg-red-100 transition-colors text-red-600"
-                      >
-                        <XCircle className="h-4 w-4 flex-shrink-0" />
-                        <span className="font-medium">Mark as Obsoleted</span>
-                      </button>
-                    )}
-                  </>
-                );
-              })()}
-            </div>
-          </div>
-        </>,
-        document.body
-      )}
+
       <MarkObsoleteModal
         isOpen={obsoleteModalOpen}
         material={(() => {

@@ -15,7 +15,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { IconRefresh } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { materialNewRevision } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { ButtonLoading } from "@/components/ui/loading/Loading";
@@ -432,27 +432,23 @@ const NewRevisionForm: React.FC<NewRevisionFormProps> = ({ materialId, source })
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* ─── Header ───────────────────────────────────────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-              Upgrade Revision
-            </h1>
-          </div>
-          <Breadcrumb items={materialNewRevision(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button variant="outline" size="sm" onClick={handleCancel} className="whitespace-nowrap gap-2">
-            Cancel
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleSaveDraft} disabled={isLoading} className="whitespace-nowrap gap-2">
-            {isLoading ? <ButtonLoading text="Saving..." /> : "Save as Draft"}
-          </Button>
-          <Button size="sm" onClick={handleSubmitForReview} disabled={isLoading} className="whitespace-nowrap gap-2">
-            Submit for Review
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Upgrade Revision"
+        breadcrumbItems={materialNewRevision(navigate)}
+        actions={
+          <>
+            <Button variant="outline" size="sm" onClick={handleCancel} className="whitespace-nowrap gap-2">
+              Cancel
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleSaveDraft} disabled={isLoading} className="whitespace-nowrap gap-2">
+              {isLoading ? <ButtonLoading text="Saving..." /> : "Save as Draft"}
+            </Button>
+            <Button size="sm" onClick={handleSubmitForReview} disabled={isLoading} className="whitespace-nowrap gap-2">
+              Submit for Review
+            </Button>
+          </>
+        }
+      />
 
             {/* ─── Workflow Stepper ─────────────────────────────────── */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

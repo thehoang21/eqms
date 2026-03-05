@@ -236,7 +236,7 @@ export const CourseProgressView: React.FC = () => {
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
           <div>
-            <p className="text-xs text-slate-500 font-mono">{info.trainingId}</p>
+            <p className="text-xs text-slate-500">{info.trainingId}</p>
             <h2 className="text-base lg:text-lg font-semibold text-slate-900 mt-0.5">
               {info.title}
             </h2>
@@ -459,7 +459,7 @@ export const CourseProgressView: React.FC = () => {
                       {rowNumber}
                     </td>
                     <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
-                      <span className="font-mono text-slate-700">{emp.userId}</span>
+                      <span className="text-slate-700">{emp.userId}</span>
                     </td>
                     <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                       <div>

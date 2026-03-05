@@ -15,6 +15,9 @@ export * from './form';
 export * from './card';
 export * from './table';
 export * from './dropdown';
+export * from './page';
+export * from './stepper';
+export * from './tabs';
 
 // Feedback Components
 export * from './modal';

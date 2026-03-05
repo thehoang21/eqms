@@ -15,7 +15,7 @@ import {
   Download,
 } from "lucide-react";
 import { IconReportAnalytics } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { auditTrailDetail } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
@@ -255,15 +255,11 @@ export const AuditTrailDetailView: React.FC<AuditTrailDetailViewProps> = ({
   return (
     <div className="space-y-6 w-full">
       {/* Header: Title + Breadcrumb + Actions */}
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-              Audit Trail Detail
-            </h1>
-            <Breadcrumb items={auditTrailDetail()} />
-          </div>
-          <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+      <PageHeader
+        title="Audit Trail Detail"
+        breadcrumbItems={auditTrailDetail()}
+        actions={
+          <>
             <Button
               onClick={onBack}
               size="sm"
@@ -281,9 +277,9 @@ export const AuditTrailDetailView: React.FC<AuditTrailDetailViewProps> = ({
               <Download className="h-4 w-4" />
               Export
             </Button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Content Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 lg:gap-6">

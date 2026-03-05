@@ -36,7 +36,7 @@ import {
   IconSettings2,
 } from "@tabler/icons-react";
 import { cn } from "@/components/ui/utils";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { userManual } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Select } from "@/components/ui/select/Select";
 import manualContentData from "./userManualContent.json";
@@ -297,26 +297,22 @@ export const UserManualView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* ── Header ── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            User Manual
-          </h1>
-          <Breadcrumb items={userManual()} />
-        </div>
-
-        {/* Search */}
-        <div className="relative w-full lg:w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search guides..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-9 pl-9 pr-4 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 bg-white"
-          />
-        </div>
-      </div>
+      <PageHeader
+        title="User Manual"
+        breadcrumbItems={userManual()}
+        actions={
+          <div className="relative w-full lg:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search guides..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-9 pl-9 pr-4 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 placeholder:text-slate-400 bg-white"
+            />
+          </div>
+        }
+      />
 
       {/* ── Search Results Notice ── */}
       {searchQuery && (

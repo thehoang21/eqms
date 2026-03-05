@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { Download } from "lucide-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { trainingMatrix } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
@@ -116,14 +116,10 @@ export const TrainingMatrixView: React.FC = () => {
   return (
     <div className="space-y-5 w-full flex-1 flex flex-col">
       {/* Page header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Training Matrix
-          </h1>
-          <Breadcrumb items={trainingMatrix()} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+      <PageHeader
+        title="Training Matrix"
+        breadcrumbItems={trainingMatrix()}
+        actions={
           <Button
             onClick={() => console.log("Export")}
             variant="outline"
@@ -133,8 +129,8 @@ export const TrainingMatrixView: React.FC = () => {
             <Download className="h-4 w-4" />
             Export Matrix
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Filter Bar */}
       <FilterBar

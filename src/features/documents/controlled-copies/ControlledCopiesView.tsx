@@ -166,7 +166,7 @@ const DropdownMenu: React.FC<{
                 onCancel();
                 onClose();
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <FileX className="h-4 w-4 flex-shrink-0" />
               <span className="font-medium">Cancel Distribution</span>
@@ -179,7 +179,7 @@ const DropdownMenu: React.FC<{
                 onReportLostDamaged();
                 onClose();
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <Shredder className="h-4 w-4 flex-shrink-0" />
               <span className="font-medium">Report Lost/Damaged</span>
@@ -192,7 +192,7 @@ const DropdownMenu: React.FC<{
                 onCancel();
                 onClose();
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <FileX className="h-4 w-4 flex-shrink-0" />
               <span className="font-medium">Cancel Distribution</span>
@@ -205,7 +205,7 @@ const DropdownMenu: React.FC<{
                 onReportLostDamaged();
                 onClose();
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+              className="flex w-full items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:bg-slate-50 active:bg-slate-100 transition-colors"
             >
               <Shredder className="h-4 w-4 flex-shrink-0" />
               <span className="font-medium">Report Lost/Damaged</span>

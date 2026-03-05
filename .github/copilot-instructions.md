@@ -89,25 +89,72 @@ import { Popover } from "@/components/ui/popover/Popover";
 import { ResponsiveForm } from "@/components/ui/form/ResponsiveForm";
 ```
 
-#### 12. ActionDropdown — `components/ui/dropdown/ActionDropdown.tsx`
-```tsx
-import { ActionDropdown } from "@/components/ui/dropdown/ActionDropdown";
-import type { ActionDropdownItem } from "@/components/ui/dropdown/ActionDropdown";
-```
-- **Dùng cho table row actions** — trigger là MoreVertical icon
-- Portal rendering, auto-positioning (flip up khi gần bottom viewport)
-- **Props:** `actions: ActionDropdownItem[]`, `size?: 'sm' | 'default' | 'lg'`, `disabled?`, `triggerIcon?`, `minWidth?`
-- **ActionDropdownItem:** `{ label, icon?, onClick, disabled?, destructive? }` hoặc `{ type: 'divider' }`
+#### 12. Table Row Action Dropdown — Inline `DropdownMenu` pattern (CHUẨN)
+
+**KHÔNG dùng `ActionDropdown` component cho table row actions.**
+**PHẢI viết inline `DropdownMenu` trong cùng file, dùng `createPortal` — xem mẫu tại `DocumentsView.tsx`.**
 
 ```tsx
-<ActionDropdown
-  actions={[
-    { label: 'View', icon: <Eye className="h-4 w-4" />, onClick: handleView },
-    { label: 'Edit', icon: <Edit className="h-4 w-4" />, onClick: handleEdit },
-    { type: 'divider' },
-    { label: 'Delete', icon: <Trash className="h-4 w-4" />, onClick: handleDelete, destructive: true },
-  ]}
-/>
+import { createPortal } from "react-dom";
+import { MoreVertical } from "lucide-react";
+
+// 1. Khai báo state trong component
+const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
+const buttonRefs = useRef<Record<string, React.RefObject<HTMLButtonElement | null>>>({});
+
+// 2. Handler tính toán vị trí
+const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+  event.stopPropagation();
+  if (openDropdownId === id) { setOpenDropdownId(null); return; }
+  const rect = event.currentTarget.getBoundingClientRect();
+  const menuHeight = 200; const menuWidth = 200; const safeMargin = 8;
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const shouldShowAbove = spaceBelow < menuHeight && rect.top > menuHeight;
+  const top = shouldShowAbove ? rect.top + window.scrollY - 4 : rect.bottom + window.scrollY + 4;
+  let left = rect.right + window.scrollX - menuWidth;
+  left = Math.max(safeMargin, Math.min(left, window.innerWidth - menuWidth - safeMargin));
+  setDropdownPosition({ top, left, showAbove: shouldShowAbove });
+  setOpenDropdownId(id);
+};
+
+// 3. Local DropdownMenu component (định nghĩa ngay trong file, trên main component)
+const DropdownMenu: React.FC<{ ... }> = ({ isOpen, onClose, position, ... }) => {
+  if (!isOpen) return null;
+  return createPortal(
+    <>
+      <div className="fixed inset-0 z-40 animate-in fade-in duration-150"
+        onClick={(e) => { e.stopPropagation(); onClose(); }} aria-hidden="true" />
+      <div
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        style={{ top: `${position.top}px`, left: `${position.left}px`, transform: position.showAbove ? 'translateY(-100%)' : 'none' }}
+      >
+        <div className="py-1">
+          {menuItems.map((item, i) => (
+            <button key={i} onClick={(e) => { e.stopPropagation(); item.onClick(); }}
+              className={cn("flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors", item.color)}>
+              <item.icon className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </>,
+    window.document.body
+  );
+};
+
+// 4. Trong action td:
+<td onClick={(e) => e.stopPropagation()} className="sticky right-0 ...">
+  <button
+    ref={buttonRefs.current[item.id]}
+    onClick={(e) => handleDropdownToggle(item.id, e)}
+    className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
+  >
+    <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
+  </button>
+  <DropdownMenu isOpen={openDropdownId === item.id} onClose={() => setOpenDropdownId(null)} position={dropdownPosition} ... />
+</td>
 ```
 
 #### 13. SmartDropdown — `components/ui/dropdown/SmartDropdown.tsx`
@@ -195,6 +242,75 @@ const items: BreadcrumbItem[] = [
 
 **Sau khi thêm màn hình mới, PHẢI bổ sung vào `breadcrumbs.config.ts`.**
 
+#### 18. PageHeader — `components/ui/page/PageHeader.tsx`
+```tsx
+import { PageHeader } from "@/components/ui/page/PageHeader";
+import type { BreadcrumbItem } from "@/components/ui/breadcrumb/Breadcrumb";
+```
+- Chuẩn hoá header cho mọi màn hình: breadcrumb + tiêu đề + nút hành động
+- **Props:** `title: string`, `breadcrumbItems: BreadcrumbItem[]`, `actions?: ReactNode`, `className?`
+- Layout: `flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4`
+
+```tsx
+<PageHeader
+  title="Document List"
+  breadcrumbItems={breadcrumbs.documentList(navigate)}
+  actions={
+    <Button onClick={handleNew}>
+      <Plus className="h-4 w-4 mr-2" /> New Document
+    </Button>
+  }
+/>
+```
+
+#### 19. WorkflowStepper — `components/ui/stepper/WorkflowStepper.tsx`
+```tsx
+import { WorkflowStepper } from "@/components/ui/stepper/WorkflowStepper";
+```
+- Hiển thị workflow stages với chevron shape (first/middle/last)
+- Màu: completed=`bg-emerald-100 text-emerald-700`, current=`bg-emerald-600 text-white`, upcoming=`bg-slate-100 text-slate-500`
+- **Props:** `steps: string[]`, `currentStep: string`, `className?`
+
+```tsx
+const WORKFLOW_STEPS = ["Draft", "Pending Review", "Pending Approval", "Approved", "Effective"];
+
+<WorkflowStepper steps={WORKFLOW_STEPS} currentStep={document.status} />
+```
+
+#### 20. TabNav — `components/ui/tabs/TabNav.tsx`
+```tsx
+import { TabNav } from "@/components/ui/tabs/TabNav";
+import type { TabItem } from "@/components/ui/tabs/TabNav";
+```
+- Tab navigation với 2 variants
+- **Props:** `tabs: TabItem[]`, `activeTab: string`, `onChange: (id: string) => void`, `variant?: 'underline' | 'pill'`, `className?`
+- **TabItem:** `{ id: string, label: string, icon?: ElementType, count?: number }`
+- `underline` (default): emerald border-bottom, dùng trong card/panel
+- `pill`: slate bg segment, dùng standalone
+
+```tsx
+const tabs: TabItem[] = [
+  { id: "overview", label: "Overview" },
+  { id: "history", label: "Revision History", count: 3 },
+  { id: "training", label: "Training" },
+];
+
+<TabNav tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
+<TabNav tabs={tabs} activeTab={activeTab} onChange={setActiveTab} variant="pill" />
+```
+
+#### 21. ReadOnlyField — `components/ui/form/ReadOnlyField.tsx`
+```tsx
+import { ReadOnlyField } from "@/components/ui/form/ReadOnlyField";
+```
+- Display-only field với styling đồng nhất (`bg-slate-50 border border-slate-200 rounded-lg h-9`)
+- **Props:** `value?: string | number | null`, `placeholder?: string` (default "—"), `className?`
+
+```tsx
+<ReadOnlyField value={document.documentId} />
+<ReadOnlyField value={document.approvedBy} placeholder="Not approved yet" />
+```
+
 ---
 
 ### 0.2 Quy trình khi cần UI component
@@ -237,13 +353,15 @@ const items: BreadcrumbItem[] = [
 <Breadcrumb items={breadcrumbs.documentList(navigate)} />
 ```
 
-❌ **SAI — Custom dropdown createPortal thủ công:**
+✅ **ĐÚNG — Table row action dropdown (inline `DropdownMenu` + `createPortal`):**
 ```tsx
-{openDropdownId && createPortal(<>...</>, document.body)}
+// Xem đầy đủ tại DocumentsView.tsx — định nghĩa local DropdownMenu component trong file,
+// dùng openDropdownId state + handleDropdownToggle + createPortal vào document.body
 ```
-✅ **ĐÚNG:**
+
+❌ **SAI — Dùng `ActionDropdown` component cho table row actions:**
 ```tsx
-<ActionDropdown actions={[...]} />
+<ActionDropdown actions={[{ label: 'View', icon: <Eye />, onClick: handleView }]} />
 ```
 
 ### 0.4 Utilities có sẵn
@@ -340,13 +458,19 @@ import logoImg from '@/assets/images/logo.png';
         onClick={(e) => e.stopPropagation()}
         className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
       >
-        <ActionDropdown
-          actions={[
-            { label: 'View', icon: <Eye className="h-4 w-4" />, onClick: () => handleView(item.id) },
-            { label: 'Edit', icon: <Edit className="h-4 w-4" />, onClick: () => handleEdit(item.id) },
-            { type: 'divider' },
-            { label: 'Delete', icon: <Trash className="h-4 w-4" />, onClick: () => handleDelete(item.id), destructive: true },
-          ]}
+        {/* Inline DropdownMenu + MoreVertical trigger — xem pattern đầy đủ ở DocumentsView.tsx */}
+        <button
+          ref={getButtonRef(item.id)}
+          onClick={(e) => handleDropdownToggle(item.id, e)}
+          className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
+        >
+          <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
+        </button>
+        <DropdownMenu
+          item={item}
+          isOpen={openDropdownId === item.id}
+          onClose={() => setOpenDropdownId(null)}
+          position={dropdownPosition}
         />
       </td>
     </tr>
@@ -368,7 +492,7 @@ import logoImg from '@/assets/images/logo.png';
 ### 3.5 Event Propagation Rules (QUAN TRỌNG!)
 1. **Row:** `onClick={() => handleView(id)}`
 2. **Action td:** `onClick={(e) => e.stopPropagation()}`
-3. **Dùng `ActionDropdown`** — tự động xử lý event handling bên trong
+3. **Trigger button & DropdownMenu backdrop:** đều có `e.stopPropagation()` — xem `DocumentsView.tsx`
 
 ---
 
@@ -599,6 +723,40 @@ formatFileSize(bytes)           // "1.5 MB"
 
 ---
 
+## 12.1 Status Color Utilities
+
+**PHẢI** dùng `@/utils/status.ts`, KHÔNG định nghĩa lại `getStatusColor` trong từng component:
+
+```tsx
+import { getStatusColorClass, getDocumentTypeColorClass, getPriorityColorClass } from "@/utils/status";
+
+// Document / Training / User / Equipment / Risk statuses → Tailwind bg+text+border classes
+getStatusColorClass("Draft")             // "bg-slate-100 text-slate-700 border-slate-200"
+getStatusColorClass("Approved")          // "bg-emerald-50 text-emerald-700 border-emerald-200"
+getStatusColorClass("Pending Review")    // "bg-amber-50 text-amber-700 border-amber-200"
+
+// Document types
+getDocumentTypeColorClass("SOP")         // "bg-blue-50 text-blue-700 border-blue-200"
+
+// Priority levels
+getPriorityColorClass("Critical")        // "bg-red-50 text-red-700 border-red-200"
+getPriorityColorClass("High")            // "bg-orange-50 text-orange-700 border-orange-200"
+```
+
+Usage in badge:
+```tsx
+<span className={cn(
+  "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border",
+  getStatusColorClass(item.status)
+)}>
+  {item.status}
+</span>
+```
+
+❌ KHÔNG viết local `getStatusColor` functions trong từng component
+
+---
+
 ## 13. TypeScript Patterns
 
 ```tsx
@@ -679,7 +837,6 @@ import { IconLayoutDashboard } from "@tabler/icons-react";
 // 4. UI Components (PHẢI reuse từ components/ui)
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
-import { ActionDropdown } from "@/components/ui/dropdown/ActionDropdown";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
@@ -750,7 +907,7 @@ import { AUTH_SLIDE_IMAGES, CAROUSEL_INTERVAL } from "./authCarousel";
 - [ ] Row clickable: `cursor-pointer group` + `onClick={() => handleView(id)}`
 - [ ] Sticky action column: z-index + shadow + before border classes đầy đủ
 - [ ] Action cell: `onClick={(e) => e.stopPropagation()}`
-- [ ] Actions: dùng `ActionDropdown` component
+- [ ] Actions: dùng inline `DropdownMenu` + `createPortal` (xem pattern tại `DocumentsView.tsx`)
 - [ ] Empty state: centered, icon + message
 - [ ] Pagination: dùng `TablePagination` component
 - [ ] Filters: responsive grid, dùng `Select` component

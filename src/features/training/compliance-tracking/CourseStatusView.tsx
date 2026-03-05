@@ -9,7 +9,7 @@ import {
   TrendingUp,
   BookOpen,
 } from "lucide-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { courseStatus } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -168,14 +168,10 @@ export const CourseStatusView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header: Title + Breadcrumb + Action Button */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Course Status
-          </h1>
-          <Breadcrumb items={courseStatus(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+      <PageHeader
+        title="Course Status"
+        breadcrumbItems={courseStatus(navigate)}
+        actions={
           <Button
             onClick={() => console.log("Export status")}
             variant="outline"
@@ -185,8 +181,8 @@ export const CourseStatusView: React.FC = () => {
             <Download className="h-4 w-4" />
             Export
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Filters */}
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">

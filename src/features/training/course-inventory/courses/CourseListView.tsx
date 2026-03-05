@@ -1,28 +1,19 @@
-import React, { useState, useMemo, useRef, createRef, RefObject } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/app/routes.constants";
 import {
   Search,
   GraduationCap,
-  Calendar,
   Users,
-  Clock,
-  MapPin,
-  Plus,
-  Filter,
-  Eye,
   Edit,
-  Trash2,
-  MoreVertical,
-  FileText,
-  Award,
   Download,
   ClipboardList,
   BarChart3,
+  MoreVertical,
 } from "lucide-react";
-import { IconPlus, IconInfoCircle, IconEyeCheck, IconChecks } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { IconInfoCircle, IconEyeCheck, IconChecks, IconPlus } from "@tabler/icons-react";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { coursesList } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -30,6 +21,8 @@ import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
 import { TablePagination } from "@/components/ui/table/TablePagination";
 import { TableEmptyState } from "@/components/ui/table/TableEmptyState";
 import { cn } from "@/components/ui/utils";
+import { formatDate } from "@/utils/format";
+import { getStatusColorClass } from "@/utils/status";
 import {
   TrainingRecord,
   TrainingFilters,
@@ -38,6 +31,75 @@ import {
   TrainingMethod,
 } from "../../types";
 import { MOCK_TRAININGS } from "./mockData";
+
+// ── Local Dropdown ────────────────────────────────────────────────
+interface CourseDropdownMenuProps {
+  training: TrainingRecord;
+  isOpen: boolean;
+  onClose: () => void;
+  position: { top: number; left: number; showAbove?: boolean };
+  navigate: ReturnType<typeof useNavigate>;
+}
+
+const CourseDropdownMenu: React.FC<CourseDropdownMenuProps> = ({
+  training,
+  isOpen,
+  onClose,
+  position,
+  navigate,
+}) => {
+  if (!isOpen) return null;
+
+  type MenuItem =
+    | { isDivider: true }
+    | { isDivider?: false; icon: React.ElementType; label: string; onClick: () => void; color?: string };
+
+  const menuItems: MenuItem[] = [
+    { icon: IconInfoCircle, label: "View Detail",   onClick: () => { navigate(ROUTES.TRAINING.COURSE_DETAIL(training.id)); onClose(); }, color: "text-slate-500" },
+    { icon: Edit,           label: "Edit Course",   onClick: () => { navigate(ROUTES.TRAINING.COURSE_EDIT(training.id)); onClose(); },   color: "text-slate-500" },
+    { icon: ClipboardList,  label: "Result Entry",  onClick: () => { navigate(ROUTES.TRAINING.COURSE_RESULT_ENTRY(training.id)); onClose(); }, color: "text-slate-500" },
+    { icon: BarChart3,      label: "View Progress", onClick: () => { navigate(ROUTES.TRAINING.COURSE_PROGRESS(training.id)); onClose(); },           color: "text-slate-500" },
+    ...(training.status === "Pending Review"  ? [{ icon: IconEyeCheck, label: "Review Course",  onClick: () => { navigate(ROUTES.TRAINING.APPROVAL_DETAIL(training.id)); onClose(); }, color: "text-slate-500" } as MenuItem] : []),
+    ...(training.status === "Pending Approval" ? [{ icon: IconChecks,   label: "Approve Course", onClick: () => { navigate(ROUTES.TRAINING.APPROVE_DETAIL(training.id)); onClose(); },  color: "text-slate-500" } as MenuItem] : []),
+    { isDivider: true },
+    { icon: Download, label: "Export PDF", onClick: () => { console.log("Export PDF:", training.id); onClose(); }, color: "text-slate-500" },
+  ];
+
+  return createPortal(
+    <>
+      <div
+        className="fixed inset-0 z-40 animate-in fade-in duration-150"
+        onClick={(e) => { e.stopPropagation(); onClose(); }}
+        aria-hidden="true"
+      />
+      <div
+        className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
+        style={{ top: `${position.top}px`, left: `${position.left}px`, transform: position.showAbove ? "translateY(-100%)" : "none" }}
+      >
+        <div className="py-1">
+          {menuItems.map((item, i) => {
+            if ("isDivider" in item && item.isDivider) {
+              return <div key={i} className="my-1 border-t border-slate-100" />;
+            }
+            const mi = item as Exclude<MenuItem, { isDivider: true }>;
+            const Icon = mi.icon;
+            return (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); mi.onClick(); }}
+                className={cn("flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors", mi.color)}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">{mi.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </>,
+    window.document.body
+  );
+};
 
 export const CourseListView: React.FC = () => {
   const navigate = useNavigate();
@@ -55,6 +117,32 @@ export const CourseListView: React.FC = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Dropdown state
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
+  const buttonRefs = useRef<Record<string, React.RefObject<HTMLButtonElement | null>>>({});
+
+  const getButtonRef = (id: string) => {
+    if (!buttonRefs.current[id]) {
+      buttonRefs.current[id] = React.createRef<HTMLButtonElement>();
+    }
+    return buttonRefs.current[id];
+  };
+
+  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    if (openDropdownId === id) { setOpenDropdownId(null); return; }
+    const rect = event.currentTarget.getBoundingClientRect();
+    const menuHeight = 200; const menuWidth = 200; const safeMargin = 8;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const shouldShowAbove = spaceBelow < menuHeight && rect.top > menuHeight;
+    const top = shouldShowAbove ? rect.top + window.scrollY - 4 : rect.bottom + window.scrollY + 4;
+    let left = rect.right + window.scrollX - menuWidth;
+    left = Math.max(safeMargin, Math.min(left, window.innerWidth - menuWidth - safeMargin));
+    setDropdownPosition({ top, left, showAbove: shouldShowAbove });
+    setOpenDropdownId(id);
+  };
 
   // Filter Options
   const typeOptions = [
@@ -115,17 +203,6 @@ export const CourseListView: React.FC = () => {
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  const getStatusColor = (status: TrainingStatus): string => {
-    switch (status) {
-      case "Draft":            return "bg-slate-100 text-slate-700 border-slate-200";
-      case "Pending Review":   return "bg-amber-50 text-amber-700 border-amber-200";
-      case "Pending Approval": return "bg-blue-50 text-blue-700 border-blue-200";
-      case "Approved":         return "bg-emerald-50 text-emerald-700 border-emerald-200";
-      case "Obsoleted":        return "bg-rose-50 text-rose-700 border-rose-200";
-      default:                 return "bg-slate-50 text-slate-700 border-slate-200";
-    }
-  };
-
   const getMethodConfig = (method: TrainingMethod) => {
     switch (method) {
       case "Read & Understood": return { label: "Read & Understood", className: "bg-slate-50 text-slate-700 border-slate-200" };
@@ -134,122 +211,34 @@ export const CourseListView: React.FC = () => {
     }
   };
 
-  // Action Dropdown
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, showAbove: false });
-
-  const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    
-    if (openDropdownId === id) {
-      setOpenDropdownId(null);
-    } else {
-      const rect = event.currentTarget.getBoundingClientRect();
-      
-      // Menu dimensions (varies by content, estimate max)
-      const menuHeight = 220;
-      const menuWidth = 200;
-      const safeMargin = 8;
-      
-      // Check available space
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      
-      // Show above if not enough space below AND there's more space above
-      const shouldShowAbove = spaceBelow < menuHeight && spaceAbove > menuHeight;
-      
-      // Calculate vertical position
-      let top: number;
-      if (shouldShowAbove) {
-        top = rect.top + window.scrollY - 4;
-      } else {
-        top = rect.bottom + window.scrollY + 4;
-      }
-      
-      // Calculate horizontal position with safe margins
-      const viewportWidth = window.innerWidth;
-      let left = rect.right + window.scrollX - menuWidth;
-      
-      // Ensure menu doesn't overflow right edge
-      if (left + menuWidth > viewportWidth - safeMargin) {
-        left = viewportWidth - menuWidth - safeMargin + window.scrollX;
-      }
-      
-      // Ensure menu doesn't overflow left edge
-      if (left < safeMargin + window.scrollX) {
-        left = safeMargin + window.scrollX;
-      }
-      
-      setDropdownPosition({ top, left, showAbove: shouldShowAbove });
-      setOpenDropdownId(id);
-    }
-  };
-
-  const handleViewCourse = (id: string) => {
-    navigate(ROUTES.TRAINING.COURSE_DETAIL(id));
-    setOpenDropdownId(null);
-  };
-
-  const handleEditCourse = (id: string) => {
-    navigate(ROUTES.TRAINING.COURSE_EDIT(id));
-    setOpenDropdownId(null);
-  };
-
-  const handleResultEntry = (id: string) => {
-    navigate(ROUTES.TRAINING.COURSE_RESULT_ENTRY(id));
-    setOpenDropdownId(null);
-  };
-
-  const handleViewProgress = (id: string) => {
-    navigate(ROUTES.TRAINING.COURSE_PROGRESS(id));
-    setOpenDropdownId(null);
-  };
-
-  const handleReviewCourse = (id: string) => {
-    navigate(ROUTES.TRAINING.APPROVAL_DETAIL(id));
-    setOpenDropdownId(null);
-  };
-
-  const handleApproveCourse = (id: string) => {
-    navigate(ROUTES.TRAINING.APPROVE_DETAIL(id));
-    setOpenDropdownId(null);
-  };
-
-  const handleExportPDF = (id: string) => {
-    console.log("Export PDF:", id);
-    setOpenDropdownId(null);
-  };
-
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header: Title + Breadcrumb + Action Button */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Courses List
-          </h1>
-          <Breadcrumb items={coursesList(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button
-            onClick={() => console.log("Export triggered")}
-            variant="outline"
-            size="sm"
-            className="whitespace-nowrap gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-          <Button
-            onClick={() => navigate(ROUTES.TRAINING.COURSES_CREATE)}
-            size="sm"
-            className="whitespace-nowrap gap-2"
-          >
-            <IconPlus className="h-4 w-4" />
-            New Course
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Courses List"
+        breadcrumbItems={coursesList(navigate)}
+        actions={
+          <>
+            <Button
+              onClick={() => console.log("Export triggered")}
+              variant="outline"
+              size="sm"
+              className="whitespace-nowrap gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+            <Button
+              onClick={() => navigate(ROUTES.TRAINING.COURSES_CREATE)}
+              size="sm"
+              className="whitespace-nowrap gap-2"
+            >
+              <IconPlus className="h-4 w-4" />
+              New Course
+            </Button>
+          </>
+        }
+      />
 
       {/* Filters */}
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -424,7 +413,7 @@ export const CourseListView: React.FC = () => {
                   <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                     <span className={cn(
                       "inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium border",
-                      getStatusColor(training.status)
+                      getStatusColorClass(training.status)
                     )}>
                       {training.status}
                     </span>
@@ -433,11 +422,7 @@ export const CourseListView: React.FC = () => {
                     {training.instructor}
                   </td>
                   <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-700">
-                    {new Date(training.scheduledDate).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {formatDate(training.scheduledDate)}
                   </td>
                   <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
                     <div className="flex items-center gap-1.5 sm:gap-2">
@@ -452,12 +437,20 @@ export const CourseListView: React.FC = () => {
                     className="sticky right-0 bg-white py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
                   >
                     <button
+                      ref={getButtonRef(training.id)}
                       onClick={(e) => handleDropdownToggle(training.id, e)}
                       className="inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-lg hover:bg-slate-100 transition-colors"
-                      aria-label="Actions"
+                      aria-label="More actions"
                     >
                       <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-600" />
                     </button>
+                    <CourseDropdownMenu
+                      training={training}
+                      isOpen={openDropdownId === training.id}
+                      onClose={() => setOpenDropdownId(null)}
+                      position={dropdownPosition}
+                      navigate={navigate}
+                    />
                   </td>
                 </tr>
               ))}
@@ -499,122 +492,6 @@ export const CourseListView: React.FC = () => {
         )}
       </div>
 
-      {/* Action Dropdown Portal */}
-      {openDropdownId && createPortal(
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40 animate-in fade-in duration-150"
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpenDropdownId(null);
-            }}
-            aria-hidden="true"
-          />
-          {/* Menu */}
-          <div
-            className="fixed z-50 min-w-[160px] w-[200px] max-w-[90vw] max-h-[300px] overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-xl animate-in fade-in slide-in-from-top-2 duration-200"
-            style={{
-              top: `${dropdownPosition.top}px`,
-              left: `${dropdownPosition.left}px`,
-              transform: dropdownPosition.showAbove ? 'translateY(-100%)' : 'none'
-            }}
-          >
-            {(() => {
-              const currentTraining = MOCK_TRAININGS.find(t => t.id === openDropdownId);
-              const isPendingReview = currentTraining?.status === "Pending Review";
-              const isPendingApproval = currentTraining?.status === "Pending Approval";
-
-              return (
-                <div className="py-1">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewCourse(openDropdownId);
-                      setOpenDropdownId(null);
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                  >
-                    <IconInfoCircle className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-medium">View Detail Course</span>
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditCourse(openDropdownId);
-                      setOpenDropdownId(null);
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                  >
-                    <Edit className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-medium">Edit Course</span>
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleResultEntry(openDropdownId);
-                      setOpenDropdownId(null);
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                  >
-                    <ClipboardList className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-medium">Result Entry</span>
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewProgress(openDropdownId);
-                      setOpenDropdownId(null);
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                  >
-                    <BarChart3 className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-medium">View Progress</span>
-                  </button>
-                  {isPendingReview && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleReviewCourse(openDropdownId);
-                        setOpenDropdownId(null);
-                      }}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                    >
-                      <IconEyeCheck className="h-4 w-4 flex-shrink-0" />
-                      <span className="font-medium">Review Course</span>
-                    </button>
-                  )}
-                  {isPendingApproval && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleApproveCourse(openDropdownId);
-                        setOpenDropdownId(null);
-                      }}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                    >
-                      <IconChecks className="h-4 w-4 flex-shrink-0" />
-                      <span className="font-medium">Approve Course</span>
-                    </button>
-                  )}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleExportPDF(openDropdownId);
-                      setOpenDropdownId(null);
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-xs hover:bg-slate-50 active:bg-slate-100 transition-colors text-slate-500"
-                  >
-                    <Download className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-medium">Export PDF</span>
-                  </button>
-                </div>
-              );
-            })()}
-          </div>
-        </>,
-        document.body
-      )}
     </div>
   );
 };

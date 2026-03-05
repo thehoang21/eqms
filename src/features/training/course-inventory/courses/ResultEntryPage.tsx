@@ -11,7 +11,7 @@ import {
   AlertCircle,
   ZoomIn,
 } from "lucide-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { courseResultEntry } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -395,43 +395,37 @@ export const ResultEntryPage: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* ===== Header ===== */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-1">
-            <div>
-              <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-                Result Entry
-              </h1>
-              <Breadcrumb items={courseResultEntry(navigate)} />
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate(-1)}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleSave}
-            disabled={isLoading}
-          >
-            Save Draft
-          </Button>
-          <Button
-            variant="default"
-            size="sm"
-            onClick={handleConfirmSubmit}
-            className="gap-2"
-          >
-            Complete
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Result Entry"
+        breadcrumbItems={courseResultEntry(navigate)}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSave}
+              disabled={isLoading}
+            >
+              Save Draft
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleConfirmSubmit}
+              className="gap-2"
+            >
+              Complete
+            </Button>
+          </>
+        }
+      />
 
       {/* ===== Course Info Card ===== */}
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
@@ -624,7 +618,7 @@ export const ResultEntryPage: React.FC = () => {
 
                     {/* User ID */}
                     <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
-                      <span className="font-mono text-slate-700">{row.userId}</span>
+                      <span className="text-slate-700">{row.userId}</span>
                     </td>
 
                     {/* Employee Name */}

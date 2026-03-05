@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/app/routes.constants";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { courseCreate } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Check } from "lucide-react";
 import { cn } from "@/components/ui/utils";
@@ -250,33 +250,31 @@ export const CreateCourseView: React.FC = () => {
     return (
         <div className="space-y-6 w-full flex-1 flex flex-col">
             {/* Header: Title + Breadcrumb + Action Buttons */}
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-                <div className="flex-1 min-w-0">
-                    <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-                        Create New Training
-                    </h1>
-                    <Breadcrumb items={courseCreate(navigate)} />
-                </div>
-                <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-                    <Button
-                        variant="outline"
-                        onClick={handleCancel}
-                        size="sm"
-                        className="whitespace-nowrap gap-2"
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="default"
-                        onClick={handleSave}
-                        size="sm"
-                        className="whitespace-nowrap gap-2"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? <ButtonLoading text="Saving..." /> : "Save"}
-                    </Button>
-                </div>
-            </div>
+            <PageHeader
+              title="Create New Training"
+              breadcrumbItems={courseCreate(navigate)}
+              actions={
+                <>
+                  <Button
+                    variant="outline"
+                    onClick={handleCancel}
+                    size="sm"
+                    className="whitespace-nowrap gap-2"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="default"
+                    onClick={handleSave}
+                    size="sm"
+                    className="whitespace-nowrap gap-2"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? <ButtonLoading text="Saving..." /> : "Save"}
+                  </Button>
+                </>
+              }
+            />
 
             {/* Status Workflow Stepper */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

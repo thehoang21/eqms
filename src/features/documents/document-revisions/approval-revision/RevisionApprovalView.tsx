@@ -260,11 +260,11 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const statusSteps: DocumentStatus[] = ["Draft", "Pending Review", "Pending Approval", "Pending Training", "Ready for Publishing", "Effective", "Obsoleted", "Closed - Cancelled"];
 
     // Breadcrumbs
-    const breadcrumbs = revisionApproval(navigate, onBack, revision.documentId);
+    const breadcrumbs = revisionApproval(navigate, onBack);
 
     return (
         <DocumentWorkflowLayout
-            title={`Approve Revision: ${revision.documentId}`}
+            title="Approve Revision"
             breadcrumbs={breadcrumbs}
             onBack={onBack}
             documentId={`${revision.documentId} v${revision.version}`}

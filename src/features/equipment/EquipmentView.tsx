@@ -10,7 +10,7 @@ import {
   Monitor,
 } from "lucide-react";
 import { IconPlus } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { equipmentManagement } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -101,24 +101,22 @@ export const EquipmentView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Equipment Management
-          </h1>
-          <Breadcrumb items={equipmentManagement()} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button onClick={() => {}} variant="outline" size="sm" className="whitespace-nowrap gap-2">
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-          <Button onClick={() => {}} size="sm" className="whitespace-nowrap gap-2">
-            <IconPlus className="h-4 w-4" />
-            Add Equipment
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Equipment Management"
+        breadcrumbItems={equipmentManagement()}
+        actions={
+          <>
+            <Button onClick={() => {}} variant="outline" size="sm" className="whitespace-nowrap gap-2">
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+            <Button onClick={() => {}} size="sm" className="whitespace-nowrap gap-2">
+              <IconPlus className="h-4 w-4" />
+              Add Equipment
+            </Button>
+          </>
+        }
+      />
 
       {/* Filters */}
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">

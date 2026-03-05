@@ -23,7 +23,7 @@ import {
   Activity,
   Eye,
 } from "lucide-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { materialUsageReport } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { formatDateUS } from "@/utils/format";
@@ -326,29 +326,25 @@ export const UsageReportView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* ─── Header ──────────────────────────────────────────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-              Usage Report
-            </h1>
+      <PageHeader
+        title="Usage Report"
+        breadcrumbItems={materialUsageReport(navigate)}
+        actions={
+          <>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
               <BarChart3 className="h-3 w-3" />
               {material.materialCode}
             </span>
-          </div>
-          <Breadcrumb items={materialUsageReport(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)} className="gap-2">
-            Back
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => console.log("Export report")} className="gap-2">
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-        </div>
-      </div>
+            <Button variant="outline" size="sm" onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)} className="gap-2">
+              Back
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => console.log("Export report")} className="gap-2">
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+          </>
+        }
+      />
 
       {/* ─── Material Info Card ───────────────────────────────────── */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

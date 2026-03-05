@@ -9,6 +9,8 @@ import {
   getModuleIcon,
   isOverdue,
   getPriorityColor,
+  parseDateDMY,
+  toISODateString,
 } from "../utils";
 
 interface TaskCalendarViewProps {
@@ -32,15 +34,15 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
     return { year, month, firstDay, daysInMonth, daysInPrevMonth };
   }, [selectedMonth, selectedYear]);
 
-  // Group tasks by date
+  // Group tasks by date (normalize dd/MM/yyyy → yyyy-MM-dd for matching)
   const tasksByDate = useMemo(() => {
     const grouped: Record<string, Task[]> = {};
     tasks.forEach(task => {
-      const date = task.dueDate;
-      if (!grouped[date]) {
-        grouped[date] = [];
+      const isoDate = toISODateString(task.dueDate);
+      if (!grouped[isoDate]) {
+        grouped[isoDate] = [];
       }
-      grouped[date].push(task);
+      grouped[isoDate].push(task);
     });
     return grouped;
   }, [tasks]);
@@ -57,7 +59,9 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
     // Previous month days
     for (let i = firstDay - 1; i >= 0; i--) {
       const date = daysInPrevMonth - i;
-      const fullDate = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+      const prevMonth = month === 0 ? 12 : month;
+      const prevYear = month === 0 ? year - 1 : year;
+      const fullDate = `${prevYear}-${String(prevMonth).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
       days.push({ date, month: 'prev', fullDate, isToday: false });
     }
 
@@ -73,8 +77,10 @@ export const TaskCalendarView: React.FC<TaskCalendarViewProps> = ({ tasks, onTas
 
     // Next month days to complete the grid
     const remainingDays = 42 - days.length; // 6 rows * 7 days
+    const nextMonth = month === 11 ? 1 : month + 2;
+    const nextYear = month === 11 ? year + 1 : year;
     for (let date = 1; date <= remainingDays; date++) {
-      const fullDate = `${year}-${String(month + 2).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+      const fullDate = `${nextYear}-${String(nextMonth).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
       days.push({ date, month: 'next', fullDate, isToday: false });
     }
 

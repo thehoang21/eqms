@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ROUTES } from "@/app/routes.constants";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { courseEdit } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Check } from "lucide-react";
 import { cn } from "@/components/ui/utils";
@@ -301,28 +301,26 @@ export const EditCourseView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Edit Course
-          </h1>
-          <Breadcrumb items={courseEdit(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button variant="outline" onClick={handleCancel} size="sm" className="whitespace-nowrap gap-2">
-            Cancel
-          </Button>
-          <Button
-            variant="default"
-            onClick={handleSave}
-            size="sm"
-            className="whitespace-nowrap gap-2"
-            disabled={isLoading}
-          >
-            {isLoading ? <ButtonLoading text="Saving..." /> : "Save Changes"}
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Edit Course"
+        breadcrumbItems={courseEdit(navigate)}
+        actions={
+          <>
+            <Button variant="outline" onClick={handleCancel} size="sm" className="whitespace-nowrap gap-2">
+              Cancel
+            </Button>
+            <Button
+              variant="default"
+              onClick={handleSave}
+              size="sm"
+              className="whitespace-nowrap gap-2"
+              disabled={isLoading}
+            >
+              {isLoading ? <ButtonLoading text="Saving..." /> : "Save Changes"}
+            </Button>
+          </>
+        }
+      />
 
       {/* Info Banner */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-start gap-3">

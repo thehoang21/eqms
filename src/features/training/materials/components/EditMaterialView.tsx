@@ -14,7 +14,7 @@ import {
   Lock,
 } from "lucide-react";
 import { IconRefresh } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { materialEdit } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { ButtonLoading } from "@/components/ui/loading/Loading";
@@ -381,38 +381,34 @@ const EditMaterialForm: React.FC<EditMaterialFormProps> = ({ materialId, existin
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* ─── Header ─────────────────────────────────────────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-              Edit Training Material
-            </h1>
-          </div>
-          <Breadcrumb items={materialEdit(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button variant="outline" onClick={handleCancel} size="sm" className="whitespace-nowrap gap-2">
-            Cancel
-          </Button>
-          <Button
-            variant="outline"
-            onClick={handleSaveDraft}
-            size="sm"
-            className="whitespace-nowrap gap-2"
-            disabled={isLoading}
-          >
-            {isLoading ? <ButtonLoading text="Saving..." /> : "Save Draft"}
-          </Button>
-          <Button
-            onClick={handleSubmitForReview}
-            size="sm"
-            className="whitespace-nowrap gap-2"
-            disabled={isLoading}
-          >
-            Submit for Review
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Edit Training Material"
+        breadcrumbItems={materialEdit(navigate)}
+        actions={
+          <>
+            <Button variant="outline" onClick={handleCancel} size="sm" className="whitespace-nowrap gap-2">
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleSaveDraft}
+              size="sm"
+              className="whitespace-nowrap gap-2"
+              disabled={isLoading}
+            >
+              {isLoading ? <ButtonLoading text="Saving..." /> : "Save Draft"}
+            </Button>
+            <Button
+              onClick={handleSubmitForReview}
+              size="sm"
+              className="whitespace-nowrap gap-2"
+              disabled={isLoading}
+            >
+              Submit for Review
+            </Button>
+          </>
+        }
+      />
 
       {/* ─── Draft-only notice ──────────────────────────────────── */}
       <div className="flex items-start gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FileBarChart, ShieldAlert, History, Clock } from 'lucide-react';
 import { cn } from '@/components/ui/utils';
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { report } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import type { TabView } from './types';
 import { useTemplatesTab } from './components/TemplatesTab';
@@ -20,14 +20,10 @@ export const ReportView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Reports & Analytics
-          </h1>
-          <Breadcrumb items={report()} />
-        </div>
-      </div>
+      <PageHeader
+        title="Reports & Analytics"
+        breadcrumbItems={report()}
+      />
 
       {/* Tabs + Filters Card */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

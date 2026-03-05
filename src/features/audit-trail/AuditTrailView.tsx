@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { IconInfoCircle } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { auditTrail } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -460,24 +460,20 @@ export const AuditTrailView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Audit Trail
-          </h1>
-          <Breadcrumb items={auditTrail()} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => console.log("Export all")}
-        >
-          <Download className="h-4 w-4 mr-2" />
-          Export
-        </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Audit Trail"
+        breadcrumbItems={auditTrail()}
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => console.log("Export all")}
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
+        }
+      />
 
       {/* Filters */}
       <FilterCard>
@@ -639,12 +635,12 @@ export const AuditTrailView: React.FC = () => {
                       </td>
 
                       {/* IP Address */}
-                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-900 font-mono">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-900">
                         {record.ipAddress}
                       </td>
 
                       {/* Device */}
-                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-900 font-mono">
+                      <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-900">
                         {record.device || "-"}
                       </td>
 

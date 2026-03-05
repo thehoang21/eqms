@@ -209,27 +209,23 @@ export const revisionDetail = (navigate?: (path: string) => void): BreadcrumbIte
 export const revisionReview = (
   navigate?: (path: string) => void,
   onBack?: () => void,
-  documentId?: string
 ): BreadcrumbItem[] => [
   dashboard(navigate),
   { label: "Document Control", onClick: navigate ? () => navigate(ROUTES.DOCUMENTS.ALL) : undefined },
   { label: "Document Revisions", onClick: navigate ? () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) : undefined },
   { label: "Pending My Review", onClick: onBack },
-  { label: "Review Revision" },
-  { label: documentId || "", isActive: true },
+  { label: "Review Revision", isActive: true },
 ];
 
 export const revisionApproval = (
   navigate?: (path: string) => void,
   onBack?: () => void,
-  documentId?: string
 ): BreadcrumbItem[] => [
   dashboard(navigate),
   { label: "Document Control", onClick: navigate ? () => navigate(ROUTES.DOCUMENTS.ALL) : undefined },
   { label: "Document Revisions", onClick: navigate ? () => navigate(ROUTES.DOCUMENTS.REVISIONS.ALL) : undefined },
   { label: "Pending My Approval", onClick: onBack },
-  { label: "Approve Revision" },
-  { label: documentId || "", isActive: true },
+  { label: "Approve Revision", isActive: true },
 ];
 
 // --- Controlled Copies ---

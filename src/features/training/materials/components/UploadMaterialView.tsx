@@ -17,7 +17,7 @@ import {
   Link2,
   ExternalLink,
 } from "lucide-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { uploadMaterial } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { ButtonLoading } from "@/components/ui/loading/Loading";
@@ -381,25 +381,23 @@ export const UploadMaterialView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* ─── Header ─────────────────────────────────────────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Upload Training Material
-          </h1>
-          <Breadcrumb items={uploadMaterial(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button variant="outline" onClick={handleCancel} size="sm" className="whitespace-nowrap gap-2">
-            Cancel
-          </Button>
-          <Button variant="outline" onClick={handleSaveDraft} size="sm" className="whitespace-nowrap gap-2" disabled={isLoading}>
-            {isLoading ? <ButtonLoading text="Saving..." /> : "Save Draft" }
-          </Button>
-          <Button onClick={handleSubmitForReview} size="sm" className="whitespace-nowrap gap-2" disabled={isLoading}>
-            Submit
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Upload Training Material"
+        breadcrumbItems={uploadMaterial(navigate)}
+        actions={
+          <>
+            <Button variant="outline" onClick={handleCancel} size="sm" className="whitespace-nowrap gap-2">
+              Cancel
+            </Button>
+            <Button variant="outline" onClick={handleSaveDraft} size="sm" className="whitespace-nowrap gap-2" disabled={isLoading}>
+              {isLoading ? <ButtonLoading text="Saving..." /> : "Save Draft"}
+            </Button>
+            <Button onClick={handleSubmitForReview} size="sm" className="whitespace-nowrap gap-2" disabled={isLoading}>
+              Submit
+            </Button>
+          </>
+        }
+      />
 
       {/* ─── Workflow Stepper ───────────────────────────────────── */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

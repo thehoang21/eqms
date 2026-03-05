@@ -3,7 +3,7 @@
  * Centralized exports for all responsive UI components
  */
 
-// Table Components
+// Table Components (ResponsiveTable wrappers only — TablePagination and TableEmptyState are exported via ./table)
 export {
   ResponsiveTableContainer,
   ResponsiveTableWrapper,
@@ -12,8 +12,6 @@ export {
   TableBody,
   TableCell,
   TableRow,
-  TableEmptyState,
-  TablePagination,
 } from './table/ResponsiveTable';
 
 // Form Components

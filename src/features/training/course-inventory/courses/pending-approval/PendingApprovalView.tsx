@@ -10,7 +10,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { IconInfoCircle, IconChecks } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { coursePendingApproval } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -139,35 +139,31 @@ export const PendingApprovalView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3">
-            <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-              Pending Approval
-            </h1>
-          </div>
-          <Breadcrumb items={coursePendingApproval(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button
-            onClick={() => navigate(-1)}
-            variant="outline"
-            size="sm"
-            className="whitespace-nowrap"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => console.log("Export pending approval")}
-            variant="outline"
-            size="sm"
-            className="whitespace-nowrap gap-2"
-          >
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Pending Approval"
+        breadcrumbItems={coursePendingApproval(navigate)}
+        actions={
+          <>
+            <Button
+              onClick={() => navigate(-1)}
+              variant="outline"
+              size="sm"
+              className="whitespace-nowrap"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => console.log("Export pending approval")}
+              variant="outline"
+              size="sm"
+              className="whitespace-nowrap gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+          </>
+        }
+      />
 
       {/* Filters */}
       <div className="bg-white p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm">

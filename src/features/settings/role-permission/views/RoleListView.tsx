@@ -54,7 +54,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       icon: IconTrash,
       label: "Delete Role",
       onClick: onDelete,
-      color: canDelete ? "text-red-600" : "text-slate-300",
+      color: canDelete ? "text-slate-500" : "text-slate-300",
       disabled: !canDelete,
     },
   ];

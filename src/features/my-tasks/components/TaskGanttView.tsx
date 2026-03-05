@@ -7,6 +7,7 @@ import {
   getModuleIcon,
   isOverdue,
   getStatusBadgeStyle,
+  parseDateDMY,
 } from "../utils";
 
 interface TaskGanttViewProps {
@@ -33,7 +34,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
       };
     }
 
-    const dates = tasks.map(t => new Date(t.dueDate));
+    const dates = tasks.map(t => parseDateDMY(t.dueDate));
     const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
     const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
     
@@ -139,7 +140,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
 
   // Calculate task bar position and width
   const getTaskBarStyle = (task: Task) => {
-    const dueDate = new Date(task.dueDate);
+    const dueDate = parseDateDMY(task.dueDate);
     const taskStart = new Date(dueDate);
     taskStart.setDate(taskStart.getDate() - 7); // Assume 7 days duration
     
@@ -576,11 +577,7 @@ export const TaskGanttView: React.FC<TaskGanttViewProps> = ({ tasks, onTaskClick
                                 <div className="flex items-center gap-2">
                                   <span className="text-slate-500 w-16">Due Date:</span>
                                   <span className="text-white">
-                                    {new Date(task.dueDate).toLocaleDateString("en-GB", {
-                                      day: "2-digit",
-                                      month: "2-digit",
-                                      year: "numeric"
-                                    })}
+                                    {task.dueDate}
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-2">

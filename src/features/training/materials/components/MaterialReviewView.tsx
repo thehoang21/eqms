@@ -17,7 +17,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { IconChecks } from "@tabler/icons-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { materialReview } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { AlertModal, AlertModalType } from "@/components/ui/modal/AlertModal";
@@ -216,40 +216,37 @@ export const MaterialReviewView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* ─── Header ─────────────────────────────────────────────── */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Review Material
-          </h1>
-          <Breadcrumb items={materialReview(navigate)} />
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
-          <Button
-            variant="outline"
-            size="sm"
-            className="whitespace-nowrap gap-2"
-            onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)}
-          >
-            Back
-          </Button>
-
-          {canReview && (
-            <>
-              <Button
-                variant="destructive"
-                size="sm"
-                className="whitespace-nowrap gap-2"
-                onClick={handleReviewReject}
-              >
-                Reject
-              </Button>
-              <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleReviewApprove}>
-                Complete Review
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
+      <PageHeader
+        title="Review Material"
+        breadcrumbItems={materialReview(navigate)}
+        actions={
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              className="whitespace-nowrap gap-2"
+              onClick={() => navigate(ROUTES.TRAINING.TRAINING_MATERIALS)}
+            >
+              Back
+            </Button>
+            {canReview && (
+              <>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="whitespace-nowrap gap-2"
+                  onClick={handleReviewReject}
+                >
+                  Reject
+                </Button>
+                <Button size="sm" className="whitespace-nowrap gap-2" onClick={handleReviewApprove}>
+                  Complete Review
+                </Button>
+              </>
+            )}
+          </>
+        }
+      />
 
       {/* ─── Workflow Stepper ───────────────────────────────────── */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">

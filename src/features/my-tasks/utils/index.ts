@@ -14,6 +14,22 @@ import {
 import type { Priority, TaskStatus, ModuleType } from "../types";
 
 /**
+ * Parse a dd/MM/yyyy date string into a Date object
+ */
+export const parseDateDMY = (dateStr: string): Date => {
+  const [day, month, year] = dateStr.split('/');
+  return new Date(Number(year), Number(month) - 1, Number(day));
+};
+
+/**
+ * Convert a dd/MM/yyyy date string to yyyy-MM-dd (ISO) format
+ */
+export const toISODateString = (dateStr: string): string => {
+  const [day, month, year] = dateStr.split('/');
+  return `${year}-${month}-${day}`;
+};
+
+/**
  * Get priority badge color classes
  */
 export const getPriorityColor = (p: Priority): string => {
@@ -84,18 +100,21 @@ export const getModuleBadgeStyle = (m: ModuleType): string => {
 };
 
 /**
- * Check if a date is overdue (before today)
+ * Check if a date (dd/MM/yyyy) is overdue (before today)
  */
 export const isOverdue = (dateString: string): boolean => {
-  const today = new Date().toISOString().split("T")[0];
-  return dateString < today;
+  const due = parseDateDMY(dateString);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+  return due.getTime() < today.getTime();
 };
 
 /**
- * Calculate days until a date
+ * Calculate days until a date (dd/MM/yyyy)
  */
 export const daysUntil = (dateString: string): number => {
-  const due = new Date(dateString);
+  const due = parseDateDMY(dateString);
   const today = new Date();
   // Normalize to midnight to avoid partial-day rounding issues
   const dueMid = new Date(
@@ -112,10 +131,10 @@ export const daysUntil = (dateString: string): number => {
 };
 
 /**
- * Calculate days left until due date
+ * Calculate days left until due date (dd/MM/yyyy)
  */
 export const calculateDaysLeft = (dueDate: string): number => {
-  const due = new Date(dueDate);
+  const due = parseDateDMY(dueDate);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   due.setHours(0, 0, 0, 0);

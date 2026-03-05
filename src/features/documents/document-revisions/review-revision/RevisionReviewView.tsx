@@ -285,11 +285,11 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
   ];
 
   // Breadcrumbs
-  const breadcrumbs = revisionReview(navigate, onBack, document.documentId);
+  const breadcrumbs = revisionReview(navigate, onBack);
 
   return (
     <DocumentWorkflowLayout
-      title={`Review Revision: ${document.documentId}`}
+      title="Review Revision"
       breadcrumbs={breadcrumbs}
       onBack={onBack}
       documentId={document.documentId}

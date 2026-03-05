@@ -8,7 +8,7 @@ import {
   Award,
   CheckCircle2,
 } from "lucide-react";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { PageHeader } from "@/components/ui/page/PageHeader";
 import { exportRecords } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { Button } from "@/components/ui/button/Button";
 import { Select } from "@/components/ui/select/Select";
@@ -70,14 +70,10 @@ export const ExportRecordsView: React.FC = () => {
   return (
     <div className="space-y-6 w-full flex-1 flex flex-col">
       {/* Header: Title + Breadcrumb */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 lg:gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-slate-900">
-            Export Training Records
-          </h1>
-          <Breadcrumb items={exportRecords(navigate)} />
-        </div>
-      </div>
+      <PageHeader
+        title="Export Training Records"
+        breadcrumbItems={exportRecords(navigate)}
+      />
 
       {/* Export Configuration Form */}
       <div className="bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-sm">
