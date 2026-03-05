@@ -4,19 +4,13 @@ import { Button } from "@/components/ui/button/Button";import { ButtonLoading } 
 import { resetViewportZoom, blurActiveInput } from "@/utils/viewport";
 import { isValidEmail } from "@/utils/validation";
 import logoImg from "@/assets/images/logo_nobg.png";
-import slide1 from "@/assets/images/slide-image/ipad1.webp";
-import slide2 from "@/assets/images/slide-image/ipad2.webp";
-import slide3 from "@/assets/images/slide-image/ipad3.webp";
-import slide4 from "@/assets/images/slide-image/ipad4.webp";
+import { AUTH_SLIDE_IMAGES, CAROUSEL_INTERVAL } from "./authCarousel";
 
 // ============================================================================
 // CONSTANTS & CONFIGURATION
 // ============================================================================
 
-const CAROUSEL_INTERVAL = 3000; // 3 seconds per slide
 const REQUEST_SIMULATION_DELAY = 2000; // 2 seconds
-
-const SLIDE_IMAGES = [slide1, slide2, slide3, slide4] as const;
 
 const SLIDE_CONTENT = [
   {
@@ -155,7 +149,7 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({
   // Auto-play carousel
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % SLIDE_IMAGES.length);
+      setCurrentSlide((prev) => (prev + 1) % AUTH_SLIDE_IMAGES.length);
     }, CAROUSEL_INTERVAL);
 
     return () => clearInterval(timer);
@@ -239,7 +233,7 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({
         <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden bg-slate-900 ring-1 ring-slate-900/5">
           {/* Carousel Container */}
           <div className="absolute inset-0 z-0" role="region" aria-label="Password recovery information carousel">
-            {SLIDE_IMAGES.map((slide, index) => (
+            {AUTH_SLIDE_IMAGES.map((slide, index) => (
               <div
                 key={index}
                 className={cn(
@@ -269,7 +263,9 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({
             <div className="max-w-3xl pointer-events-auto">
                {/* Animated Text Content */}
                <div className="relative h-[220px] mb-6"> 
-                  {SLIDE_CONTENT.map((content, index) => (
+                  {AUTH_SLIDE_IMAGES.map((_, index) => {
+                    const content = SLIDE_CONTENT[index % SLIDE_CONTENT.length];
+                    return (
                     <div
                       key={index}
                       className={cn(
@@ -292,24 +288,25 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({
                           {content.description}
                        </p>
                     </div>
-                  ))}
+                  );
+                  })}
                </div>
 
                {/* Modern Indicators */}
                <div className="flex gap-4">
-                {SLIDE_IMAGES.map((_, index) => (
+                {AUTH_SLIDE_IMAGES.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => handleSlideChange(index)}
-                    className="group focus:outline-none py-4"
+                    className="group focus:outline-none p-1"
                     aria-label={`Go to slide ${index + 1}`}
                   >
-                    <div className="relative h-1 w-12 bg-white/20 rounded-full overflow-hidden">
-                       <div className={cn(
-                          "absolute inset-y-0 left-0 bg-emerald-500 rounded-full transition-all duration-300 ease-out",
-                          index === currentSlide ? "w-full" : "w-0 group-hover:w-full group-hover:opacity-50"
-                       )} />
-                    </div>
+                    <div className={cn(
+                      "h-2 w-2 rounded-full transition-all duration-300 ease-out",
+                      index === currentSlide
+                        ? "bg-emerald-500 scale-125"
+                        : "bg-white/30 group-hover:bg-white/60"
+                    )} />
                   </button>
                 ))}
               </div>

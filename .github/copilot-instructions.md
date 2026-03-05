@@ -1,6 +1,8 @@
-# QMS Project UI/UX Standard Operating Procedures (SOP)
+﻿# QMS Project UI/UX Standard Operating Procedures (SOP)
 
 Bạn là một chuyên gia Senior React Developer (ReactJS, Tailwind CSS, shadcn/ui). Khi thực hiện yêu cầu trong dự án này, bạn PHẢI tuân thủ các quy chuẩn thiết kế và kỹ thuật sau:
+
+---
 
 ## 0. Nguyên tắc Component Reusability (TỐI QUAN TRỌNG!)
 
@@ -10,377 +12,501 @@ Bạn là một chuyên gia Senior React Developer (ReactJS, Tailwind CSS, shadc
 
 **PHẢI SỬ DỤNG các components này khi cần:**
 
-1. **Button** (`components/ui/button/Button.tsx`)
-   - Variants: `default`, `ghost`, `outline`, `secondary`, `destructive`, `link`
-   - Sizes: `xs`, `sm`, `default`, `lg`, `xl`, `icon`, `icon-sm`, `icon-lg`
-   - Props: `variant`, `size`, `fullWidth`, `disabled`, `onClick`, etc.
+#### 1. Button — `components/ui/button/Button.tsx`
+```tsx
+import { Button } from "@/components/ui/button/Button";
+```
+- **Variants:** `default` | `outline` | `ghost` | `destructive` | `secondary` | `link`
+- **Sizes:** `xs` | `sm` | `default` | `lg` | `xl` | `icon` | `icon-sm` | `icon-lg`
+- **Props:** `variant`, `size`, `fullWidth`, `disabled`, `onClick`, `type`
+- **Actual size heights:** `xs=h-8`, `sm=h-9`, `default=h-10/h-11`, `icon=h-11 w-11`
 
-2. **Select** (`components/ui/select/Select.tsx`)
-   - Custom dropdown với search functionality
-   - Portal rendering (z-index: 9999)
-   - Props: `label`, `value`, `onChange`, `options`, `placeholder`, `enableSearch`
+#### 2. Select — `components/ui/select/Select.tsx`
+```tsx
+import { Select } from "@/components/ui/select/Select";
+```
+- Custom dropdown với search + async search + grouped options
+- Portal rendering (z-index: 9999)
+- **Props:** `label`, `value`, `onChange`, `options`, `groups`, `placeholder`, `enableSearch`, `disabled`, `isLoading`, `onSearch` (async), `debounceMs`, `minSearchLength`
 
-3. **MultiSelect** (`components/ui/select/MultiSelect.tsx`)
-   - Multiple selection dropdown với search functionality
-   - Display selected items as tags với remove button
-   - Portal rendering (z-index: 9999)
-   - Props: `label`, `value` (array), `onChange`, `options`, `placeholder`, `enableSearch`, `maxVisibleTags`
+#### 3. MultiSelect — `components/ui/select/MultiSelect.tsx`
+```tsx
+import { MultiSelect } from "@/components/ui/select/MultiSelect";
+```
+- Multiple selection, display selected items as tags
+- Portal rendering (z-index: 9999)
+- **Props:** `label`, `value` (array), `onChange`, `options`, `placeholder`, `enableSearch`, `maxVisibleTags`
 
-4. **Checkbox** (`components/ui/checkbox/Checkbox.tsx`)
-   - Props: `checked`, `onChange`, `id`, `label`, `disabled`
+#### 4. Checkbox — `components/ui/checkbox/Checkbox.tsx`
+```tsx
+import { Checkbox } from "@/components/ui/checkbox/Checkbox";
+```
+- **Props:** `checked`, `onChange`, `id`, `label`, `disabled`
 
-5. **DateTimePicker** (`components/ui/datetime-picker/DateTimePicker.tsx`)
-   - Date/time selection với calendar interface
-   - Props: `label`, `value`, `onChange`, `placeholder`
+#### 5. DateTimePicker — `components/ui/datetime-picker/DateTimePicker.tsx`
+```tsx
+import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
+```
+- **Props:** `label`, `value`, `onChange`, `placeholder`
 
-6. **StatusBadge** (`components/ui/statusbadge/StatusBadge.tsx`)
-   - Hiển thị status/state với colors chuẩn
-   - Tự động map status → color theme
+#### 6. StatusBadge — `components/ui/statusbadge/StatusBadge.tsx`
+```tsx
+import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
+```
+- Tự động map `StatusType` → color/label
+- **StatusType:** `draft` | `pendingReview` | `pendingApproval` | `approved` | `rejected` | `pendingTraining` | `readyForPublishing` | `published` | `effective` | `active` | `archived` | `obsolete` | `current` | `blocked` | `inProgress`
+- **Props:** `status: StatusType`, `size?: 'sm' | 'default' | 'lg'`
 
-7. **AlertModal** (`components/ui/modal/AlertModal.tsx`)
-   - Modal types: `success`, `error`, `warning`, `confirm`, `info`
-   - Props: `isOpen`, `onClose`, `onConfirm`, `type`, `title`, `message`, `isLoading`
+#### 7. Badge — `components/ui/badge/Badge.tsx`
+```tsx
+import { Badge, TaskStatusBadge, PriorityBadge } from "@/components/ui/badge/Badge";
+```
+- **Variants:** `default` | `success` | `warning` | `error` | `info` | `secondary` | `outline`
+- **Sizes:** `sm` | `default` | `lg`
+- **Props:** `variant`, `size`, `icon`, `pill` (rounded-full vs rounded-lg), `className`
+- Included pre-built: `TaskStatusBadge` (status: Pending/In-Progress/Reviewing/Completed/Overdue), `PriorityBadge` (Critical/High/Medium/Low)
 
-8. **ResponsiveCard** (`components/ui/card/ResponsiveCard.tsx`)
-   - Card container với responsive padding
-   - Props: `title`, `subtitle`, `children`, `className`
+#### 8. AlertModal — `components/ui/modal/AlertModal.tsx`
+```tsx
+import { AlertModal } from "@/components/ui/modal/AlertModal";
+```
+- **Types:** `success` | `error` | `warning` | `confirm` | `info`
+- **Props:** `isOpen`, `onClose`, `onConfirm`, `type`, `title`, `description`, `isLoading`
 
-9. **Popover** (`components/ui/popover/Popover.tsx`)
-   - Tooltip/popover với positioning
+#### 9. ResponsiveCard — `components/ui/card/ResponsiveCard.tsx`
+```tsx
+import { ResponsiveCard } from "@/components/ui/card/ResponsiveCard";
+```
+- **Props:** `title`, `subtitle`, `children`, `className`
 
-10. **ResponsiveForm** (`components/ui/form/ResponsiveForm.tsx`)
-   - Form layout với responsive grid
+#### 10. Popover — `components/ui/popover/Popover.tsx`
+```tsx
+import { Popover } from "@/components/ui/popover/Popover";
+```
 
-11. **ResponsiveTable** (`components/ui/table/ResponsiveTable.tsx`)
-    - ⚠️ CHỈ dùng cho simple tables, ưu tiên native HTML table cho complex tables
+#### 11. ResponsiveForm — `components/ui/form/ResponsiveForm.tsx`
+```tsx
+import { ResponsiveForm } from "@/components/ui/form/ResponsiveForm";
+```
 
-12. **Badge** (`components/ui/badge/Badge.tsx`)
-    - Inline badge/tag component
-    - Props: `variant`, `size`, `icon`, `pill` (rounded-full vs rounded-lg)
+#### 12. ActionDropdown — `components/ui/dropdown/ActionDropdown.tsx`
+```tsx
+import { ActionDropdown } from "@/components/ui/dropdown/ActionDropdown";
+import type { ActionDropdownItem } from "@/components/ui/dropdown/ActionDropdown";
+```
+- **Dùng cho table row actions** — trigger là MoreVertical icon
+- Portal rendering, auto-positioning (flip up khi gần bottom viewport)
+- **Props:** `actions: ActionDropdownItem[]`, `size?: 'sm' | 'default' | 'lg'`, `disabled?`, `triggerIcon?`, `minWidth?`
+- **ActionDropdownItem:** `{ label, icon?, onClick, disabled?, destructive? }` hoặc `{ type: 'divider' }`
 
-13. **ActionDropdown** (`components/ui/dropdown/ActionDropdown.tsx`)
-    - Reusable dropdown menu cho table actions
-    - Portal rendering, backdrop, positioning
+```tsx
+<ActionDropdown
+  actions={[
+    { label: 'View', icon: <Eye className="h-4 w-4" />, onClick: handleView },
+    { label: 'Edit', icon: <Edit className="h-4 w-4" />, onClick: handleEdit },
+    { type: 'divider' },
+    { label: 'Delete', icon: <Trash className="h-4 w-4" />, onClick: handleDelete, destructive: true },
+  ]}
+/>
+```
 
-14. **TablePagination** (`components/ui/table/TablePagination.tsx`)
-    - Pagination footer cho tables
-    - Props: `currentPage`, `totalPages`, `onPageChange`, `startItem`, `endItem`, `totalItems`
+#### 13. SmartDropdown — `components/ui/dropdown/SmartDropdown.tsx`
+```tsx
+import { SmartDropdown, DropdownItem, DropdownDivider } from "@/components/ui/dropdown/SmartDropdown";
+```
+- **Dùng khi cần custom trigger** (không phải MoreVertical)
+- Auto-positioning (flip up khi gần bottom), Portal rendering, Escape key support
+- **Props:** `isOpen`, `onClose`, `triggerRef`, `children`, `estimatedHeight?`, `minWidth?`, `closeOnBackdrop?`
 
-15. **Toast** (`components/ui/toast/Toast.tsx`)
-    - Notification toast system
-    - Import `useToast` hook
+```tsx
+const triggerRef = useRef<HTMLButtonElement>(null);
+const [isOpen, setIsOpen] = useState(false);
 
-16. **Loading** (`components/ui/loading/Loading.tsx`) ⭐ **MỚI**
-    - Loading spinner sử dụng respinner library (BeatLoading)
-    - Variants:
-      - `<Loading />` - Default inline loading
-      - `<InlineLoading />` - Small inline loading (for buttons, dropdowns)
-      - `<FullPageLoading />` - Full page overlay loading
-      - `<ButtonLoading />` - Button loading state với text
-      - `<SectionLoading />` - Card/section loading state
-    - Props: `size` ('xs', 'sm', 'default', 'lg', 'xl'), `color` (default: '#111111'), `count` (default: 4), `text`, `fullPage`
-    - **PHẢI SỬ DỤNG thay cho custom spinner CSS**
+<button ref={triggerRef} onClick={() => setIsOpen(true)}>Open</button>
+
+<SmartDropdown
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  triggerRef={triggerRef}
+  estimatedHeight={200}
+>
+  <DropdownItem onClick={handleEdit}>Edit</DropdownItem>
+  <DropdownDivider />
+  <DropdownItem onClick={handleDelete} destructive>Delete</DropdownItem>
+</SmartDropdown>
+```
+
+#### 14. TablePagination — `components/ui/table/TablePagination.tsx`
+```tsx
+import { TablePagination } from "@/components/ui/table/TablePagination";
+```
+- **Props:** `currentPage`, `totalPages`, `totalItems`, `itemsPerPage`, `onPageChange`, `onItemsPerPageChange?`, `showItemCount?`, `showPageNumbers?`, `showItemsPerPageSelector?`, `itemsPerPageOptions?`
+
+#### 15. Toast — `components/ui/toast/Toast.tsx`
+```tsx
+import { useToast } from "@/components/ui/toast";
+
+const { showToast } = useToast();
+showToast({ type: 'success', title: 'Saved', message: 'Changes saved.', duration: 3000 });
+```
+- **Types:** `success` | `error` | `warning` | `info`
+
+#### 16. Loading — `components/ui/loading/Loading.tsx`
+```tsx
+import { Loading, InlineLoading, FullPageLoading, ButtonLoading, SectionLoading } from "@/components/ui/loading/Loading";
+```
+- **Variants:**
+  - `<Loading />` — Default inline loading
+  - `<InlineLoading size="xs" />` — Nhỏ, dùng trong button/dropdown
+  - `<FullPageLoading text="Loading..." />` — Full page overlay
+  - `<ButtonLoading text="Saving..." light />` — Trong button (light=white spinner)
+  - `<SectionLoading />` — Card/section loading
+- **Props:** `size` (`xs|sm|default|lg|xl`), `color` (default: `#111111`), `count`, `text`, `fullPage`, `className`
+- **PHẢI SỬ DỤNG thay cho custom spinner CSS**
+
+#### 17. Breadcrumb — `components/ui/breadcrumb/Breadcrumb.tsx`
+```tsx
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import breadcrumbs from "@/components/ui/breadcrumb/breadcrumbs.config";
+```
+- **PHẢI SỬ DỤNG** thay cho breadcrumb inline thủ công
+- Tự động render: Dashboard icon → middle items (ẩn trên mobile) → active item (bold)
+- Clickable items dùng `onClick`, non-clickable chỉ cần `label`
+
+**Sử dụng config có sẵn:**
+```tsx
+const navigate = useNavigate();
+<Breadcrumb items={breadcrumbs.documentList(navigate)} />
+<Breadcrumb items={breadcrumbs.revisionReview(navigate, onBack, document.documentId)} />
+<Breadcrumb items={breadcrumbs.documentDetail(navigate, { fromArchive: true })} />
+```
+
+**Tạo breadcrumb custom (khi không có sẵn trong config):**
+```tsx
+import { Breadcrumb, type BreadcrumbItem } from "@/components/ui/breadcrumb/Breadcrumb";
+
+const items: BreadcrumbItem[] = [
+  { label: "Dashboard", onClick: () => navigate(ROUTES.DASHBOARD) },
+  { label: "Module Name", onClick: () => navigate(ROUTES.MODULE) },
+  { label: "Current Page", isActive: true },
+];
+<Breadcrumb items={items} />
+```
+
+**Sau khi thêm màn hình mới, PHẢI bổ sung vào `breadcrumbs.config.ts`.**
+
+---
 
 ### 0.2 Quy trình khi cần UI component
 
-**BƯỚC 1: KIỂM TRA `components/ui` TRƯỚC**
-```bash
-# Check if component exists
-ls components/ui/
-```
-
-**BƯỚC 2: NẾU COMPONENT CÓ SẴN**
-- Import và sử dụng trực tiếp
-- KHÔNG tạo duplicate component
-- KHÔNG viết lại logic đã có
-
-**BƯỚC 3: NẾU COMPONENT CHƯA CÓ**
-- Tạo component mới trong `components/ui/[component-name]/`
-- Tuân thủ Tailwind CSS + shadcn/ui design system
-- Export qua `index.ts` nếu cần
-- Document usage trong copilot-instructions.md
+**BƯỚC 1:** Kiểm tra `components/ui` trước
+**BƯỚC 2:** Nếu có → import và dùng trực tiếp, KHÔNG tạo duplicate
+**BƯỚC 3:** Nếu chưa có → tạo trong `components/ui/[name]/`, tuân thủ design system, document vào file này
 
 ### 0.3 Ví dụ ĐÚNG và SAI
 
-❌ **SAI - Tạo button mới:**
+❌ **SAI — Custom button:**
 ```tsx
-const MyButton = () => (
-  <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg">
-    Click me
-  </button>
-);
+<button className="px-4 py-2 bg-emerald-600 text-white rounded-lg">Click</button>
+```
+✅ **ĐÚNG:**
+```tsx
+<Button variant="default" size="sm">Click</Button>
 ```
 
-✅ **ĐÚNG - Dùng Button component:**
-```tsx
-import { Button } from "@/components/ui/button/Button";
-
-<Button variant="default" size="sm">
-  Click me
-</Button>
-```
-
-❌ **SAI - Tạo custom select:**
-```tsx
-const MySelect = () => (
-  <select className="...">
-    <option>...</option>
-  </select>
-);
-```
-
-✅ **ĐÚNG - Dùng Select component:**
-```tsx
-import { Select } from "@/components/ui/select/Select";
-
-<Select
-  label="Status"
-  value={status}
-  onChange={setStatus}
-  options={[
-    { label: "Draft", value: "draft" },
-    { label: "Active", value: "active" }
-  ]}
-/>
-```
-
-✅ **ĐÚNG - Dùng MultiSelect cho multiple values:**
-```tsx
-import { MultiSelect } from "@/components/ui/select/MultiSelect";
-
-<MultiSelect
-  label="Authors"
-  value={authors}
-  onChange={setAuthors}
-  options={[
-    { label: "John Doe", value: "john" },
-    { label: "Jane Smith", value: "jane" }
-  ]}
-  placeholder="Select authors..."
-  maxVisibleTags={2}
-/>
-```
-
-❌ **SAI - Tạo custom loading spinner:**
+❌ **SAI — Custom loading spinner:**
 ```tsx
 <div className="h-5 w-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
 ```
-
-✅ **ĐÚNG - Dùng Loading component:**
+✅ **ĐÚNG:**
 ```tsx
-import { Loading, InlineLoading, ButtonLoading } from "@/components/ui/loading/Loading";
-
-// Inline loading
 <InlineLoading size="sm" />
-
-// Button loading
 <ButtonLoading text="Processing..." light />
+```
 
-// Full page loading
-<Loading fullPage text="Loading..." />
+❌ **SAI — Breadcrumb thủ công:**
+```tsx
+<div className="flex items-center gap-1.5">
+  <IconLayoutDashboard className="h-4 w-4" />
+  <span>/</span>
+  <span>Document Control</span>
+</div>
+```
+✅ **ĐÚNG:**
+```tsx
+<Breadcrumb items={breadcrumbs.documentList(navigate)} />
+```
+
+❌ **SAI — Custom dropdown createPortal thủ công:**
+```tsx
+{openDropdownId && createPortal(<>...</>, document.body)}
+```
+✅ **ĐÚNG:**
+```tsx
+<ActionDropdown actions={[...]} />
 ```
 
 ### 0.4 Utilities có sẵn
 
-**`cn()` utility** (`components/ui/utils.ts`):
+**`cn()` utility** — `components/ui/utils.ts`:
 ```tsx
 import { cn } from "@/components/ui/utils";
-
-// Conditional classes
-<div className={cn(
-  "base-class",
-  isActive && "active-class",
-  className
-)} />
+<div className={cn("base-class", isActive && "active-class", className)} />
 ```
 
-**Responsive utilities** (`components/ui/responsive.ts`):
-- `useMediaQuery()`
-- `useBreakpoint()`
+**Hooks** — `src/hooks/`:
+- `useDropdownPosition()` — tính vị trí dropdown tránh tràn viewport
+- `usePagination()` — logic phân trang
+- `useDebounce()` — debounce input
+- `useLocalStorage()` — persist state
+
+---
 
 ## 1. Nguyên tắc về Asset & Hình ảnh
-- **Logo/Icons:** KHÔNG ghi trực tiếp đường dẫn vào thẻ `src`. PHẢI sử dụng cơ chế import: `import logoImg from '@/assets/images/...'`.
-- **Thẻ Img:** Luôn sử dụng `object-contain` và có thuộc tính `onError` để tránh hiển thị icon ảnh vỡ.
 
-## 2. Quy chuẩn Layout & Z-Index (Ngăn chặn đè lớp)
-- **Header:** `sticky top-0`, `z-40`, `bg-white/95 backdrop-blur-sm`.
-- **Search Bar:** Trong Header, thanh Search chiếm `max-w-xl lg:max-w-2xl`, căn giữa bằng `flex-1 flex justify-center`.
-- **Dropdown/Popover:** `z-50` (bao gồm cả backdrop `z-40`).
-- **Sidebar:** Độ rộng mở: `280px`, Thu gọn: `80px`. Khi thu gọn, chỉ hiển thị Icon và Tooltip.
-- **Table Header (sticky):** `z-30` với `backdrop-blur-sm`.
-- **Sticky Action Column:** Header: `z-40`, Body cells: `z-30`.
+- **Logo/Icons:** KHÔNG ghi đường dẫn trực tiếp. PHẢI dùng import:
+```tsx
+import logoImg from '@/assets/images/logo.png';
+```
+- **Thẻ img:** Luôn có `object-contain` và `onError`:
+```tsx
+<img src={logoImg} alt="Logo" className="h-14 w-auto object-contain"
+  onError={(e) => { e.currentTarget.style.display = "none"; }} />
+```
+
+---
+
+## 2. Quy chuẩn Layout & Z-Index
+
+| Layer | Z-index | Notes |
+|---|---|---|
+| Header | `z-40` | `sticky top-0 bg-white/95 backdrop-blur-sm` |
+| Sidebar | `z-30` | Mở: 280px, Thu gọn: 80px |
+| Table Header sticky | `z-30` | `backdrop-blur-sm` |
+| Sticky Action Column header | `z-40` | |
+| Sticky Action Column body | `z-30` | |
+| Dropdown backdrop | `z-40` | |
+| Dropdown menu | `z-50` | |
+| Modal | `z-50` | |
+| Full page loading | `z-50` | |
+
+---
 
 ## 3. Quy chuẩn Data Table (Native HTML Table)
+
 ### 3.1 Container Structure
 ```tsx
 <div className="border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col">
-  <div className="overflow-x-auto">
+  <div className="overflow-x-auto flex-1">
     <table className="w-full">
-      {/* table content */}
+      <thead>...</thead>
+      <tbody>...</tbody>
     </table>
+    {/* Empty state bên ngoài table, bên trong overflow-x-auto */}
   </div>
-  {/* Pagination Footer */}
-  <Pagination ... />
+  <TablePagination ... />
 </div>
 ```
 
 ### 3.2 Table Header (thead)
-- **Classes:** `bg-slate-50 border-b border-slate-200` (hoặc `bg-slate-50/80` nếu sticky)
-- **th cells:** `py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap`
-- **Sticky header (optional):** Thêm `sticky top-0 z-30 backdrop-blur-sm`
+```tsx
+<thead className="bg-slate-50 border-b border-slate-200">
+  <tr>
+    <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+      Column
+    </th>
+    {/* Sticky action header */}
+    <th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-bold text-slate-500 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
+      Actions
+    </th>
+  </tr>
+</thead>
+```
 
 ### 3.3 Table Body (tbody)
-- **Classes:** `divide-y divide-slate-200 bg-white`
-- **tr (row):** 
-  - Hover: `hover:bg-slate-50/80 transition-colors`
-  - Clickable: `cursor-pointer group`
-  - Click handler: `onClick={() => onViewItem(id)}`
-- **td cells:** `py-3.5 px-4 text-sm whitespace-nowrap`
-
-### 3.4 Sticky Action Column (Cực kỳ quan trọng!)
-**Header (th):**
 ```tsx
-<th className="sticky right-0 bg-slate-50 py-3.5 px-4 text-center text-xs font-semibold text-slate-700 uppercase tracking-wider z-40 backdrop-blur-sm whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)]">
-  Action
-</th>
+<tbody className="divide-y divide-slate-200 bg-white">
+  {paginatedData.map((item) => (
+    <tr
+      key={item.id}
+      className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+      onClick={() => handleView(item.id)}
+    >
+      <td className="py-3.5 px-4 text-sm whitespace-nowrap text-slate-700">
+        {item.value}
+      </td>
+      {/* Sticky action cell */}
+      <td
+        onClick={(e) => e.stopPropagation()}
+        className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
+      >
+        <ActionDropdown
+          actions={[
+            { label: 'View', icon: <Eye className="h-4 w-4" />, onClick: () => handleView(item.id) },
+            { label: 'Edit', icon: <Edit className="h-4 w-4" />, onClick: () => handleEdit(item.id) },
+            { type: 'divider' },
+            { label: 'Delete', icon: <Trash className="h-4 w-4" />, onClick: () => handleDelete(item.id), destructive: true },
+          ]}
+        />
+      </td>
+    </tr>
+  ))}
+</tbody>
 ```
 
-**Body Cell (td):**
+### 3.4 Empty State
 ```tsx
-<td 
-  onClick={(e) => e.stopPropagation()}
-  className="sticky right-0 bg-white py-3.5 px-4 text-sm text-center z-30 whitespace-nowrap before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[1px] before:bg-slate-200 shadow-[-4px_0_12px_-4px_rgba(0,0,0,0.05)] group-hover:bg-slate-50"
->
-  <button
-    onClick={(e) => {
-      e.stopPropagation();
-      handleAction(e);
-    }}
-    className="inline-flex items-center justify-center h-8 w-8 rounded-lg hover:bg-slate-100 transition-colors"
-  >
-    <MoreVertical className="h-4 w-4 text-slate-600" />
-  </button>
-</td>
-```
-
-**Lưu ý quan trọng về Event Handling:**
-- Action cell PHẢI có `onClick={(e) => e.stopPropagation()}` để ngăn click lan lên row
-- Button bên trong PHẢI có `onClick={(e) => { e.stopPropagation(); ... }}` để tránh mở detail khi click action
-- Backdrop của dropdown menu cũng cần `onClick={(e) => { e.stopPropagation(); onClose(); }}`
-
-### 3.5 Pagination Component
-**Placement:** Nằm ở footer của container, ngăn cách với Table bằng `border-t border-slate-200`.
-```tsx
-<div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-white">
-  <div className="text-sm text-slate-600">
-    Showing <span className="font-medium text-slate-900">{start}</span> to{" "}
-    <span className="font-medium text-slate-900">{end}</span> of{" "}
-    <span className="font-medium text-slate-900">{total}</span> results
+{paginatedData.length === 0 && (
+  <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+    <IconInbox className="h-12 w-12 text-slate-300 mb-4" />
+    <p className="text-lg font-medium text-slate-600">No items found</p>
+    <p className="text-sm">Try adjusting your filters</p>
   </div>
-  <div className="flex items-center gap-2">
-    <Button variant="outline" size="sm">Previous</Button>
-    <Button variant="outline" size="sm">Next</Button>
+)}
+```
+
+### 3.5 Event Propagation Rules (QUAN TRỌNG!)
+1. **Row:** `onClick={() => handleView(id)}`
+2. **Action td:** `onClick={(e) => e.stopPropagation()}`
+3. **Dùng `ActionDropdown`** — tự động xử lý event handling bên trong
+
+---
+
+## 4. Breadcrumb Pattern (CHUẨN HOÁ)
+
+**PHẢI dùng `Breadcrumb` component + `breadcrumbs.config.ts`**
+
+```tsx
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import breadcrumbs from "@/components/ui/breadcrumb/breadcrumbs.config";
+
+const navigate = useNavigate();
+<Breadcrumb items={breadcrumbs.documentDetail(navigate, { fromArchive: true })} />
+```
+
+**Danh sách configs có sẵn** (xem đầy đủ tại `breadcrumbs.config.ts`):
+
+| Config key | Params |
+|---|---|
+| `documentList(navigate)` | |
+| `archivedDocuments(navigate)` | |
+| `documentDetail(navigate, { fromArchive? })` | |
+| `newDocument(navigate)` | |
+| `revisionList(navigate)` | |
+| `revisionsOwnedByMe(navigate)` | |
+| `pendingDocuments(navigate, activeTab?)` | `'pending-review'` / `'pending-approval'` |
+| `revisionDetail(navigate)` | |
+| `revisionReview(navigate, onBack?, documentId?)` | |
+| `revisionApproval(navigate, onBack?, documentId?)` | |
+| `controlledCopies(navigate, activeTab?)` | |
+| `controlledCopyDetail(navigate)` | |
+| `trainingMaterials(navigate)` | |
+| `coursesList(navigate)` | |
+| `userManagement(navigate)` | |
+| `myTasks(navigate)` | |
+| `notifications(navigate)` | |
+
+**Khi tạo màn hình mới → PHẢI bổ sung config vào `breadcrumbs.config.ts`**
+
+---
+
+## 5. Filter Component Pattern
+
+### 5.1 Filter Layout
+```tsx
+<div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm w-full">
+  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
+    {/* Search: xl:col-span-6 */}
+    <div className="xl:col-span-6">
+      <label className="block text-xs font-medium text-slate-700 mb-1.5">Search</label>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <input
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search..."
+          className="w-full h-9 pl-9 pr-4 text-sm border border-slate-200 rounded-lg
+            focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500
+            placeholder:text-slate-400"
+        />
+      </div>
+    </div>
+    {/* Regular filter: xl:col-span-3 */}
+    <div className="xl:col-span-3">
+      <Select label="Status" value={statusFilter} onChange={setStatusFilter} options={STATUS_OPTIONS} />
+    </div>
   </div>
 </div>
 ```
 
-## 4. Dropdown Menu trong Table (Portal Pattern)
-**PHẢI sử dụng createPortal để render dropdown:**
-```tsx
-import { createPortal } from "react-dom";
+---
 
-const DropdownMenu: React.FC<Props> = ({ isOpen, onClose, position }) => {
-  if (!isOpen) return null;
-  
-  return createPortal(
-    <>
-      {/* Backdrop với z-40 */}
-      <div
-        className="fixed inset-0 z-40 animate-in fade-in duration-150"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-        aria-hidden="true"
-      />
-      {/* Menu với z-50 */}
-      <div
-        className="fixed z-50 min-w-[200px] rounded-lg border border-slate-200 bg-white shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
-        style={{ top: `${position.top}px`, left: `${position.left}px` }}
-      >
-        <div className="py-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleAction();
-              onClose();
-            }}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-          >
-            <Icon className="h-4 w-4 text-slate-500" />
-            <span>Action Label</span>
-          </button>
-        </div>
-      </div>
-    </>,
-    window.document.body
-  );
-};
+## 6. Form Input Standards
+
+```tsx
+{/* Label */}
+<label htmlFor="fieldId" className="block text-sm font-medium text-slate-700 mb-1.5">
+  Field Name <span className="text-red-500">*</span>
+</label>
+
+{/* Input */}
+<input
+  id="fieldId"
+  className="w-full h-9 px-3 text-sm border border-slate-200 rounded-lg
+    focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500
+    placeholder:text-slate-400 disabled:bg-slate-50 disabled:text-slate-500"
+  placeholder="Enter value..."
+/>
+
+{/* Error message */}
+{error && (
+  <p className="text-xs text-red-600 font-medium mt-1.5 flex items-center gap-1.5
+    animate-in fade-in slide-in-from-top-1 duration-200" role="alert">
+    {error}
+  </p>
+)}
+
+{/* Textarea */}
+<textarea
+  className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg resize-none
+    focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500
+    placeholder:text-slate-400"
+  rows={4}
+/>
 ```
 
-**Position Calculation:**
+---
+
+## 7. Badge/Status Color System
+
+### StatusBadge (workflow statuses)
 ```tsx
-const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
-  event.stopPropagation();
-  const button = event.currentTarget;
-  const rect = button.getBoundingClientRect();
-  setDropdownPosition({
-    top: rect.bottom + window.scrollY + 4,
-    left: rect.right + window.scrollX - 200, // Adjust based on menu width
-  });
-  setOpenDropdownId(id);
-};
+<StatusBadge status="pendingReview" size="sm" />
+<StatusBadge status="approved" />
 ```
 
-## 5. Đồng bộ Style Component (shadcn/ui)
+### Badge (general tags)
+```tsx
+<Badge variant="success" pill>Active</Badge>
+<Badge variant="warning" size="sm">Pending</Badge>
+<Badge variant="error" icon={<AlertCircle className="h-3 w-3" />}>Critical</Badge>
+<TaskStatusBadge status="In-Progress" />
+<PriorityBadge priority="High" />
+```
 
-### 5.1 Button Component
-**Variants:**
-- `default`: `bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm active:scale-95`
-- `ghost`: `hover:bg-slate-100 hover:text-slate-900 active:scale-95`
-- `outline`: `border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 shadow-sm active:scale-95`
-- `secondary`: `bg-slate-100 text-slate-900 hover:bg-slate-200 active:scale-95`
+### Manual badge colors (khi cần custom)
+| Status | Classes |
+|---|---|
+| Draft | `bg-slate-100 text-slate-700 border-slate-200` |
+| Pending Review | `bg-amber-50 text-amber-700 border-amber-200` |
+| Pending Approval | `bg-blue-50 text-blue-700 border-blue-200` |
+| Approved / Effective | `bg-emerald-50 text-emerald-700 border-emerald-200` |
+| Pending Training | `bg-purple-50 text-purple-700 border-purple-200` |
+| Ready for Publishing | `bg-indigo-50 text-indigo-700 border-indigo-200` |
+| Obsoleted | `bg-orange-50 text-orange-700 border-orange-200` |
+| Rejected / Cancelled | `bg-red-50 text-red-700 border-red-200` |
 
-**Sizes (responsive):**
-- `xs`: `h-6 md:h-7 px-2 md:px-3 text-xs`
-- `sm`: `h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm`
-- `default`: `h-10 md:h-11 px-4 md:px-6 text-sm md:text-base`
-- `icon`: `h-10 w-10 md:h-11 md:w-11 p-0`
-
-### 5.2 Form Components (Input, Select)
-- **Label:** `text-sm font-medium text-slate-700 mb-1.5 block`
-- **Input/Select height:** `h-9`
-- **Border:** `border border-slate-200 rounded-lg`
-- **Focus state:** `focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500`
-- **Placeholder:** `placeholder:text-slate-400 placeholder:text-sm`
-
-### 5.3 Select Component (Custom Dropdown)
-- **Trigger:** Height `h-9`, full width, với ChevronDown icon
-- **Portal rendering:** Sử dụng `createPortal` với `position: fixed`, `z-index: 9999`
-- **Search input (nếu có):** Auto-focus khi mở, với Search icon
-- **Options:** `py-3 px-4 text-sm hover:bg-slate-50 transition-colors`
-- **Selected indicator:** Check icon bên phải
-
-### 5.4 Badges/Status Indicators
-**Status colors (đồng nhất):**
-- Draft: `bg-slate-50 text-slate-700 border-slate-200`
-- Pending Review: `bg-amber-50 text-amber-700 border-amber-200`
-- Pending Approval: `bg-blue-50 text-blue-700 border-blue-200`
-- Approved: `bg-cyan-50 text-cyan-700 border-cyan-200`
-- Effective: `bg-emerald-50 text-emerald-700 border-emerald-200`
-- Archive: `bg-red-50 text-red-700 border-red-200`
-
-**Badge structure:**
+**Badge structure (manual):**
 ```tsx
 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border {colorClasses}">
   {icon && <Icon className="h-3.5 w-3.5" />}
@@ -388,140 +514,98 @@ const handleDropdownToggle = (id: string, event: React.MouseEvent<HTMLButtonElem
 </span>
 ```
 
-## 6. Filter Component Pattern
+---
 
-### 6.1 Reusable Filter Component
-Tạo component tái sử dụng cho các view tương tự nhau (ví dụ: DocumentFilters):
-```tsx
-interface FiltersProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  statusFilter: Status | "All";
-  onStatusChange: (value: Status | "All") => void;
-  // ... other filters
-}
-```
+## 8. Border-Radius Standards (3-Tier)
 
-### 6.2 Filter Layout (Grid)
-```tsx
-<div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm w-full">
-  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-end">
-    {/* Search input: xl:col-span-6 */}
-    {/* Regular filters: xl:col-span-3 each */}
-  </div>
-</div>
-```
+| Level | Class | Dùng cho |
+|---|---|---|
+| Large | `rounded-xl` | Cards, Panels, Modals, Table containers, Filter panels |
+| Medium | `rounded-lg` | Buttons, Inputs, Selects, Dropdowns, Alert boxes |
+| Pill/Circle | `rounded-full` | Status badges, Tags, Avatars, Dot indicators |
 
-## 7. Navigation & Breadcrumbs
-- **Breadcrumb separator:** Sử dụng dấu `/` text: `<span className="text-slate-400 mx-1">/</span>`
-- **Breadcrumb structure:**
-```tsx
-<div className="flex items-center gap-1.5 text-slate-500 mt-1 text-sm">
-  <span>Dashboard</span>
-  <span className="text-slate-400 mx-1">/</span>
-  <span>Module Name</span>
-  <span className="text-slate-400 mx-1">/</span>
-  <span className="text-slate-700 font-medium">Current Page</span>
-</div>
-```
-- Cấp cuối cùng: `text-slate-700 font-medium`
+❌ **KHÔNG dùng:** `rounded-md`, `rounded-2xl`, `rounded`
 
-## 8. Border-Radius Standards (3-Tier System)
-
-**QUY TẮC: Tuân thủ hệ thống 3 cấp độ border-radius để đảm bảo đồng nhất UI**
-
-### 8.1 Level 1: Large Containers (16px / 1rem)
-**Class:** `rounded-xl`
-- **Sử dụng cho:** Cards, Panels, Modals, Table containers, Filter containers, Large form sections
-- **Ví dụ:**
-  ```tsx
-  <div className="border rounded-xl bg-white shadow-sm">
-    {/* Table container */}
-  </div>
-  
-  <div className="bg-white p-5 rounded-xl border border-slate-200">
-    {/* Filter panel */}
-  </div>
-  ```
-
-### 8.2 Level 2: Medium Elements (12px / 0.75rem)
-**Class:** `rounded-lg`
-- **Sử dụng cho:** Buttons, Inputs, Selects, Dropdowns, Action buttons, Small cards, Alert boxes, Search bars
-- **Ví dụ:**
-  ```tsx
-  <Button variant="default" className="rounded-lg">Submit</Button>
-  
-  <input className="h-9 border border-slate-200 rounded-lg" />
-  
-  <div className="fixed bg-white rounded-lg shadow-2xl">
-    {/* Dropdown menu */}
-  </div>
-  ```
-
-### 8.3 Level 3: Pills & Circular Elements (9999px / 50%)
-**Class:** `rounded-full`
-- **Sử dụng cho:** Status badges, Tags, Pills, Avatars, Profile pictures, Count indicators, Dot indicators
-- **Ví dụ:**
-  ```tsx
-  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border">
-    {/* Status badge */}
-  </span>
-  
-  <div className="h-10 w-10 rounded-full bg-slate-100">
-    {/* Avatar */}
-  </div>
-  
-  <div className="h-1.5 w-1.5 rounded-full bg-emerald-600">
-    {/* Dot indicator */}
-  </div>
-  ```
-
-### 8.4 CẢNH BÁO: Tránh sử dụng
-- ❌ `rounded-md` (8px) - Không còn sử dụng, thay bằng `rounded-lg`
-- ❌ `rounded-2xl` (24px) - Quá lớn, chỉ dùng trong trường hợp đặc biệt
-- ❌ `rounded` (4px) - Quá nhỏ, không phù hợp với design system
-
-### 8.5 Component Enforcement
-Các components trong `components/ui` ĐÃ enforce border-radius chuẩn:
-- **Button:** `rounded-lg` (enforced)
-- **Select/MultiSelect:** `rounded-lg` (enforced)
-- **Input fields:** `rounded-lg` (h-9, enforced)
-- **StatusBadge:** `rounded-full` (enforced)
-- **Modal:** `rounded-xl` (enforced)
-- **Card:** `rounded-xl` (enforced)
+---
 
 ## 9. Color Palette (Emerald Theme)
-- **Primary:** `emerald-600` (buttons, active states)
-- **Primary Hover:** `emerald-700`
-- **Success:** `emerald-50/600/700`
-- **Warning:** `amber-50/600/700`
-- **Error:** `red-50/600/700`
-- **Info:** `blue-50/600/700`
-- **Text Primary:** `slate-900`
-- **Text Secondary:** `slate-700`
-- **Text Muted:** `slate-500`
-- **Border:** `slate-200`
-- **Background:** `white`, `slate-50`, `slate-100`
 
-## 9. Animation Classes (Tailwind)
-- **Fade in:** `animate-in fade-in duration-150`
-- **Slide from top:** `slide-in-from-top-2 duration-200`
-- **Zoom in:** `zoom-in-95 duration-150`
-- **Button active:** `active:scale-95`
-- **Transitions:** `transition-colors`, `transition-all`
+| Token | Value |
+|---|---|
+| Primary | `emerald-600` |
+| Primary Hover | `emerald-700` |
+| Text Primary | `slate-900` |
+| Text Secondary | `slate-700` |
+| Text Muted | `slate-500` |
+| Border | `slate-200` |
+| Background | `white`, `slate-50`, `slate-100` |
+| Success | `emerald-*` |
+| Warning | `amber-*` |
+| Error | `red-*` |
+| Info | `blue-*` |
 
-## 10. Responsive Design Patterns
-- **Breakpoints:** `md:` (768px), `lg:` (1024px), `xl:` (1280px), `2xl:` (1536px)
-- **Hide on mobile:** `hidden md:table-cell` (for table columns)
-- **Show on mobile only:** `md:hidden`
-- **Responsive padding:** `px-4 md:px-6`, `py-2.5 md:py-3`
-- **Responsive text:** `text-sm md:text-base`
-- **Grid responsive:** `grid-cols-1 md:grid-cols-2 xl:grid-cols-12`
+---
 
-## 11. TypeScript Patterns
+## 10. Animation Classes
 
-### 11.1 Common Interfaces
+```
+animate-in fade-in duration-150            → Fade in
+slide-in-from-top-2 duration-200           → Slide from top
+slide-in-from-bottom-2 duration-200        → Slide from bottom
+zoom-in-95 duration-150                    → Zoom in
+active:scale-[0.97]                        → Button press
+transition-colors                          → Color transition
+transition-all duration-200                → General transition
+```
+
+---
+
+## 11. Responsive Design
+
+| Breakpoint | Value |
+|---|---|
+| `md:` | 768px |
+| `lg:` | 1024px |
+| `xl:` | 1280px |
+| `2xl:` | 1536px |
+
+**Patterns:**
 ```tsx
+hidden md:table-cell                            // Ẩn trên mobile (table columns)
+md:hidden                                       // Chỉ hiện trên mobile
+px-4 md:px-6                                    // Responsive padding
+text-sm md:text-base                            // Responsive text
+grid-cols-1 md:grid-cols-2 xl:grid-cols-12      // Responsive grid
+```
+
+---
+
+## 12. Data Formatting
+
+**PHẢI** dùng `@/utils/format.ts`, KHÔNG viết inline:
+
+```tsx
+import { formatDate, formatDateUS, formatDateTime, formatDateLong, formatRelativeTime, formatFileSize } from "@/utils/format";
+
+formatDate(dateString)          // "Jan 15, 2025"
+formatDateUS(dateString)        // "01/15/2025"
+formatDateTime(dateString)      // "Jan 15, 2025, 2:30 PM"
+formatDateLong(dateString)      // "January 15, 2025"
+formatRelativeTime(dateString)  // "2 hours ago"
+formatFileSize(bytes)           // "1.5 MB"
+```
+
+❌ KHÔNG viết: `new Date(date).toLocaleDateString("en-US", { ... })`
+
+---
+
+## 13. TypeScript Patterns
+
+```tsx
+// Status types
+type Status = "Draft" | "Pending Review" | "Pending Approval" | "Effective" | "Obsoleted";
+
+// Common interfaces
 interface TableColumn {
   id: string;
   label: string;
@@ -530,31 +614,23 @@ interface TableColumn {
   locked?: boolean;
 }
 
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-  startItem: number;
-  endItem: number;
-  totalItems: number;
-}
+// Generic handlers
+onItemClick?: (id: string) => void;
 ```
 
-### 11.2 Type Aliases
-- Sử dụng union types cho status/types: `type Status = "Draft" | "Active" | "Archived"`
-- Generic callbacks: `onItemClick?: (id: string) => void`
+---
 
-## 12. React Hooks & State Management
+## 14. React Patterns
 
-### 12.1 Filter States Pattern
+### State Management
 ```tsx
 const [searchQuery, setSearchQuery] = useState("");
 const [statusFilter, setStatusFilter] = useState<Status | "All">("All");
 const [currentPage, setCurrentPage] = useState(1);
-const [columns, setColumns] = useState<TableColumn[]>([...defaultColumns]);
+const [itemsPerPage, setItemsPerPage] = useState(10);
 ```
 
-### 12.2 useMemo for Performance
+### useMemo cho performance
 ```tsx
 const filteredData = useMemo(() => {
   return data.filter((item) => {
@@ -563,212 +639,133 @@ const filteredData = useMemo(() => {
     return matchesSearch && matchesStatus;
   });
 }, [data, searchQuery, statusFilter]);
+
+const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+const startIndex = (currentPage - 1) * itemsPerPage; // Khai báo ngoài nếu dùng trong JSX
+
+const paginatedData = useMemo(() => {
+  return filteredData.slice(startIndex, startIndex + itemsPerPage);
+}, [filteredData, startIndex, itemsPerPage]);
 ```
 
-### 12.3 useRef for Refs Management
-```tsx
-const buttonRefs = useRef<{ [key: string]: RefObject<HTMLButtonElement> }>({});
-
-const getButtonRef = (id: string) => {
-  if (!buttonRefs.current[id]) {
-    buttonRefs.current[id] = createRef<HTMLButtonElement>();
-  }
-  return buttonRefs.current[id];
-};
-```
-
-## 13. Coding Style & Best Practices
-
-### 13.1 Component Reusability Checklist
-
-**Trước khi viết code mới, PHẢI kiểm tra:**
-- ✅ Có Button component chưa? → Dùng `@/components/ui/button/Button`
-- ✅ Có Select/Dropdown chưa? → Dùng `@/components/ui/select/Select`
-- ✅ Có Input field chưa? → Check trong `@/components/ui/form`
-- ✅ Có Modal chưa? → Dùng `@/components/ui/modal/AlertModal`
-- ✅ Có Badge/Status chưa? → Dùng `@/components/ui/statusbadge/StatusBadge`
-- ✅ Có DatePicker chưa? → Dùng `@/components/ui/datetime-picker/DateTimePicker`
-- ✅ Có Card chưa? → Dùng `@/components/ui/card/ResponsiveCard`
-- ✅ Có Badge/Tag chưa? → Dùng `@/components/ui/badge/Badge`
-- ✅ Có Pagination chưa? → Dùng `@/components/ui/table/TablePagination`
-- ✅ Có Toast chưa? → Dùng `@/components/ui/toast/Toast` và `useToast`
-- ✅ Có Loading spinner chưa? → **PHẢI DÙNG** `@/components/ui/loading/Loading`
-- ✅ Cần format date? → Dùng `@/utils/format` (formatDate, formatDateTime, etc.)
-
-**Khi cần tạo component mới:**
-- 📁 Tạo folder mới trong `components/ui/[component-name]/`
-- 📝 Follow Tailwind CSS + shadcn/ui patterns
-- 🎨 Sử dụng color palette emerald theme
-- 📱 Responsive với breakpoints chuẩn
-- ♿ Accessibility với aria-labels
-- 📚 Document trong copilot-instructions.md
-
-### 13.2 Import Organization
-```tsx
-// 1. React imports
-import React, { useState, useMemo, useRef, useEffect } from "react";
-import { createPortal } from "react-dom";
-
-// 2. Third-party libraries
-import { ChevronRight, Search, Filter } from "lucide-react";
-
-// 3. UI Components (PHẢI reuse từ components/ui)
-import { Button } from "@/components/ui/button/Button";
-import { Select } from "@/components/ui/select/Select";
-import { Checkbox } from "@/components/ui/checkbox/Checkbox";
-import { AlertModal } from "@/components/ui/modal/AlertModal";
-import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
-import { DateTimePicker } from "@/components/ui/datetime-picker/DateTimePicker";
-
-// 4. Utils
-import { cn } from "@/components/ui/utils";
-
-// 5. Types
-import { Task, TableColumn } from "../types";
-```
-
-### 13.2 Component Structure
+### Component Structure
 ```tsx
 // 1. Interfaces/Types
-interface Props { ... }
-
-// 2. Helper Components (nếu chỉ dùng trong file này)
-const SubComponent: React.FC<Props> = ({ ... }) => { ... };
-
-// 3. Main Component
-export const MainComponent: React.FC<Props> = ({ ... }) => {
-  // a. State declarations
-  const [state, setState] = useState(...);
-  
-  // b. Refs
-  const ref = useRef(null);
-  
-  // c. Memoized values
-  const computed = useMemo(() => ..., [deps]);
-  
-  // d. Effects
-  useEffect(() => { ... }, [deps]);
-  
-  // e. Event handlers
-  const handleClick = () => { ... };
-  
-  // f. Render helpers
-  const renderItem = (item) => { ... };
-  
-  // g. JSX return
-  return ( ... );
-};
+// 2. Helper functions/constants
+// 3. Main Component:
+//   a. State declarations
+//   b. Refs
+//   c. useMemo (filteredData, paginatedData)
+//   d. useEffect
+//   e. Event handlers (handleXxx)
+//   f. JSX return
 ```
 
-### 13.3 Naming Conventions
-- **Components:** PascalCase (e.g., `TaskTable`, `DocumentFilters`)
-- **Functions/Handlers:** camelCase với prefix `handle` (e.g., `handleClick`, `handleFilterChange`)
-- **Boolean variables:** Prefix `is`, `has`, `should` (e.g., `isOpen`, `hasError`)
-- **Constants:** UPPER_SNAKE_CASE (e.g., `MOCK_DOCUMENTS`, `DEFAULT_PAGE_SIZE`)
+---
 
-### 13.4 CSS Class Management
-- **LUÔN dùng `cn()` utility:** `cn("base-classes", condition && "conditional", className)`
-- **Avoid inline styles trừ khi cần dynamic positioning**
+## 15. Import Organization
 
-### 13.5 Component Design Principles
-- **DRY (Don't Repeat Yourself):** Tái sử dụng components từ `components/ui`
-- **Single Responsibility:** Mỗi component chỉ làm một việc
-- **Prop Interface:** Định nghĩa rõ ràng props với TypeScript
-- **Default Props:** Cung cấp giá trị mặc định hợp lý
-- **Composition over Inheritance:** Ưu tiên compose components thay vì kế thừa
-
-## 14. Data Formatting & Utilities
-
-### 14.1 Centralized Formatting (`@/utils/format.ts`)
-**PHẢI import từ centralized utils thay vì viết inline:**
 ```tsx
-import { formatDate, formatDateUS, formatDateTime, formatDateLong, formatRelativeTime, formatFileSize } from "@/utils/format";
+// 1. React
+import React, { useState, useMemo, useRef, useEffect, useCallback } from "react";
 
-// Sử dụng:
-formatDate(dateString)       // "Jan 15, 2025"
-formatDateUS(dateString)     // "01/15/2025"
-formatDateTime(dateString)   // "Jan 15, 2025, 2:30 PM"
-formatDateLong(dateString)   // "January 15, 2025"
-formatRelativeTime(dateString) // "2 hours ago"
-formatFileSize(bytes)        // "1.5 MB"
-```
+// 2. Router
+import { useNavigate, useLocation } from "react-router-dom";
 
-**❌ KHÔNG viết inline:**
-```tsx
-// SAI
-new Date(date).toLocaleDateString("en-US", { ... })
+// 3. Third-party
+import { Eye, Edit, Trash, Search } from "lucide-react";
+import { IconLayoutDashboard } from "@tabler/icons-react";
 
-// ĐÚNG
+// 4. UI Components (PHẢI reuse từ components/ui)
+import { Button } from "@/components/ui/button/Button";
+import { Select } from "@/components/ui/select/Select";
+import { ActionDropdown } from "@/components/ui/dropdown/ActionDropdown";
+import { AlertModal } from "@/components/ui/modal/AlertModal";
+import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
+import { TablePagination } from "@/components/ui/table/TablePagination";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import breadcrumbs from "@/components/ui/breadcrumb/breadcrumbs.config";
+import { cn } from "@/components/ui/utils";
+
+// 5. Features/Utils
+import { ROUTES } from "@/app/routes.constants";
 import { formatDate } from "@/utils/format";
-formatDate(date)
+
+// 6. Local types
+import type { ItemType } from "./types";
 ```
 
-### 14.2 Helper Functions Organization
-Đặt helper functions trước component hoặc trong separate utils file:
+---
+
+## 16. Naming Conventions
+
+| Type | Convention | Example |
+|---|---|---|
+| Component | PascalCase | `DocumentListView`, `TaskTable` |
+| Handler | camelCase + `handle` prefix | `handleClick`, `handleFilterChange` |
+| Boolean state | `is`/`has`/`should` prefix | `isOpen`, `hasError`, `isLoading` |
+| Constants | UPPER_SNAKE_CASE | `MOCK_DOCUMENTS`, `DEFAULT_PAGE_SIZE` |
+| Types/Interfaces | PascalCase | `DocumentStatus`, `TableColumn` |
+
+---
+
+## 17. Accessibility (A11Y)
+
 ```tsx
-// Helper functions
-const getStatusColor = (status: Status) => { ... };
-const getStatusIcon = (status: Status) => { ... };
-const formatCurrency = (amount: number) => { ... };
+// Icon-only buttons PHẢI có aria-label
+<button aria-label="More actions"><MoreVertical className="h-4 w-4" /></button>
+
+// Backdrop
+<div aria-hidden="true" className="fixed inset-0" onClick={onClose} />
+
+// Form fields
+<input aria-invalid={!!error} aria-describedby={error ? "field-error" : undefined} />
+
+// Loading state
+<button aria-busy={isLoading} disabled={isLoading}>Submit</button>
 ```
 
-## 15. Accessibility (A11Y)
-- **Icon-only buttons:** PHẢI có `aria-label` mô tả hành động
-  ```tsx
-  <button aria-label="More actions">
-    <MoreVertical className="h-4 w-4" />
-  </button>
-  ```
-- **Backdrop:** `aria-hidden="true"`
-- **Focus states:** `focus-visible:ring-2 focus-visible:ring-emerald-500`
-- **Keyboard support:** Escape key để đóng modals/dropdowns
-- **Select/Combobox:** Sử dụng `role="combobox"`, `aria-expanded`, `aria-haspopup="listbox"`
-- **Decorative icons:** Icons bên cạnh text label không cần `aria-label` (text đã mô tả)
+---
 
-## 16. Performance Optimizations
-- **Pagination:** Luôn paginate data phía client (10-20 items/page)
-- **Virtual scrolling:** Không cần thiết cho tables < 1000 rows
-- **Memoization:** Sử dụng `useMemo` cho filtered/sorted data VÀ paginatedData
-  ```tsx
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return filteredData.slice(startIndex, startIndex + itemsPerPage);
-  }, [filteredData, currentPage, itemsPerPage]);
-  ```
-  **Lưu ý:** Nếu `startIndex` cần dùng trong JSX (row numbering), khai báo riêng ngoài `useMemo`
-- **Event handlers:** Declare outside JSX khi có thể
-- **visibleColumns:** Wrap trong `useMemo` nếu có column customizer
+## 18. Auth Pages — Shared Carousel
 
-## 17. QUAN TRỌNG: Event Propagation trong Table
-Khi có interactive elements bên trong clickable table rows:
-
-1. **Row click handler:** `onClick={() => onViewItem(id)}`
-2. **Action cell:** `onClick={(e) => e.stopPropagation()}`
-3. **Action button:** `onClick={(e) => { e.stopPropagation(); handleAction(); }}`
-4. **Dropdown backdrop:** `onClick={(e) => { e.stopPropagation(); onClose(); }}`
-5. **Dropdown items:** `onClick={(e) => { e.stopPropagation(); handleItemAction(); }}`
-
-**Quy tắc vàng:** Mọi click handler trong Action column PHẢI có `e.stopPropagation()` để tránh trigger row click.
+**3 màn hình auth dùng chung config:**
+```tsx
+import { AUTH_SLIDE_IMAGES, CAROUSEL_INTERVAL } from "./authCarousel";
+// AUTH_SLIDE_IMAGES: 9 ảnh (ipad1.webp → ipad9.webp)
+// CAROUSEL_INTERVAL: 3000ms
+```
+- **Text content:** `SLIDE_CONTENT[index % SLIDE_CONTENT.length]` — mỗi màn hình có content riêng, số slide = 9
+- **Indicators:** Chấm tròn nhỏ `h-2 w-2 rounded-full`
+  - Active: `bg-emerald-500 scale-125`
+  - Inactive: `bg-white/30`
 
 ---
 
-## Checklist khi tạo Table mới:
+## 19. Checklist khi tạo Table mới
 
-- [ ] Container có `border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col`
-- [ ] Table header có `bg-slate-50 border-b border-slate-200`
-- [ ] Table body có `divide-y divide-slate-200 bg-white`
-- [ ] Sticky action column có đầy đủ classes (z-index, border, shadow)
-- [ ] Action cell có `onClick={(e) => e.stopPropagation()}`
-- [ ] Action button có `onClick={(e) => { e.stopPropagation(); ... }}`
-- [ ] Dropdown menu dùng `createPortal`
-- [ ] Backdrop có z-40, Menu có z-50
-- [ ] Pagination nằm trong cùng container với table
-- [ ] Filters có responsive grid layout
-- [ ] Column customizer có drag-and-drop
-- [ ] useMemo cho filtered data
-- [ ] Breadcrumbs đúng format với dấu "/" separator
-- [ ] Animation classes cho smooth transitions
+- [ ] Container: `border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col`
+- [ ] thead: `bg-slate-50 border-b border-slate-200`
+- [ ] tbody: `divide-y divide-slate-200 bg-white`
+- [ ] Row clickable: `cursor-pointer group` + `onClick={() => handleView(id)}`
+- [ ] Sticky action column: z-index + shadow + before border classes đầy đủ
+- [ ] Action cell: `onClick={(e) => e.stopPropagation()}`
+- [ ] Actions: dùng `ActionDropdown` component
+- [ ] Empty state: centered, icon + message
+- [ ] Pagination: dùng `TablePagination` component
+- [ ] Filters: responsive grid, dùng `Select` component
+- [ ] `useMemo` cho filteredData + paginatedData
+- [ ] Breadcrumb: dùng `Breadcrumb` + config từ `breadcrumbs.config.ts`
+
+## 20. Checklist khi tạo màn hình mới
+
+- [ ] Bổ sung breadcrumb config vào `breadcrumbs.config.ts`
+- [ ] Loading states: dùng `Loading`/`ButtonLoading`/`SectionLoading`
+- [ ] Toast notifications: dùng `useToast`
+- [ ] Confirm dialogs: dùng `AlertModal`
+- [ ] Date formatting: dùng `@/utils/format`
+- [ ] Thêm route vào `routes.constants.ts` và `routes.tsx`
 
 ---
 
-**LƯU Ý CUỐI CÙNG:** Khi copy patterns từ DocumentListView hoặc DocumentsOwnedByMeView, đảm bảo giữ nguyên cấu trúc event handling và z-index để tránh bugs về click behavior và overlapping.
+**LƯU Ý:** Khi copy patterns từ DocumentListView hoặc DocumentsOwnedByMeView, đảm bảo giữ nguyên cấu trúc event handling và z-index để tránh bugs về click behavior và overlapping.
