@@ -68,6 +68,8 @@ export const NewDocumentView: React.FC = () => {
     const [isObsoleteModalOpen, setIsObsoleteModalOpen] = useState(false);
     const [isUploadRevisionModalOpen, setIsUploadRevisionModalOpen] = useState(false);
     const [isSaved, setIsSaved] = useState(false); // Track if document has been saved
+    const [isRevisionUploaded, setIsRevisionUploaded] = useState(false); // Track if revision was uploaded
+    const [uploadedRevisionFile, setUploadedRevisionFile] = useState<File | null>(null); // Store uploaded revision file
     const [documentStatus, setDocumentStatus] = useState<DocumentStatus>("Draft"); // Track current document status
 
     // Subtab states
@@ -158,6 +160,7 @@ export const NewDocumentView: React.FC = () => {
         reviewDate: "",
         description: "",
         isTemplate: false,
+        titleLocalLanguage: "",
     });
 
     // Calculate current step index based on document status
@@ -173,6 +176,7 @@ export const NewDocumentView: React.FC = () => {
         if (!String(formData.type || "").trim()) missing.push("Document Type");
         if (!formData.author || formData.author.length === 0) missing.push("Authors");
         if (!formData.businessUnit.trim()) missing.push("Business Unit");
+        if (!formData.description.trim()) missing.push("Description");
         if (!Number.isFinite(formData.periodicReviewCycle) || formData.periodicReviewCycle <= 0) {
             missing.push("Periodic Review Cycle (Months)");
         }
@@ -185,6 +189,7 @@ export const NewDocumentView: React.FC = () => {
         formData.type,
         formData.author,
         formData.businessUnit,
+        formData.description,
         formData.periodicReviewCycle,
         formData.periodicReviewNotification,
     ]);
@@ -274,23 +279,17 @@ export const NewDocumentView: React.FC = () => {
         // Keep only the latest revision for new document
         setRevisions([newRevision]);
 
-        // Replace file in uploaded files for preview in Document tab (only 1 file allowed)
-        const newUploadedFile: UploadedFile = {
-            id: `file-${Date.now()}`,
-            file,
-            progress: 100,
-            status: "success",
-        };
-        setUploadedFiles([newUploadedFile]);
-        
-        // Select the new file for preview
-        setSelectedFile(file);
-        
+        // Move document to Active status
+        setDocumentStatus("Active");
+
+        // Mark revision as uploaded (locks fields, hides upload button & file preview)
+        setIsRevisionUploaded(true);
+
+        // Store uploaded file for preview in workspace
+        setUploadedRevisionFile(file);
+
         // Close modal
         setIsUploadRevisionModalOpen(false);
-        
-        // Switch to Document tab to show preview
-        setActiveTab("document");
     };
 
     // Status workflow steps - simplified for new document creation
@@ -301,7 +300,7 @@ export const NewDocumentView: React.FC = () => {
         { id: "general" as TabType, label: "General Information" },
         { id: "training" as TabType, label: "Training Information" },
         { id: "document" as TabType, label: "Document" },
-        { id: "signatures" as TabType, label: "Signatures" },
+        ...(isSaved ? [{ id: "signatures" as TabType, label: "Signatures" }] : []),
         { id: "audit" as TabType, label: "Audit Trail" },
     ];
 
@@ -447,14 +446,10 @@ export const NewDocumentView: React.FC = () => {
         </div>
             {/* Warning Banner - Show when saved but missing reviewers or approvers */}
             {isSaved && (reviewers.length === 0 || approvers.length === 0) && documentStatus !== "Obsoleted" && documentStatus !== "Closed - Cancelled" && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-                    <div className="flex items-start gap-3">
-                        <div className="flex-1">
-                            <p className="text-sm font-medium text-red-800 text-center">
-                                Please add at least one reviewer and one approver in order to upload revisions.
-                            </p>
-                        </div>
-                    </div>
+                <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-2 text-center">
+                    <p className="text-sm font-medium text-red-700">
+                        Please add at least one reviewer and one approver in order to upload revisions.
+                    </p>
                 </div>
             )}
                     {/* Tab Navigation */}
@@ -492,11 +487,14 @@ export const NewDocumentView: React.FC = () => {
                             createdDateTime={createdDateTime}
                             openedBy={openedBy}
                             isObsoleted={documentStatus === "Obsoleted" || documentStatus === "Closed - Cancelled"}
+                            readOnlyReviewDate={true}
+                            lockedAfterSave={isSaved}
+                            lockAllEditableFields={isRevisionUploaded}
                         />
                     )}
 
                     {activeTab === "training" && (
-                        <TrainingTab isReadOnly={documentStatus === "Obsoleted" || documentStatus === "Closed - Cancelled"} />
+                        <TrainingTab isReadOnly={documentStatus === "Obsoleted" || documentStatus === "Closed - Cancelled" || isRevisionUploaded} />
                     )}
 
                     {activeTab === "document" && (
@@ -513,7 +511,7 @@ export const NewDocumentView: React.FC = () => {
                             onRelatedDocumentsChange={setRelationshipDocs}
                             documentType={formData.type}
                             onSuggestedCodeChange={setSuggestedDocumentCode}
-                            hideUpload={!isSaved}
+                            hideUpload={!isSaved || isRevisionUploaded}
                         />
                     )}
 
@@ -568,7 +566,17 @@ export const NewDocumentView: React.FC = () => {
                         )}
 
                         {/* Save/Next Step button - only show when not cancelled */}
-                        {documentStatus !== "Closed - Cancelled" && (
+                        {documentStatus !== "Closed - Cancelled" && !isSaved && (
+                            <Button
+                                onClick={handleCancel}
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-2"
+                                disabled={documentStatus === "Obsoleted"}
+                            >
+                                Cancel
+                            </Button>
+                        )}
                             <Button
                                 onClick={handleSaveDraft}
                                 disabled={
@@ -586,9 +594,9 @@ export const NewDocumentView: React.FC = () => {
                                         : "Processing..."
                                     : isSaved
                                     ? "Save"
-                                    : "Save & Next"}
+                                    : "Next Step"}
                         </Button>
-                        )}
+                        
 
                         {/* Obsolete button - only show when document is Active */}
                         {documentStatus === "Active" && (
@@ -609,8 +617,8 @@ export const NewDocumentView: React.FC = () => {
                         {/* Other action buttons - only show after saved and not obsoleted or cancelled */}
                         {isSaved && documentStatus !== "Obsoleted" && documentStatus !== "Closed - Cancelled" && (
                             <>
-                                {/* Upload Revision button - only show when reviewers and approvers are added */}
-                                {reviewers.length > 0 && approvers.length > 0 && (
+                                {/* Upload Revision button - only show when reviewers and approvers are added and revision not yet uploaded */}
+                                {reviewers.length > 0 && approvers.length > 0 && !isRevisionUploaded && (
                                     <Button
                                         onClick={() => setIsUploadRevisionModalOpen(true)}
                                         variant="outline"
@@ -620,28 +628,6 @@ export const NewDocumentView: React.FC = () => {
                                         Upload Revision
                                     </Button>
                                 )}
-                                <Button
-                                    onClick={() => {
-                                        setActiveSubtab("reviewers");
-                                        setIsReviewerModalOpen(true);
-                                    }}
-                                    variant="outline"
-                                    size="sm"
-                                    className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
-                                >
-                                    Reviewers
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        setActiveSubtab("approvers");
-                                        setIsApproverModalOpen(true);
-                                    }}
-                                    variant="outline"
-                                    size="sm"
-                                    className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
-                                >
-                                    Approvers
-                                </Button>
                                 <Button
                                     onClick={() => {
                                         setActiveSubtab("related");
@@ -671,6 +657,28 @@ export const NewDocumentView: React.FC = () => {
                                     {parentDocument && (
                                         <span className="ml-2 text-xs opacity-70">(1)</span>
                                     )}
+                                </Button>
+                                                                <Button
+                                    onClick={() => {
+                                        setActiveSubtab("reviewers");
+                                        setIsReviewerModalOpen(true);
+                                    }}
+                                    variant="outline"
+                                    size="sm"
+                                    className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
+                                >
+                                    Reviewers
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setActiveSubtab("approvers");
+                                        setIsApproverModalOpen(true);
+                                    }}
+                                    variant="outline"
+                                    size="sm"
+                                    className="whitespace-nowrap px-6 !border-emerald-600 !text-emerald-600 hover:!bg-emerald-50"
+                                >
+                                    Approvers
                                 </Button>
                             </>
                         )}
@@ -710,7 +718,15 @@ export const NewDocumentView: React.FC = () => {
 
                     {/* Subtab Content */}
                     <div className="p-4 md:p-6">
-                        {activeSubtab === "revisions" && <DocumentRevisionsTab revisions={revisions} />}
+                        {activeSubtab === "revisions" && (
+                            <DocumentRevisionsTab
+                                revisions={revisions}
+                                documentAuthor={formData.author}
+                                documentStatus={documentStatus}
+                                documentCreated={createdDateTime}
+                                revisionFile={uploadedRevisionFile}
+                            />
+                        )}
                         {activeSubtab === "reviewers" && (
                             <ReviewersTab
                                 reviewers={reviewers}

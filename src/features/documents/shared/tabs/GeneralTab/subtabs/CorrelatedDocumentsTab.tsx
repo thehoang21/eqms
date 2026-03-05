@@ -152,7 +152,7 @@ export const CorrelatedDocumentsTab: React.FC<CorrelatedDocumentsTabProps> = ({
                                         <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600">
                                             {startIndex + index + 1}
                                         </td>
-                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap font-medium text-slate-900">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap font-medium text-emerald-600">
                                             {doc.documentNumber}
                                         </td>
                                         <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600 hidden md:table-cell">

@@ -101,7 +101,7 @@ export const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
  type="text"
  value={password}
  readOnly
- className="flex-1 h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-medium text-slate-900"
+ className="flex-1 h-9 px-4 border border-slate-200 rounded-lg text-sm bg-slate-50 font-medium text-slate-900 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default"
  />
  <Button
  onClick={onRegeneratePassword}

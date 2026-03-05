@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { StatusBadge } from "@/components/ui/statusbadge/StatusBadge";
 import { TablePagination } from "@/components/ui/table/TablePagination";
+import { ROUTES } from "@/app/routes.constants";
 import { Revision } from "./types";
 
 interface DocumentRevisionsTabProps {
     revisions?: Revision[];
     onCountChange?: (count: number) => void;
+    documentAuthor?: string;
+    documentStatus?: string;
+    documentCreated?: string;
+    revisionFile?: File | null;
 }
 
-export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revisions = [], onCountChange }) => {
+export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revisions = [], onCountChange, documentAuthor = "", documentStatus = "Draft", documentCreated = "", revisionFile = null }) => {
+    const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -38,6 +45,27 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revi
     useEffect(() => {
         onCountChange?.(revisions?.length || 0);
     }, [revisions, onCountChange]);
+
+    const handleRevisionClick = (revision: Revision) => {
+        navigate(ROUTES.DOCUMENTS.REVISIONS.WORKSPACE, {
+            state: {
+                sourceDocument: {
+                    code: revision.revisionNumber,
+                    name: revision.revisionName,
+                    version: revision.revisionNumber,
+                },
+                isStandalone: true,
+                revisionId: revision.id,
+                revisionCreated: revision.created,
+                revisionOpenedBy: revision.openedBy,
+                revisionState: revision.state,
+                documentAuthor,
+                documentStatus,
+                documentCreated,
+                revisionFile,
+            },
+        });
+    };
 
     return (
         <div className="space-y-4">
@@ -92,9 +120,12 @@ export const DocumentRevisionsTab: React.FC<DocumentRevisionsTabProps> = ({ revi
                                             {startIndex + index + 1}
                                         </td>
                                         <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap">
-                                            <span className="font-medium text-slate-900">
+                                            <button
+                                                onClick={() => handleRevisionClick(revision)}
+                                                className="font-medium text-emerald-600 hover:text-emerald-700 hover:underline underline-offset-2 transition-colors cursor-pointer"
+                                            >
                                                 {revision.revisionNumber}
-                                            </span>
+                                            </button>
                                         </td>
                                         <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
                                             {revision.created}

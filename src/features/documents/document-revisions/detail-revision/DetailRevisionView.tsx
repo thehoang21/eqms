@@ -43,6 +43,7 @@ interface RevisionDetail {
   lastModified: string;
   lastModifiedBy: string;
   isTemplate: boolean;
+  titleLocalLanguage: string;
   businessUnit: string;
   knowledgeBase: string;
   subType: string;
@@ -141,6 +142,7 @@ const MOCK_REVISION: RevisionDetail = {
   lastModified: "2023-12-15",
   lastModifiedBy: "Dr. Sarah Johnson",
   isTemplate: false,
+  titleLocalLanguage: "",
   businessUnit: "Operation Unit",
   knowledgeBase: "Human Resources & Administrator",
   subType: "-- None --",

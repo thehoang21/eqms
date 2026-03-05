@@ -152,6 +152,7 @@ const MOCK_REVISION: DocumentDetail = {
   lastModified: "2026-01-05",
   lastModifiedBy: "John Smith",
   isTemplate: false,
+  titleLocalLanguage: "",
   businessUnit: "Operation Unit",
   knowledgeBase: "Quality Assurance",
   subType: "-- None --",

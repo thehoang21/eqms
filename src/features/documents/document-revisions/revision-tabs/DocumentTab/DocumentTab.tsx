@@ -57,29 +57,14 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
 
   // VIEW MODE - Read-only document viewer (PDF, DOCX & Images)
   if (mode === "view") {
-    // Create mock file for testing - in production this would come from API
-    const [mockFile, setMockFile] = useState<File | null>(null);
     const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-
-    useEffect(() => {
-      // Fetch sample.docx for testing
-      fetch("/src/assets/sample.docx")
-        .then((res) => res.blob())
-        .then((blob) => {
-          const file = new window.File([blob], "sample.docx", {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-          setMockFile(file);
-        })
-        .catch((err) => console.error("Error loading sample.docx:", err));
-    }, []);
 
     // Detect file type
     const getFileType = (): 'pdf' | 'docx' | 'image' | 'unknown' => {
-      if (!mockFile) return 'unknown';
+      if (!selectedFile) return 'unknown';
       
-      const name = mockFile.name.toLowerCase();
-      const type = mockFile.type.toLowerCase();
+      const name = selectedFile.name.toLowerCase();
+      const type = selectedFile.type.toLowerCase();
       
       // Check for images
       if (name.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/) || type.startsWith('image/')) {
@@ -105,9 +90,9 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     const isImage = fileType === 'image';
 
     useEffect(() => {
-      if (isDocx && mockFile && docxContainerRef.current) {
+      if (isDocx && selectedFile && docxContainerRef.current) {
         docxContainerRef.current.innerHTML = "";
-        renderAsync(mockFile, docxContainerRef.current, undefined, {
+        renderAsync(selectedFile, docxContainerRef.current, undefined, {
           breakPages: true,
           inWrapper: true,
           ignoreWidth: false,
@@ -118,16 +103,16 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
           console.error("Error rendering docx:", error);
         });
       }
-    }, [mockFile, isDocx]);
+    }, [selectedFile, isDocx]);
 
     // Create image preview URL
     useEffect(() => {
-      if (isImage && mockFile) {
-        const url = URL.createObjectURL(mockFile);
+      if (isImage && selectedFile) {
+        const url = URL.createObjectURL(selectedFile);
         setImagePreviewUrl(url);
         return () => URL.revokeObjectURL(url);
       }
-    }, [mockFile, isImage]);
+    }, [selectedFile, isImage]);
 
     const handleZoomIn = () => {
       setZoomLevel((prev) => Math.min(prev + 10, 200));
@@ -202,7 +187,7 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
             >
               <img
                 src={imagePreviewUrl}
-                alt={mockFile?.name || "Preview"}
+                alt={selectedFile?.name || "Preview"}
                 className="max-w-full h-auto shadow-lg"
                 style={{ maxHeight: 'calc(100vh - 280px)' }}
               />
@@ -281,8 +266,8 @@ export const DocumentTab: React.FC<DocumentTabProps> = ({
     }
 
     // PDF viewer
-    if (isPdf && mockFile) {
-      const pdfUrl = URL.createObjectURL(mockFile);
+    if (isPdf && selectedFile) {
+      const pdfUrl = URL.createObjectURL(selectedFile);
       return (
         <div
           className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col"

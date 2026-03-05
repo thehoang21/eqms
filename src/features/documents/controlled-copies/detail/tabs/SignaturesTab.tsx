@@ -54,7 +54,7 @@ export const SignaturesTab: React.FC = () => {
                   type="text"
                   value={record.actionByName}
                   readOnly
-                  className="flex-1 h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+                  className="flex-1 h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default"
                 />
               </div>
             </div>
@@ -68,7 +68,7 @@ export const SignaturesTab: React.FC = () => {
                 type="text"
                 value={record.actionOnValue}
                 readOnly
-                className="h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+                className="h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default"
               />
             </div>
           </React.Fragment>

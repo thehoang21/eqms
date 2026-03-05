@@ -22,7 +22,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={controlledCopy.documentNumber}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -35,7 +35,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={formatDateTimePartsNumeric(controlledCopy.createdDate, controlledCopy.createdTime)}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -48,7 +48,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={controlledCopy.openedBy}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -61,7 +61,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={controlledCopy.department || ""}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -74,7 +74,22 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={controlledCopy.name}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
+          />
+        </div>
+
+        {/* Title in Local Language - Full width */}
+        <div className="flex flex-col gap-1.5 md:col-span-2">
+          <label className="text-xs sm:text-sm font-medium text-slate-700">
+            Title in Local Language
+            <span className="text-slate-400 text-xs font-normal ml-1.5">(optional)</span>
+          </label>
+          <input
+            type="text"
+            value={(controlledCopy as any).titleLocalLanguage || ""}
+            readOnly
+            placeholder="—"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default"
           />
         </div>
 
@@ -87,7 +102,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={controlledCopy.document}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -100,7 +115,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={controlledCopy.version || ""}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -113,7 +128,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={formatDateNumeric(controlledCopy.validUntil)}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -126,7 +141,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value={controlledCopy.version || ""}
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -140,7 +155,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
               type="text"
               value={controlledCopy.copyNumber?.toString() || "1"}
               readOnly
-              className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+              className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
             />
             <p className="text-xs text-slate-500 italic">
               The Copy Number field represents the n'th copy of the related revision
@@ -158,7 +173,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
               type="text"
               value={controlledCopy.totalCopies?.toString() || "1"}
               readOnly
-              className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+              className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
             />
             <p className="text-xs text-slate-500 italic">
               The Total Copies Number field represents the total number of all copies of the related revision
@@ -175,7 +190,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value=""
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -188,7 +203,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             type="text"
             value=""
             readOnly
-            className="w-full h-9 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none"
+            className="w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default focus:outline-none"
           />
         </div>
 
@@ -201,7 +216,7 @@ export const DocumentInformationTab: React.FC<DocumentInformationTabProps> = ({
             value={controlledCopy.reason || ""}
             readOnly
             rows={3}
-            className="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm text-slate-700 resize-none focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 resize-none focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default"
           />
         </div>
       </div>

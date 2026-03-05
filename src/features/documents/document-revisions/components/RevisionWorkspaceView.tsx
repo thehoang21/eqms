@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { ROUTES } from '@/app/routes.constants';
 import {
     ChevronRight,
@@ -14,33 +15,62 @@ import {
     Home,
     Layers,
     FileText,
+    Cloud,
 } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { cn } from "@/components/ui/utils";
 import { ESignatureModal } from "@/components/ui/esignmodal/ESignatureModal";
 import { AlertModal } from "@/components/ui/modal/AlertModal";
 
-// Import tabs (reusing shared revision tabs)
+// Import all workspace tabs from revision-tabs (single source of truth)
 import {
     GeneralTab,
     TrainingTab,
     SignaturesTab,
-    AuditTab
+    AuditTab,
+    DocumentTab,
+    WorkingNotesTab,
+    InfoFromDocumentTab,
+    WorkspaceReviewersTab,
+    WorkspaceApproversTab,
 } from "../revision-tabs";
-import { MultiDocumentUpload } from "./MultiDocumentUpload";
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconChevronRight } from "@tabler/icons-react";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import { revisionWorkspace } from "@/components/ui/breadcrumb/breadcrumbs.config";
 
 // --- Types ---
+type ReviewFlowType = "sequential" | "parallel";
+
+interface WorkspaceReviewer {
+    id: string;
+    name: string;
+    username?: string;
+    role: string;
+    email: string;
+    department: string;
+    order: number;
+}
+
+interface WorkspaceApprover {
+    id: string;
+    name: string;
+    username?: string;
+    role: string;
+    email: string;
+    department: string;
+}
+
 type TabType =
     | "general"
+    | "working-notes"
+    | "info-from-doc"
     | "training"
+    | "reviewers"
+    | "approvers"
     | "document"
     | "signatures"
-    | "audit"
-    | "workflow";
+    | "audit";
 
 interface WorkspaceDocument {
     id: string;
@@ -65,6 +95,7 @@ interface WorkspaceDocument {
         reviewDate: string;
         description: string;
         isTemplate: boolean;
+        titleLocalLanguage: string;
     };
 }
 
@@ -85,19 +116,26 @@ interface LocationState {
         nextVersion: string;
     }>;
     reasonForChange?: string;
-    isStandalone?: boolean; // Flag để phân biệt standalone vs parent-child
+    isStandalone?: boolean;
+    revisionId?: string;
+    revisionCreated?: string;
+    revisionOpenedBy?: string;
+    revisionState?: string;
+    documentAuthor?: string;
+    documentStatus?: string;
+    documentCreated?: string;
+    revisionFile?: File | null;
 }
 
 export const RevisionWorkspaceView: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state as LocationState;
+    const { user } = useAuth();
+    const currentUserName = user ? `${user.firstName} ${user.lastName}`.trim() : "—";
 
     const [activeTab, setActiveTab] = useState<TabType>("general");
     const [currentDocIndex, setCurrentDocIndex] = useState(0);
-    const [uploadedFiles, setUploadedFiles] = useState<{
-        [documentId: string]: File | null;
-    }>({});
     const [isSaving, setIsSaving] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isESignOpen, setIsESignOpen] = useState(false);
@@ -106,6 +144,11 @@ export const RevisionWorkspaceView: React.FC = () => {
         useState<React.ReactNode>(null);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [showSaveModal, setShowSaveModal] = useState(false);
+
+    // Reviewers & Approvers state (workspace-owned)
+    const [workspaceReviewers, setWorkspaceReviewers] = useState<WorkspaceReviewer[]>([]);
+    const [workspaceApprovers, setWorkspaceApprovers] = useState<WorkspaceApprover[]>([]);
+    const [reviewFlowType, setReviewFlowType] = useState<ReviewFlowType>("parallel");
 
     // Initialize workspace documents from Impact Analysis decisions
     const [workspaceDocuments, setWorkspaceDocuments] = useState<
@@ -143,6 +186,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                             reviewDate: "",
                             description: "",
                             isTemplate: false,
+                            titleLocalLanguage: "",
                         },
                     });
                     break;
@@ -174,6 +218,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                             reviewDate: "",
                             description: "",
                             isTemplate: false,
+                            titleLocalLanguage: "",
                         },
                     });
 
@@ -204,6 +249,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                                     reviewDate: "",
                                     description: "",
                                     isTemplate: false,
+                                    titleLocalLanguage: "",
                                 },
                             }));
                         documents.push(...upgradedDocs);
@@ -228,13 +274,8 @@ export const RevisionWorkspaceView: React.FC = () => {
 
     const currentDocument = workspaceDocuments[currentDocIndex];
 
-    // Check if all files are uploaded
-    const allFilesUploaded = useMemo(() => {
-        return workspaceDocuments.every(
-            (doc) =>
-                uploadedFiles[doc.id] !== null && uploadedFiles[doc.id] !== undefined
-        );
-    }, [workspaceDocuments, uploadedFiles]);
+    // File is already uploaded via UploadRevisionModal before navigating here
+    const allFilesUploaded = !!state?.revisionFile;
 
     // Check if current document has all required fields
     const isCurrentDocumentValid = useMemo(() => {
@@ -418,10 +459,6 @@ export const RevisionWorkspaceView: React.FC = () => {
         }
     };
 
-    const handleFilesChange = (files: { [documentId: string]: File | null }) => {
-        setUploadedFiles(files);
-    };
-
     // Status workflow steps
     const statusSteps: DocumentStatus[] = [
         "Draft",
@@ -436,11 +473,15 @@ export const RevisionWorkspaceView: React.FC = () => {
     const currentStepIndex = 0; // Always "Draft" for new revisions
 
     const tabs = [
-        { id: "general" as TabType, label: "General Information" },
-        { id: "training" as TabType, label: "Training Information" },
-        { id: "document" as TabType, label: "Document" },
-        { id: "signatures" as TabType, label: "Signatures" },
-        { id: "audit" as TabType, label: "Audit Trail" },
+        { id: "general" as TabType,       label: "General Information" },
+        { id: "working-notes" as TabType,  label: "Working Notes" },
+        { id: "info-from-doc" as TabType,  label: "Information from Document" },
+        { id: "training" as TabType,       label: "Training Information" },
+        { id: "reviewers" as TabType,      label: "Reviewers" },
+        { id: "approvers" as TabType,      label: "Approvers" },
+        { id: "document" as TabType,       label: "Document" },
+        { id: "signatures" as TabType,     label: "Signatures" },
+        { id: "audit" as TabType,          label: "Audit Trail" },
     ];
 
     if (workspaceDocuments.length === 0) {
@@ -511,7 +552,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                             size="sm"
                             className="gap-1.5 shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
                         >
-                            <span className="text-xs md:text-sm">{isSaving ? "Saving..." : "Save Draft"}</span>
+                            <span className="text-xs md:text-sm">{isSaving ? "Saving..." : "Save"}</span>
                         </Button>
                         <Button
                             onClick={handleSubmitForReview}
@@ -710,16 +751,9 @@ export const RevisionWorkspaceView: React.FC = () => {
                 {/* Tab Content */}
                 <div className="p-3 sm:p-4 md:p-6">
                     {activeTab === "document" && (
-                        <MultiDocumentUpload
-                            documents={workspaceDocuments.map((doc) => ({
-                                id: doc.id,
-                                code: doc.code,
-                                name: doc.name,
-                                type: doc.type,
-                                nextVersion: doc.nextVersion,
-                            }))}
-                            uploadedFiles={uploadedFiles}
-                            onFilesChange={handleFilesChange}
+                        <DocumentTab
+                            mode="view"
+                            selectedFile={state?.revisionFile ?? null}
                         />
                     )}
 
@@ -735,11 +769,11 @@ export const RevisionWorkspaceView: React.FC = () => {
                                         <p className="text-xs lg:text-sm text-slate-600 mb-1.5 lg:mb-2 truncate">
                                             {currentDocument.name}
                                         </p>
-                                        {uploadedFiles[currentDocument.id] && (
+                                        {state?.revisionFile && (
                                             <div className="flex items-center gap-1.5 lg:gap-2 text-xs lg:text-sm">
                                                 <FileText className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-blue-600 shrink-0" />
                                                 <span className="text-blue-700 font-medium truncate">
-                                                    File: {uploadedFiles[currentDocument.id]?.name}
+                                                    File: {state.revisionFile.name}
                                                 </span>
                                             </div>
                                         )}
@@ -810,9 +844,135 @@ export const RevisionWorkspaceView: React.FC = () => {
 
                     {activeTab === "training" && <TrainingTab />}
 
+                    {activeTab === "working-notes" && <WorkingNotesTab />}
+
+                    {activeTab === "info-from-doc" && (
+                        <InfoFromDocumentTab
+                            documentCode={state?.sourceDocument?.code}
+                            documentName={state?.sourceDocument?.name}
+                            documentType={state?.sourceDocument?.type}
+                            documentVersion={state?.sourceDocument?.version}
+                            documentStatus={state?.documentStatus}
+                            documentAuthor={state?.documentAuthor}
+                            documentCreated={state?.documentCreated}
+                            reasonForChange={state?.reasonForChange}
+                        />
+                    )}
+
+                    {activeTab === "reviewers" && (
+                        <WorkspaceReviewersTab
+                            reviewers={workspaceReviewers}
+                            onReviewersChange={setWorkspaceReviewers}
+                            reviewFlowType={reviewFlowType}
+                            onReviewFlowTypeChange={setReviewFlowType}
+                        />
+                    )}
+
+                    {activeTab === "approvers" && (
+                        <WorkspaceApproversTab
+                            approvers={workspaceApprovers}
+                            onApproversChange={setWorkspaceApprovers}
+                        />
+                    )}
+
                     {activeTab === "signatures" && <SignaturesTab />}
 
                     {activeTab === "audit" && <AuditTab />}
+                </div>
+            </div>
+
+            {/* Action Buttons below tab card */}
+            <div className="flex flex-wrap items-center gap-3">
+                <Button
+                    onClick={handleSave}
+                    disabled={isSaving || isSubmitting || !allFilesUploaded}
+                    size="sm"
+                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white disabled:bg-slate-300"
+                >
+                    {isSaving ? "Saving..." : "Save"}
+                </Button>
+                <Button
+                    onClick={handleBack}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                >
+                    Cancel
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 !border-blue-600 !text-blue-600 hover:!bg-blue-50"
+                    onClick={() => window.open('https://office.com', '_blank')}
+                >
+                    Upload To Microsoft Office Online
+                </Button>
+            </div>
+
+            {/* Documents Table Card */}
+            <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
+                <div className="px-4 py-3 border-b border-slate-200 bg-slate-50">
+                    <h3 className="text-sm font-semibold text-slate-700">Documents in Workspace</h3>
+                </div>
+                <div className="overflow-x-auto">
+                    <table className="w-full">
+                        <thead className="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap w-12">No.</th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Number</th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">Created</th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden md:table-cell">Opened by</th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Document Name</th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">State</th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">Author</th>
+                                <th className="py-3.5 px-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">Valid Until</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200 bg-white">
+                            {workspaceDocuments.length > 0 ? (
+                                workspaceDocuments.map((doc, index) => (
+                                    <tr
+                                        key={doc.id}
+                                        className="hover:bg-slate-50/80 transition-colors"
+                                    >
+                                        <td className="py-3.5 px-4 text-sm text-slate-500 whitespace-nowrap">{index + 1}</td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                            <button
+                                                onClick={() => navigate(-1)}
+                                                className="font-medium text-emerald-600 hover:text-emerald-700 hover:underline underline-offset-2 transition-colors cursor-pointer"
+                                            >
+                                                {doc.code}
+                                            </button>
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
+                                            {state?.documentCreated || state?.revisionCreated || '—'}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden md:table-cell">
+                                            {currentUserName}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm text-slate-900 whitespace-nowrap max-w-[200px] truncate">
+                                            {doc.name}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm whitespace-nowrap">
+                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border bg-slate-100 text-slate-700 border-slate-200">
+                                                {state?.documentStatus || 'Draft'}
+                                            </span>
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden lg:table-cell">
+                                            {state?.documentAuthor || '—'}
+                                        </td>
+                                        <td className="py-3.5 px-4 text-sm text-slate-600 whitespace-nowrap hidden lg:table-cell">—</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={8} className="py-12 text-center">
+                                        <p className="text-sm text-slate-500">No documents in workspace.</p>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

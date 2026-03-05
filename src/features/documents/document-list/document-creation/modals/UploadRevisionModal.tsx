@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { Checkbox } from "@/components/ui/checkbox/Checkbox";
+import { Select } from "@/components/ui/select/Select";
 import { FormModal } from "@/components/ui/modal/FormModal";
 
 interface UploadRevisionModalProps {
@@ -22,7 +23,18 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
   const [note, setNote] = useState("");
   const [useTemplate, setUseTemplate] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Mock published templates with same document type
+  const MOCK_TEMPLATES = [
+    { label: "SOP Template v1.0", value: "sop-template-v1" },
+    { label: "SOP Template v2.0", value: "sop-template-v2" },
+    { label: "Quality Control Template", value: "qc-template-v1" },
+    { label: "Work Instruction Template", value: "wi-template-v1" },
+  ];
+
+  const hasFileOrTemplate = useTemplate ? !!selectedTemplate : !!selectedFile;
 
   const displayName = `${documentName}_${revisionNumber}`;
 
@@ -33,20 +45,29 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
   };
 
   const handleConfirm = () => {
-    if (selectedFile) {
-      onConfirm(selectedFile, note, useTemplate);
-      // Reset state
+    if (useTemplate && selectedTemplate) {
+      // Create a mock File from template name for consistency
+      const templateLabel = MOCK_TEMPLATES.find(t => t.value === selectedTemplate)?.label || selectedTemplate;
+      const mockFile = new File([""], templateLabel + ".docx", { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+      onConfirm(mockFile, note, true);
       setNote("");
       setUseTemplate(false);
       setSelectedFile(null);
+      setSelectedTemplate("");
+    } else if (selectedFile) {
+      onConfirm(selectedFile, note, false);
+      setNote("");
+      setUseTemplate(false);
+      setSelectedFile(null);
+      setSelectedTemplate("");
     }
   };
 
   const handleClose = () => {
-    // Reset state
     setNote("");
     setUseTemplate(false);
     setSelectedFile(null);
+    setSelectedTemplate("");
     onClose();
   };
 
@@ -55,12 +76,12 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
       isOpen={isOpen}
       onClose={handleClose}
       onConfirm={handleConfirm}
-      title="Upload revision"
+      title="Upload Revision"
       confirmText="OK"
       cancelText="Cancel"
       size="lg"
       isLoading={false}
-      confirmDisabled={!selectedFile}
+      confirmDisabled={!hasFileOrTemplate}
     >
       <div className="space-y-4">
         {/* Name Field */}
@@ -107,39 +128,61 @@ export const UploadRevisionModal: React.FC<UploadRevisionModalProps> = ({
         </div>
 
         {/* Checkbox */}
-        <div>
+        <div className="space-y-3">
           <Checkbox
             id="use-template"
             checked={useTemplate}
-            onChange={(checked) => setUseTemplate(checked)}
+            onChange={(checked) => {
+              setUseTemplate(checked);
+              setSelectedTemplate("");
+              setSelectedFile(null);
+            }}
             label="Select file from template"
           />
+
+          {useTemplate && (
+            <div className="space-y-2">
+              <Select
+                label="Document Template"
+                value={selectedTemplate}
+                onChange={setSelectedTemplate}
+                options={MOCK_TEMPLATES}
+                placeholder="Select a published template..."
+                enableSearch={true}
+              />
+              <p className="text-xs text-slate-500">
+                Note: Files can be selected only from published templates with the same Document Type
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* File Upload */}
-        <div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            onChange={handleFileSelect}
-            className="hidden"
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
-          />
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              variant="outline"
-              size="sm"
-              className="gap-2 w-full sm:w-auto"
-            >
-              <Upload className="h-4 w-4" />
-              Choose File
-            </Button>
-            <span className="text-sm text-slate-600 truncate">
-              {selectedFile ? selectedFile.name : "No file chosen"}
-            </span>
+        {/* File Upload - hidden when using template */}
+        {!useTemplate && (
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              onChange={handleFileSelect}
+              className="hidden"
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+            />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                variant="outline"
+                size="sm"
+                className="gap-2 w-full sm:w-auto"
+              >
+                <Upload className="h-4 w-4" />
+                Choose File
+              </Button>
+              <span className="text-sm text-slate-600 truncate">
+                {selectedFile ? selectedFile.name : "No file chosen"}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </FormModal>
   );

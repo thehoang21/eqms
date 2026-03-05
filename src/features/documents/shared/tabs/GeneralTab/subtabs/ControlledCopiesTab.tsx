@@ -144,7 +144,7 @@ export const ControlledCopiesTab: React.FC = () => {
                                         <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap font-medium text-slate-900">
                                             {copy.controlledCopiesName}
                                         </td>
-                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600 hidden md:table-cell">
+                                        <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap font-medium text-emerald-600 hidden md:table-cell">
                                             {copy.copyNumber}
                                         </td>
                                         <td className="py-2 px-2 sm:py-3.5 sm:px-4 text-xs sm:text-sm whitespace-nowrap text-slate-600 hidden md:table-cell">

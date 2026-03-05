@@ -62,6 +62,7 @@ interface RevisionDetail {
     lastModified: string;
     lastModifiedBy: string;
     isTemplate: boolean;
+    titleLocalLanguage: string;
     businessUnit: string;
     knowledgeBase: string;
     subType: string;
@@ -117,6 +118,7 @@ const MOCK_REVISION: RevisionDetail = {
     lastModified: "2026-01-05 10:30:00",
     lastModifiedBy: "John Smith",
     isTemplate: false,
+    titleLocalLanguage: "",
     businessUnit: "Manufacturing",
     knowledgeBase: "Quality Management",
     subType: "Testing",
@@ -175,6 +177,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
         reviewDate: "",
         description: revision.description,
         isTemplate: revision.isTemplate,
+        titleLocalLanguage: revision.titleLocalLanguage ?? "",
     });
 
     // Determine if current user can approve (single approver)
