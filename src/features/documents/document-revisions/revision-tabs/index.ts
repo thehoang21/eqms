@@ -16,10 +16,13 @@ export { InfoFromDocumentTab } from './InfoFromDocumentTab/InfoFromDocumentTab';
 export { WorkspaceReviewersTab } from './ReviewersTab/WorkspaceReviewersTab';
 export { WorkspaceApproversTab } from './ApproversTab/WorkspaceApproversTab';
 
-// Shared tabs re-exported (single import point for the workspace)
-export {
-  GeneralTab,
-  TrainingTab,
-  SignaturesTab,
-  AuditTab,
-} from '@/features/documents/shared/tabs';
+// Shared tabs still available (GeneralTab / TrainingTab for backward compat if needed)
+export { GeneralTab } from '@/features/documents/shared/tabs';
+export type { GeneralTabFormData } from '@/features/documents/shared/tabs';
+
+// Revision workspace-local tab implementations (identical UI to detail-revision/tabs)
+export { GeneralInformationTab } from './GeneralInformation/GeneralInformationTab';
+export type { GeneralInformationDocumentDetail } from './GeneralInformation/GeneralInformationTab';
+export { TrainingInformationTab } from './TrainingInformationTab/TrainingInformationTab';
+export { SignaturesTab } from './SignaturesTab/SignaturesTab';
+export { AuditTrailTab } from './AuditTrailTab/AuditTrailTab';

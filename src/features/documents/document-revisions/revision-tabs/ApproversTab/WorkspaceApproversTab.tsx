@@ -1,63 +1,59 @@
 import React from "react";
-import { UserCheck } from "lucide-react";
 
 interface Approver {
     id: string;
     name: string;
-    username?: string;
-    role: string;
-    email: string;
-    department: string;
     signedOn?: string;
 }
 
 interface WorkspaceApproversTabProps {
     approvers: Approver[];
-    onApproversChange?: (approvers: Approver[]) => void;
 }
 
-export const WorkspaceApproversTab: React.FC<WorkspaceApproversTabProps> = ({
-    approvers,
-}) => {
+const READ_ONLY_CLASS =
+    "w-full h-9 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 cursor-default";
+
+export const WorkspaceApproversTab: React.FC<WorkspaceApproversTabProps> = ({ approvers }) => {
+    const rows = approvers.length > 0
+        ? approvers
+        : [{ id: "empty", name: "", signedOn: undefined }];
+
     return (
-        <div className="space-y-3">
-            {approvers.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 text-slate-400">
-                    <UserCheck className="h-10 w-10 text-slate-300 mb-3" />
-                    <p className="text-sm font-medium text-slate-500">No approvers assigned</p>
-                    <p className="text-xs text-slate-400 mt-1">Approvers will appear here once added</p>
-                </div>
-            ) : (
-                approvers.map((approver, index) => (
-                    <div
-                        key={approver.id}
-                        className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 p-4 bg-slate-50 border border-slate-200 rounded-xl"
-                    >
-                        <div>
-                            <label className="block text-xs font-medium text-slate-500 mb-1.5">
-                                Approver {index + 1} — Name
+        <div className="space-y-4 md:space-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                {rows.map((approver, index) => (
+                    <React.Fragment key={approver.id}>
+                        {/* Approver Name */}
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-xs sm:text-sm font-medium text-slate-700">
+                                Approver {index + 1}
                             </label>
                             <input
                                 type="text"
                                 value={approver.name}
                                 readOnly
-                                className="w-full h-9 px-3 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-700 focus:outline-none cursor-default"
+                                placeholder="—"
+                                className={READ_ONLY_CLASS}
                             />
                         </div>
-                        <div>
-                            <label className="block text-xs font-medium text-slate-500 mb-1.5">
-                                Signed On
+
+                        {/* Signed On */}
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-xs sm:text-sm font-medium text-slate-700">
+                                Signed On (dd/MM/yyyy HH:mm:ss)
                             </label>
                             <input
                                 type="text"
-                                value={approver.signedOn || "—"}
+                                value={approver.signedOn || ""}
                                 readOnly
-                                className="w-full h-9 px-3 text-sm border border-slate-200 rounded-lg bg-slate-50 text-slate-400 focus:outline-none cursor-default"
+                                placeholder="—"
+                                className={READ_ONLY_CLASS}
                             />
                         </div>
-                    </div>
-                ))
-            )}
+                    </React.Fragment>
+                ))}
+            </div>
         </div>
     );
 };
+

@@ -24,10 +24,10 @@ import { AlertModal } from "@/components/ui/modal/AlertModal";
 
 // Import all workspace tabs from revision-tabs (single source of truth)
 import {
-    GeneralTab,
-    TrainingTab,
+    GeneralInformationTab,
+    TrainingInformationTab,
     SignaturesTab,
-    AuditTab,
+    AuditTrailTab,
     DocumentTab,
     WorkingNotesTab,
     InfoFromDocumentTab,
@@ -45,20 +45,13 @@ type ReviewFlowType = "sequential" | "parallel";
 interface WorkspaceReviewer {
     id: string;
     name: string;
-    username?: string;
-    role: string;
-    email: string;
-    department: string;
-    order: number;
+    signedOn?: string;
 }
 
 interface WorkspaceApprover {
     id: string;
     name: string;
-    username?: string;
-    role: string;
-    email: string;
-    department: string;
+    signedOn?: string;
 }
 
 type TabType =
@@ -787,10 +780,27 @@ export const RevisionWorkspaceView: React.FC = () => {
                                 </div>
                             </div>
 
-                            <GeneralTab
-                                formData={currentDocument.formData}
-                                onFormChange={handleFormChange}
-                                hideTemplateCheckbox={true}
+                            <GeneralInformationTab
+                                document={{
+                                    documentId: state?.revisionId ?? '',
+                                    title: currentDocument.formData.title,
+                                    type: currentDocument.formData.type,
+                                    created: state?.revisionCreated ?? '',
+                                    openedBy: state?.revisionOpenedBy ?? currentUserName,
+                                    author: String(currentDocument.formData.author ?? ''),
+                                    isTemplate: currentDocument.formData.isTemplate,
+                                    businessUnit: currentDocument.formData.businessUnit,
+                                    department: currentDocument.formData.department,
+                                    knowledgeBase: currentDocument.formData.knowledgeBase,
+                                    subType: currentDocument.formData.subType,
+                                    periodicReviewCycle: currentDocument.formData.periodicReviewCycle,
+                                    periodicReviewNotification: currentDocument.formData.periodicReviewNotification,
+                                    effectiveDate: '',
+                                    validUntil: '',
+                                    language: currentDocument.formData.language,
+                                    description: currentDocument.formData.description,
+                                    titleLocalLanguage: currentDocument.formData.titleLocalLanguage,
+                                }}
                             />
 
                             {/* Navigation Buttons */}
@@ -842,7 +852,7 @@ export const RevisionWorkspaceView: React.FC = () => {
                         </div>
                     )}
 
-                    {activeTab === "training" && <TrainingTab />}
+                    {activeTab === "training" && <TrainingInformationTab />}
 
                     {activeTab === "working-notes" && <WorkingNotesTab />}
 
@@ -862,22 +872,18 @@ export const RevisionWorkspaceView: React.FC = () => {
                     {activeTab === "reviewers" && (
                         <WorkspaceReviewersTab
                             reviewers={workspaceReviewers}
-                            onReviewersChange={setWorkspaceReviewers}
-                            reviewFlowType={reviewFlowType}
-                            onReviewFlowTypeChange={setReviewFlowType}
                         />
                     )}
 
                     {activeTab === "approvers" && (
                         <WorkspaceApproversTab
                             approvers={workspaceApprovers}
-                            onApproversChange={setWorkspaceApprovers}
                         />
                     )}
 
                     {activeTab === "signatures" && <SignaturesTab />}
 
-                    {activeTab === "audit" && <AuditTab />}
+                    {activeTab === "audit" && <AuditTrailTab />}
                 </div>
             </div>
 
