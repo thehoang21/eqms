@@ -77,6 +77,7 @@ interface DocumentDetail {
   lastModified: string;
   lastModifiedBy: string;
   isTemplate: boolean;
+  titleLocalLanguage?: string;
   businessUnit: string;
   knowledgeBase: string;
   subType: string;
