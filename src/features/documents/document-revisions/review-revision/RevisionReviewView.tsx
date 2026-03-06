@@ -29,10 +29,11 @@ import {
   SignaturesTab,
   AuditTrailTab,
   WorkingNotesTab,
-  DocumentInformationTab,
-  ReviewSignaturesTab,
-} from "@/features/documents/document-revisions/detail-revision/tabs";
-import { TrainingTab } from "@/features/documents/shared/tabs";
+  InfoFromDocumentTab,
+  WorkspaceReviewersTab,
+  WorkspaceApproversTab,
+  TrainingInformationTab,
+} from "@/features/documents/document-revisions/revision-tabs";
 
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 
@@ -671,10 +672,10 @@ export const RevisionReviewView: React.FC<RevisionReviewViewProps> = ({
         />
       )}
       {activeTab === "workingNotes" && <WorkingNotesTab />}
-      {activeTab === "documentInfo" && <DocumentInformationTab />}
-      {activeTab === "training" && <TrainingTab isReadOnly />}
-      {activeTab === "reviewers" && <ReviewSignaturesTab type="reviewers" />}
-      {activeTab === "approvers" && <ReviewSignaturesTab type="approvers" />}
+      {activeTab === "documentInfo" && <InfoFromDocumentTab />}
+      {activeTab === "training" && <TrainingInformationTab isReadOnly />}
+      {activeTab === "reviewers" && <WorkspaceReviewersTab reviewers={[]} />}
+      {activeTab === "approvers" && <WorkspaceApproversTab approvers={[]} />}
       {activeTab === "signatures" && <SignaturesTab />}
       {activeTab === "audit" && <AuditTrailTab />}
 

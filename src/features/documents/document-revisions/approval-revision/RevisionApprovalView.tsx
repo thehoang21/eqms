@@ -2,15 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from '@/app/routes.constants';
 import {
-    User,
     MessageSquare,
-    ThumbsUp,
-    ThumbsDown,
     Send,
-    CheckCircle,
-    XCircle,
 } from "lucide-react";
-import { cn } from '@/components/ui/utils';
 import { Button } from '@/components/ui/button/Button';
 import { ESignatureModal } from '@/components/ui/esignmodal/ESignatureModal';
 import { AlertModal } from '@/components/ui/modal/AlertModal';
@@ -18,9 +12,18 @@ import { useToast } from '@/components/ui/toast';
 import { formatDate } from '@/utils/format';
 import { revisionApproval } from "@/components/ui/breadcrumb/breadcrumbs.config";
 import { DocumentWorkflowLayout, DEFAULT_WORKFLOW_TABS } from "@/features/documents/shared/layouts";
-import { DocumentTab } from "../revision-tabs/DocumentTab/DocumentTab";
-import { GeneralTab, TrainingTab, SignaturesTab, AuditTab, type GeneralTabFormData } from "@/features/documents/shared/tabs";
-import { WorkingNotesTab, DocumentInformationTab, ReviewSignaturesTab } from "@/features/documents/document-revisions/detail-revision/tabs";
+import {
+    GeneralTab,
+    DocumentTab,
+    TrainingInformationTab,
+    SignaturesTab,
+    AuditTrailTab,
+    WorkingNotesTab,
+    InfoFromDocumentTab,
+    WorkspaceReviewersTab,
+    WorkspaceApproversTab,
+    type GeneralTabFormData,
+} from "@/features/documents/document-revisions/revision-tabs";
 import type { DocumentType, DocumentStatus } from "@/features/documents/types";
 import { IconMessage2 } from "@tabler/icons-react";
 
@@ -160,7 +163,7 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
     const [showESignModal, setShowESignModal] = useState(false);
     const [showRejectWarning, setShowRejectWarning] = useState(false);
     const [eSignAction, setESignAction] = useState<'approve' | 'reject'>('approve');
-    
+
     // GeneralTab state
     const [formData, setFormData] = useState<FormData>({
         title: revision.title,
@@ -226,10 +229,10 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
             setIsSubmitting(false);
 
             // Show success message and redirect Back
-            const message = eSignAction === 'approve' 
+            const message = eSignAction === 'approve'
                 ? `Revision ${revision.documentId} v${revision.version} has been approved successfully.`
                 : `Revision ${revision.documentId} v${revision.version} has been rejected.`;
-            
+
             showToast({
                 type: eSignAction === 'approve' ? 'success' : 'warning',
                 title: eSignAction === 'approve' ? 'Approved' : 'Rejected',
@@ -405,13 +408,13 @@ export const RevisionApprovalView: React.FC<RevisionApprovalViewProps> = ({
                     onFormChange={setFormData}
                 />
             )}
-            {activeTab === "workingNotes" && <WorkingNotesTab isReadOnly />}
-            {activeTab === "documentInfo" && <DocumentInformationTab isReadOnly />}
-            {activeTab === "training" && <TrainingTab isReadOnly />}
-            {activeTab === "reviewers" && <ReviewSignaturesTab type="reviewers" />}
-            {activeTab === "approvers" && <ReviewSignaturesTab type="approvers" />}
+            {activeTab === "workingNotes" && <WorkingNotesTab />}
+            {activeTab === "documentInfo" && <InfoFromDocumentTab />}
+            {activeTab === "training" && <TrainingInformationTab isReadOnly />}
+            {activeTab === "reviewers" && <WorkspaceReviewersTab reviewers={[]} />}
+            {activeTab === "approvers" && <WorkspaceApproversTab approvers={[]} />}
             {activeTab === "signatures" && <SignaturesTab />}
-            {activeTab === "audit" && <AuditTab />}
+            {activeTab === "audit" && <AuditTrailTab />}
 
             {/* Reject Warning Modal */}
             <AlertModal

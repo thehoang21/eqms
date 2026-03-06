@@ -45,7 +45,7 @@ const RevisionWorkspaceView = lazy(() => import('@/features/documents/document-r
 const PendingDocumentsView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.PendingDocumentsView })));
 const RevisionReviewView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionReviewView })));
 const RevisionApprovalView = lazy(() => import('@/features/documents/document-revisions').then(m => ({ default: m.RevisionApprovalView })));
-const StandaloneRevisionView = lazy(() => import('@/features/documents/document-revisions/components/StandaloneRevisionView').then(m => ({ default: m.StandaloneRevisionView })));
+const UpgradeRevisionView = lazy(() => import('@/features/documents/document-revisions/components/UpgradeRevisionView').then(m => ({ default: m.UpgradeRevisionView })));
 
 // Controlled Copies
 const ControlledCopiesView = lazy(() => import('@/features/documents/controlled-copies').then(m => ({ default: m.ControlledCopiesView })));
@@ -261,7 +261,7 @@ export const AppRoutes: React.FC = () => {
             <Route path="pending-approval" element={<Suspense fallback={<LoadingFallback />}><PendingDocumentsView viewType="approval" onViewDocument={(id) => navigate(ROUTES.DOCUMENTS.REVISIONS.DETAIL(id))} /></Suspense>} />
             <Route path="new" element={<Suspense fallback={<LoadingFallback />}><NewRevisionView /></Suspense>} />
             <Route path="new-multi" element={<Suspense fallback={<LoadingFallback />}><NewRevisionView /></Suspense>} />
-            <Route path="new-standalone" element={<Suspense fallback={<LoadingFallback />}><StandaloneRevisionView /></Suspense>} />
+            <Route path="new-standalone" element={<Suspense fallback={<LoadingFallback />}><UpgradeRevisionView /></Suspense>} />
             <Route path="workspace" element={<Suspense fallback={<LoadingFallback />}><RevisionWorkspaceView /></Suspense>} />
             <Route path="review/:id" element={<RevisionReviewViewWrapper />} />
             <Route path="approval/:id" element={<RevisionApprovalViewWrapper />} />

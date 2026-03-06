@@ -48,7 +48,7 @@ const fetchSourceDocument = async (id: string): Promise<SourceDocument> => {
     };
 };
 
-export const StandaloneRevisionView: React.FC = () => {
+export const UpgradeRevisionView: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchParams] = useSearchParams();

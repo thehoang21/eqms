@@ -74,7 +74,7 @@ export { PendingDocumentsView } from './document-revisions/views/PendingDocument
 export { DetailRevisionView } from './document-revisions/detail-revision/DetailRevisionView';
 export { NewRevisionView } from './document-revisions/components/NewRevisionView';
 export { RevisionWorkspaceView } from './document-revisions/components/RevisionWorkspaceView';
-export { StandaloneRevisionView } from './document-revisions/components/StandaloneRevisionView';
+export { UpgradeRevisionView } from './document-revisions/components/UpgradeRevisionView';
 export { RevisionReviewView } from './document-revisions/review-revision/RevisionReviewView';
 export { RevisionApprovalView } from './document-revisions/approval-revision/RevisionApprovalView';
 

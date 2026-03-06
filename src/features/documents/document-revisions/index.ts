@@ -12,7 +12,7 @@ export { PendingDocumentsView } from './views/PendingDocumentsView';
 // Revision Creation & Workspace
 export { NewRevisionView } from './components/NewRevisionView';
 export { RevisionWorkspaceView } from './components/RevisionWorkspaceView';
-export { StandaloneRevisionView } from './components/StandaloneRevisionView';
+export { UpgradeRevisionView } from './components/UpgradeRevisionView';
 export { MultiDocumentUpload } from './components/MultiDocumentUpload';
 
 // Review & Approval
